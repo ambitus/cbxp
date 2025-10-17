@@ -8,11 +8,14 @@
 namespace CBXP {
 class ControlBlockExplorer {
  private:
-  cbxp_result_t* _p_result;
+  cbxp_result_t* p_result_;
+  static std::vector<std::string> createIncludeList(
+      const std::string& includes_string);
 
  public:
   ControlBlockExplorer(cbxp_result_t* p_result, bool debug);
-  void exploreControlBlock(const std::string& control_block_name);
+  void exploreControlBlock(const std::string& control_block_name,
+                           const std::string& includes_string);
 };
 }  // namespace CBXP
 

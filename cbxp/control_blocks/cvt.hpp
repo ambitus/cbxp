@@ -7,7 +7,9 @@ namespace CBXP {
 
 class CVT : public ControlBlock {
  public:
-  nlohmann::json get();
+  nlohmann::json get(void* __ptr32 p_control_block = nullptr) override;
+  explicit CVT(const std::vector<std::string>& includes)
+      : ControlBlock("cvt", {"ecvt", "asvt"}, includes) {}
 };
 
 }  // namespace CBXP

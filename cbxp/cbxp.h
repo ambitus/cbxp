@@ -16,7 +16,8 @@ avoid memory leaks:
   result.result_json
 
 */
-cbxp_result_t *cbxp(const char *control_block_name, bool debug);
+cbxp_result_t* cbxp(const char* control_block_name, const char* includes_string,
+                    bool debug);
 
 #ifdef __cplusplus
 }

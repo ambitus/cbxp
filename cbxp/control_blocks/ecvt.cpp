@@ -12,23 +12,29 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json ECVT::get() {
-  const struct psa* __ptr32 p_psa = 0;
-  // Get the address of the CVT from the PSA
-  const struct cvtmap* __ptr32 p_cvt =
-      // 'nullPointer' is a false positive because the PSA starts at address 0
-      // cppcheck-suppress nullPointer
-      static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
-  // Get the address of the EVCT from the CVT
-  const struct ecvt* __ptr32 p_ecvt =
-      static_cast<struct ecvt* __ptr32>(p_cvt->cvtecvt);
+nlohmann::json ECVT::get(void* __ptr32 p_control_block) {
+  const struct ecvt* __ptr32 p_ecvt;
+  nlohmann::json ecvt_json = {};
+
+  if (p_control_block == nullptr) {
+    // PSA starts at address 0
+    const struct psa* __ptr32 p_psa = 0;
+    // Get the address of the CVT from the PSA
+    const struct cvtmap* __ptr32 p_cvt =
+        // 'nullPointer' is a false positive because the PSA starts at address 0
+        // cppcheck-suppress nullPointer
+        static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
+    // Get the address of the EVCT from the CVT
+    p_ecvt = static_cast<struct ecvt* __ptr32>(p_cvt->cvtecvt);
+  } else {
+    p_ecvt = static_cast<struct ecvt* __ptr32>(p_control_block);
+  }
 
   Logger::getInstance().debug("ECVT hex dump:");
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_ecvt),
                                 sizeof(struct ecvt));
 
   // Get Fields
-  nlohmann::json ecvt_json = {};
 
   ecvt_json["ecvt_boostinfo"] =
       formatter_.getBitmap<uint64_t>(

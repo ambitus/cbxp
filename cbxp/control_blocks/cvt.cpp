@@ -7,44 +7,64 @@
 #include <nlohmann/json.hpp>
 #include <string>
 
+#include "asvt.hpp"
+#include "ecvt.hpp"
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json CVT::get() {
-  const struct psa* __ptr32 p_psa = 0;
-  // 'nullPointer' is a false positive because the PSA starts at address 0
-  // cppcheck-suppress-begin nullPointer
-  const struct cvtmap* __ptr32 p_cvtmap =
-      static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
-  const struct cvtfix* __ptr32 p_cvtfix =
-      static_cast<struct cvtfix* __ptr32>(p_psa->flccvt);
-  const struct cvtxtnt2* __ptr32 p_cvtxtnt2 =
-      static_cast<struct cvtxtnt2* __ptr32>(p_psa->flccvt);
-  const struct cvtvstgx* __ptr32 p_cvtvstgx =
-      static_cast<struct cvtvstgx* __ptr32>(p_psa->flccvt);
+nlohmann::json CVT::get(void* __ptr32 p_control_block) {
+  const struct cvtmap* __ptr32 p_cvtmap;
+  const struct cvtfix* __ptr32 p_cvtfix;
+  const struct cvtxtnt2* __ptr32 p_cvtxtnt2;
+  const struct cvtvstgx* __ptr32 p_cvtvstgx;
+  nlohmann::json cvt_json = {};
+
+  if (p_control_block == nullptr) {
+    // PSA starts at address 0
+    const struct psa* __ptr32 p_psa = 0;
+    // 'nullPointer' is a false positive because the PSA starts at address 0
+    // cppcheck-suppress-begin nullPointer
+    p_cvtmap = static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
+  } else {
+    p_cvtmap = static_cast<struct cvtmap* __ptr32>(p_control_block);
+  }
+  p_cvtfix = const_cast<struct cvtfix* __ptr32>(
+      reinterpret_cast<const struct cvtfix* __ptr32>(p_cvtmap));
+  p_cvtxtnt2 = const_cast<struct cvtxtnt2* __ptr32>(
+      reinterpret_cast<const struct cvtxtnt2* __ptr32>(p_cvtmap));
+  p_cvtvstgx = const_cast<struct cvtvstgx* __ptr32>(
+      reinterpret_cast<const struct cvtvstgx* __ptr32>(p_cvtmap));
   // cppcheck-suppress-end nullPointer
 
   Logger::getInstance().debug("CVT hex dump:");
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_cvtmap),
                                 sizeof(struct cvtmap));
 
-  // Get fields
-  nlohmann::json cvt_json = {};
+  cvt_json["cvtasvt"] = formatter_.getHex<uint32_t>(&p_cvtmap->cvtasvt);
+  cvt_json["cvtecvt"] = formatter_.getHex<uint32_t>(&p_cvtmap->cvtecvt);
 
-  cvt_json["cvtabend"]    = formatter_.getHex<uint32_t>(p_cvtmap->cvtabend);
-  cvt_json["cvtamff"]     = formatter_.getHex<uint32_t>(p_cvtmap->cvtamff);
-  cvt_json["cvtasmvt"]    = formatter_.getHex<uint32_t>(p_cvtmap->cvtasmvt);
-  cvt_json["cvtasvt"]     = formatter_.getHex<uint32_t>(p_cvtmap->cvtasvt);
-  cvt_json["cvtbret"]     = formatter_.getHex<uint16_t>(p_cvtmap->cvtbret);
-  cvt_json["cvtbsm0f"]    = formatter_.getHex<uint16_t>(p_cvtmap->cvtbsm0f);
-  cvt_json["cvtcsd"]      = formatter_.getHex<uint32_t>(p_cvtmap->cvtcsd);
-  cvt_json["cvtctlfg"]    = formatter_.getBitmap<uint8_t>(
+  for (const auto& [include, include_includes] : include_map_) {
+    if (include == "asvt") {
+      cvt_json["cvtasvt"] = CBXP::ASVT(include_includes).get(p_cvtmap->cvtasvt);
+    } else if (include == "ecvt") {
+      cvt_json["cvtecvt"] = CBXP::ECVT(include_includes).get(p_cvtmap->cvtecvt);
+    }
+  }
+
+  // Get fields
+
+  cvt_json["cvtabend"] = formatter_.getHex<uint32_t>(p_cvtmap->cvtabend);
+  cvt_json["cvtamff"]  = formatter_.getHex<uint32_t>(p_cvtmap->cvtamff);
+  cvt_json["cvtasmvt"] = formatter_.getHex<uint32_t>(p_cvtmap->cvtasmvt);
+  cvt_json["cvtbret"]  = formatter_.getHex<uint16_t>(p_cvtmap->cvtbret);
+  cvt_json["cvtbsm0f"] = formatter_.getHex<uint16_t>(p_cvtmap->cvtbsm0f);
+  cvt_json["cvtcsd"]   = formatter_.getHex<uint32_t>(p_cvtmap->cvtcsd);
+  cvt_json["cvtctlfg"] = formatter_.getBitmap<uint8_t>(
       reinterpret_cast<const char*>(&p_cvtmap->cvtctlfg));
   cvt_json["cvtdcb"] = formatter_.getBitmap<uint8_t>(
       reinterpret_cast<const char*>(&p_cvtmap->cvtdcb));
   cvt_json["cvtdcpa"]  = formatter_.getBitmap<uint32_t>(p_cvtmap->cvtdcpa);
   cvt_json["cvtdfa"]   = formatter_.getHex<uint32_t>(p_cvtmap->cvtdfa);
-  cvt_json["cvtecvt"]  = formatter_.getHex<uint32_t>(p_cvtmap->cvtecvt);
   cvt_json["cvtedat2"] = formatter_.getBitmap<uint32_t>(p_cvtmap->cvtedat2);
   cvt_json["cvteplps"] = formatter_.getHex<uint32_t>(p_cvtvstgx->cvteplps);
   cvt_json["cvtexit"]  = formatter_.getHex<uint16_t>(p_cvtmap->cvtexit);
@@ -122,4 +142,3 @@ nlohmann::json CVT::get() {
   return cvt_json;
 }
 }  // namespace CBXP
-

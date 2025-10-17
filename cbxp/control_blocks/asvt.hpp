@@ -32,7 +32,9 @@ namespace CBXP {
 
 class ASVT : public ControlBlock {
  public:
-  nlohmann::json get();
+  nlohmann::json get(void* __ptr32 p_control_block = nullptr) override;
+  explicit ASVT(const std::vector<std::string>& includes)
+      : ControlBlock("asvt", {"ascb"}, includes) {}
 };
 
 }  // namespace CBXP
