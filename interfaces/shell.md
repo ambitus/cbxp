@@ -15,6 +15,11 @@ The following shell interface is provided to facilitate exploitation of CBXP by 
 
 &nbsp;
 
+{: .note }
+> _Wherever you **Install**/**Extract** the **CBXP Pax File**, make sure to add the path to the `bin` directory where the `cbxp` executable resides to `PATH` in `/etc/profile` (global) or `~/.profile`/`~/.bashrc` (local/individual)._
+
+&nbsp;
+
 ### 📄 Description
 
 Extract **Control Blocks** from **Live Memory** *(storage)*, post-process them into **JSON**, and write the result JSON to the `stdout` file descriptor.
