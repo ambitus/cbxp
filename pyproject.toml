@@ -38,11 +38,11 @@ build-backend = "setuptools.build_meta"
     ]
 
 [project.urls]
-    Homepage = "https://github.ibm.com/lcarcaramo/CBExplorer/"
-    Documentation = "https://github.ibm.com/lcarcaramo/CBExplorer/"
-    Source = "https://github.ibm.com/lcarcaramo/CBExplorer/"
-    Issues = "https://github.ibm.com/lcarcaramo/CBExplorer/issues"
-    "Release Notes" = "https://github.ibm.com/lcarcaramo/CBExplorer/milestones?state=closed"
+    Homepage = "https://ambitus.github.io/cbxp/"
+    Documentation = "https://ambitus.github.io/cbxp/interfaces/python/"
+    Source = "https://github.com/ambitus/cbxp"
+    Issues = "https://github.com/ambitus/cbxp/issues"
+    "Release Notes" = "https://github.com/ambitus/cbxp/milestones?state=closed"
 
 [tool.setuptools.packages.find]
     where = ["python"]

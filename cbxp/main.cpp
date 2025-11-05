@@ -49,7 +49,7 @@ int main(int argc, const char* argv[]) {
 
   for (int i = 1; i < argc; i++) {
     std::string flag = argv[i];
-    if (flag == "-d" || flag == "-debug") {
+    if (flag == "-d" || flag == "--debug") {
       debug = true;
     } else if (flag == "-i" || flag == "--include") {
       if (i + 1 >= argc - 1) {

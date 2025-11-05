@@ -1,3 +1,4 @@
 graft externals
 graft cbxp
 exclude externals/.clang-format
+exclude tests/*

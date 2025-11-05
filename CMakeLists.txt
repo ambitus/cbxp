@@ -6,6 +6,8 @@ execute_process(
     RESULT_VARIABLE uname_result
 )
 
+set(CXX_STANDARD 17)
+
 if(uname_output STREQUAL "OS/390\n")
     set(CMAKE_CXX_COMPILER "ibm-clang++64")
 else()
@@ -86,6 +88,7 @@ add_custom_target(
                 "--suppress='missingIncludeSystem'"
                 "--inline-suppr"
                 "--language=c++"
+                "--std=c++${CXX_STANDARD}"
                 "--enable=all"
                 "--force"
                 "--check-level=exhaustive"

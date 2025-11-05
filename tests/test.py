@@ -2,6 +2,10 @@ import unittest
 from cbxp import cbxp, CBXPError
 
 class TestCBXP(unittest.TestCase):
+
+    # ============================================================================
+    # Basic Usage
+    # ============================================================================
     def test_cbxp_can_extract_psa(self):
         cbdata = cbxp("psa")
         self.assertIs(type(cbdata), dict)
@@ -23,7 +27,10 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
             self.assertIs(type(entry), dict)
-        
+    
+    # ============================================================================
+    # Include Patterns
+    # ============================================================================
     def test_cbxp_can_extract_the_psa_and_include_the_cvt(self):
         cbdata = cbxp("psa", includes=["cvt"])
         self.assertIs(type(cbdata), dict)
@@ -120,11 +127,24 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
 
+    # ============================================================================
+    # Debug Mode
+    # ============================================================================
+    def test_cbxp_can_run_in_debug_mode(self):
+        cbdata = cbxp("psa", debug=True)
+        self.assertIs(type(cbdata), dict)
+
+    # ============================================================================
+    # Errors: Unknown Control Block
+    # ============================================================================
     def test_cbxp_raises_cbxp_error_when_unknown_control_block_is_provided(self):
         with self.assertRaises(CBXPError) as e:
             cbxp("unknown")
         self.assertEqual("Unknown control block 'unknown' was specified.", str(e.exception))
 
+    # ============================================================================
+    # Errors: Bad Include Patterns
+    # ============================================================================
     def test_cbxp_raises_cbxp_error_if_asvt_ascb_is_included_when_extracting_the_psa(self):
         with self.assertRaises(CBXPError) as e:
             cbxp("psa", includes=["asvt.ascb"])
@@ -167,4 +187,4 @@ class TestCBXP(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main(argv=["", "-v", "-f", "-b"])
+    unittest.main(verbosity=2, failfast=True, buffer=True)

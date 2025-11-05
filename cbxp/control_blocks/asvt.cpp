@@ -34,7 +34,7 @@ nlohmann::json ASVT::get(void* __ptr32 p_control_block) {
 
   std::vector<std::string> ascbs;
   ascbs.reserve(p_asvt->asvtmaxu);
-  uint32_t* __ptr32 p_ascb = const_cast<uint32_t* __ptr32>(
+  const uint32_t* __ptr32 p_ascb = const_cast<uint32_t* __ptr32>(
       reinterpret_cast<const uint32_t* __ptr32>(&p_asvt->asvtenty));
 
   for (int i = 0; i < p_asvt->asvtmaxu; i++) {

@@ -1,5 +1,6 @@
 """Build Python extension."""
 
+import os
 from glob import glob
 
 from setuptools import Extension, setup
@@ -8,6 +9,10 @@ from setuptools.command.build_ext import build_ext
 
 def main():
     """Python extension build entrypoint."""
+    os.environ["CC"] = "ibm-clang64"
+    os.environ["CFLAGS"] = "-std=c11"
+    os.environ["CXX"] = "ibm-clang++64"
+    os.environ["CXXFLAGS"] = "-std=c++17"
     setup_args = {
         "ext_modules": [
             Extension(

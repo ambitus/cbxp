@@ -15,11 +15,15 @@ The following are a set of guidelines to help you contribute.
 
   * [Adding New Functionality](#adding-new-functionality)
 
-  * [Testing](#testing)
+  * [Branch Naming Conventions](#branch-naming-conventions)
 
   * [Fixing Bugs](#fixing-bugs)
 
-  * [Branch Naming Conventions](#branch-naming-conventions)
+  * [Testing](#testing)
+
+    * [Python Interface Testing](#python-interface-testing)
+
+    * [Shell Interface Testing](#shell-interface-testing)
 
 * [Style Guidelines](#style-guidelines)
 
@@ -57,35 +61,6 @@ To ensure `clang-format` and `cppcheck` are always run against your code on **ev
 
 If you want to continube new functionality, open a GitHub pull request against the `dev` branch with your changes. In the PR, make sure to clearly document the new functionality including why it is valuable.
 
-### Testing
-
-Testing is currently done in the form of manual funcitional testing.
-
-* To test the **Python Interface**, build the CBXP sdist and wheel, and then install the sdist and wheel to verify that the Python binding works.
-  ```shell
-  # Build
-  python3 -m build
-  # Install sdist
-  python3 -m pip install dist/*.tar.gz
-  # Install wheel
-  python3 -m pip install dist/*.whl
-  ```
-
-  ```python
-  from cbxp import cbxp
-  psa = cbxp("psa")
-  ```
-* To test the **CLI**, build the `cbxp` binary using `cmake` and `gmake`, and then execute it with the appropriate arguments.
-  ```shell
-  cmake .
-  gmake
-  ./dist/cbxp psa
-  ```
-
-### Fixing Bugs
-
-If you fix a bug, open a GitHub pull request against the `dev` branch with the fix. In the PR, make sure to clearly describe the problem and the solution.
-
 ### Branch Naming Conventions
 
 Code branches should use the following naming conventions:
@@ -95,9 +70,45 @@ Code branches should use the following naming conventions:
 * `bug/name` *(Branch where one or more bugs are being fixed)*
 * `junk/name` *(Throwaway branch created for experimentation)*
 
+### Fixing Bugs
+
+If you fix a bug, open a GitHub pull request against the `dev` branch with the fix. In the PR, make sure to clearly describe the problem and the solution.
+
+### Testing
+
+CBXP is tested using automated functional tests. Test cases for new functionality and bug fixes should be added to [`tests/test.py`](tests/test.py) and [`tests/test.sh`](tests/test.sh).
+
+#### Python Interface Testing
+1. Add new test cases to [`tests/test.py`](tests/test.py).
+2. Build and install the CBXP Python package. Both the **wheel** and **sdist** distributions for all [Python versions supported by CBXP](README.md#minimum-zos--language-versions) should be tested.
+
+   ```shell
+   # Build
+   python3 -m build
+   # Install sdist
+   python3 -m pip install dist/<cbxp sdist>.tar.gz
+   # Install wheel
+   python3 -m pip install dist/<cbxp wheel>.whl
+   ```
+
+3. Run the test suite.
+
+   ```shell
+   python3 ./tests/test.py
+   ```
+
+#### Shell Interface Testing
+1. Add new tests cases to [`tests/test.sh`](tests/test.sh).
+2. Run the test suite using `cmake` and `gmake`.
+
+   ```shell
+   cmake .
+   gmake test
+   ```
+
 ## Style Guidelines
 
-:bulb: _These steps can be done automatically using the [pre-commit Hooks](#pre-commit-hooks)._
+:bulb: _`clang-format` can be setup to run automatically using the [pre-commit Hooks](#pre-commit-hooks)._
 
 The use of the `clang-format` code formatter is required.
 
@@ -105,7 +116,7 @@ The following code style conventions should be followed:
 * Varible names should use snake case *(i.e., `my_variable`)*.
 * Pointer variables should start with `p_` *(i.e., `p_my_pointer`)*.
 * Class variables should end with an `_` to help differentiate between class variables and local function variables *(i.e., `my_class_variable_`)*.
-* Class name should use pascal case *(i.e., `MyClass`)*.
+* Class names should use pascal case *(i.e., `MyClass`)*.
 * Function names should use camel case *(i.e., `myFunction()`)*.
 * When calling a class function within the same class that function is a member of, the following syntax should be used to make it clear that a function within the same class is being called.
 
@@ -124,7 +135,7 @@ The following code style conventions should be followed:
 
 ## Static Code Analysis
 
-:bulb: _These steps can be done automatically using the [pre-commit Hooks](#pre-commit-hooks)._
+:bulb: _`cppcheck` can be setup to run automatically using the [pre-commit Hooks](#pre-commit-hooks)._
 
 `cppcheck` will be run against all code contributions to ensure that contributions don't inadvertently introduce any vulnerabilities or other significant issues. All contributions must have no `cppcheck` complaints. False positives and minor complaints may be [suppressed](http://cppcheck.net/manual.html#inline-suppressions) when it makes sense to do so, but this should only be done sparingly. All `cppcheck` comlpaints should be evaluated and corrected when it is possible and makes sense to do so. You can run `cppcheck` by running `gmake check`.
 
