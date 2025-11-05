@@ -112,3 +112,9 @@ add_custom_target(
                 "-i"
                 ${CBXP_SRC_ALL}
 )
+
+add_custom_target(
+    test
+    COMMAND "./tests/test.sh"
+    DEPENDS cbxp
+)

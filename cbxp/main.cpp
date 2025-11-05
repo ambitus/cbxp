@@ -60,7 +60,7 @@ int main(int argc, const char* argv[]) {
       bool has_comma      = std::any_of(include.begin(), include.end(),
                                         [](char c) { return c == ','; });
       if (has_comma) {
-        std::cout << "Include patterns cannot contain commas" << std::endl;
+        std::cerr << "Include patterns cannot contain commas" << std::endl;
         return -1;
       }
       if (includes_string == "") {
@@ -92,13 +92,15 @@ int main(int argc, const char* argv[]) {
   explorer.exploreControlBlock(control_block_name, includes_string);
 
   if (cbxp_result.return_code == CBXP::Error::BadControlBlock) {
-    std::cout << "Unknown control block '" << control_block_name
+    std::cerr << "Unknown control block '" << control_block_name
               << "' was specified." << std::endl;
+    return -1;
   } else if (cbxp_result.return_code == CBXP::Error::BadInclude) {
-    std::cout << "A bad include pattern was provided" << std::endl;
+    std::cerr << "A bad include pattern was provided" << std::endl;
+    return -1;
   } else {
     std::cout << cbxp_result.result_json << std::endl;
   }
 
-  return cbxp_result.return_code;
+  return 0;
 }
