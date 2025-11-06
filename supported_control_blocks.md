@@ -15,7 +15,7 @@ Control blocks that are natively supported by CBXP.
 &nbsp;
 
 {: .warning }
-> _Since CBXP runs in **Problem State**, only **Non-Fetch Protected** control block data can be extracted from **Live Memory** (storage). Also, access to control block data is **NOT Serialezd**, meaning that CBXP may occasionally extract control block data that is **Malformed** or otherwise **NOT Valid**._
+> _Since CBXP runs in **Problem State**, only **Non-Fetch Protected** control block data can be extracted from **Live Memory** (storage). Also, access to control block data is **NOT Serialized**, meaning that CBXP may occasionally extract control block data that is **Malformed** or otherwise **NOT Valid**._
 
 &nbsp;
 
