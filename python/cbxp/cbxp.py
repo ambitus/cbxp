@@ -1,5 +1,4 @@
 import json
-from typing import Union
 from enum import Enum
 
 from cbxp._C import call_cbxp
