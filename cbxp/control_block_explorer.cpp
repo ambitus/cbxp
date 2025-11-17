@@ -8,6 +8,7 @@
 #include "control_block_error.hpp"
 #include "control_blocks/ascb.hpp"
 #include "control_blocks/asvt.hpp"
+#include "control_blocks/assb.hpp"
 #include "control_blocks/control_block.hpp"
 #include "control_blocks/cvt.hpp"
 #include "control_blocks/ecvt.hpp"
@@ -83,7 +84,9 @@ void ControlBlockExplorer::exploreControlBlock(
       control_block_json = ASCB(includes).get();
     } else if (control_block_name == "asvt") {
       control_block_json = ASVT(includes).get();
-    } else {
+    } else if (control_block_name == "assb") {
+      control_block_json = ASSB(includes).get();
+    else {
       throw ControlBlockError();
     }
   } catch (const CBXPError& e) {

@@ -2,7 +2,7 @@
 
 #include <cvt.h>
 #include <ihapsa.h>
-
+#include <ihaascb.h>
 #include <cstdint>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -45,7 +45,7 @@ const asvt_t* __ptr32 p_asvt;
       }
       // cast ascb addr into ascb pointer a
       // 
-      const struct ascb* __ptr32 p_ascb = reinterpret_cast<struct ascb* __ptr32>(*p_ascb_addr);
+    const struct ascb* __ptr32 p_ascb = reinterpret_cast<struct ascb* __ptr32>(*p_ascb_addr);
       assbs.push_back(ASSB::get(reinterpret_cast<void* __ptr32>(p_ascb->ascbassb)));
       p_ascb_addr++;  // This SHOULD increment the pointer by 4 bytes.
     }
