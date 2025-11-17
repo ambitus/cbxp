@@ -86,6 +86,7 @@ void ControlBlockExplorer::exploreControlBlock(
       control_block_json = ASVT(includes).get();
     } else if (control_block_name == "assb") {
       control_block_json = ASSB(includes).get();
+    }
     else {
       throw ControlBlockError();
     }
