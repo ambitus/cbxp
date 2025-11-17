@@ -7,7 +7,7 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
-
+#include <ihaassb.h>
 #include "ascb.hpp"
 #include "asvt.hpp"
 #include <assb.hpp>
@@ -45,8 +45,8 @@ const asvt_t* __ptr32 p_asvt;
       }
       // cast ascb addr into ascb pointer a
       // 
-      const struct ascb* __ptr32 p_ascb = static_cast<struct ascb* _ptr32>(*p_ascb_addr);
-      assbs.push_back(ASSB::get(reinterpret_cast<void* __ptr32>(p_ascb->ascbassb)));
+      const struct ascb* __ptr32 p_ascb = reinterpret_cast<struct ascb* __ptr32>(*p_ascb_addr);
+      assbs.push_back(ASSB::get(reinterpret_cast<void* __ptr32>(p_ascb->ascbassb));
       p_ascb_addr++;  // This SHOULD increment the pointer by 4 bytes.
     }
     return assbs;
@@ -59,7 +59,7 @@ const asvt_t* __ptr32 p_asvt;
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_assb),
                                 sizeof(struct assb));
 
-   assb_json[""] = ;                    
+  assb_json["assb_asst_time_on_cp"] = formatter_.getString(p_assb->assb_asst_time_on_cp, 8);;                    
   return assb_json;
 }
 }  // namespace CBXP
