@@ -59,7 +59,9 @@ const asvt_t* __ptr32 p_asvt;
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_assb),
                                 sizeof(struct assb));
 
-  assb_json["assb_asst_time_on_cp"] = formatter_.getString(p_assb->assb_asst_time_on_cp, 8);;                    
+  assb_json["assb_asst_time_on_cp"] = formatter_.getString(p_assb->assb_asst_time_on_cp, 8);
+  assb_json["assb_cms_lockinst_addr"] = formatter_.getHex<uint32_t>(&(p_assb->assb_cms_lockinst_addr));
+
   return assb_json;
 }
 }  // namespace CBXP

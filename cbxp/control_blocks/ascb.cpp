@@ -8,7 +8,7 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
-
+#include "assb.hpp"
 #include "asvt.hpp"
 #include "logger.hpp"
 
@@ -51,6 +51,14 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
 
   ascb_json["ascbassb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbassb));
   ascb_json["ascbasxb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbasxb));
+
+  for (const auto& [include, include_includes] : include_map_) {
+    if (include == "assb") {
+      ascb_json["ascbassb"] = CBXP::ASSB(include_includes).get(p_ascb->ascbassb);
+    }
+  }
+
+
 
   Logger::getInstance().debug("ASCB hex dump:");
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_ascb),
