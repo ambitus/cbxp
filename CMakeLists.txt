@@ -21,10 +21,12 @@ project(CBXP VERSION 0.0.2
              LANGUAGES C CXX)
 
 file(
-    GLOB CBXP_SRC 
+    GLOB CBXP_SRC_LIB
     "cbxp/*.cpp"
     "cbxp/control_blocks/*.cpp"
 )
+
+list(REMOVE_ITEM CBXP_SRC_LIB "cbxp/main.cpp")
 
 file(
     GLOB CBXP_SRC_ALL
@@ -38,7 +40,8 @@ file(
     "cbxp/**/*.h"
 )
 
-add_executable(cbxp ${CBXP_SRC})
+add_library(libcbxp ${CBXP_SRC_LIB})
+add_executable(cbxp "cbxp/main.cpp")
 
 target_include_directories(
     cbxp PUBLIC
@@ -65,12 +68,16 @@ add_custom_target(
     COMMAND "mkdir"
                 "-p"
                 "cbxp-${CMAKE_PROJECT_VERSION}/bin"
+                "cbxp-${CMAKE_PROJECT_VERSION}/lib"
     COMMAND "cp"
                 "LICENSE"
                 "cbxp-${CMAKE_PROJECT_VERSION}/"
     COMMAND "cp"
                 "NOTICES"
                 "cbxp-${CMAKE_PROJECT_VERSION}/"
+    COMMAND "cp"
+                "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/libcbxp.so"
+                "cbxp-${CMAKE_PROJECT_VERSION}/lib/"
     COMMAND "cp"
                 "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cbxp"
                 "cbxp-${CMAKE_PROJECT_VERSION}/bin/"
