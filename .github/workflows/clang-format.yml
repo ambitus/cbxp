@@ -13,6 +13,6 @@ jobs:
       # Create symbolic link to clang-format-19 so that
       # 'clang-format' can be used to run 'clang-format-19'.
       run: |
-        ln -s clang-format $(which clang-format-19)
+        ln -s $(which clang-format-19) clang-format
         cmake .
         make lint
