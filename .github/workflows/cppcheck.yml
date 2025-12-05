@@ -1,0 +1,15 @@
+name: cppcheck
+on: [push, pull_request]
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install cppcheck
+      run: sudo apt-get install -y cmake cppcheck
+    - name: Run cppcheck
+      run: |
+        cmake .
+        make check

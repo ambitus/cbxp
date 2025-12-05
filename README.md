@@ -1,3 +1,6 @@
+[![clang-format](https://github.com/ambitus/cbxp/actions/workflows/clang-format.yml/badge.svg)](https://github.com/ambitus/cbxp/actions/workflows/clang-format.yml)
+[![cppcheck](https://github.com/ambitus/cbxp/actions/workflows/cppcheck.yml/badge.svg)](https://github.com/ambitus/cbxp/actions/workflows/cppcheck.yml)
+[![ruff](https://github.com/ambitus/cbxp/actions/workflows/ruff.yml/badge.svg)](https://github.com/ambitus/cbxp/actions/workflows/ruff.yml)
 [![Version](https://img.shields.io/pypi/v/cbxp?label=alpha)](https://pypi.org/project/cbxp/#history)
 [![Python Versions](https://img.shields.io/pypi/pyversions/cbxp)](https://pypi.org/project/cbxp/)
 [![Downloads](https://img.shields.io/pypi/dm/cbxp)](https://pypistats.org/packages/cbxp)

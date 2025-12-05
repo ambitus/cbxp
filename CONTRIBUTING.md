@@ -110,9 +110,9 @@ CBXP is tested using automated functional tests. Test cases for new functionalit
 
 :bulb: _`clang-format` can be setup to run automatically using the [pre-commit Hooks](#pre-commit-hooks)._
 
-The use of the `clang-format` code formatter is required.
+The use of the `clang-format` code formatter is required. All Python code also must pass `ruff` style checks.
 
-The following code style conventions should be followed:
+The following C/C++ code style conventions should be followed:
 * Varible names should use snake case *(i.e., `my_variable`)*.
 * Pointer variables should start with `p_` *(i.e., `p_my_pointer`)*.
 * Class variables should end with an `_` to help differentiate between class variables and local function variables *(i.e., `my_class_variable_`)*.
@@ -146,9 +146,11 @@ When contributing to CBXP, make sure to complete all applicable tasks in the fol
 * Make any necessary updates to `pyproject.toml`.
 * Make any necessary updates to `README.md`.
 * Ensure that you have **pre-commit Hooks** setup to ensure that `clang-format` and `cppcheck` are run against the code for every commit you make.
+* Check for style violations in C/C++ code using `clang-format` by running `gmake lint`.
+* Check for style vilotations in Python code using `ruff` by running `ruff check`.
+* Format C/C++ code using `clang-format` by running `gmake format`.
+* Format Python code using `ruff` by running `ruff format`.
 * Run `cppcheck` static code analysis by running `gmake check`.
-* Check for style violations using `clang-format` by running `gmake lint`.
-* Format the CBXP code using `clang-format` by running `gmake format`.
 
 ## Found a bug?
 

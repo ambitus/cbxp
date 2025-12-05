@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools >= 80.9.0"]
-build-backend = "setuptools.build_meta"
+    requires = ["setuptools >= 80.9.0"]
+    build-backend = "setuptools.build_meta"
 
 [project]
     name="cbxp"
-    version="0.0.2"
+    version="0.0.3"
     requires-python = ">= 3.12"
     authors = [
         { name = "Leonard J. Carcaramo Jr", email = "lcarcaramo@ibm.com" },
@@ -50,3 +50,23 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.package-data]
     cbxp = ["LICENSE", "NOTICES"]
+
+[tool.ruff.lint]
+    # Ruff by default is not very aggressive, only enforcing a few rulesets like E and F.
+    # To ensure well organized code a bunch more rulesets have been enabled
+    select = [
+        "ERA", # Checks for commented out code
+        "E", 
+        "F", 
+        "B", 
+        "EM", # Error messages and exceptions
+        "SIM", # Comes with suggestions on simplifying things
+        "N",  # Checks if code conforms to the PEP8 naming conventions
+        "PLE", 
+        "UP", 
+        "TRY", # Best practices for try-except
+        "FLY", # Checks for string joins
+        "I",  # Comes with suggestions on organizing imports
+        "COM", # Checks for missing commas and unnecessary 
+        "A", 
+    ]
