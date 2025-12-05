@@ -8,11 +8,11 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install clang-format
-      run: sudo apt install -y cmake clang-format-19
+      run: sudo apt install -y cmake clang-format-20
     - name: clang-format
-      # Create symbolic link to clang-format-19 so that
-      # 'clang-format' can be used to run 'clang-format-19'.
+      # Create symbolic link to clang-format-20 so that
+      # 'clang-format' can be used to run 'clang-format-20'.
       run: |
-        ln -s $(which clang-format-19) clang-format
+        ln -s $(which clang-format-20) clang-format
         cmake .
         make lint
