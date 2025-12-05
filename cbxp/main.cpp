@@ -35,7 +35,8 @@ int main(int argc, const char* argv[]) {
 
   if (argc == 2) {
     if (std::strcmp(argv[1], "-v") == 0 ||
-        std::strcmp(argv[1], "--version") == 0) { std::cout << "CBXP " << VERSION << std::endl;
+        std::strcmp(argv[1], "--version") == 0) {
+      std::cout << "CBXP " << VERSION << std::endl;
       return 0;
     }
 
