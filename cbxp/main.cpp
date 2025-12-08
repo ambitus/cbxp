@@ -11,11 +11,12 @@
 #include "cbxp_result.h"
 #include "control_block_error.hpp"
 
-typedef cbxp_result_t* (*cbxp_t)(const char*, const char*, bool);
+typedef const cbxp_result_t* (*cbxp_t)(const char* control_block_name,
+                                       const char* includes_string, bool debug);
 
 static void show_usage(const char* argv[]);
 static void show_dll_errors();
-static int cleanup_and_exit(int rc, void* lib_handle);
+static void cleanup_and_exit(int exit_rc, void* lib_handle);
 
 static void show_usage(const char* argv[]) {
   std::cout << "Usage: " << argv[0] << " [options] <control block>" << std::endl
@@ -41,13 +42,13 @@ static void show_dll_errors() {
   }
 }
 
-static int cleanup_and_exit(int rc, void* lib_handle) {
-  int eret = dlclose(lib_handle);
-  if (eret != 0) {
+static void cleanup_and_exit(int exit_rc, void* lib_handle) {
+  int rc = dlclose(lib_handle);
+  if (rc != 0) {
     show_dll_errors();
-    return -1;
+    exit(-1);
   }
-  return rc;
+  exit(exit_rc);
 }
 
 int main(int argc, const char* argv[]) {
@@ -59,10 +60,10 @@ int main(int argc, const char* argv[]) {
   }
 
   // Resolve symbol 'cbxp()'
-  cbxp_t cbxp = static_cast<cbxp_t>(dlsym(lib_handle, "cbxp"));
+  cbxp_t cbxp = reinterpret_cast<cbxp_t>(dlsym(lib_handle, "cbxp"));
   if (cbxp == nullptr) {
     show_dll_errors();
-    return cleanup_and_exit(-1, lib_handle);
+    cleanup_and_exit(-1, lib_handle);
   }
 
   bool debug                     = false;
@@ -70,20 +71,20 @@ int main(int argc, const char* argv[]) {
 
   if (argc < 2) {
     show_usage(argv);
-    return cleanup_and_exit(-1, lib_handle);
+    cleanup_and_exit(-1, lib_handle);
   }
 
   if (argc == 2) {
     if (std::strcmp(argv[1], "-v") == 0 ||
         std::strcmp(argv[1], "--version") == 0) {
       std::cout << "CBXP " << VERSION << std::endl;
-      return cleanup_and_exit(0, lib_handle);
+      cleanup_and_exit(0, lib_handle);
     }
 
     if (std::strcmp(argv[1], "-h") == 0 ||
         std::strcmp(argv[1], "--help") == 0) {
       show_usage(argv);
-      return cleanup_and_exit(0, lib_handle);
+      cleanup_and_exit(0, lib_handle);
     }
   }
 
@@ -94,14 +95,14 @@ int main(int argc, const char* argv[]) {
     } else if (flag == "-i" || flag == "--include") {
       if (i + 1 >= argc - 1) {
         show_usage(argv);
-        return cleanup_and_exit(-1, lib_handle);
+        cleanup_and_exit(-1, lib_handle);
       }
       std::string include = std::string(argv[++i]);
       bool has_comma      = std::any_of(include.begin(), include.end(),
                                         [](char c) { return c == ','; });
       if (has_comma) {
         std::cerr << "Include patterns cannot contain commas" << std::endl;
-        return cleanup_and_exit(-1, lib_handle);
+        cleanup_and_exit(-1, lib_handle);
       }
       if (includes_string == "") {
         includes_string = include;
@@ -111,7 +112,7 @@ int main(int argc, const char* argv[]) {
     } else {
       if (i != argc - 1) {
         show_usage(argv);
-        return cleanup_and_exit(-1, lib_handle);
+        cleanup_and_exit(-1, lib_handle);
       }
       control_block_name = std::string(argv[i]);
     }
@@ -119,7 +120,7 @@ int main(int argc, const char* argv[]) {
 
   if (control_block_name == "") {
     show_usage(argv);
-    return cleanup_and_exit(-1, lib_handle);
+    cleanup_and_exit(-1, lib_handle);
   }
 
   nlohmann::json control_block_json;
@@ -130,13 +131,13 @@ int main(int argc, const char* argv[]) {
   if (cbxp_result->return_code == CBXP::Error::BadControlBlock) {
     std::cerr << "Unknown control block '" << control_block_name
               << "' was specified." << std::endl;
-    return cleanup_and_exit(-1, lib_handle);
+    cleanup_and_exit(-1, lib_handle);
   } else if (cbxp_result->return_code == CBXP::Error::BadInclude) {
     std::cerr << "A bad include pattern was provided" << std::endl;
-    return cleanup_and_exit(-1, lib_handle);
+    cleanup_and_exit(-1, lib_handle);
   } else {
     std::cout << cbxp_result->result_json << std::endl;
   }
 
-  return cleanup_and_exit(0, lib_handle);
+  cleanup_and_exit(0, lib_handle);
 }
