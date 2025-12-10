@@ -241,7 +241,7 @@ def clean_git_repo() {
 
 def publish(
     python_executables_and_wheels_map, 
-    release_title
+    release_title,
     release_tag, 
     git_branch, 
     milestone, 
