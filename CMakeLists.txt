@@ -16,7 +16,7 @@ endif()
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./dist")
 
-project(CBXP VERSION 0.0.2
+project(CBXP VERSION 0.0.3
              DESCRIPTION "A unified and standardized interface for extracting z/OS control block data."
              LANGUAGES C CXX)
 
