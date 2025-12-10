@@ -139,28 +139,28 @@ pipeline {
             clean_python_environment()
             clean_git_repo()
           }
+          // Shell distribution
+          def cbxp_version = get_cbxp_version()
+          def pax = "cbxp-${cbxp_version}.pax.Z"
+          echo "Building '${pax}' ..."
+          sh """
+              cmake .
+              gmake package
+          """
+
+          echo "Install test '${pax}' ..."
+          sh """
+              mkdir install-test
+              cd install-test
+              pax -rf ../dist/${pax}
+              ls -alT install-test/cbxp
+          """
+
+          echo "'Function testing './dist/cbxp' ..."
+          sh "./tests/test.sh"
+
+          clean_git_repo()
         }
-        // Shell distribution
-        def cbxp_version = get_cbxp_version()
-        def pax = "cbxp-${cbxp_version}.pax.Z"
-        echo "Building '${pax}' ..."
-        sh """
-            cmake .
-            gmake package
-        """
-
-        echo "Install test '${pax}' ..."
-        sh """
-            mkdir install-test
-            cd install-test
-            pax -rf ../dist/${pax}
-            ls -alT install-test/cbxp
-        """
-
-        echo "'Function testing './dist/cbxp' ..."
-        sh "./tests/test.sh"
-
-        clean_git_repo()
       }
     }
     stage('Publish') {
