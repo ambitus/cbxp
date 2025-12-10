@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
     name="cbxp"
-    version="0.0.2"
+    version="0.0.3"
     requires-python = ">= 3.12"
     authors = [
         { name = "Leonard J. Carcaramo Jr", email = "lcarcaramo@ibm.com" },
