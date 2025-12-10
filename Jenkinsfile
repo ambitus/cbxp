@@ -153,7 +153,7 @@ pipeline {
               mkdir install-test
               cd install-test
               pax -rf ../dist/${pax}
-              ls -alT install-test/cbxp
+              ls -alT cbxp-${cbxp_version}
           """
 
           echo "'Function testing './dist/cbxp' ..."
