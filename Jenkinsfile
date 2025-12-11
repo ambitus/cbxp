@@ -297,17 +297,17 @@ def publish(
       )
     ).trim()
 
-    def checksums_file = "SHASUMS256.txt.asc"
+    clean_git_repo()
 
+    def checksums_file = "SHASUMS256.txt.asc"
     sh """
+      mkdir ./dist
       touch ./dist/${checksums_file}
       chtag -t -c ISO8859-1 ./dist/${checksums_file}
     """
     
     def tar_publish
     def tar_built = false
-
-    clean_git_repo()
 
     // Build and publish Python packages
     for (python in python_executables_and_wheels_map.keySet()) {
@@ -377,7 +377,7 @@ def upload_asset(release_id, release_asset) {
 
 def build_description(python_executables_and_wheels_map, release_tag, milestone) {
   def description = (
-    "Release Notes: ${milestone}\\n&nbsp;\\n&nbsp;\\n"
+    "Release Notes: ${milestone}\\n"
     + "## Python Interface Installation"
   )
 
@@ -401,7 +401,7 @@ def build_description(python_executables_and_wheels_map, release_tag, milestone)
     + "> :warning: _Requires z/OS Open XL C/C++ 2.1 compiler._\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${tar} "
     + "&& python3 -m pip install ${tar}\\n```\\n"
-    + "## Shell Interface Installation"
+    + "## Shell Interface Installation\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${pax} "
     + "&& pax -rf ${pax}\\n```\\n"
   )
