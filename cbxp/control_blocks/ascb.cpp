@@ -65,7 +65,7 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
                                 sizeof(struct ascb));
 
   ascb_json["ascbascb"] = formatter_.getString(p_ascb->ascbascb, 4);
-  ascb_json["ascbasid"] = p_ascb->ascbasid;
+  ascb_json["ascbasid"] = p_ascb->ascbasn;
   ascb_json["ascbdcti"] = p_ascb->ascbdcti;
   ascb_json["ascbejst"] = formatter_.getBitmap<uint64_t>(
       reinterpret_cast<const char*>(&p_ascb->ascbejst));
