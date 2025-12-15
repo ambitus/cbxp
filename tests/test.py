@@ -120,7 +120,6 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
 
-
     def test_cbxp_can_extract_psa_and_include_cvt_recursive_wildcard(self):
         cbdata = cbxp("psa", includes=["cvt.**"])
         self.assertIs(type(cbdata), dict)
@@ -132,7 +131,6 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
 
-    
     def test_cbxp_can_extract_psa_and_include_cvt_wildcard(self):
         cbdata = cbxp("psa", includes=["cvt.*"])
         self.assertIs(type(cbdata), dict)
@@ -142,7 +140,7 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
         for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), str)
-
+            
     def test_cbxp_can_extract_cvt_and_include_wildcard_and_asvt_wildcard(self):
         cbdata = cbxp("cvt", includes=["*", "asvt.*"])
         self.assertIs(type(cbdata), dict)
@@ -151,7 +149,7 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata["cvtasvt"]["asvtenty"]), list)
         for entry in cbdata["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
-    
+            
     def test_cbxp_can_extract_cvt_and_include_wildcard_and_asvt_recursive_wildcard(self):
         cbdata = cbxp("cvt", includes=["*", "asvt.**"])
         self.assertIs(type(cbdata), dict)

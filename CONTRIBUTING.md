@@ -37,7 +37,7 @@ The following are a set of guidelines to help you contribute.
 
 > :warning: _All code contributed must be made under an Apache 2 license._
 >
-> :warning: _All contributions must be accompanied by a [Developer Certification of Origin (DCO) signoff](https://github.com/openmainframeproject/tsc/blob/master/process/contribution_guidelines.md#developer-certificate-of-origin)._
+> :warning: _All contributions must be accompanied by a [Developer Certification of Origin (DCO) signoff](https://tac.openmainframeproject.org/process/contribution_guidelines.html#contribution-sign-off)._
 
 ## Ways to Contribute
 
