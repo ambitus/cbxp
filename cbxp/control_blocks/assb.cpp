@@ -59,12 +59,6 @@ const asvt_t* __ptr32 p_asvt;
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_assb),
                                 sizeof(struct assb));
 
-             
-  //assb_json["assb_asst_time_on_cp"] = *reinterpret_cast<uint64_t *>(p_assb->assb_asst_time_on_cp);
-  //assb_json["assb_asst_time_on_cp"] = *reinterpret_cast<uint64_t*>(p_assb->assb_asst_time_on_cp);
-  //uint64_t value;
-  //std::memcpy(&value, p_assb->assb_asst_time_on_cp, 8);
-  //assb_json["assb_asst_time_on_cp"] = value;
   assb_json["assb_cms_lockinst_addr"] = formatter_.getHex<uint32_t>(&(p_assb->assb_cms_lockinst_addr));
   assb_json["assb_enqdeq_cms_lockinst_addr"] = formatter_.getHex<uint32_t>(&(p_assb->assb_enqdeq_cms_lockinst_addr));
   assb_json["assb_latch_cms_lockinst_addr"] = formatter_.getHex<uint32_t>(&(p_assb->assb_latch_cms_lockinst_addr));
@@ -76,11 +70,10 @@ const asvt_t* __ptr32 p_asvt;
   assb_json["assbtasb"] = formatter_.getHex<uint32_t>(&(p_assb->assbtasb));
   assb_json["assbvab"] = formatter_.getHex<uint32_t>(&(p_assb->assbvab));
   assb_json["assbldax"] = formatter_.getHex<uint32_t>(&(p_assb->assbldax));
-  //assb_json["assbldax"] = formatter_.getBitmap<uint32_t>(p_assb->assbldax);
+
   assb_json["assbisqn"] = p_assb->assbisqn;
-
-
-
+  assb_json["assbjbni"] = formatter_.getString(p_assb->assbjbni, 8);
+  assb_json["assbjbns"] = formatter_.getString(p_assb->assbjbns, 8);
   
   uint64_t assb_asst_time_on_cp;
   std::memcpy(&assb_asst_time_on_cp, p_assb->assb_asst_time_on_cp, 8);
@@ -117,7 +110,6 @@ const asvt_t* __ptr32 p_asvt;
   uint64_t assb_srb_time_on_cp;
   std::memcpy(&assb_srb_time_on_cp, p_assb->assb_srb_time_on_cp, 8);
   assb_json["assb_srb_time_on_cp"] = assb_srb_time_on_cp;
-
 
   uint64_t assb_srb_time_on_zcbp;
   std::memcpy(&assb_srb_time_on_zcbp, p_assb->assb_srb_time_on_zcbp, 8);
@@ -210,14 +202,6 @@ const asvt_t* __ptr32 p_asvt;
   uint64_t assbasst;
   std::memcpy(&assbasst, p_assb->assbasst, 8);
   assb_json["assbasst"] = assbasst;
-
-  uint64_t assbjbni;
-  std::memcpy(&assbjbni, p_assb->assbjbni, 8);
-  assb_json["assbjbni"] = assbjbni;
-
-  uint64_t assbjbns;
-  std::memcpy(&assbjbns, p_assb->assbjbns, 8);
-  assb_json["assbjbns"] = assbjbns;
 
   uint64_t assbphtm;
   std::memcpy(&assbphtm, p_assb->assbphtm, 8);
@@ -353,8 +337,6 @@ const asvt_t* __ptr32 p_asvt;
   uint64_t assbend;
   std::memcpy(&assbend, p_assb->assbend, 8);
   assb_json["assbend"] = assbend;
-
-
 
   return assb_json;
 }
