@@ -33,8 +33,8 @@ nlohmann::json ASSB::get(void* __ptr32 p_control_block) {
         assb_json["assbs"].get_ref<std::vector<nlohmann::json>&>();
     assbs.reserve(p_asvt->asvtmaxu);
 
-    uint32_t* __ptr32 p_ascb_addr =
-        reinterpret_cast<uint32_t* __ptr32>(&p_asvt->asvtenty);
+    const uint32_t* __ptr32 p_ascb_addr =
+        reinterpret_cast<const uint32_t* __ptr32>(&p_asvt->asvtenty);
     for (int i = 0; i < p_asvt->asvtmaxu; i++) {
       if (0x80000000 & *p_ascb_addr) {
         Logger::getInstance().debug(formatter_.getHex<uint32_t>(p_ascb_addr) +
