@@ -65,6 +65,7 @@ class TestCBXP(unittest.TestCase):
         cbdata = cbxp("ascb", includes=["assb"])
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
+            self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
 
     def test_cbxp_can_extract_the_psa_and_include_the_cvt_ecvt(self):
