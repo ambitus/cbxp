@@ -25,6 +25,8 @@ run_with_expected_exit_code 0 ./dist/cbxp cvt
 run_with_expected_exit_code 0 ./dist/cbxp ecvt
 run_with_expected_exit_code 0 ./dist/cbxp asvt
 run_with_expected_exit_code 0 ./dist/cbxp ascb
+run_with_expected_exit_code 0 ./dist/cbxp assb
+
 # Include Patterns
 run_with_expected_exit_code 0 ./dist/cbxp -i cvt psa
 run_with_expected_exit_code 0 ./dist/cbxp --include cvt psa
@@ -39,6 +41,9 @@ run_with_expected_exit_code 0 ./dist/cbxp -i cvt.ecvt -i cvt.asvt.ascb psa
 run_with_expected_exit_code 0 ./dist/cbxp -i "cvt.**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -i "cvt.*" psa
 run_with_expected_exit_code 0 ./dist/cbxp -i "asvt.*" -i "*" cvt
+run_with_expected_exit_code 0 ./dist/cbxp -i assb ascb
+run_with_expected_exit_code 0 ./dist/cbxp -i cvt.ecvt -i cvt.asvt.ascb.assb psa
+
 # Debug Mode
 run_with_expected_exit_code 0 ./dist/cbxp -d psa
 run_with_expected_exit_code 0 ./dist/cbxp --debug psa

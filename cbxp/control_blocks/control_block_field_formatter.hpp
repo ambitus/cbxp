@@ -10,7 +10,7 @@
 
 namespace CBXP {
 class ControlBlockFieldFormatter {
- private:
+ public:
   template <typename T>
   static T uint(const void* p_field) {
     T uint_field;
@@ -18,7 +18,6 @@ class ControlBlockFieldFormatter {
     return uint_field;
   }
 
- public:
   static const std::string getString(const void* p_field, int length) {
     auto ascii_field_unique_ptr = std::make_unique<char[]>(length);
     std::memcpy(ascii_field_unique_ptr.get(), p_field, length);
