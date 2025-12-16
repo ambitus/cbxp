@@ -34,9 +34,9 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
   // but we will set this up anyways to be safe.
   pthread_mutex_lock(&cbxp_mutex);
 
-  cbxp_result_t* result = cbxp(control_block, includes_string, debug);
+  const cbxp_result_t* result = cbxp(control_block, includes_string, debug);
 
-  result_dictionary     = Py_BuildValue(
+  result_dictionary           = Py_BuildValue(
       "{s:s#, s:i}", "result_json", result->result_json,
       result->result_json_length, "return_code", result->return_code);
 

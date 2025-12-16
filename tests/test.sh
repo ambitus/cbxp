@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export LIBPATH=${PWD}/dist:$LIBPATH
+
 run_with_expected_exit_code() {
     expected_code=$1
     shift

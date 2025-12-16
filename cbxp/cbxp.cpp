@@ -7,8 +7,8 @@
 #include "cbxp_result.h"
 #include "control_block_explorer.hpp"
 
-cbxp_result_t* cbxp(const char* control_block_name, const char* includes_string,
-                    bool debug) {
+const cbxp_result_t* cbxp(const char* control_block_name,
+                          const char* includes_string, bool debug) {
   nlohmann::json control_block_json;
   std::string control_block        = control_block_name;
 
