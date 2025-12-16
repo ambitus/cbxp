@@ -160,5 +160,5 @@ add_custom_target(
 add_custom_target(
     test
     COMMAND "./tests/test.sh"
-    DEPENDS cbxp
+    DEPENDS libcbxp cbxp
 )
