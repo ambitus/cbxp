@@ -342,7 +342,7 @@ def publish(
     echo "Adding sha256 checksum for '${tar_publish}' to ${checksums_file}..."
     sh "cd dist && sha256sum -t ${tar_publish} >> ${checksums_file}"
 
-    // Build and publish Shell distribution
+    // Build and publish CLI/Library distribution
     def cbxp_version = get_cbxp_version()
     def pax = "cbxp-${cbxp_version}.pax.Z"
     echo "Building '${pax}' ..."
@@ -401,7 +401,7 @@ def build_description(python_executables_and_wheels_map, release_tag, milestone)
     + "> :warning: _Requires z/OS Open XL C/C++ 2.1 compiler._\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${tar} "
     + "&& python3 -m pip install ${tar}\\n```\\n"
-    + "## Shell Interface Installation\\n"
+    + "## CLI/Library Installation\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${pax} "
     + "&& pax -rf ${pax}\\n```\\n"
   )

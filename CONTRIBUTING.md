@@ -23,7 +23,7 @@ The following are a set of guidelines to help you contribute.
 
     * [Python Interface Testing](#python-interface-testing)
 
-    * [Shell Interface Testing](#shell-interface-testing)
+    * [CLI Interface Testing](#cli-interface-testing)
 
 * [Style Guidelines](#style-guidelines)
 
@@ -97,7 +97,7 @@ CBXP is tested using automated functional tests. Test cases for new functionalit
    python3 ./tests/test.py
    ```
 
-#### Shell Interface Testing
+#### CLI Interface Testing
 1. Add new tests cases to [`tests/test.sh`](tests/test.sh).
 2. Run the test suite using `cmake` and `gmake`.
 
