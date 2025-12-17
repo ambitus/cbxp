@@ -48,7 +48,7 @@ There are many ways to contribute to the project. You can write code, work on th
 If you want to write code, a good way to get started is by looking at the issues section of this repository. Look for the **Good First Issue** tag. Good First Issues are great as a first contribution.
 
 ### pre-commit Hooks
-To ensure `clang-format` and `cppcheck` are always run against your code on **every commit**, set up the **pre-commit hooks**.
+To ensure `clang-format`, `cppcheck`, and `ruff` are always run against your code on **every commit**, set up the **pre-commit hooks**.
 
 * Install [`pre-commit`](https://pre-commit.com/).
 * Setup **pre-commit Hooks**:
