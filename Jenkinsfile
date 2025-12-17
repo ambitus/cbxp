@@ -378,7 +378,7 @@ def upload_asset(release_id, release_asset) {
 def build_description(python_executables_and_wheels_map, release_tag, milestone) {
   def description = (
     "Release Notes: ${milestone}\\n"
-    + "## Python Interface Installation"
+    + "## Python Interface Installation\\n"
   )
 
   for (python in python_executables_and_wheels_map.keySet()) {
