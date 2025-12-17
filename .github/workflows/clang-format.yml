@@ -1,0 +1,20 @@
+name: clang-format
+on: [push, pull_request]
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install clang-format
+      run: sudo apt install -y cmake clang-format-19
+    - name: clang-format
+      # Create symbolic link to clang-format-19 and 
+      # add it to PATH so that 'clang-format' can 
+      # be used to run 'clang-format-19'.
+      run: |
+        ln -s $(which clang-format-19) clang-format
+        export PATH=$PWD:$PATH
+        cmake .
+        make lint

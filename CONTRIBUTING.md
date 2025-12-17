@@ -23,7 +23,7 @@ The following are a set of guidelines to help you contribute.
 
     * [Python Interface Testing](#python-interface-testing)
 
-    * [Shell Interface Testing](#shell-interface-testing)
+    * [CLI Interface Testing](#cli-interface-testing)
 
 * [Style Guidelines](#style-guidelines)
 
@@ -48,7 +48,7 @@ There are many ways to contribute to the project. You can write code, work on th
 If you want to write code, a good way to get started is by looking at the issues section of this repository. Look for the **Good First Issue** tag. Good First Issues are great as a first contribution.
 
 ### pre-commit Hooks
-To ensure `clang-format` and `cppcheck` are always run against your code on **every commit**, set up the **pre-commit hooks**.
+To ensure `clang-format`, `cppcheck`, and `ruff` are always run against your code on **every commit**, set up the **pre-commit hooks**.
 
 * Install [`pre-commit`](https://pre-commit.com/).
 * Setup **pre-commit Hooks**:
@@ -97,7 +97,7 @@ CBXP is tested using automated functional tests. Test cases for new functionalit
    python3 ./tests/test.py
    ```
 
-#### Shell Interface Testing
+#### CLI Interface Testing
 1. Add new tests cases to [`tests/test.sh`](tests/test.sh).
 2. Run the test suite using `cmake` and `gmake`.
 
@@ -108,11 +108,11 @@ CBXP is tested using automated functional tests. Test cases for new functionalit
 
 ## Style Guidelines
 
-:bulb: _`clang-format` can be setup to run automatically using the [pre-commit Hooks](#pre-commit-hooks)._
+:bulb: _`clang-format` and `ruff` can be setup to run automatically using the [pre-commit Hooks](#pre-commit-hooks)._
 
-The use of the `clang-format` code formatter is required.
+All C/C++ code must be formatted using `clang-format`, and all Python code must be formatted using `ruff`.
 
-The following code style conventions should be followed:
+The following C/C++ code style conventions should be followed:
 * Varible names should use snake case *(i.e., `my_variable`)*.
 * Pointer variables should start with `p_` *(i.e., `p_my_pointer`)*.
 * Class variables should end with an `_` to help differentiate between class variables and local function variables *(i.e., `my_class_variable_`)*.
@@ -145,10 +145,12 @@ When contributing to CBXP, make sure to complete all applicable tasks in the fol
 
 * Make any necessary updates to `pyproject.toml`.
 * Make any necessary updates to `README.md`.
-* Ensure that you have **pre-commit Hooks** setup to ensure that `clang-format` and `cppcheck` are run against the code for every commit you make.
+* Ensure that you have **pre-commit Hooks** setup to ensure that `clang-format`, `cppcheck`, and `ruff` are run against the code for every commit you make.
+* Check for style violations in C/C++ code by running `gmake lint`.
+* Check for style vilotations in Python code by running `ruff check`.
+* Format C/C++ code by running `gmake format`.
+* Format Python code by running `ruff format`.
 * Run `cppcheck` static code analysis by running `gmake check`.
-* Check for style violations using `clang-format` by running `gmake lint`.
-* Format the CBXP code using `clang-format` by running `gmake format`.
 
 ## Found a bug?
 
