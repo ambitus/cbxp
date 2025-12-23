@@ -27,7 +27,7 @@ def main():
                     + [
                         "cbxp",
                         "externals",
-                        "/usr/include/zos"
+                        "/usr/include/zos",
                     ]
                 ),
                 extra_link_args=[
@@ -35,9 +35,10 @@ def main():
                     "-Wl,-b,edit=no",
                 ],
                 extra_compile_args=[
+                    "-O2",
                     "-fzos-le-char-mode=ascii",
-                    "-Wno-trigraphs"
-                ]
+                    "-Wno-trigraphs",
+                ],
             ),
         ],
         "cmdclass": {"build_ext": build_ext},

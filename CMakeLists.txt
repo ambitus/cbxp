@@ -1,12 +1,25 @@
 cmake_minimum_required(VERSION 3.15)
 
+project(CBXP VERSION 0.0.3
+             DESCRIPTION "A unified and standardized interface for extracting z/OS control block data."
+             LANGUAGES C CXX)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./dist")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "./dist")
+
 execute_process(
     COMMAND uname
     OUTPUT_VARIABLE uname_output
     RESULT_VARIABLE uname_result
 )
 
+# ============================================================================
+# Compiler Info
+# ============================================================================
 set(CXX_STANDARD 17)
+
+set(COMPILE_OPTIONS -O2 -fzos-le-char-mode=ascii -Wno-trigraphs)
+set(LINK_OPTIONS -m64 -Wl,-b,edit=no)
 
 if(uname_output STREQUAL "OS/390\n")
     set(CMAKE_CXX_COMPILER "ibm-clang++64")
@@ -14,15 +27,14 @@ else()
     set(CMAKE_CXX_COMPILER "clang")
 endif()
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./dist")
-
-project(CBXP VERSION 0.0.2
-             DESCRIPTION "A unified and standardized interface for extracting z/OS control block data."
-             LANGUAGES C CXX)
-
+# ============================================================================
+# Sources
+# ============================================================================
 file(
-    GLOB CBXP_SRC 
-    "cbxp/*.cpp"
+    GLOB CBXP_SRC_LIB
+    "cbxp/cbxp.cpp"
+    "cbxp/control_block_explorer.cpp"
+    "cbxp/logger.cpp"
     "cbxp/control_blocks/*.cpp"
 )
 
@@ -38,33 +50,47 @@ file(
     "cbxp/**/*.h"
 )
 
-add_executable(cbxp ${CBXP_SRC})
+# ============================================================================
+# Build '/lib/libcbxp.so'
+# ============================================================================
+add_library(libcbxp SHARED ${CBXP_SRC_LIB})
+set_target_properties(libcbxp PROPERTIES OUTPUT_NAME "cbxp")
 
 target_include_directories(
-    cbxp PUBLIC
+    libcbxp PUBLIC
     cbxp
     cbxp/control_blocks
     externals
     /usr/include/zos
 )
 
+target_compile_options(libcbxp PUBLIC ${COMPILE_OPTIONS})
+target_link_options(libcbxp PUBLIC ${LINK_OPTIONS})
+
+# ============================================================================
+# Build '/bin/cbxp'
+# ============================================================================
+add_executable(cbxp "cbxp/main.cpp")
+
+target_include_directories(cbxp PUBLIC cbxp externals)
+
 target_compile_definitions(
-    cbxp
-    PUBLIC
+    cbxp PUBLIC
     VERSION="${CMAKE_PROJECT_VERSION}"
 )
 
-target_compile_options(
-    cbxp PUBLIC 
-    -fzos-le-char-mode=ascii
-    -Wno-trigraphs
-)
+target_compile_options(cbxp PUBLIC ${COMPILE_OPTIONS})
+target_link_options(cbxp PUBLIC ${LINK_OPTIONS})
 
+# ============================================================================
+# Packaging
+# ============================================================================
 add_custom_target(
     package
     COMMAND "mkdir"
                 "-p"
                 "cbxp-${CMAKE_PROJECT_VERSION}/bin"
+                "cbxp-${CMAKE_PROJECT_VERSION}/lib"
     COMMAND "cp"
                 "LICENSE"
                 "cbxp-${CMAKE_PROJECT_VERSION}/"
@@ -72,16 +98,22 @@ add_custom_target(
                 "NOTICES"
                 "cbxp-${CMAKE_PROJECT_VERSION}/"
     COMMAND "cp"
-                "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cbxp"
+                "./dist/libcbxp.so"
+                "cbxp-${CMAKE_PROJECT_VERSION}/lib/"
+    COMMAND "cp"
+                "./dist/cbxp"
                 "cbxp-${CMAKE_PROJECT_VERSION}/bin/"
     COMMAND "pax"
                 "-wzf"
-                "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/cbxp-${CMAKE_PROJECT_VERSION}.pax.Z"
+                "./dist/cbxp-${CMAKE_PROJECT_VERSION}.pax.Z"
                 "-o saveext"
                 "cbxp-${CMAKE_PROJECT_VERSION}/*"
-    DEPENDS cbxp
+    DEPENDS libcbxp cbxp
 )
 
+# ============================================================================
+# Cppcheck
+# ============================================================================
 add_custom_target(
     check
     COMMAND "cppcheck"
@@ -101,6 +133,9 @@ add_custom_target(
                 "${CMAKE_CURRENT_SOURCE_DIR}/cbxp"
 )
 
+# ============================================================================
+# Lint
+# ============================================================================
 add_custom_target(
     lint
     COMMAND "clang-format"
@@ -109,6 +144,9 @@ add_custom_target(
                 ${CBXP_SRC_ALL}
 )
 
+# ============================================================================
+# Format
+# ============================================================================
 add_custom_target(
     format
     COMMAND "clang-format"
@@ -116,8 +154,11 @@ add_custom_target(
                 ${CBXP_SRC_ALL}
 )
 
+# ============================================================================
+# Test
+# ============================================================================
 add_custom_target(
     test
     COMMAND "./tests/test.sh"
-    DEPENDS cbxp
+    DEPENDS libcbxp cbxp
 )
