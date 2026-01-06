@@ -17,35 +17,35 @@
 
 namespace CBXP {
 
-std::vector<std::string> ControlBlockExplorer::createIncludeList(
-    const std::string& includes_string) {
-  if (includes_string == "") {
+std::vector<std::string> ControlBlockExplorer::createList(
+    const std::string& comma_separated_string) {
+  if (comma_separated_string == "") {
     return {};
   }
 
-  std::vector<std::string> includes = {};
+  std::vector<std::string> list = {};
 
   Logger::getInstance().debug(
-      "Creating include list from the provided include list string: " +
-      includes_string);
+      "Creating list from the provided comma-separated list string: " +
+      comma_separated_string);
 
   const std::string del = ",";
   std::string entry;
   size_t index = 0;
 
-  auto pos     = includes_string.find(del);
+  auto pos     = comma_separated_string.find(del);
 
   while (pos != std::string::npos) {
-    entry = includes_string.substr(index, pos);
-    includes.push_back(entry);
+    entry = comma_separated_string.substr(index, pos);
+    list.push_back(entry);
     index += pos + 1;
-    pos = includes_string.substr(index, std::string::npos).find(del);
+    pos = comma_separated_string.substr(index, std::string::npos).find(del);
   }
-  entry = includes_string.substr(index, pos);
-  includes.push_back(entry);
+  entry = comma_separated_string.substr(index, pos);
+  list.push_back(entry);
   Logger::getInstance().debug("Done.");
 
-  return includes;
+  return list;
 }
 
 ControlBlockExplorer::ControlBlockExplorer(cbxp_result_t* p_result,
@@ -65,9 +65,12 @@ ControlBlockExplorer::ControlBlockExplorer(cbxp_result_t* p_result,
 }
 
 void ControlBlockExplorer::exploreControlBlock(
-    const std::string& control_block_name, const std::string& includes_string) {
+    const std::string& control_block_name, const std::string& includes_string,
+    const std::string& filters_string) {
   std::vector<std::string> includes =
-      ControlBlockExplorer::createIncludeList(includes_string);
+      ControlBlockExplorer::createList(includes_string);
+  std::vector<std::string> filters =
+      ControlBlockExplorer::createList(filters_string);
 
   Logger::getInstance().debug("Extracting '" + control_block_name +
                               "' control block data...");
@@ -75,17 +78,17 @@ void ControlBlockExplorer::exploreControlBlock(
   nlohmann::json control_block_json;
   try {
     if (control_block_name == "psa") {
-      control_block_json = PSA(includes).get();
+      control_block_json = PSA(includes, filters).get();
     } else if (control_block_name == "cvt") {
-      control_block_json = CVT(includes).get();
+      control_block_json = CVT(includes, filters).get();
     } else if (control_block_name == "ecvt") {
-      control_block_json = ECVT(includes).get();
+      control_block_json = ECVT(includes, filters).get();
     } else if (control_block_name == "ascb") {
-      control_block_json = ASCB(includes).get();
+      control_block_json = ASCB(includes, filters).get();
     } else if (control_block_name == "asvt") {
-      control_block_json = ASVT(includes).get();
+      control_block_json = ASVT(includes, filters).get();
     } else if (control_block_name == "assb") {
-      control_block_json = ASSB(includes).get();
+      control_block_json = ASSB(includes, filters).get();
     } else {
       throw ControlBlockError();
     }

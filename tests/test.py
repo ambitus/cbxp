@@ -170,6 +170,29 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry["ascbassb"]), dict)
 
     # ============================================================================
+    # Filters
+    # ============================================================================
+    def test_cbxp_can_use_basic_filter(self):
+        cbdata = cbxp("psa", control_block_filter=["psapsa=PSA"])
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_include_filter_with_wildcard_include(self):
+        cbdata = cbxp(
+            "psa",
+            control_block_filter=["cvt.asvt.ascb.assb.assbjbni=MASTER"],
+            includes=["**"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_include_filter_with_explicit_include(self):
+        cbdata = cbxp(
+            "psa",
+            control_block_filter=["cvt.asvt.ascb.assb.assbjbni=MASTER"],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    # ============================================================================
     # Debug Mode
     # ============================================================================
     def test_cbxp_can_run_in_debug_mode(self):
@@ -235,6 +258,36 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp("cvt", includes=["asvt,as"])
         self.assertEqual("Include patterns cannot contain commas", str(e.exception))
+
+    # ============================================================================
+    # Errors: Bad Filters
+    # ============================================================================
+    def test_cbxp_raises_cbxp_error_if_filter_uses_non_included_control_block(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                control_block_filter=["cvt.asvt.ascb.assb.assbjbni=MASTER"],
+            )
+        self.assertEqual("A bad filter was provided", str(e.exception))
+
+    def test_cbxp_raises_cbxp_error_if_filter_uses_unknown_key(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp("psa", control_block_filter=["psapsb=PSA"])
+        self.assertEqual("A bad filter was provided", str(e.exception))
+
+    def test_cbxp_raises_cbxp_error_if_no_filter_match(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp("psa", control_block_filter=["psapsa=PSB"])
+        self.assertEqual(
+            "No control block was found that matched the provided filter",
+            str(e.exception),
+        )
 
 
 if __name__ == "__main__":

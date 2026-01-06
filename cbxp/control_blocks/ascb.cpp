@@ -42,7 +42,11 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
         p_ascb_addr++;
         continue;
       }
-      ascbs.push_back(ASCB::get(reinterpret_cast<void* __ptr32>(*p_ascb_addr)));
+      nlohmann::json new_ascb =
+          ASCB::get(reinterpret_cast<void* __ptr32>(*p_ascb_addr));
+      if (!new_ascb.is_null()) {
+        ascbs.push_back(new_ascb);
+      }
       p_ascb_addr++;  // This SHOULD increment the pointer by 4 bytes.
     }
     return ascbs;
@@ -55,8 +59,11 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
 
   for (const auto& [include, include_includes] : include_map_) {
     if (include == "assb") {
-      ascb_json["ascbassb"] =
-          CBXP::ASSB(include_includes).get(p_ascb->ascbassb);
+      ascb_json["ascbassb"] = CBXP::ASSB(include_includes, filter_map_[include])
+                                  .get(p_ascb->ascbassb);
+      if (ascb_json["ascbassb"].is_null()) {
+        return {};
+      }
     }
   }
 
@@ -90,6 +97,10 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
   ascb_json["ascbxtcb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbxtcb));
   ascb_json["ascbzcx"]  = formatter_.getBitmap<uint32_t>(p_ascb->ascbzcx);
 
-  return ascb_json;
+  if (ASCB::matchFilter(ascb_json)) {
+    return ascb_json;
+  } else {
+    return {};
+  }
 }
 }  // namespace CBXP

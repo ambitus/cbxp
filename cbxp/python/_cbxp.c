@@ -16,13 +16,16 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
   PyObject* debug_pyobj;
   const char* control_block;
   const char* includes_string;
+  const char* filters_string;
   Py_ssize_t request_length;
   bool debug            = false;
 
-  static char* kwlist[] = {"request", "include", "debug", NULL};
+  static char* kwlist[] = {"request", "include", "filters_string", "debug",
+                           NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|sO", kwlist, &control_block,
-                                   &includes_string, &debug_pyobj)) {
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|ssO", kwlist,
+                                   &control_block, &includes_string,
+                                   &filters_string, &debug_pyobj)) {
     return NULL;
   }
 
@@ -34,9 +37,10 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
   // but we will set this up anyways to be safe.
   pthread_mutex_lock(&cbxp_mutex);
 
-  const cbxp_result_t* result = cbxp(control_block, includes_string, debug);
+  const cbxp_result_t* result =
+      cbxp(control_block, includes_string, filters_string, debug);
 
-  result_dictionary           = Py_BuildValue(
+  result_dictionary = Py_BuildValue(
       "{s:s#, s:i}", "result_json", result->result_json,
       result->result_json_length, "return_code", result->return_code);
 

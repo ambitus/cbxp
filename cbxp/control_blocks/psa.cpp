@@ -30,7 +30,8 @@ nlohmann::json PSA::get(void* __ptr32 p_control_block) {
 
   for (const auto& [include, include_includes] : include_map_) {
     if (include == "cvt") {
-      psa_json["flccvt"] = CBXP::CVT(include_includes).get(p_psa->flccvt);
+      psa_json["flccvt"] =
+          CBXP::CVT(include_includes, filter_map_[include]).get(p_psa->flccvt);
     }
   }
 
@@ -61,6 +62,10 @@ nlohmann::json PSA::get(void* __ptr32 p_control_block) {
   psa_json["psaval"]   = formatter_.getBitmap<uint16_t>(p_psa->psaval);
   psa_json["psaxcvt"]  = formatter_.getHex<uint64_t>(p_psa->psaxcvt);
 
-  return psa_json;
+  if (PSA::matchFilter(psa_json)) {
+    return psa_json;
+  } else {
+    return {};
+  }
 }
 }  // namespace CBXP

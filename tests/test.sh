@@ -44,6 +44,11 @@ run_with_expected_exit_code 0 ./dist/cbxp -i "asvt.*" -i "*" cvt
 run_with_expected_exit_code 0 ./dist/cbxp -i assb ascb
 run_with_expected_exit_code 0 ./dist/cbxp -i cvt.ecvt -i cvt.asvt.ascb.assb psa
 
+# Filters
+run_with_expected_exit_code 0 ./dist/cbxp -f psapsa=psa psa
+run_with_expected_exit_code 0 ./dist/cbxp -f cvt.asvt.ascb.assb.assbjbni=master -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp -f cvt.asvt.ascb.assb.assbjbni=master -i cvt.asvt.ascb.assb psa
+
 # Debug Mode
 run_with_expected_exit_code 0 ./dist/cbxp -d psa
 run_with_expected_exit_code 0 ./dist/cbxp --debug psa
@@ -59,6 +64,9 @@ run_with_expected_exit_code 255 ./dist/cbxp
 run_with_expected_exit_code 255 ./dist/cbxp -x "unknown flag" cvt
 run_with_expected_exit_code 255 ./dist/cbxp -i cvt 
 run_with_expected_exit_code 255 ./dist/cbxp -i -i cvt psa
+run_with_expected_exit_code 255 ./dist/cbxp -d -d psa
+run_with_expected_exit_code 255 ./dist/cbxp -f psa
+run_with_expected_exit_code 255 ./dist/cbxp -f psapsa=psa
 # Errors: Unknown Control Block
 run_with_expected_exit_code 255 ./dist/cbxp unknown
 # Errors: Bad Include Patterns
@@ -70,6 +78,11 @@ run_with_expected_exit_code 255 ./dist/cbxp -i ecvt ascb
 run_with_expected_exit_code 255 ./dist/cbxp -i cvt.ecvt -i cvt.ascb psa
 run_with_expected_exit_code 255 ./dist/cbxp -i cvt.asvt.ascb -i ecvt psa
 run_with_expected_exit_code 255 ./dist/cbxp -i cvt cvt
+# Errors: Bad Filters
+run_with_expected_exit_code 255 ./dist/cbxp -f psapsa=junk psa
+run_with_expected_exit_code 255 ./dist/cbxp -f junk=fakeval cvt
+run_with_expected_exit_code 255 ./dist/cbxp -i asvt -f junk.jsonkey=fakeval cvt
+
 
 echo " -------------------------------- "
 echo " -------------------------------- "

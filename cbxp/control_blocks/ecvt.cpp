@@ -176,6 +176,10 @@ nlohmann::json ECVT::get(void* __ptr32 p_control_block) {
       reinterpret_cast<const char*>(&p_ecvt->ecvtvser));
   ecvt_json["ecvtxtsw"] = formatter_.getHex<uint32_t>(p_ecvt->ecvtxtsw);
 
-  return ecvt_json;
+  if (ECVT::matchFilter(ecvt_json)) {
+    return ecvt_json;
+  } else {
+    return {};
+  }
 }
 }  // namespace CBXP

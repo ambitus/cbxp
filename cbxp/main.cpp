@@ -12,7 +12,8 @@
 #include "control_block_error.hpp"
 
 typedef const cbxp_result_t* (*cbxp_t)(const char* control_block_name,
-                                       const char* includes_string, bool debug);
+                                       const char* includes_string,
+                                       const char* filters_string, bool debug);
 
 static void show_usage(const char* argv[]);
 static void show_dll_errors();
@@ -27,6 +28,9 @@ static void show_usage(const char* argv[]) {
             << std::endl
             << "  -i, --include <pattern>          Include additional control "
                "blocks based on a pattern"
+            << std::endl
+            << "  -f, --filter <filter>            Filter repeated control "
+               "blocks using a key-value pair filter"
             << std::endl
             << "  -v, --version                    Show version number"
             << std::endl
@@ -67,7 +71,8 @@ int main(int argc, const char* argv[]) {
   }
 
   bool debug                     = false;
-  std::string control_block_name = "", includes_string = "";
+  std::string control_block_name = "", includes_string = "",
+              filters_string = "";
 
   if (argc < 2) {
     show_usage(argv);
@@ -91,7 +96,12 @@ int main(int argc, const char* argv[]) {
   for (int i = 1; i < argc; i++) {
     std::string flag = argv[i];
     if (flag == "-d" || flag == "--debug") {
-      debug = true;
+      if (!debug) {
+        debug = true;
+      } else {
+        show_usage(argv);
+        cleanup_and_exit(-1, lib_handle);
+      }
     } else if (flag == "-i" || flag == "--include") {
       if (i + 1 >= argc - 1) {
         show_usage(argv);
@@ -109,6 +119,17 @@ int main(int argc, const char* argv[]) {
       } else {
         includes_string += "," + include;
       }
+    } else if (flag == "-f" || flag == "--filter") {
+      if (i + 1 >= argc - 1) {
+        show_usage(argv);
+        cleanup_and_exit(-1, lib_handle);
+      }
+      std::string filter = std::string(argv[++i]);
+      if (filters_string == "") {
+        filters_string = filter;
+      } else {
+        filters_string += "," + filter;
+      }
     } else {
       if (i != argc - 1) {
         show_usage(argv);
@@ -125,8 +146,10 @@ int main(int argc, const char* argv[]) {
 
   nlohmann::json control_block_json;
 
+  size_t null_length = strlen("null\0");
   const cbxp_result_t* cbxp_result =
-      cbxp(control_block_name.c_str(), includes_string.c_str(), debug);
+      cbxp(control_block_name.c_str(), includes_string.c_str(),
+           filters_string.c_str(), debug);
 
   if (cbxp_result->return_code == CBXP::Error::BadControlBlock) {
     std::cerr << "Unknown control block '" << control_block_name
@@ -134,6 +157,14 @@ int main(int argc, const char* argv[]) {
     cleanup_and_exit(-1, lib_handle);
   } else if (cbxp_result->return_code == CBXP::Error::BadInclude) {
     std::cerr << "A bad include pattern was provided" << std::endl;
+    cleanup_and_exit(-1, lib_handle);
+  } else if (cbxp_result->return_code == CBXP::Error::BadFilter) {
+    std::cerr << "A bad filter was provided" << std::endl;
+    cleanup_and_exit(-1, lib_handle);
+  } else if (cbxp_result->result_json_length == null_length &&
+             filters_string != "") {
+    std::cerr << "No control block was found that matched the provided filter"
+              << std::endl;
     cleanup_and_exit(-1, lib_handle);
   } else {
     std::cout << cbxp_result->result_json << std::endl;

@@ -8,8 +8,9 @@ namespace CBXP {
 class PSA : public ControlBlock {
  public:
   nlohmann::json get(void* __ptr32 p_control_block = nullptr) override;
-  explicit PSA(const std::vector<std::string>& includes)
-      : ControlBlock("psa", {"cvt"}, includes) {}
+  explicit PSA(const std::vector<std::string>& includes,
+               const std::vector<std::string>& filters)
+      : ControlBlock("psa", {"cvt"}, includes, filters) {}
 };
 }  // namespace CBXP
 #endif
