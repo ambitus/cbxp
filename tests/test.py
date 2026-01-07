@@ -179,7 +179,7 @@ class TestCBXP(unittest.TestCase):
     def test_cbxp_can_use_include_filter_with_wildcard_include(self):
         cbdata = cbxp(
             "psa",
-            control_block_filter=["cvt.asvt.ascb.assb.assbjbni=MASTER"],
+            control_block_filter=["cvt.asvt.ascb.assb.assbjbns=*MASTER*"],
             includes=["**"],
         )
         self.assertIs(type(cbdata), dict)
@@ -187,7 +187,7 @@ class TestCBXP(unittest.TestCase):
     def test_cbxp_can_use_include_filter_with_explicit_include(self):
         cbdata = cbxp(
             "psa",
-            control_block_filter=["cvt.asvt.ascb.assb.assbjbni=MASTER"],
+            control_block_filter=["cvt.asvt.ascb.assb.assbjbns=*MASTER*"],
             includes=["cvt.asvt.ascb.assb"],
         )
         self.assertIs(type(cbdata), dict)
@@ -268,7 +268,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp(
                 "psa",
-                control_block_filter=["cvt.asvt.ascb.assb.assbjbni=MASTER"],
+                control_block_filter=["cvt.asvt.ascb.assb.assbjbns=*MASTER*"],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 

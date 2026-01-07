@@ -112,6 +112,13 @@ bool ControlBlock::testValue(const nlohmann::json& json_value,
 }
 
 bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
+  for (const auto& [json_key, json_value] : control_block_json.items()) {
+    if (json_value.is_null()) {
+      // If any element in our json structure is null, we already failed a
+      // filter match
+      return false;
+    }
+  }
   if (current_filters_.empty()) {
     // If the filter map is empty then we want to return the control block
     return true;

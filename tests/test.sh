@@ -46,8 +46,8 @@ run_with_expected_exit_code 0 ./dist/cbxp -i cvt.ecvt -i cvt.asvt.ascb.assb psa
 
 # Filters
 run_with_expected_exit_code 0 ./dist/cbxp -f psapsa=psa psa
-run_with_expected_exit_code 0 ./dist/cbxp -f cvt.asvt.ascb.assb.assbjbni=master -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f cvt.asvt.ascb.assb.assbjbni=master -i cvt.asvt.ascb.assb psa
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" -i cvt.asvt.ascb.assb psa
 
 # Debug Mode
 run_with_expected_exit_code 0 ./dist/cbxp -d psa
@@ -82,6 +82,7 @@ run_with_expected_exit_code 255 ./dist/cbxp -i cvt cvt
 run_with_expected_exit_code 255 ./dist/cbxp -f psapsa=junk psa
 run_with_expected_exit_code 255 ./dist/cbxp -f junk=fakeval cvt
 run_with_expected_exit_code 255 ./dist/cbxp -i asvt -f junk.jsonkey=fakeval cvt
+run_with_expected_exit_code 255 ./dist/cbxp -f cvt.asvt.ascb.assb.assbjbni=junkjob -i cvt.asvt.ascb.assb psa
 
 
 echo " -------------------------------- "
