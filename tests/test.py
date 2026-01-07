@@ -192,6 +192,99 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
+    def test_cbxp_can_use_multiple_include_filters(self):
+        cbdata = cbxp(
+            "psa",
+            control_block_filter=[
+                "cvt.asvt.ascb.assb.assbjbns=*master*,cvt.asvt.ascb.ascbasid>0"
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_wildcard_filter_with_string(self):
+        cbdata = cbxp(
+            "psa",
+            control_block_filter=["cvt.asvt.ascb.assb.assbjbns=?mas?er?"],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_equals(self):
+        cbdata = cbxp(
+            "psa",
+            control_block_filter=["cvt.asvt.ascb.ascbasid=1"],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_greater_than(self):
+        cbdata = cbxp(
+            "psa",
+            control_block_filter=["cvt.asvt.ascb.ascbasid>0"],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_less_than(self):
+        cbdata = cbxp(
+            "psa",
+            control_block_filter=["cvt.asvt.ascb.ascbasid<2"],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_greater_than_or_equals(self):
+        cbdata = cbxp(
+            "psa",
+            control_block_filter=["cvt.asvt.ascb.ascbasid<=2"],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_less_than_or_equals(self):
+        cbdata = cbxp(
+            "psa",
+            control_block_filter=["cvt.asvt.ascb.ascbasid>=1"],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_ulong_filter_with_equals(self):
+        cbdata = cbxp(
+            "cvt",
+            control_block_filter=["cvtasmvt=88000000"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_ulong_filter_with_greater_than(self):
+        cbdata = cbxp(
+            "cvt",
+            control_block_filter=["cvtasmvt>87FFFFFF"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_ulong_filter_with_less_than(self):
+        cbdata = cbxp(
+            "cvt",
+            control_block_filter=["cvtasmvt<88000001"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_ulong_filter_with_greater_than_or_equals(self):
+        cbdata = cbxp(
+            "cvt",
+            control_block_filter=["cvtasmvt>=87FFFFFF"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_ulong_filter_with_less_than_or_equals(self):
+        cbdata = cbxp(
+            "cvt",
+            control_block_filter=["cvtasmvt<=88000000"],
+        )
+        self.assertIs(type(cbdata), dict)
+
     # ============================================================================
     # Debug Mode
     # ============================================================================
@@ -269,6 +362,33 @@ class TestCBXP(unittest.TestCase):
             cbxp(
                 "psa",
                 control_block_filter=["cvt.asvt.ascb.assb.assbjbns=*MASTER*"],
+            )
+        self.assertEqual("A bad filter was provided", str(e.exception))
+
+    def test_cbxp_raises_cbxp_error_if_one_of_two_filters_fails(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                includes=["**"],
+                control_block_filter=[
+                    "cvt.asvt.ascb.assb.assbjbns=*master*,cvt.asvt.ascb.ascbasid=2"
+                ],
+            )
+        self.assertEqual(
+            "No control block was found that matched the provided filter",
+            str(e.exception),
+        )
+
+    def test_cbxp_raises_cbxp_error_if_non_equality_filter_used_with_string(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                includes=["**"],
+                control_block_filter=["cvt.asvt.ascb.assb.assbjbns<*master*"],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
