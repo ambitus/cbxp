@@ -196,7 +196,7 @@ class TestCBXP(unittest.TestCase):
         cbdata = cbxp(
             "psa",
             control_block_filter=[
-                "cvt.asvt.ascb.assb.assbjbns=*master*,cvt.asvt.ascb.ascbasid>0"
+                "cvt.asvt.ascb.assb.assbjbns=*master*,cvt.asvt.ascb.ascbasid>0",
             ],
             includes=["cvt.asvt.ascb.assb"],
         )
@@ -373,7 +373,7 @@ class TestCBXP(unittest.TestCase):
                 "psa",
                 includes=["**"],
                 control_block_filter=[
-                    "cvt.asvt.ascb.assb.assbjbns=*master*,cvt.asvt.ascb.ascbasid=2"
+                    "cvt.asvt.ascb.assb.assbjbns=*master*,cvt.asvt.ascb.ascbasid=2",
                 ],
             )
         self.assertEqual(
