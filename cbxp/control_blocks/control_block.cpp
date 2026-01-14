@@ -107,6 +107,9 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
         "Error with type conversions for filter evaluation");
     throw FilterError();
   }
+  // We should never get here, so it would be good to say "no match" just in
+  // case
+  return false;
 }
 
 bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {

@@ -50,7 +50,7 @@ run_with_expected_exit_code 0 ./dist/cbxp -f psapsa=junk psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" -i "**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" -i cvt.asvt.ascb.assb psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=?mas?er?" -i cvt.asvt.ascb.assb psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*,cvt.asvt.ascb.ascbasid>0" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid=1" -i "**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid>=1" -i "**" psa
