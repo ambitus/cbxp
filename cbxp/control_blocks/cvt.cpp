@@ -43,13 +43,15 @@ nlohmann::json CVT::get(void* __ptr32 p_control_block) {
   cvt_json["cvtasvt"] = formatter_.getHex<uint32_t>(&p_cvtmap->cvtasvt);
   cvt_json["cvtecvt"] = formatter_.getHex<uint32_t>(&p_cvtmap->cvtecvt);
 
-  for (const auto& [include, include_includes] : include_map_) {
+  for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "asvt") {
-      cvt_json["cvtasvt"] = CBXP::ASVT(include_includes, filter_map_[include])
-                                .get(p_cvtmap->cvtasvt);
+      cvt_json["cvtasvt"] =
+          CBXP::ASVT(cbxp_options.include_patterns, cbxp_options.filters)
+              .get(p_cvtmap->cvtasvt);
     } else if (include == "ecvt") {
-      cvt_json["cvtecvt"] = CBXP::ECVT(include_includes, filter_map_[include])
-                                .get(p_cvtmap->cvtecvt);
+      cvt_json["cvtecvt"] =
+          CBXP::ECVT(cbxp_options.include_patterns, cbxp_options.filters)
+              .get(p_cvtmap->cvtecvt);
     }
   }
 

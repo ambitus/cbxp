@@ -57,10 +57,11 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
   ascb_json["ascbassb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbassb));
   ascb_json["ascbasxb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbasxb));
 
-  for (const auto& [include, include_includes] : include_map_) {
+  for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "assb") {
-      ascb_json["ascbassb"] = CBXP::ASSB(include_includes, filter_map_[include])
-                                  .get(p_ascb->ascbassb);
+      ascb_json["ascbassb"] =
+          CBXP::ASSB(cbxp_options.include_patterns, cbxp_options.filters)
+              .get(p_ascb->ascbassb);
       if (ascb_json["ascbassb"].is_null()) {
         return {};
       }

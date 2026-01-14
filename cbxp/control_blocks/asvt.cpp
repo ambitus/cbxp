@@ -47,10 +47,10 @@ nlohmann::json ASVT::get(void* __ptr32 p_control_block) {
   Logger::getInstance().debug("ASVT hex dump:");
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_asvt),
                                 sizeof(asvt_t));
-  for (const auto& [include, include_includes] : include_map_) {
+  for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "ascb") {
       nlohmann::json ascbs_json;
-      CBXP::ASCB ascb(include_includes, filter_map_[include]);
+      CBXP::ASCB ascb(cbxp_options.include_patterns, cbxp_options.filters);
       uint32_t* __ptr32 p_ascb_addr = const_cast<uint32_t* __ptr32>(
           reinterpret_cast<const uint32_t* __ptr32>(&p_asvt->asvtenty));
       for (int i = 0; i < p_asvt->asvtmaxu; i++) {

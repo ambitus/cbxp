@@ -28,10 +28,11 @@ nlohmann::json PSA::get(void* __ptr32 p_control_block) {
 
   psa_json["flccvt"] = formatter_.getHex<uint32_t>(&p_psa->flccvt);
 
-  for (const auto& [include, include_includes] : include_map_) {
+  for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "cvt") {
       psa_json["flccvt"] =
-          CBXP::CVT(include_includes, filter_map_[include]).get(p_psa->flccvt);
+          CBXP::CVT(cbxp_options.include_patterns, cbxp_options.filters)
+              .get(p_psa->flccvt);
     }
   }
 

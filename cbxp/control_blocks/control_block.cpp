@@ -28,13 +28,8 @@ void ControlBlock::createFilterMap(const std::vector<std::string>& filters) {
       std::string control_block        = filter.substr(0, del_pos);
 
       // Check to make sure we are including the specified control block
-      bool control_block_in_inclusion = false;
-      for (const auto& [include, options] : options_map_) {
-        if (control_block == include) {
-          control_block_in_inclusion = true;
-        }
-      }
-      if (!control_block_in_inclusion) {
+      auto it = options_map_.find(control_block);
+      if (it == options_map_.end()) {
         Logger::getInstance().debug("'" + control_block +
                                     "' is not specified in the inclusion list");
         throw FilterError();
