@@ -7,6 +7,16 @@
 
 namespace CBXP {
 
+typedef struct {
+  std::string operation;
+  std::string value;
+} cbxp_filter_t;
+
+typedef struct {
+  std::vector<std::string> include_patterns;
+  std::vector<std::string> filters;
+} cbxp_options_t;
+
 class ControlBlock {
  private:
   const std::string control_block_name_;
@@ -14,28 +24,28 @@ class ControlBlock {
   void processDoubleAsteriskInclude();
   void processAsteriskInclude();
   void processExplicitInclude(std::string& include);
-  void processFilterValue(const std::string& filter);
-  bool testValue(const nlohmann::json& json_value,
-                 const std::string& filter_value, const std::string& operation);
+  void addCurrentFilter(const std::string& filter);
+  void createIncludeMap(const std::vector<std::string>& includes);
+  void createFilterMap(const std::vector<std::string>& filters);
+  bool compare(const nlohmann::json& json_value,
+               const std::string& filter_value, const std::string& operation);
 
  protected:
   ControlBlockFieldFormatter formatter_;
-  std::unordered_map<std::string, std::vector<std::string>> include_map_;
-  std::unordered_map<std::string, std::vector<std::string>> filter_map_;
-  std::unordered_map<std::string, std::vector<std::string>> current_filters_;
+  std::unordered_map<std::string, cbxp_options_t> options_map_;
+  std::unordered_map<std::string, std::vector<cbxp_filter_t>> current_filters_;
   bool matchFilter(nlohmann::json& control_block_json);
+  void createOptionsMap(const std::vector<std::string>& includes,
+                        const std::vector<std::string>& filters);
 
  public:
-  void createIncludeMap(const std::vector<std::string>& includes);
-  void createFilterMap(const std::vector<std::string>& filters);
   virtual nlohmann::json get(void* __ptr32 p_control_block = nullptr) = 0;
   explicit ControlBlock(const std::string& name,
                         const std::vector<std::string>& includables,
                         const std::vector<std::string>& includes,
                         const std::vector<std::string>& filters)
       : control_block_name_(name), includables_(includables) {
-    createIncludeMap(includes);
-    createFilterMap(filters);
+    createOptionsMap(includes, filters);
   }
   virtual ~ControlBlock() = default;
 };

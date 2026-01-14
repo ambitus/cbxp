@@ -55,6 +55,11 @@ static void cleanup_and_exit(int exit_rc, void* lib_handle) {
   exit(exit_rc);
 }
 
+bool check_for_comma(const std::string& string) {
+  return std::any_of(string.begin(), string.end(),
+                     [](char c) { return c == ','; });
+}
+
 int main(int argc, const char* argv[]) {
   // Load 'libcbxp.so'
   void* lib_handle = dlopen("libcbxp.so", RTLD_NOW);
@@ -108,9 +113,7 @@ int main(int argc, const char* argv[]) {
         cleanup_and_exit(-1, lib_handle);
       }
       std::string include = std::string(argv[++i]);
-      bool has_comma      = std::any_of(include.begin(), include.end(),
-                                        [](char c) { return c == ','; });
-      if (has_comma) {
+      if (check_for_comma(include)) {
         std::cerr << "Include patterns cannot contain commas" << std::endl;
         cleanup_and_exit(-1, lib_handle);
       }
@@ -125,6 +128,10 @@ int main(int argc, const char* argv[]) {
         cleanup_and_exit(-1, lib_handle);
       }
       std::string filter = std::string(argv[++i]);
+      if (check_for_comma(filter)) {
+        std::cerr << "Filters cannot contain commas" << std::endl;
+        cleanup_and_exit(-1, lib_handle);
+      }
       if (filters_string == "") {
         filters_string = filter;
       } else {
@@ -146,7 +153,6 @@ int main(int argc, const char* argv[]) {
 
   nlohmann::json control_block_json;
 
-  size_t null_length = strlen("null\0");
   const cbxp_result_t* cbxp_result =
       cbxp(control_block_name.c_str(), includes_string.c_str(),
            filters_string.c_str(), debug);
@@ -160,11 +166,6 @@ int main(int argc, const char* argv[]) {
     cleanup_and_exit(-1, lib_handle);
   } else if (cbxp_result->return_code == CBXP::Error::BadFilter) {
     std::cerr << "A bad filter was provided" << std::endl;
-    cleanup_and_exit(-1, lib_handle);
-  } else if (cbxp_result->result_json_length == null_length &&
-             filters_string != "") {
-    std::cerr << "No control block was found that matched the provided filter"
-              << std::endl;
     cleanup_and_exit(-1, lib_handle);
   } else {
     std::cout << cbxp_result->result_json << std::endl;

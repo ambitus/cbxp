@@ -42,10 +42,10 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
         p_ascb_addr++;
         continue;
       }
-      nlohmann::json new_ascb =
+      nlohmann::json next_ascb =
           ASCB::get(reinterpret_cast<void* __ptr32>(*p_ascb_addr));
-      if (!new_ascb.is_null()) {
-        ascbs.push_back(new_ascb);
+      if (!next_ascb.is_null()) {
+        ascbs.push_back(next_ascb);
       }
       p_ascb_addr++;  // This SHOULD increment the pointer by 4 bytes.
     }

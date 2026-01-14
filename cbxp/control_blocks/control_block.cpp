@@ -8,6 +8,12 @@
 #include "logger.hpp"
 
 namespace CBXP {
+void ControlBlock::createOptionsMap(const std::vector<std::string>& includes,
+                                    const std::vector<std::string>& filters) {
+  createIncludeMap(includes);
+  createFilterMap(filters);
+}
+
 void ControlBlock::createFilterMap(const std::vector<std::string>& filters) {
   Logger::getInstance().debug("Creating filter map for the '" +
                               control_block_name_ + "' control block...");
@@ -23,7 +29,7 @@ void ControlBlock::createFilterMap(const std::vector<std::string>& filters) {
 
       // Check to make sure we are including the specified control block
       bool control_block_in_inclusion = false;
-      for (const auto& [include, include_includes] : include_map_) {
+      for (const auto& [include, options] : options_map_) {
         if (control_block == include) {
           control_block_in_inclusion = true;
         }
@@ -33,15 +39,15 @@ void ControlBlock::createFilterMap(const std::vector<std::string>& filters) {
                                     "' is not specified in the inclusion list");
         throw FilterError();
       }
-      filter_map_[control_block].push_back(control_block_filter);
+      options_map_[control_block].filters.push_back(control_block_filter);
     } else {
-      ControlBlock::processFilterValue(filter);
+      ControlBlock::addCurrentFilter(filter);
     }
   }
   Logger::getInstance().debug("Done");
 }
 
-void ControlBlock::processFilterValue(const std::string& filter) {
+void ControlBlock::addCurrentFilter(const std::string& filter) {
   std::string filter_key, filter_value;
   std::vector<std::string> delimeters = {"<=", ">=", "<", ">", "="};
   for (std::string del : delimeters) {
@@ -50,59 +56,56 @@ void ControlBlock::processFilterValue(const std::string& filter) {
       // If there's a delimeter then separate include into the key and its value
       filter_value = filter.substr(del_pos + del.length());
       filter_key   = filter.substr(0, del_pos);
-      current_filters_[filter_key].push_back(filter_value);
-      current_filters_[filter_key].push_back(del);
+      if (filter_value == "") {
+        Logger::getInstance().debug("cannot specify null filter value");
+        throw FilterError();
+      }
+      cbxp_filter_t filter_data = {del, filter_value};
+      current_filters_[filter_key].push_back(filter_data);
       return;
     }
   }
 }
 
-bool ControlBlock::testValue(const nlohmann::json& json_value,
-                             const std::string& filter_value,
-                             const std::string& operation) {
-  std::string value_str;
+bool ControlBlock::compare(const nlohmann::json& json_value,
+                           const std::string& filter_value,
+                           const std::string& operation) {
+  std::string value_str = "";
   try {
+    uint64_t value_uint;
+    uint64_t filter_uint;
     try {
-      int value_int  = json_value.get<int>();
-      int filter_int = std::stoi(filter_value);
-      if (operation == "=") {
-        return value_int == filter_int;
-      } else if (operation == ">") {
-        return value_int > filter_int;
-      } else if (operation == "<") {
-        return value_int < filter_int;
-      } else if (operation == ">=") {
-        return value_int >= filter_int;
-      } else if (operation == "<=") {
-        return value_int <= filter_int;
-      }
+      value_uint  = json_value.get<int>();
+      filter_uint = std::stoul(filter_value, nullptr, 0);
     } catch (...) {
       value_str = json_value.get<std::string>();
       if (value_str.substr(0, 2) == "0x") {
-        unsigned long value_ulong  = std::stoul(value_str.substr(2));
-        unsigned long filter_ulong = std::stoul(filter_value);
-        if (operation == "=") {
-          return value_ulong == filter_ulong;
-        } else if (operation == ">") {
-          return value_ulong > filter_ulong;
-        } else if (operation == "<") {
-          return value_ulong < filter_ulong;
-        } else if (operation == ">=") {
-          return value_ulong >= filter_ulong;
-        } else if (operation == "<=") {
-          return value_ulong <= filter_ulong;
-        }
+        value_uint  = std::stoul(value_str, nullptr, 0);
+        filter_uint = std::stoul(filter_value, nullptr, 0);
       }
     }
-    if (operation == "=") {
-      size_t last_non_space = value_str.find_last_not_of(" \t\n\r\f\v");
-      value_str.resize(last_non_space + 1);
-      std::transform(value_str.begin(), value_str.end(), value_str.begin(),
-                     [](unsigned char c) { return std::tolower(c); });
-      return (fnmatch(filter_value.c_str(), value_str.c_str(), 0) == 0);
-    } else {
-      Logger::getInstance().debug("Cannot use <,<=,> or >= with string filter");
-      throw FilterError();
+    if (value_str != "") {
+      // Filter is testing strings
+      if (operation == "=") {
+        size_t last_non_space = value_str.find_last_not_of(" \t\n\r\f\v");
+        value_str.resize(last_non_space + 1);
+        return (fnmatch(filter_value.c_str(), value_str.c_str(), 0) == 0);
+      } else {
+        Logger::getInstance().debug(
+            "Cannot use <,<=,> or >= with string filter");
+        throw FilterError();
+      }
+    }  // Filter is testing non-strings
+    else if (operation == "=") {
+      return value_uint == filter_uint;
+    } else if (operation == ">") {
+      return value_uint > filter_uint;
+    } else if (operation == "<") {
+      return value_uint < filter_uint;
+    } else if (operation == ">=") {
+      return value_uint >= filter_uint;
+    } else if (operation == "<=") {
+      return value_uint <= filter_uint;
     }
   } catch (...) {
     Logger::getInstance().debug(
@@ -125,11 +128,11 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
   }
   for (const auto& [filter_key, filter_values] : current_filters_) {
     if (control_block_json.contains(filter_key)) {
-      for (size_t i = 0; i < filter_values.size(); i += 2) {
-        const std::string& filter_value = filter_values[i];
-        const std::string& operation    = filter_values[i + 1];
-        if (!ControlBlock::testValue(control_block_json[filter_key],
-                                     filter_value, operation)) {
+      // cppcheck-suppress useStlAlgorithm
+      for (const cbxp_filter_t& filter_data : filter_values) {
+        // would require capturing structured bindings to use all_of or none_of
+        if (!ControlBlock::compare(control_block_json[filter_key],
+                                   filter_data.value, filter_data.operation)) {
           return false;
         }
       }
@@ -161,26 +164,26 @@ void ControlBlock::createIncludeMap(const std::vector<std::string>& includes) {
 
 void ControlBlock::processDoubleAsteriskInclude() {
   // Any existing entries in the hash map are redundant, so clear them
-  include_map_.clear();
+  options_map_.clear();
   for (const std::string& includable : includables_) {
     // Build a map of all includables_ but with "**" at the next level
-    include_map_[includable] = {"**"};
+    options_map_[includable].include_patterns = {"**"};
   }
 }
 
 void ControlBlock::processAsteriskInclude() {
-  if (include_map_.empty()) {
+  if (options_map_.empty()) {
     for (const std::string& includable : includables_) {
       // Build a map of all includables_
-      include_map_[includable] = {};
+      options_map_[includable].include_patterns = {};
     }
   }
   for (const std::string& includable : includables_) {
-    if (include_map_.find(includable) != include_map_.end()) {
+    if (options_map_.find(includable) != options_map_.end()) {
       continue;
     }
     // Add all includables_ not already present to the map
-    include_map_[includable] = {};
+    options_map_[includable].include_patterns = {};
   }
 }
 
@@ -202,25 +205,27 @@ void ControlBlock::processExplicitInclude(std::string& include) {
                                 control_block_name_ + "' control block");
     throw IncludeError();
   }
-  if (include_map_.find(include) == include_map_.end()) {
+  if (options_map_.find(include) == options_map_.end()) {
     // If we don't already have this include in our map, add it with its
     // includes
     if (include_includes == "") {
-      include_map_[include] = {};
+      options_map_[include].include_patterns = {};
     } else {
-      include_map_[include] = {include_includes};
+      options_map_[include].include_patterns = {include_includes};
     }
   } else {
     // If we DO already have this in our map, then we should add its
     // includes if they are useful or new
-    if (std::find(include_map_[include].begin(), include_map_[include].end(),
-                  include_includes) != include_map_[include].end()) {
+    if (std::find(options_map_[include].include_patterns.begin(),
+                  options_map_[include].include_patterns.end(),
+                  include_includes) !=
+        options_map_[include].include_patterns.end()) {
       return;
     }
     if (include_includes == "") {
       return;
     }
-    include_map_[include].push_back(include_includes);
+    options_map_[include].include_patterns.push_back(include_includes);
   }
 }
 }  // namespace CBXP

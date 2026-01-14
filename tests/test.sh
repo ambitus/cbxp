@@ -46,6 +46,7 @@ run_with_expected_exit_code 0 ./dist/cbxp -i cvt.ecvt -i cvt.asvt.ascb.assb psa
 
 # Filters
 run_with_expected_exit_code 0 ./dist/cbxp -f psapsa=psa psa
+run_with_expected_exit_code 0 ./dist/cbxp -f psapsa=junk psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" -i "**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" -i cvt.asvt.ascb.assb psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=?mas?er?" -i cvt.asvt.ascb.assb psa
@@ -55,11 +56,11 @@ run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid>0" -i "**" 
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid>=1" -i "**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid<2" -i "**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid<=2" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<88000001" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt=88000000" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>87FFFFFF" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<=88000000" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>=87FFFFFF" cvt
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<0x88000001" cvt
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt=2281701376" cvt
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>0x87FFFFFF" cvt
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<=0x88000000" cvt
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>=0x87FFFFFF" cvt
 
 # Debug Mode
 run_with_expected_exit_code 0 ./dist/cbxp -d psa
@@ -79,7 +80,7 @@ run_with_expected_exit_code 255 ./dist/cbxp -i -i cvt psa
 run_with_expected_exit_code 255 ./dist/cbxp -d -d psa
 run_with_expected_exit_code 255 ./dist/cbxp -f psa
 run_with_expected_exit_code 255 ./dist/cbxp -f psapsa=psa
-run_with_expected_exit_code 55 ./dist/cbxp --debug -d psa
+run_with_expected_exit_code 255 ./dist/cbxp --debug -d psa
 # Errors: Unknown Control Block
 run_with_expected_exit_code 255 ./dist/cbxp unknown
 # Errors: Bad Include Patterns
@@ -92,8 +93,9 @@ run_with_expected_exit_code 255 ./dist/cbxp -i cvt.ecvt -i cvt.ascb psa
 run_with_expected_exit_code 255 ./dist/cbxp -i cvt.asvt.ascb -i ecvt psa
 run_with_expected_exit_code 255 ./dist/cbxp -i cvt cvt
 # Errors: Bad Filters
-run_with_expected_exit_code 255 ./dist/cbxp -f psapsa=junk psa
+run_with_expected_exit_code 255 ./dist/cbxp -f psapsa= psa
 run_with_expected_exit_code 255 ./dist/cbxp -f junk=fakeval cvt
+run_with_expected_exit_code 255 ./dist/cbxp -f psapsa=psa,cvt.asvt.ascb.ascbasid<2 cvt
 run_with_expected_exit_code 255 ./dist/cbxp -i asvt -f junk.jsonkey=fakeval cvt
 run_with_expected_exit_code 255 ./dist/cbxp -f cvt.asvt.ascb.assb.assbjbni=junkjob -i cvt.asvt.ascb.assb psa
 run_with_expected_exit_code 255 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*,cvt.asvt.ascb.ascbasid=2" -i "**" psa

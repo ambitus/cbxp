@@ -250,40 +250,45 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_ulong_filter_with_equals(self):
+    def test_cbxp_can_decimal_filter_for_hex_field_with_equals(self):
         cbdata = cbxp(
             "cvt",
-            control_block_filter=["cvtasmvt=88000000"],
+            control_block_filter=["cvtasmvt=2281701376"],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_ulong_filter_with_greater_than(self):
+    def test_cbxp_can_use_hex_filter_with_greater_than(self):
         cbdata = cbxp(
             "cvt",
-            control_block_filter=["cvtasmvt>87FFFFFF"],
+            control_block_filter=["cvtasmvt>0x87FFFFFF"],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_ulong_filter_with_less_than(self):
+    def test_cbxp_can_use_hex_filter_with_less_than(self):
         cbdata = cbxp(
             "cvt",
-            control_block_filter=["cvtasmvt<88000001"],
+            control_block_filter=["cvtasmvt<0x88000001"],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_ulong_filter_with_greater_than_or_equals(self):
+    def test_cbxp_can_use_hex_filter_with_greater_than_or_equals(self):
         cbdata = cbxp(
             "cvt",
-            control_block_filter=["cvtasmvt>=87FFFFFF"],
+            control_block_filter=["cvtasmvt>=0x87FFFFFF"],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_ulong_filter_with_less_than_or_equals(self):
+    def test_cbxp_can_use_hex_filter_with_less_than_or_equals(self):
         cbdata = cbxp(
             "cvt",
-            control_block_filter=["cvtasmvt<=88000000"],
+            control_block_filter=["cvtasmvt<=0x88000000"],
         )
         self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_returns_none_if_no_filter_match(
+        self,
+    ):
+        self.assertIsNone(cbxp("psa", control_block_filter=["psapsa=PSB"]))
 
     # ============================================================================
     # Debug Mode
@@ -399,15 +404,19 @@ class TestCBXP(unittest.TestCase):
             cbxp("psa", control_block_filter=["psapsb=PSA"])
         self.assertEqual("A bad filter was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_no_filter_match(
+    def test_cbxp_raises_cbxp_error_if_filter_passes_null_value(
         self,
     ):
         with self.assertRaises(CBXPError) as e:
-            cbxp("psa", control_block_filter=["psapsa=PSB"])
-        self.assertEqual(
-            "No control block was found that matched the provided filter",
-            str(e.exception),
-        )
+            cbxp("psa", control_block_filter=["psapsa="])
+        self.assertEqual("A bad filter was provided", str(e.exception))
+
+    def test_cbxp_raises_cbxp_error_if_filter_has_comma(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp("psa", control_block_filter=["psapsa=PSA,cvt.cvtasmvt<88000001"])
+        self.assertEqual("Filters cannot contain commas", str(e.exception))
 
 
 if __name__ == "__main__":

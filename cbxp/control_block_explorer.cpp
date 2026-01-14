@@ -17,16 +17,16 @@
 
 namespace CBXP {
 
-std::vector<std::string> ControlBlockExplorer::createList(
+std::vector<std::string> ControlBlockExplorer::createOptionsList(
     const std::string& comma_separated_string) {
   if (comma_separated_string == "") {
     return {};
   }
 
-  std::vector<std::string> list = {};
+  std::vector<std::string> options_list = {};
 
   Logger::getInstance().debug(
-      "Creating list from the provided comma-separated list string: " +
+      "Creating options list from the provided comma-separated list string: " +
       comma_separated_string);
 
   const std::string del = ",";
@@ -37,15 +37,15 @@ std::vector<std::string> ControlBlockExplorer::createList(
 
   while (pos != std::string::npos) {
     entry = comma_separated_string.substr(index, pos);
-    list.push_back(entry);
+    options_list.push_back(entry);
     index += pos + 1;
     pos = comma_separated_string.substr(index, std::string::npos).find(del);
   }
   entry = comma_separated_string.substr(index, pos);
-  list.push_back(entry);
+  options_list.push_back(entry);
   Logger::getInstance().debug("Done.");
 
-  return list;
+  return options_list;
 }
 
 ControlBlockExplorer::ControlBlockExplorer(cbxp_result_t* p_result,
@@ -68,9 +68,9 @@ void ControlBlockExplorer::exploreControlBlock(
     const std::string& control_block_name, const std::string& includes_string,
     const std::string& filters_string) {
   std::vector<std::string> includes =
-      ControlBlockExplorer::createList(includes_string);
+      ControlBlockExplorer::createOptionsList(includes_string);
   std::vector<std::string> filters =
-      ControlBlockExplorer::createList(filters_string);
+      ControlBlockExplorer::createOptionsList(filters_string);
 
   Logger::getInstance().debug("Extracting '" + control_block_name +
                               "' control block data...");

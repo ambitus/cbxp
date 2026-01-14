@@ -9,7 +9,7 @@ namespace CBXP {
 class ControlBlockExplorer {
  private:
   cbxp_result_t* p_result_;
-  static std::vector<std::string> createList(
+  static std::vector<std::string> createOptionsList(
       const std::string& comma_separated_string);
 
  public:

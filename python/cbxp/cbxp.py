@@ -9,7 +9,6 @@ class CBXPErrorCode(Enum):
 
     COMMA_IN_INCLUDE = -1
     COMMA_IN_FILTER = -2
-    NO_FILTER_MATCH = -3
     BAD_CONTROL_BLOCK = 1
     BAD_INCLUDE = 2
     BAD_CONTROL_BLOCK_FILTER = 3
@@ -31,8 +30,6 @@ class CBXPError(Exception):
                 message = "A bad include pattern was provided"
             case CBXPErrorCode.BAD_CONTROL_BLOCK_FILTER.value:
                 message = "A bad filter was provided"
-            case CBXPErrorCode.NO_FILTER_MATCH.value:
-                message = "No control block was found that matched the provided filter"
             case _:
                 message = "an unknown error occurred"
         super().__init__(message)
@@ -60,12 +57,12 @@ def cbxp(
 
     response = call_cbxp(
         control_block.lower(),
-        ",".join(includes).lower(),
-        ",".join(control_block_filters).lower(),
+        ",".join(includes),
+        ",".join(control_block_filters),
         debug=debug,
     )
     if response["return_code"]:
         raise CBXPError(response["return_code"], control_block)
     if response["result_json"] == "null" and control_block_filters != []:
-        raise CBXPError(CBXPErrorCode.NO_FILTER_MATCH.value, control_block)
+        return None
     return json.loads(response["result_json"])
