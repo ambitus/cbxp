@@ -45,13 +45,9 @@ nlohmann::json CVT::get(void* __ptr32 p_control_block) {
 
   for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "asvt") {
-      cvt_json["cvtasvt"] =
-          CBXP::ASVT(cbxp_options.include_patterns, cbxp_options.filters)
-              .get(p_cvtmap->cvtasvt);
+      cvt_json["cvtasvt"] = CBXP::ASVT(cbxp_options).get(p_cvtmap->cvtasvt);
     } else if (include == "ecvt") {
-      cvt_json["cvtecvt"] =
-          CBXP::ECVT(cbxp_options.include_patterns, cbxp_options.filters)
-              .get(p_cvtmap->cvtecvt);
+      cvt_json["cvtecvt"] = CBXP::ECVT(cbxp_options).get(p_cvtmap->cvtecvt);
     }
   }
 

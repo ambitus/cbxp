@@ -59,9 +59,7 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
 
   for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "assb") {
-      ascb_json["ascbassb"] =
-          CBXP::ASSB(cbxp_options.include_patterns, cbxp_options.filters)
-              .get(p_ascb->ascbassb);
+      ascb_json["ascbassb"] = CBXP::ASSB(cbxp_options).get(p_ascb->ascbassb);
       if (ascb_json["ascbassb"].is_null()) {
         return {};
       }
