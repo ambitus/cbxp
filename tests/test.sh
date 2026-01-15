@@ -47,10 +47,10 @@ run_with_expected_exit_code 0 ./dist/cbxp -i cvt.ecvt -i cvt.asvt.ascb.assb psa
 # Filters
 run_with_expected_exit_code 0 ./dist/cbxp -f psapsa=psa psa
 run_with_expected_exit_code 0 ./dist/cbxp -f psapsa=junk psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" -i cvt.asvt.ascb.assb psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=?mas?er?" -i cvt.asvt.ascb.assb psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -i cvt.asvt.ascb.assb psa
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=?MAS?ER?" -i cvt.asvt.ascb.assb psa
+run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid=1" -i "**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid>=1" -i "**" psa
