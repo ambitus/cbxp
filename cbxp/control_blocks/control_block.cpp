@@ -77,6 +77,7 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
       if (value_str.substr(0, 2) == "0x") {
         value_uint  = std::stoul(value_str, nullptr, 0);
         filter_uint = std::stoul(filter_value, nullptr, 0);
+        value_str   = "";
       }
     }
     if (value_str != "") {
