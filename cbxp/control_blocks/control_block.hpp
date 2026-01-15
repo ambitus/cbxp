@@ -42,10 +42,9 @@ class ControlBlock {
   virtual nlohmann::json get(void* __ptr32 p_control_block = nullptr) = 0;
   explicit ControlBlock(const std::string& name,
                         const std::vector<std::string>& includables,
-                        const std::vector<std::string>& includes,
-                        const std::vector<std::string>& filters)
+                        const cbxp_options_t& cbxp_options)
       : control_block_name_(name), includables_(includables) {
-    createOptionsMap(includes, filters);
+    createOptionsMap(cbxp_options.include_patterns, cbxp_options.filters);
   }
   virtual ~ControlBlock() = default;
 };

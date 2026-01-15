@@ -8,9 +8,8 @@ namespace CBXP {
 class ASSB : public ControlBlock {
  public:
   nlohmann::json get(void* __ptr32 p_control_block = nullptr) override;
-  explicit ASSB(const std::vector<std::string>& includes,
-                const std::vector<std::string>& filters)
-      : ControlBlock("assb", {}, includes, filters) {}
+  explicit ASSB(const cbxp_options_t& cbxp_options)
+      : ControlBlock("assb", {}, cbxp_options) {}
 };
 
 }  // namespace CBXP

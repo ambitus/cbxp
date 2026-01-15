@@ -67,10 +67,9 @@ ControlBlockExplorer::ControlBlockExplorer(cbxp_result_t* p_result,
 void ControlBlockExplorer::exploreControlBlock(
     const std::string& control_block_name, const std::string& includes_string,
     const std::string& filters_string) {
-  std::vector<std::string> includes =
-      ControlBlockExplorer::createOptionsList(includes_string);
-  std::vector<std::string> filters =
-      ControlBlockExplorer::createOptionsList(filters_string);
+  cbxp_options_t cbxp_options = {
+      ControlBlockExplorer::createOptionsList(includes_string),
+      ControlBlockExplorer::createOptionsList(filters_string)};
 
   Logger::getInstance().debug("Extracting '" + control_block_name +
                               "' control block data...");
@@ -78,17 +77,17 @@ void ControlBlockExplorer::exploreControlBlock(
   nlohmann::json control_block_json;
   try {
     if (control_block_name == "psa") {
-      control_block_json = PSA(includes, filters).get();
+      control_block_json = PSA(cbxp_options).get();
     } else if (control_block_name == "cvt") {
-      control_block_json = CVT(includes, filters).get();
+      control_block_json = CVT(cbxp_options).get();
     } else if (control_block_name == "ecvt") {
-      control_block_json = ECVT(includes, filters).get();
+      control_block_json = ECVT(cbxp_options).get();
     } else if (control_block_name == "ascb") {
-      control_block_json = ASCB(includes, filters).get();
+      control_block_json = ASCB(cbxp_options).get();
     } else if (control_block_name == "asvt") {
-      control_block_json = ASVT(includes, filters).get();
+      control_block_json = ASVT(cbxp_options).get();
     } else if (control_block_name == "assb") {
-      control_block_json = ASSB(includes, filters).get();
+      control_block_json = ASSB(cbxp_options).get();
     } else {
       throw ControlBlockError();
     }
