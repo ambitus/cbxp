@@ -302,7 +302,7 @@ class TestCBXP(unittest.TestCase):
                     "cvt.asvt.ascb.assb.assbjbns=*MASTER*",
                     "cvt.asvt.ascb.ascbasid=2",
                 ],
-            )
+            ),
         )
 
     # ============================================================================
