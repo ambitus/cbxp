@@ -25,6 +25,11 @@ html, body {
     color: #9af;
 }
 
+.search-input:focus {
+    outline: 2px solid #9af;
+    border-radius: inherit;
+}
+
 .search-input {
     color: #fff
 }
@@ -233,6 +238,7 @@ code, div.highlighter-rouge {
 }
 
 blockquote.note, p.note {
+    border: 0;
     border-left: 4px solid #9af;
     background-color: rgba(119, 119, 255, 0.2)
 }
@@ -246,6 +252,16 @@ blockquote.note code.highlighter-rouge {
     color: #ccc;
 }
 
+blockquote.warning::before {
+    color: #ffeb82;
+}
+
+blockquote.warning {
+    border: 0;
+    border-left: 4px #ffeb82 solid;
+    background-color: rgba(231, 175, 6, 0.2);
+}
+
 blockquote.warning code.highlighter-rouge {
     background-color: rgb(95, 85, 50);;
     color: #ccc;
@@ -254,6 +270,16 @@ blockquote.warning code.highlighter-rouge {
 blockquote.warning table code.highlighter-rouge {
     background-color: rgb(115, 105, 70);
     color: #eee;
+}
+
+blockquote.development_status::before {
+    color: #f77e7e
+}
+
+blockquote.development_status {
+    border: 0;
+    border-left: 4px #f77e7e solid;
+    background-color: rgba(221, 46, 46, 0.2);
 }
 
 blockquote.experimental code.highlighter-rouge {
@@ -285,7 +311,7 @@ blockquote.warning > div.table-wrapper > table > tbody > tr > td {
     background-color: rgb(95, 85, 50);
 }
 
-blockquote.warning > div.highlighter-rouge > button {
+blockquote.warning > div.highlighter-rouge > button:focus {
     background-color: rgb(95, 85, 50);
     border-color: rgb(95, 85, 50);
 }
@@ -296,7 +322,7 @@ blockquote.note > div.highlighter-rouge > div.highlight pre {
     background-color: #484878;
 }
 
-blockquote.note > div.highlighter-rouge > button {
+blockquote.note > div.highlighter-rouge > button:focus {
     background-color: #484878;
     border-color: #484878;
 }
@@ -445,6 +471,7 @@ img {
 
 .site-footer {
     text-align: center;
+    color: #959396;
 }
 
 .site-footer > a > img {
@@ -517,8 +544,8 @@ img {
 }
 
 @media only screen and (max-width: 1066px) {
-    .main {
-        padding-bottom: 14rem;
+    .site-footer {
+        position: inherit;
     }
 }
 
@@ -572,22 +599,7 @@ img {
     }
 }
 
-@media only screen and (max-width: 699px) {
-    .main {
-        padding-bottom: 13rem;
-    }
-}
-
-@media only screen and (max-width: 599px) {
-    .main {
-        padding-bottom: 12rem;
-    }
-}
-
 @media only screen and (max-width: 499px) {
-    .main {
-        padding-bottom: 11rem;
-    }
     .nav-list .nav-list-item .nav-list-expander {
         height: 1.6rem;
         width: 1.6rem;
@@ -606,6 +618,10 @@ img {
 div.highlighter-rouge > button, div.listingblock > div.content > button, figure.highlight > button {
     color: #9af;
     border-radius: 5px;
+}
+
+div.highlighter-rouge > button:focus {
+    outline: 2px solid #9af;
     background-color: #334;
     border-color: #334;
 }

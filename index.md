@@ -41,6 +41,7 @@ All versions of the **IBM Open Enterprise SDK for Python** that are fully suppor
 Currently, the following interfaces are provided for CBXP. Additional interfaces can be added in the future if there are use cases for them.
 * [Python Interface](./interfaces/python)
 * [Shell Interface](./interfaces/shell)
+* [C Interface](./interfaces/C)
 
 
 ## Supported Control Blocks
@@ -56,31 +57,20 @@ We plan on adding support for extracting control blocks from **Files** and **Dat
 
 &nbsp;
 
-{: .warning }
-> _CBXP currently does **NOT** support extracting control blocks from **Files** and **Data Sets**._
-
-&nbsp;
-
 <pre class="mermaid">
   flowchart LR
     python(Python Interface) ---CBXP
     style python fill:#ffcb3c,color:#000,stroke:#ffcb3c
     shell(Shell Interface) ---CBXP
     style shell fill:#33cc22,color:#000,stroke:#33cc22
+    C(C/C++ Interface) ---CBXP
+    style C fill:#01559e,color:#fff,stroke:#01559e
     subgraph C/C+
         CBXP(["CBXP (64-bit XPLINK ASCII)"])
         style CBXP fill:#0096ff,color:#fff,stroke:#0096ff
     end
-    subgraph "Live Storage (Memory)"
+    subgraph "Live Memory (Storage)"
         CBXP--- control_blocks_storage@{ shape: procs, label: "Control Blocks"}
         style control_blocks_storage color:#fff,stroke:#fff
-    end
-    subgraph "Data Sets"
-        CBXP--- control_blocks_data_set[("Control Blocks")]
-        style control_blocks_data_set color:#fff,stroke:#fff
-    end
-    subgraph "Files"
-        CBXP--- control_blocks_file[("Control Blocks")]
-        style control_blocks_file color:#fff,stroke:#fff
     end
 </pre>
