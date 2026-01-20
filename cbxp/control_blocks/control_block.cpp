@@ -10,8 +10,8 @@
 namespace CBXP {
 void ControlBlock::createOptionsMap(const std::vector<std::string>& includes,
                                     const std::vector<std::string>& filters) {
-  createIncludeMap(includes);
-  createFilterMap(filters);
+  ControlBlock::createIncludeMap(includes);
+  ControlBlock::createFilterMap(filters);
 }
 
 void ControlBlock::createFilterMap(const std::vector<std::string>& filters) {
@@ -52,7 +52,7 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
       filter_value = filter.substr(del_pos + del.length());
       filter_key   = filter.substr(0, del_pos);
       if (filter_value == "") {
-        Logger::getInstance().debug("cannot specify null filter value");
+        Logger::getInstance().debug("Filter patterns cannot be null");
         throw FilterError();
       }
       cbxp_filter_t filter_data = {del, filter_value};
@@ -88,7 +88,7 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
         return (fnmatch(filter_value.c_str(), value_str.c_str(), 0) == 0);
       } else {
         Logger::getInstance().debug(
-            "Cannot use <,<=,> or >= with string filter");
+            "<, <=, >, and >= cannot be used with string filter patterns");
         throw FilterError();
       }
     }  // Filter is testing non-strings
@@ -105,7 +105,8 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
     }
   } catch (...) {
     Logger::getInstance().debug(
-        "Error with type conversions for filter evaluation");
+        "Type conversion failed for control block value '" +
+        json_value.get<std::string>() + "'");
     throw FilterError();
   }
   // We should never get here, so it would be good to say "no match" just in
@@ -125,20 +126,21 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
     // If the filter map is empty then we want to return the control block
     return true;
   }
-  for (const auto& [filter_key, filter_values] : current_filters_) {
-    if (control_block_json.contains(filter_key)) {
-      // cppcheck-suppress useStlAlgorithm
-      for (const cbxp_filter_t& filter_data : filter_values) {
-        // would require capturing structured bindings to use all_of or none_of
-        if (!ControlBlock::compare(control_block_json[filter_key],
-                                   filter_data.value, filter_data.operation)) {
-          return false;
-        }
-      }
-    } else {
+  for (const auto& [filter_key, filter_list] : current_filters_) {
+    if (!control_block_json.contains(filter_key)) {
       Logger::getInstance().debug(
-          "Specified filter key not found in control block json");
+          "The filter key '" + filter_key +
+          "' does correspond to any control block field in the '" +
+          control_block_name_ + "' control block");
       throw FilterError();
+    }
+    // cppcheck-suppress useStlAlgorithm
+    for (const cbxp_filter_t& filter_data : filter_list) {
+      // would require capturing structured bindings to use all_of or none_of
+      if (!ControlBlock::compare(control_block_json[filter_key],
+                                 filter_data.value, filter_data.operation)) {
+        return false;
+      }
     }
   }
   // If we didn't have a reason to return false, we return true

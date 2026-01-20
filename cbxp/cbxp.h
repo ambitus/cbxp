@@ -7,7 +7,7 @@
 extern "C" {
 #endif
 
-cbxp_result_t* cbxp(const char* control_block_name, const char* includes_string,
+cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
                     const char* filters_string, bool debug);
 
 #ifdef __cplusplus

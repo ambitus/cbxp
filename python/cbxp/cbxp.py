@@ -38,7 +38,7 @@ class CBXPError(Exception):
 def cbxp(
     control_block: str,
     includes: list[str] = None,
-    control_block_filters: list[str] = None,
+    filters: list[str] = None,
     debug: bool = False,
 ) -> dict:
     # Includes processing
@@ -49,20 +49,20 @@ def cbxp(
             raise CBXPError(CBXPErrorCode.COMMA_IN_INCLUDE.value, control_block)
 
     # Filter Processing
-    if control_block_filters is None:
-        control_block_filters = []
-    for control_block_filter in control_block_filters:
+    if filters is None:
+        filters = []
+    for control_block_filter in filters:
         if "," in control_block_filter:
             raise CBXPError(CBXPErrorCode.COMMA_IN_FILTER.value, control_block)
 
     response = call_cbxp(
         control_block.lower(),
         ",".join(includes),
-        ",".join(control_block_filters),
+        ",".join(filters),
         debug=debug,
     )
     if response["return_code"]:
         raise CBXPError(response["return_code"], control_block)
-    if response["result_json"] == "null" and control_block_filters != []:
+    if response["result_json"] == "null" and filters != []:
         return None
     return json.loads(response["result_json"])
