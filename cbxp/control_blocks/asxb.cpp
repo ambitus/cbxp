@@ -59,8 +59,8 @@ nlohmann::json ASXB::get(void* __ptr32 p_control_block) {
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_asxb),
                                 sizeof(struct asxb));
 
-  asxb_json["assb_cms_lockinst_addr"] =
-      formatter_.getHex<uint32_t>(&(p_asxb->ASXBFTCB));
+  asxb_json["asxbftcb"] =
+      formatter_.getHex<uint32_t>(&(p_asxb->asxbftcb));
 
 
   return asxb_json;
