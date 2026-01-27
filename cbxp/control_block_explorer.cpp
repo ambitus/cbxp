@@ -13,6 +13,7 @@
 #include "control_blocks/cvt.hpp"
 #include "control_blocks/ecvt.hpp"
 #include "control_blocks/psa.hpp"
+#include "control_blocks/asxb.hpp"
 #include "logger.hpp"
 
 namespace CBXP {
@@ -86,7 +87,10 @@ void ControlBlockExplorer::exploreControlBlock(
       control_block_json = ASVT(includes).get();
     } else if (control_block_name == "assb") {
       control_block_json = ASSB(includes).get();
-    } else {
+    } else if (control_block_name == "asxb") {
+      control_block_json = ASXB(includes).get();
+    }
+    else {
       throw ControlBlockError();
     }
   } catch (const CBXPError& e) {
