@@ -361,10 +361,10 @@ class TestCBXP(unittest.TestCase):
         self,
     ):
         self.assertIsNone(
-            cbdata=cbxp(
+            cbxp(
                 "psa",
                 filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSB")],
-            )
+            ),
         )
 
     def test_cbxp_returns_none_if_one_of_two_filters_fails(
