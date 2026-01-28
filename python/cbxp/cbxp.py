@@ -82,7 +82,7 @@ def cbxp(
     for filter_obj in filters:
         if filters_string != "":
             filters_string += ","
-        if "," in filter_obj.value:
+        if "," in str(filter_obj):
             raise CBXPError(CBXPErrorCode.COMMA_IN_FILTER.value, control_block)
         filters_string += str(filter_obj)
 
