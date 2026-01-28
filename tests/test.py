@@ -1,6 +1,6 @@
 import unittest
 
-from cbxp import CBXPFilter, CBXPFilterOperation, CBXPError, cbxp
+from cbxp import CBXPError, CBXPFilter, CBXPFilterOperation, cbxp
 
 
 class TestCBXP(unittest.TestCase):
@@ -183,8 +183,10 @@ class TestCBXP(unittest.TestCase):
             "psa",
             filters=[
                 CBXPFilter(
-                    "cvt.asvt.ascb.assb.assbjbns", CBXPFilterOperation.EQUAL, "*MASTER*"
-                )
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "*MASTER*",
+                ),
             ],
             includes=["**"],
         )
@@ -195,8 +197,10 @@ class TestCBXP(unittest.TestCase):
             "psa",
             filters=[
                 CBXPFilter(
-                    "cvt.asvt.ascb.assb.assbjbns", CBXPFilterOperation.EQUAL, "*MASTER*"
-                )
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "*MASTER*",
+                ),
             ],
             includes=["cvt.asvt.ascb.assb"],
         )
@@ -207,10 +211,14 @@ class TestCBXP(unittest.TestCase):
             "psa",
             filters=[
                 CBXPFilter(
-                    "cvt.asvt.ascb.assb.assbjbns", CBXPFilterOperation.EQUAL, "*MASTER*"
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "*MASTER*",
                 ),
                 CBXPFilter(
-                    "cvt.asvt.ascb.assb.ascbasid", CBXPFilterOperation.GREATER_THAN, "0"
+                    "cvt.asvt.ascb.assb.ascbasid",
+                    CBXPFilterOperation.GREATER_THAN,
+                    "0",
                 ),
             ],
             includes=["cvt.asvt.ascb.assb"],
@@ -222,8 +230,10 @@ class TestCBXP(unittest.TestCase):
             "psa",
             filters=[
                 CBXPFilter(
-                    "cvt.asvt.ascb.assb.assbjbns", CBXPFilterOperation.EQUAL, "?MAS?ER?"
-                )
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "?MAS?ER?",
+                ),
             ],
             includes=["cvt.asvt.ascb.assb"],
         )
@@ -233,7 +243,7 @@ class TestCBXP(unittest.TestCase):
         cbdata = cbxp(
             "psa",
             filters=[
-                CBXPFilter("cvt.asvt.ascb.ascbasid", CBXPFilterOperation.EQUAL, "1")
+                CBXPFilter("cvt.asvt.ascb.ascbasid", CBXPFilterOperation.EQUAL, "1"),
             ],
             includes=["cvt.asvt.ascb.assb"],
         )
@@ -244,8 +254,10 @@ class TestCBXP(unittest.TestCase):
             "psa",
             filters=[
                 CBXPFilter(
-                    "cvt.asvt.ascb.ascbasid", CBXPFilterOperation.GREATER_THAN, "0"
-                )
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.GREATER_THAN,
+                    "0",
+                ),
             ],
             includes=["cvt.asvt.ascb.assb"],
         )
@@ -255,7 +267,9 @@ class TestCBXP(unittest.TestCase):
         cbdata = cbxp(
             "psa",
             filters=[
-                CBXPFilter("cvt.asvt.ascb.ascbasid", CBXPFilterOperation.LESS_THAN, "2")
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid", CBXPFilterOperation.LESS_THAN, "2"
+                ),
             ],
             includes=["cvt.asvt.ascb.assb"],
         )
@@ -269,7 +283,7 @@ class TestCBXP(unittest.TestCase):
                     "cvt.asvt.ascb.ascbasid",
                     CBXPFilterOperation.GREATER_THAN_OR_EQUAL,
                     "1",
-                )
+                ),
             ],
             includes=["cvt.asvt.ascb.assb"],
         )
@@ -283,7 +297,7 @@ class TestCBXP(unittest.TestCase):
                     "cvt.asvt.ascb.ascbasid",
                     CBXPFilterOperation.LESS_THAN_OR_EQUAL,
                     "2",
-                )
+                ),
             ],
             includes=["cvt.asvt.ascb.assb"],
         )
@@ -300,7 +314,7 @@ class TestCBXP(unittest.TestCase):
         cbdata = cbxp(
             "cvt",
             filters=[
-                CBXPFilter("cvtasmvt", CBXPFilterOperation.GREATER_THAN, "0x87FFFFFF")
+                CBXPFilter("cvtasmvt", CBXPFilterOperation.GREATER_THAN, "0x87FFFFFF"),
             ],
         )
         self.assertIs(type(cbdata), dict)
@@ -309,7 +323,7 @@ class TestCBXP(unittest.TestCase):
         cbdata = cbxp(
             "cvt",
             filters=[
-                CBXPFilter("cvtasmvt", CBXPFilterOperation.LESS_THAN, "0x88000001")
+                CBXPFilter("cvtasmvt", CBXPFilterOperation.LESS_THAN, "0x88000001"),
             ],
         )
         self.assertIs(type(cbdata), dict)
@@ -319,8 +333,10 @@ class TestCBXP(unittest.TestCase):
             "cvt",
             filters=[
                 CBXPFilter(
-                    "cvtasmvt", CBXPFilterOperation.GREATER_THAN_OR_EQUALS, "0x87FFFFFF"
-                )
+                    "cvtasmvt",
+                    CBXPFilterOperation.GREATER_THAN_OR_EQUALS,
+                    "0x87FFFFFF",
+                ),
             ],
         )
         self.assertIs(type(cbdata), dict)
@@ -330,8 +346,10 @@ class TestCBXP(unittest.TestCase):
             "cvt",
             filters=[
                 CBXPFilter(
-                    "cvtasmvt", CBXPFilterOperation.LESS_THAN_OR_EQUALS, "0x88000000"
-                )
+                    "cvtasmvt",
+                    CBXPFilterOperation.LESS_THAN_OR_EQUALS,
+                    "0x88000000",
+                ),
             ],
         )
         self.assertIs(type(cbdata), dict)
@@ -340,7 +358,7 @@ class TestCBXP(unittest.TestCase):
         self,
     ):
         self.assertIsNone(
-            cbxp("psa", filters=["psapsa", CBXPFilterOperation.EQUALS, "PSB"])
+            cbxp("psa", filters=["psapsa", CBXPFilterOperation.EQUALS, "PSB"]),
         )
 
     def test_cbxp_returns_none_if_one_of_two_filters_fails(
@@ -446,7 +464,7 @@ class TestCBXP(unittest.TestCase):
                         "cvt.asvt.ascb.assb.assbjbns",
                         CBXPFilterOperation.EQUAL,
                         "*MASTER*",
-                    )
+                    ),
                 ],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
@@ -463,7 +481,7 @@ class TestCBXP(unittest.TestCase):
                         "cvt.asvt.ascb.assb.assbjbns",
                         CBXPFilterOperation.LESS_THAN_OR_EQUAL,
                         "*MASTER*",
-                    )
+                    ),
                 ],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))

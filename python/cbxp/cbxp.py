@@ -1,6 +1,6 @@
 import json
-from typing import Union
 from enum import Enum
+from typing import Union
 
 from cbxp._C import call_cbxp
 
@@ -19,7 +19,10 @@ class CBXPFilter:
     """A class to represent a filter to limit cbxp output based on set conditions"""
 
     def __init__(
-        self, key: str, operation: CBXPFilterOperation, value: Union[str, int]
+        self,
+        key: str,
+        operation: CBXPFilterOperation,
+        value: Union[str | int],
     ):
         self.key = key
         self.operation = operation
