@@ -8,7 +8,6 @@
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
-
 #include "ascb.hpp"
 #include "asvt.hpp"
 #include "logger.hpp"

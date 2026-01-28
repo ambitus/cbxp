@@ -11,6 +11,7 @@
 
 #include "assb.hpp"
 #include "asvt.hpp"
+#include "asxb.hpp"
 #include "logger.hpp"
 
 namespace CBXP {
@@ -57,6 +58,10 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
     if (include == "assb") {
       ascb_json["ascbassb"] =
           CBXP::ASSB(include_includes).get(p_ascb->ascbassb);
+    }
+    else if (include == "asxb") {
+      ascb_json["ascbasxb"] =
+          CBXP::ASXB(include_includes).get(p_ascb->ascbasxb);
     }
   }
 
