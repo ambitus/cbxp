@@ -152,7 +152,7 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
     if (!control_block_json.contains(filter_key)) {
       Logger::getInstance().debug(
           "The filter key '" + filter_key +
-          "' does correspond to any control block field in the '" +
+          "' does not correspond to any control block field in the '" +
           control_block_name_ + "' control block");
       throw FilterError();
     }

@@ -24,7 +24,7 @@ class CBXPFilter:
         value: str | int,
     ):
         self.key = key
-        self.operation = operation
+        self.operation = operation.value
         self.value = value
 
     def __str__(self):

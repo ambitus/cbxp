@@ -217,7 +217,7 @@ class TestCBXP(unittest.TestCase):
                     "*MASTER*",
                 ),
                 CBXPFilter(
-                    "cvt.asvt.ascb.assb.ascbasid",
+                    "cvt.asvt.ascb.ascbasid",
                     CBXPFilterOperation.GREATER_THAN,
                     0,
                 ),
@@ -337,7 +337,7 @@ class TestCBXP(unittest.TestCase):
             filters=[
                 CBXPFilter(
                     "cvtasmvt",
-                    CBXPFilterOperation.GREATER_THAN_OR_EQUALS,
+                    CBXPFilterOperation.GREATER_THAN_OR_EQUAL,
                     "0x87FFFFFF",
                 ),
             ],
@@ -350,7 +350,7 @@ class TestCBXP(unittest.TestCase):
             filters=[
                 CBXPFilter(
                     "cvtasmvt",
-                    CBXPFilterOperation.LESS_THAN_OR_EQUALS,
+                    CBXPFilterOperation.LESS_THAN_OR_EQUAL,
                     "0x88000000",
                 ),
             ],
@@ -361,7 +361,10 @@ class TestCBXP(unittest.TestCase):
         self,
     ):
         self.assertIsNone(
-            cbxp("psa", filters=["psapsa", CBXPFilterOperation.EQUALS, "PSB"]),
+            cbdata=cbxp(
+                "psa",
+                filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSB")],
+            )
         )
 
     def test_cbxp_returns_none_if_one_of_two_filters_fails(
@@ -378,7 +381,7 @@ class TestCBXP(unittest.TestCase):
                         "*MASTER*",
                     ),
                     CBXPFilter(
-                        "cvt.asvt.ascb.assb.ascbasid",
+                        "cvt.asvt.ascb.ascbasid",
                         CBXPFilterOperation.GREATER_THAN,
                         2,
                     ),
@@ -495,7 +498,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp(
                 "psa",
-                filters=["psapsb", CBXPFilterOperation.EQUALS, "PSA"],
+                filters=["psapsb", CBXPFilterOperation.EQUAL, "PSA"],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
@@ -505,7 +508,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp(
                 "psa",
-                filters=["psapsb", CBXPFilterOperation.EQUALS, ""],
+                filters=["psapsb", CBXPFilterOperation.EQUAL, ""],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
@@ -515,7 +518,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp(
                 "psa",
-                filters=["psapsb", CBXPFilterOperation.EQUALS, "PSA,PSB"],
+                filters=["psapsb", CBXPFilterOperation.EQUAL, "PSA,PSB"],
             )
         self.assertEqual("Filters cannot contain commas", str(e.exception))
 
