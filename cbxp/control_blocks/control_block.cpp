@@ -71,8 +71,8 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
 bool ControlBlock::compare(const nlohmann::json& json_value,
                            const std::string& filter_value,
                            const std::string& operation) {
-  std::string value_str = "";
   try {
+    std::string value_str = "";
     uint64_t value_uint;
     uint64_t filter_uint;
     try {
