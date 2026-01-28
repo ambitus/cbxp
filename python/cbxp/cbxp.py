@@ -1,6 +1,5 @@
 import json
 from enum import Enum
-from typing import Union
 
 from cbxp._C import call_cbxp
 
@@ -22,7 +21,7 @@ class CBXPFilter:
         self,
         key: str,
         operation: CBXPFilterOperation,
-        value: Union[str | int],
+        value: str | int,
     ):
         self.key = key
         self.operation = operation

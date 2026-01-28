@@ -47,9 +47,7 @@ static void show_dll_errors() {
   }
 }
 
-static void cleanup_and_exit(int exit_rc, cbxp_result_t* cbxp_result,
-                             void* lib_handle) {
-  free(cbxp_result);
+static void cleanup_and_exit(int exit_rc, void* lib_handle) {
   int rc = dlclose(lib_handle);
   if (rc != 0) {
     show_dll_errors();
