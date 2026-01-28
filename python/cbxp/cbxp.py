@@ -1,7 +1,32 @@
 import json
+from typing import Union
 from enum import Enum
 
 from cbxp._C import call_cbxp
+
+
+class CBXPFilterOperation(Enum):
+    """An enum of possible filter operations for the cbxp interface"""
+
+    EQUAL = "="
+    LESS_THAN = "<"
+    GREATER_THAN = ">"
+    LESS_THAN_OR_EQUAL = "<="
+    GREATER_THAN_OR_EQUAL = ">="
+
+
+class CBXPFilter:
+    """A class to represent a filter to limit cbxp output based on set conditions"""
+
+    def __init__(
+        self, key: str, operation: CBXPFilterOperation, value: Union[str, int]
+    ):
+        self.key = key
+        self.operation = operation
+        self.value = value
+
+    def __str__(self):
+        return str(self.key) + str(self.operation) + str(self.value)
 
 
 class CBXPErrorCode(Enum):
@@ -38,7 +63,7 @@ class CBXPError(Exception):
 def cbxp(
     control_block: str,
     includes: list[str] = None,
-    filters: list[str] = None,
+    filters: list[CBXPFilter] = None,
     debug: bool = False,
 ) -> dict:
     # Includes processing
@@ -51,14 +76,18 @@ def cbxp(
     # Filter Processing
     if filters is None:
         filters = []
-    for control_block_filter in filters:
-        if "," in control_block_filter:
+    filters_string = ""
+    for filter_obj in filters:
+        if filters_string != "":
+            filters_string += ","
+        if "," in filter_obj.value:
             raise CBXPError(CBXPErrorCode.COMMA_IN_FILTER.value, control_block)
+        filters_string += str(filter_obj)
 
     response = call_cbxp(
         control_block.lower(),
         ",".join(includes),
-        ",".join(filters),
+        filters_string,
         debug=debug,
     )
     if response["return_code"]:

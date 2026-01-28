@@ -13,7 +13,8 @@
 
 typedef const cbxp_result_t* (*cbxp_t)(const char* control_block_name,
                                        const char* includes_string,
-                                       const char* filters_string, bool debug);
+                                       const char* filters_string, bool debug,
+                                       cbxp_result_t* cbxp_result);
 
 static void show_usage(const char* argv[]);
 static void show_dll_errors();
@@ -30,7 +31,7 @@ static void show_usage(const char* argv[]) {
                "blocks based on a pattern"
             << std::endl
             << "  -f, --filter <filter>            Filter repeated control "
-               "blocks using a key-value pair filter"
+               "block data"
             << std::endl
             << "  -v, --version                    Show version number"
             << std::endl
@@ -46,7 +47,9 @@ static void show_dll_errors() {
   }
 }
 
-static void cleanup_and_exit(int exit_rc, void* lib_handle) {
+static void cleanup_and_exit(int exit_rc, cbxp_result_t* cbxp_result,
+                             void* lib_handle) {
+  free(cbxp_result);
   int rc = dlclose(lib_handle);
   if (rc != 0) {
     show_dll_errors();
@@ -153,22 +156,23 @@ int main(int argc, const char* argv[]) {
 
   nlohmann::json control_block_json;
 
-  const cbxp_result_t* cbxp_result =
-      cbxp(control_block_name.c_str(), includes_string.c_str(),
-           filters_string.c_str(), debug);
+  static cbxp_result_t cbxp_result = {nullptr, 0, -1};
 
-  if (cbxp_result->return_code == CBXP::Error::BadControlBlock) {
+  cbxp(control_block_name.c_str(), includes_string.c_str(),
+       filters_string.c_str(), debug, &cbxp_result);
+
+  if (cbxp_result.return_code == CBXP::Error::BadControlBlock) {
     std::cerr << "Unknown control block '" << control_block_name
               << "' was specified." << std::endl;
     cleanup_and_exit(-1, lib_handle);
-  } else if (cbxp_result->return_code == CBXP::Error::BadInclude) {
+  } else if (cbxp_result.return_code == CBXP::Error::BadInclude) {
     std::cerr << "A bad include pattern was provided" << std::endl;
     cleanup_and_exit(-1, lib_handle);
-  } else if (cbxp_result->return_code == CBXP::Error::BadFilter) {
+  } else if (cbxp_result.return_code == CBXP::Error::BadFilter) {
     std::cerr << "A bad filter was provided" << std::endl;
     cleanup_and_exit(-1, lib_handle);
   } else {
-    std::cout << cbxp_result->result_json << std::endl;
+    std::cout << cbxp_result.result_json << std::endl;
   }
 
   cleanup_and_exit(0, lib_handle);

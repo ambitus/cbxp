@@ -10,6 +10,8 @@
 namespace CBXP {
 void ControlBlock::createOptionsMap(const std::vector<std::string>& includes,
                                     const std::vector<std::string>& filters) {
+  // createFilterMap depends on the construction of the "includes" portion
+  // of the options_map_ structure and must be called after createIncludeMap
   ControlBlock::createIncludeMap(includes);
   ControlBlock::createFilterMap(filters);
 }
@@ -31,9 +33,11 @@ void ControlBlock::createFilterMap(const std::vector<std::string>& filters) {
       auto it = options_map_.find(control_block);
       if (it == options_map_.end()) {
         Logger::getInstance().debug("'" + control_block +
-                                    "' is not specified in the inclusion list");
+                                    "' is not found in the inclusion list");
         throw FilterError();
       }
+      Logger::getInstance().debug("'" + control_block_filter +
+                                  "' filter for '" + control_block + "'");
       options_map_[control_block].filters.push_back(control_block_filter);
     } else {
       ControlBlock::addCurrentFilter(filter);
@@ -57,6 +61,8 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
       }
       cbxp_filter_t filter_data = {del, filter_value};
       current_filters_[filter_key].push_back(filter_data);
+      Logger::getInstance().debug("Adding filter validating " + filter_key +
+                                  " " + del + " " + filter_value);
       return;
     }
   }
@@ -83,8 +89,8 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
     if (value_str != "") {
       // Filter is testing strings
       if (operation == "=") {
-        size_t last_non_space = value_str.find_last_not_of(" \t\n\r\f\v");
-        value_str.resize(last_non_space + 1);
+        Logger::getInstance().debug(
+            "Filter is checking if value is equal to filter (string)");
         return (fnmatch(filter_value.c_str(), value_str.c_str(), 0) == 0);
       } else {
         Logger::getInstance().debug(
@@ -93,14 +99,26 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
       }
     }  // Filter is testing non-strings
     else if (operation == "=") {
+      Logger::getInstance().debug(
+          "Filter is checking if value is equal to filter (uint64_t)");
       return value_uint == filter_uint;
     } else if (operation == ">") {
+      Logger::getInstance().debug(
+          "Filter is checking if value is greater than to filter (uint64_t)");
       return value_uint > filter_uint;
     } else if (operation == "<") {
+      Logger::getInstance().debug(
+          "Filter is checking if value is less than to filter (uint64_t)");
       return value_uint < filter_uint;
     } else if (operation == ">=") {
+      Logger::getInstance().debug(
+          "Filter is checking if value is greater than or equal to filter "
+          "(uint64_t)");
       return value_uint >= filter_uint;
     } else if (operation == "<=") {
+      Logger::getInstance().debug(
+          "Filter is checking if value is less than or equal to filter "
+          "(uint64_t)");
       return value_uint <= filter_uint;
     }
   } catch (...) {
@@ -119,11 +137,15 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
     if (json_value.is_null()) {
       // If any element in our json structure is null, we already failed a
       // filter match
+      Logger::getInstance().debug(
+          "JSON structure has null element indicating failure");
       return false;
     }
   }
   if (current_filters_.empty()) {
     // If the filter map is empty then we want to return the control block
+    Logger::getInstance().debug(
+        "No filters to check match 'passes' to return control block");
     return true;
   }
   for (const auto& [filter_key, filter_list] : current_filters_) {
@@ -139,11 +161,13 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
       // would require capturing structured bindings to use all_of or none_of
       if (!ControlBlock::compare(control_block_json[filter_key],
                                  filter_data.value, filter_data.operation)) {
+        Logger::getInstance().debug("Control block did not match the filter");
         return false;
       }
     }
   }
   // If we didn't have a reason to return false, we return true
+  Logger::getInstance().debug("Control block matched the filter");
   return true;
 }
 

@@ -11,8 +11,8 @@
 
 pthread_mutex_t cbxp_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
-                    const char* filters_string, bool debug) {
+void cbxp(const char* control_block, const char* includes_string,
+          const char* filters_string, bool debug, cbxp_result_t* cbxp_result) {
   // Since cbxp manages cbxp_result_t as a static structure,
   // we need to use a mutex to make this thread safe.
   // Technically we shouldn't need this because the Python GIL,
@@ -22,15 +22,13 @@ cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
   nlohmann::json control_block_json;
   std::string control_block_string = control_block;
 
-  static cbxp_result_t cbxp_result = {nullptr, 0, -1};
-
   CBXP::ControlBlockExplorer explorer =
-      CBXP::ControlBlockExplorer(&cbxp_result, debug);
+      CBXP::ControlBlockExplorer(cbxp_result, debug);
 
   explorer.exploreControlBlock(control_block_string, includes_string,
                                filters_string);
 
   pthread_mutex_unlock(&cbxp_mutex);
 
-  return &cbxp_result;
+  return;
 }

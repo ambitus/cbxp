@@ -22,7 +22,10 @@ class ControlBlockFieldFormatter {
     auto ascii_field_unique_ptr = std::make_unique<char[]>(length);
     std::memcpy(ascii_field_unique_ptr.get(), p_field, length);
     __e2a_l(ascii_field_unique_ptr.get(), length);
-    return ascii_field_unique_ptr.get();
+    std::string ascii_field = ascii_field_unique_ptr.get();
+    size_t last_non_space   = ascii_field.find_last_not_of(" \t\n\r\f\v");
+    ascii_field.resize(last_non_space + 1);
+    return ascii_field;
   }
   template <typename T>
   static const std::string getHex(const void* p_field) {
