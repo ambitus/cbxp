@@ -59,9 +59,15 @@ nlohmann::json ASXB::get(void* __ptr32 p_control_block) {
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_asxb),
                                 sizeof(struct asxb));
 
+
     asxb_json["asxb_noabdump"] = p_asxb->asxb_noabdump;
     asxb_json["asxbftcb"] = formatter_.getHex<uint32_t>(&(p_asxb->asxbftcb));
     asxb_json["asxbitcb"] = formatter_.getHex<uint32_t>(&(p_asxb->asxbitcb));
+    asxb_json["asxbltcb"] = formatter_.getHex<uint32_t>(&(p_asxb->asxbltcb));
+    asxb_json["asxblwa"] = formatter_.getHex<uint32_t>(&(p_asxb->asxblwa));
+    asxb_json["asxbsenv"] = formatter_.getHex<uint32_t>(&(p_asxb->asxbsenv));
+    asxb_json["asxbusr8"] = formatter_.getHex<uint32_t>(&(p_asxb->asxbusr8));
+    asxb_json["asxbuser"] = formatter_.getString(p_asxb->asxbuser, 7);
 
 
 
