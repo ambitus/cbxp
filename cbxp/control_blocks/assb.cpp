@@ -48,7 +48,9 @@ nlohmann::json ASSB::get(void* __ptr32 p_control_block) {
           reinterpret_cast<struct ascb* __ptr32>(*p_ascb_addr);
       nlohmann::json next_assb =
           ASSB::get(reinterpret_cast<void* __ptr32>(p_ascb->ascbassb));
-      if (!next_assb.is_null()) assbs.push_back(next_assb);
+      if (!next_assb.is_null()) {
+        assbs.push_back(next_assb);
+      }
       p_ascb_addr++;  // This SHOULD increment the pointer by 4 bytes.
     }
     return assbs;
