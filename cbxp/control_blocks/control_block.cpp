@@ -36,8 +36,9 @@ void ControlBlock::createFilterMap(const std::vector<std::string>& filters) {
                                     "' is not found in the inclusion list");
         throw FilterError();
       }
-      Logger::getInstance().debug("'" + control_block_filter +
-                                  "' filter for '" + control_block + "'");
+      Logger::getInstance().debug("Add '" + control_block_filter +
+                                  "' for the '" + control_block +
+                                  "' control block");
       options_map_[control_block].filters.push_back(control_block_filter);
     } else {
       ControlBlock::addCurrentFilter(filter);
@@ -48,21 +49,23 @@ void ControlBlock::createFilterMap(const std::vector<std::string>& filters) {
 
 void ControlBlock::addCurrentFilter(const std::string& filter) {
   std::string filter_key, filter_value;
-  std::vector<std::string> delimeters = {"<=", ">=", "<", ">", "="};
-  for (std::string del : delimeters) {
-    size_t del_pos = filter.find(del);
-    if (del_pos != std::string::npos) {
+  std::vector<std::string> operations = {"<=", ">=", "<", ">", "="};
+  for (std::string operation : operations) {
+    size_t operation_pos = filter.find(operation);
+    if (operation_pos != std::string::npos) {
       // If there's a delimeter then separate include into the key and its value
-      filter_value = filter.substr(del_pos + del.length());
-      filter_key   = filter.substr(0, del_pos);
+      filter_value = filter.substr(operation_pos + operation.length());
+      filter_key   = filter.substr(0, operation_pos);
       if (filter_value == "") {
         Logger::getInstance().debug("Filter patterns cannot be null");
         throw FilterError();
       }
-      cbxp_filter_t filter_data = {del, filter_value};
+      cbxp_filter_t filter_data = {operation, filter_value};
       current_filters_[filter_key].push_back(filter_data);
-      Logger::getInstance().debug("Adding filter validating " + filter_key +
-                                  " " + del + " " + filter_value);
+      Logger::getInstance().debug("Adding '" + filter_key + operation +
+                                  filter_value +
+                                  "' to current filters for the '" +
+                                  control_block_name_ + "' control block");
       return;
     }
   }
@@ -89,8 +92,8 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
     if (value_str != "") {
       // Filter is testing strings
       if (operation == "=") {
-        Logger::getInstance().debug(
-            "Filter is checking if value is equal to filter (string)");
+        Logger::getInstance().debug("\"" + value_str + "\" = \"" +
+                                    filter_value + "\" ?");
         return (fnmatch(filter_value.c_str(), value_str.c_str(), 0) == 0);
       } else {
         Logger::getInstance().debug(
@@ -99,26 +102,24 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
       }
     }  // Filter is testing non-strings
     else if (operation == "=") {
-      Logger::getInstance().debug(
-          "Filter is checking if value is equal to filter (uint64_t)");
+      Logger::getInstance().debug(std::to_string(value_uint) + " = " +
+                                  std::to_string(filter_uint) + " ?");
       return value_uint == filter_uint;
     } else if (operation == ">") {
-      Logger::getInstance().debug(
-          "Filter is checking if value is greater than to filter (uint64_t)");
+      Logger::getInstance().debug(std::to_string(value_uint) + " > " +
+                                  std::to_string(filter_uint) + " ?");
       return value_uint > filter_uint;
     } else if (operation == "<") {
-      Logger::getInstance().debug(
-          "Filter is checking if value is less than to filter (uint64_t)");
+      Logger::getInstance().debug(std::to_string(value_uint) + " < " +
+                                  std::to_string(filter_uint) + " ?");
       return value_uint < filter_uint;
     } else if (operation == ">=") {
-      Logger::getInstance().debug(
-          "Filter is checking if value is greater than or equal to filter "
-          "(uint64_t)");
+      Logger::getInstance().debug(std::to_string(value_uint) +
+                                  " >= " + std::to_string(filter_uint) + " ?");
       return value_uint >= filter_uint;
     } else if (operation == "<=") {
-      Logger::getInstance().debug(
-          "Filter is checking if value is less than or equal to filter "
-          "(uint64_t)");
+      Logger::getInstance().debug(std::to_string(value_uint) +
+                                  " <= " + std::to_string(filter_uint) + " ?");
       return value_uint <= filter_uint;
     }
   } catch (...) {
@@ -133,19 +134,21 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
 }
 
 bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
+  Logger::getInstance().debug("Applying filters to the '" +
+                              control_block_name_ + "'control block");
   for (const auto& [json_key, json_value] : control_block_json.items()) {
+    Logger::getInstance().debug("Checking  '" + json_key + "'");
     if (json_value.is_null()) {
       // If any element in our json structure is null, we already failed a
       // filter match
-      Logger::getInstance().debug(
-          "JSON structure has null element indicating failure");
+      Logger::getInstance().debug("'" + json_key + "' is null");
       return false;
     }
   }
   if (current_filters_.empty()) {
     // If the filter map is empty then we want to return the control block
-    Logger::getInstance().debug(
-        "No filters to check match 'passes' to return control block");
+    Logger::getInstance().debug("No filters were provided for the '" +
+                                control_block_name_ + "' control block");
     return true;
   }
   for (const auto& [filter_key, filter_list] : current_filters_) {
@@ -159,15 +162,21 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
     // cppcheck-suppress useStlAlgorithm
     for (const cbxp_filter_t& filter_data : filter_list) {
       // would require capturing structured bindings to use all_of or none_of
+      Logger::getInstance().debug("Apply filter '" + filter_key +
+                                  filter_data.operation + filter_data.value +
+                                  "'");
       if (!ControlBlock::compare(control_block_json[filter_key],
                                  filter_data.value, filter_data.operation)) {
-        Logger::getInstance().debug("Control block did not match the filter");
+        Logger::getInstance().debug("The filter '" + filter_key +
+                                    filter_data.operation + filter_data.value +
+                                    "' did not match");
         return false;
       }
     }
   }
   // If we didn't have a reason to return false, we return true
-  Logger::getInstance().debug("Control block matched the filter");
+  Logger::getInstance().debug("All filters for the '" + control_block_name_ +
+                              "' control block matched");
   return true;
 }
 
