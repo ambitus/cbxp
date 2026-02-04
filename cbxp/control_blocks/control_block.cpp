@@ -101,26 +101,20 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
         throw FilterError();
       }
     }  // Filter is testing non-strings
-    else if (operation == "=") {
-      Logger::getInstance().debug(std::to_string(value_uint) + " = " +
-                                  std::to_string(filter_uint) + " ?");
-      return value_uint == filter_uint;
-    } else if (operation == ">") {
-      Logger::getInstance().debug(std::to_string(value_uint) + " > " +
-                                  std::to_string(filter_uint) + " ?");
-      return value_uint > filter_uint;
-    } else if (operation == "<") {
-      Logger::getInstance().debug(std::to_string(value_uint) + " < " +
-                                  std::to_string(filter_uint) + " ?");
-      return value_uint < filter_uint;
-    } else if (operation == ">=") {
-      Logger::getInstance().debug(std::to_string(value_uint) +
-                                  " >= " + std::to_string(filter_uint) + " ?");
-      return value_uint >= filter_uint;
-    } else if (operation == "<=") {
-      Logger::getInstance().debug(std::to_string(value_uint) +
-                                  " <= " + std::to_string(filter_uint) + " ?");
-      return value_uint <= filter_uint;
+    else {
+      Logger::getInstance().debug(std::to_string(value_uint) + " " + operation +
+                                  " " + std::to_string(filter_uint) + " ?");
+      if (operation == "=") {
+        return value_uint == filter_uint;
+      } else if (operation == ">") {
+        return value_uint > filter_uint;
+      } else if (operation == "<") {
+        return value_uint < filter_uint;
+      } else if (operation == ">=") {
+        return value_uint >= filter_uint;
+      } else if (operation == "<=") {
+        return value_uint <= filter_uint;
+      }
     }
   } catch (...) {
     Logger::getInstance().debug(
