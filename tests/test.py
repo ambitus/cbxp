@@ -240,7 +240,7 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_int_filter_equals(self):
+    def test_cbxp_can_use_int_filter_equal(self):
         cbdata = cbxp(
             "psa",
             filters=[
@@ -278,7 +278,7 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_int_filter_greater_than_or_equals(self):
+    def test_cbxp_can_use_int_filter_greater_than_or_equal(self):
         cbdata = cbxp(
             "psa",
             filters=[
@@ -292,7 +292,7 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_int_filter_less_than_or_equals(self):
+    def test_cbxp_can_use_int_filter_less_than_or_equal(self):
         cbdata = cbxp(
             "psa",
             filters=[
@@ -306,10 +306,17 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_decimal_filter_for_hex_field_with_equals(self):
+    def test_cbxp_can_use_hex_filter_with_equal(self):
         cbdata = cbxp(
             "cvt",
             filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, 2281701376)],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_decimal_filter_for_hex_field(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, "0x88000000")],
         )
         self.assertIs(type(cbdata), dict)
 
@@ -331,7 +338,7 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_hex_filter_with_greater_than_or_equals(self):
+    def test_cbxp_can_use_hex_filter_with_greater_than_or_equal(self):
         cbdata = cbxp(
             "cvt",
             filters=[
@@ -344,7 +351,7 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_hex_filter_with_less_than_or_equals(self):
+    def test_cbxp_can_use_hex_filter_with_less_than_or_equal(self):
         cbdata = cbxp(
             "cvt",
             filters=[
@@ -508,7 +515,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp(
                 "psa",
-                filters=["psapsb", CBXPFilterOperation.EQUAL, ""],
+                filters=["psapsa", CBXPFilterOperation.EQUAL, ""],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
@@ -518,7 +525,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp(
                 "psa",
-                filters=["psapsb", CBXPFilterOperation.EQUAL, "PSA,PSB"],
+                filters=["psapsa", CBXPFilterOperation.EQUAL, "PSA,PSB"],
             )
         self.assertEqual("Filters cannot contain commas", str(e.exception))
 

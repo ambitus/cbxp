@@ -25,8 +25,8 @@ class ControlBlock {
   void processAsteriskInclude();
   void processExplicitInclude(std::string& include);
   void addCurrentFilter(const std::string& filter);
-  void createIncludeMap(const std::vector<std::string>& includes);
-  void createFilterMap(const std::vector<std::string>& filters);
+  void createIncludeList(const std::vector<std::string>& includes);
+  void createFilterList(const std::vector<std::string>& filters);
   bool compare(const nlohmann::json& json_value,
                const std::string& filter_value, const std::string& operation);
 

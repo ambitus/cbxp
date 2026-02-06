@@ -10,14 +10,14 @@
 namespace CBXP {
 void ControlBlock::createOptionsMap(const std::vector<std::string>& includes,
                                     const std::vector<std::string>& filters) {
-  // createFilterMap depends on the construction of the "includes" portion
-  // of the options_map_ structure and must be called after createIncludeMap
-  ControlBlock::createIncludeMap(includes);
-  ControlBlock::createFilterMap(filters);
+  // createFilterList depends on the construction of the "includes" portion
+  // of the options_map_ structure and must be called after createIncludeList
+  ControlBlock::createIncludeList(includes);
+  ControlBlock::createFilterList(filters);
 }
 
-void ControlBlock::createFilterMap(const std::vector<std::string>& filters) {
-  Logger::getInstance().debug("Creating filter map for the '" +
+void ControlBlock::createFilterList(const std::vector<std::string>& filters) {
+  Logger::getInstance().debug("Creating filter list for the '" +
                               control_block_name_ + "' control block...");
   for (const std::string& filter : filters) {
     // Only case; specific non-generic filter
@@ -36,15 +36,17 @@ void ControlBlock::createFilterMap(const std::vector<std::string>& filters) {
                                     "' is not found in the inclusion list");
         throw FilterError();
       }
-      Logger::getInstance().debug("Add '" + control_block_filter +
-                                  "' for the '" + control_block +
-                                  "' control block");
+      Logger::getInstance().debug("Adding '" + control_block_filter +
+                                  "' to the filter list for the '" +
+                                  control_block + "' control block...");
       options_map_[control_block].filters.push_back(control_block_filter);
+      Logger::getInstance().debug("Done");
     } else {
       ControlBlock::addCurrentFilter(filter);
     }
   }
-  Logger::getInstance().debug("Done");
+  Logger::getInstance().debug("'" + control_block_name_ +
+                              "' filter list has been created");
 }
 
 void ControlBlock::addCurrentFilter(const std::string& filter) {
@@ -61,11 +63,12 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
         throw FilterError();
       }
       cbxp_filter_t filter_data = {operation, filter_value};
-      current_filters_[filter_key].push_back(filter_data);
       Logger::getInstance().debug("Adding '" + filter_key + operation +
                                   filter_value +
-                                  "' to current filters for the '" +
-                                  control_block_name_ + "' control block");
+                                  "' to the current filters list for the '" +
+                                  control_block_name_ + "' control block...");
+      current_filters_[filter_key].push_back(filter_data);
+      Logger::getInstance().debug("Done");
       return;
     }
   }
@@ -129,7 +132,7 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
 
 bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
   Logger::getInstance().debug("Applying filters to the '" +
-                              control_block_name_ + "'control block");
+                              control_block_name_ + "' control block...");
   for (const auto& [json_key, json_value] : control_block_json.items()) {
     Logger::getInstance().debug("Checking  '" + json_key + "'");
     if (json_value.is_null()) {
@@ -156,9 +159,9 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
     // cppcheck-suppress useStlAlgorithm
     for (const cbxp_filter_t& filter_data : filter_list) {
       // would require capturing structured bindings to use all_of or none_of
-      Logger::getInstance().debug("Apply filter '" + filter_key +
+      Logger::getInstance().debug("Applying filter '" + filter_key +
                                   filter_data.operation + filter_data.value +
-                                  "'");
+                                  "'...");
       if (!ControlBlock::compare(control_block_json[filter_key],
                                  filter_data.value, filter_data.operation)) {
         Logger::getInstance().debug("The filter '" + filter_key +
@@ -174,20 +177,24 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
   return true;
 }
 
-void ControlBlock::createIncludeMap(const std::vector<std::string>& includes) {
-  Logger::getInstance().debug("Creating include map for the '" +
+void ControlBlock::createIncludeList(const std::vector<std::string>& includes) {
+  Logger::getInstance().debug("Creating include list for the '" +
                               control_block_name_ + "' control block...");
   for (std::string include : includes) {
     if (include == "**") {
+      Logger::getInstance().debug("Processing '**' include...");
       ControlBlock::processDoubleAsteriskInclude();
       return;
     } else if (include == "*") {
+      Logger::getInstance().debug("Processing '*' include...");
       ControlBlock::processAsteriskInclude();
     } else {
+      Logger::getInstance().debug("Processing '" + include + "' include...");
       ControlBlock::processExplicitInclude(include);
     }
   }
-  Logger::getInstance().debug("Done");
+  Logger::getInstance().debug("'" + control_block_name_ +
+                              "' include list has been created");
 }
 
 void ControlBlock::processDoubleAsteriskInclude() {
@@ -195,7 +202,10 @@ void ControlBlock::processDoubleAsteriskInclude() {
   options_map_.clear();
   for (const std::string& includable : includables_) {
     // Build a map of all includables_ but with "**" at the next level
+    Logger::getInstance().debug("Adding '**' to the include list for the '" +
+                                includable + "' control block...");
     options_map_[includable].include_patterns = {"**"};
+    Logger::getInstance().debug("Done");
   }
 }
 
@@ -203,15 +213,25 @@ void ControlBlock::processAsteriskInclude() {
   if (options_map_.empty()) {
     for (const std::string& includable : includables_) {
       // Build a map of all includables_
+      Logger::getInstance().debug(
+          "Creating an entry in the include list for the '" + includable +
+          "' control block...");
       options_map_[includable].include_patterns = {};
+      Logger::getInstance().debug("Done");
     }
   }
   for (const std::string& includable : includables_) {
     if (options_map_.find(includable) != options_map_.end()) {
+      Logger::getInstance().debug("'" + includable +
+                                  "' already in inclusion list.");
       continue;
     }
     // Add all includables_ not already present to the map
+    Logger::getInstance().debug(
+        "Creating an entry in the include list for the '" + includable +
+        "' control block...");
     options_map_[includable].include_patterns = {};
+    Logger::getInstance().debug("Done");
   }
 }
 
@@ -237,9 +257,17 @@ void ControlBlock::processExplicitInclude(std::string& include) {
     // If we don't already have this include in our map, add it with its
     // includes
     if (include_includes == "") {
+      Logger::getInstance().debug(
+          "Creating an entry in the include list for the '" + include +
+          "' control block...");
       options_map_[include].include_patterns = {};
+      Logger::getInstance().debug("Done");
     } else {
+      Logger::getInstance().debug("Adding '" + include_includes +
+                                  "' to the include list for the '" + include +
+                                  "' control block...");
       options_map_[include].include_patterns = {include_includes};
+      Logger::getInstance().debug("Done");
     }
   } else {
     // If we DO already have this in our map, then we should add its
@@ -253,7 +281,11 @@ void ControlBlock::processExplicitInclude(std::string& include) {
     if (include_includes == "") {
       return;
     }
+    Logger::getInstance().debug("Adding '" + include_includes +
+                                "' to the include list for the '" + include +
+                                "' control block...");
     options_map_[include].include_patterns.push_back(include_includes);
+    Logger::getInstance().debug("Done");
   }
 }
 }  // namespace CBXP
