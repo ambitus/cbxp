@@ -77,53 +77,52 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
 bool ControlBlock::compare(const nlohmann::json& json_value,
                            const std::string& filter_value,
                            const std::string& operation) {
-  try {
-    std::string value_str = "";
-    uint64_t value_uint;
+  std::string value_str = "";
+  uint64_t value_uint;
+
+  if (json_value.is_number()) {
+    value_uint = json_value.get<int>();
+  } else {
+    value_str = json_value.get<std::string>();
+    if (value_str.substr(0, 2) == "0x") {
+      value_uint = std::stoul(value_str, nullptr, 0);
+      value_str  = "";
+    }
+  }
+  if (value_str != "") {
+    // Filter is testing strings
+    if (operation == "=") {
+      Logger::getInstance().debug("\"" + value_str + "\" = \"" + filter_value +
+                                  "\" ?");
+      return (fnmatch(filter_value.c_str(), value_str.c_str(), 0) == 0);
+    } else {
+      Logger::getInstance().debug(
+          "<, <=, >, and >= cannot be used with string filter patterns");
+      throw FilterError();
+    }
+  }  // Filter is testing non-strings
+  else {
     uint64_t filter_uint;
     try {
-      value_uint  = json_value.get<int>();
       filter_uint = std::stoul(filter_value, nullptr, 0);
     } catch (...) {
-      value_str = json_value.get<std::string>();
-      if (value_str.substr(0, 2) == "0x") {
-        value_uint  = std::stoul(value_str, nullptr, 0);
-        filter_uint = std::stoul(filter_value, nullptr, 0);
-        value_str   = "";
-      }
+      Logger::getInstance().debug("'" + filter_value +
+                                  "' cannot be compared to an numeric value");
+      throw FilterError();
     }
-    if (value_str != "") {
-      // Filter is testing strings
-      if (operation == "=") {
-        Logger::getInstance().debug("\"" + value_str + "\" = \"" +
-                                    filter_value + "\" ?");
-        return (fnmatch(filter_value.c_str(), value_str.c_str(), 0) == 0);
-      } else {
-        Logger::getInstance().debug(
-            "<, <=, >, and >= cannot be used with string filter patterns");
-        throw FilterError();
-      }
-    }  // Filter is testing non-strings
-    else {
-      Logger::getInstance().debug(std::to_string(value_uint) + " " + operation +
-                                  " " + std::to_string(filter_uint) + " ?");
-      if (operation == "=") {
-        return value_uint == filter_uint;
-      } else if (operation == ">") {
-        return value_uint > filter_uint;
-      } else if (operation == "<") {
-        return value_uint < filter_uint;
-      } else if (operation == ">=") {
-        return value_uint >= filter_uint;
-      } else if (operation == "<=") {
-        return value_uint <= filter_uint;
-      }
+    Logger::getInstance().debug(std::to_string(value_uint) + " " + operation +
+                                " " + std::to_string(filter_uint) + " ?");
+    if (operation == "=") {
+      return value_uint == filter_uint;
+    } else if (operation == ">") {
+      return value_uint > filter_uint;
+    } else if (operation == "<") {
+      return value_uint < filter_uint;
+    } else if (operation == ">=") {
+      return value_uint >= filter_uint;
+    } else if (operation == "<=") {
+      return value_uint <= filter_uint;
     }
-  } catch (...) {
-    Logger::getInstance().debug(
-        "Type conversion failed for control block value '" +
-        json_value.get<std::string>() + "'");
-    throw FilterError();
   }
   // We should never get here, so it would be good to say "no match" just in
   // case
@@ -134,11 +133,11 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
   Logger::getInstance().debug("Applying filters to the '" +
                               control_block_name_ + "' control block...");
   for (const auto& [json_key, json_value] : control_block_json.items()) {
-    Logger::getInstance().debug("Checking  '" + json_key + "'");
     if (json_value.is_null()) {
       // If any element in our json structure is null, we already failed a
       // filter match
-      Logger::getInstance().debug("'" + json_key + "' is null");
+      Logger::getInstance().debug("Child control block pointed to by '" +
+                                  json_key + "' was filtered out");
       return false;
     }
   }
