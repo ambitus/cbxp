@@ -78,18 +78,20 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
                            const std::string& filter_value,
                            const std::string& operation) {
   std::string value_str = "";
+  bool value_is_string  = false;
   uint64_t value_uint;
 
   if (json_value.is_number()) {
     value_uint = json_value.get<int>();
   } else {
-    value_str = json_value.get<std::string>();
+    value_str       = json_value.get<std::string>();
+    value_is_string = true;
     if (value_str.substr(0, 2) == "0x") {
-      value_uint = std::stoul(value_str, nullptr, 0);
-      value_str  = "";
+      value_uint      = std::stoul(value_str, nullptr, 0);
+      value_is_string = false;
     }
   }
-  if (value_str != "") {
+  if (value_is_string) {
     // Filter is testing strings
     if (operation == "=") {
       Logger::getInstance().debug("\"" + value_str + "\" = \"" + filter_value +

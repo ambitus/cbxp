@@ -13,8 +13,9 @@
 
 typedef const cbxp_result_t* (*cbxp_t)(const char* control_block_name,
                                        const char* includes_string,
-                                       const char* filters_string, bool debug,
-                                       cbxp_result_t* cbxp_result);
+                                       const char* filters_string, bool debug);
+
+typedef const void (*cbxp_free_t)(const cbxp_result_t* cbxp_result);
 
 static void show_usage(const char* argv[]);
 static void show_dll_errors();
@@ -69,11 +70,18 @@ int main(int argc, const char* argv[]) {
     return -1;
   }
 
+  int exit_rc = -1;
   // Resolve symbol 'cbxp()'
   cbxp_t cbxp = reinterpret_cast<cbxp_t>(dlsym(lib_handle, "cbxp"));
   if (cbxp == nullptr) {
     show_dll_errors();
-    cleanup_and_exit(-1, lib_handle);
+    cleanup_and_exit(exit_rc, lib_handle);
+  }
+  cbxp_free_t cbxp_free =
+      reinterpret_cast<cbxp_free_t>(dlsym(lib_handle, "cbxp_free"));
+  if (cbxp_free == nullptr) {
+    show_dll_errors();
+    cleanup_and_exit(exit_rc, lib_handle);
   }
 
   bool debug                     = false;
@@ -82,7 +90,7 @@ int main(int argc, const char* argv[]) {
 
   if (argc < 2) {
     show_usage(argv);
-    cleanup_and_exit(-1, lib_handle);
+    cleanup_and_exit(exit_rc, lib_handle);
   }
 
   if (argc == 2) {
@@ -106,17 +114,17 @@ int main(int argc, const char* argv[]) {
         debug = true;
       } else {
         show_usage(argv);
-        cleanup_and_exit(-1, lib_handle);
+        cleanup_and_exit(exit_rc, lib_handle);
       }
     } else if (flag == "-i" || flag == "--include") {
       if (i + 1 >= argc - 1) {
         show_usage(argv);
-        cleanup_and_exit(-1, lib_handle);
+        cleanup_and_exit(exit_rc, lib_handle);
       }
       std::string include = std::string(argv[++i]);
       if (check_for_comma(include)) {
         std::cerr << "Include patterns cannot contain commas" << std::endl;
-        cleanup_and_exit(-1, lib_handle);
+        cleanup_and_exit(exit_rc, lib_handle);
       }
       if (includes_string == "") {
         includes_string = include;
@@ -126,12 +134,12 @@ int main(int argc, const char* argv[]) {
     } else if (flag == "-f" || flag == "--filter") {
       if (i + 1 >= argc - 1) {
         show_usage(argv);
-        cleanup_and_exit(-1, lib_handle);
+        cleanup_and_exit(exit_rc, lib_handle);
       }
       std::string filter = std::string(argv[++i]);
       if (check_for_comma(filter)) {
         std::cerr << "Filters cannot contain commas" << std::endl;
-        cleanup_and_exit(-1, lib_handle);
+        cleanup_and_exit(exit_rc, lib_handle);
       }
       if (filters_string == "") {
         filters_string = filter;
@@ -141,7 +149,7 @@ int main(int argc, const char* argv[]) {
     } else {
       if (i != argc - 1) {
         show_usage(argv);
-        cleanup_and_exit(-1, lib_handle);
+        cleanup_and_exit(exit_rc, lib_handle);
       }
       control_block_name = std::string(argv[i]);
     }
@@ -149,29 +157,31 @@ int main(int argc, const char* argv[]) {
 
   if (control_block_name == "") {
     show_usage(argv);
-    cleanup_and_exit(-1, lib_handle);
+    cleanup_and_exit(exit_rc, lib_handle);
   }
 
   nlohmann::json control_block_json;
 
-  static cbxp_result_t cbxp_result = {nullptr, 0, -1};
+  const cbxp_result_t* cbxp_result =
+      cbxp(control_block_name.c_str(), includes_string.c_str(),
+           filters_string.c_str(), debug);
 
-  cbxp(control_block_name.c_str(), includes_string.c_str(),
-       filters_string.c_str(), debug, &cbxp_result);
-
-  if (cbxp_result.return_code == CBXP::Error::BadControlBlock) {
-    std::cerr << "Unknown control block '" << control_block_name
-              << "' was specified." << std::endl;
-    cleanup_and_exit(-1, lib_handle);
-  } else if (cbxp_result.return_code == CBXP::Error::BadInclude) {
-    std::cerr << "A bad include pattern was provided" << std::endl;
-    cleanup_and_exit(-1, lib_handle);
-  } else if (cbxp_result.return_code == CBXP::Error::BadFilter) {
-    std::cerr << "A bad filter was provided" << std::endl;
-    cleanup_and_exit(-1, lib_handle);
-  } else {
-    std::cout << cbxp_result.result_json << std::endl;
+  switch (cbxp_result->return_code) {
+    case CBXP::Error::BadControlBlock:
+      std::cerr << "Unknown control block '" << control_block_name
+                << "' was specified." << std::endl;
+      break;
+    case CBXP::Error::BadInclude:
+      std::cerr << "A bad include pattern was provided" << std::endl;
+      break;
+    case CBXP::Error::BadFilter:
+      std::cerr << "A bad filter was provided" << std::endl;
+      break;
+    default:
+      std::cout << cbxp_result->result_json << std::endl;
+      exit_rc = 0;
   }
 
-  cleanup_and_exit(0, lib_handle);
+  cbxp_free(cbxp_result);
+  cleanup_and_exit(exit_rc, lib_handle);
 }
