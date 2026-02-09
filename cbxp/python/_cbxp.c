@@ -40,7 +40,14 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
 
   result_json_length = cbxp_result->result_json_length;
   rc                 = cbxp_result->return_code;
-  result_json        = strndup(cbxp_result->result_json, result_json_length);
+  result_json        = malloc(result_json_length);
+  if (result_json == NULL) {
+    cbxp_free(cbxp_result);
+    result_dictionary =
+        Py_BuildValue("{s:s}", "error", "memory allocation error");
+    return result_dictionary;
+  }
+  memcpy(result_json, cbxp_result->result_json, result_json_length);
 
   cbxp_free(cbxp_result);
 

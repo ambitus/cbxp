@@ -36,6 +36,7 @@ class CBXPErrorCode(Enum):
 
     COMMA_IN_INCLUDE = -1
     COMMA_IN_FILTER = -2
+    PY_MEMORY_ERROR = -3
     BAD_CONTROL_BLOCK = 1
     BAD_INCLUDE = 2
     BAD_CONTROL_BLOCK_FILTER = 3
@@ -51,6 +52,8 @@ class CBXPError(Exception):
                 message = "Include patterns cannot contain commas"
             case CBXPErrorCode.COMMA_IN_FILTER.value:
                 message = "Filters cannot contain commas"
+            case CBXPErrorCode.PY_MEMORY_ERROR.value:
+                message = "Memory allocation error"
             case CBXPErrorCode.BAD_CONTROL_BLOCK.value:
                 message = f"Unknown control block '{control_block_name}' was specified."
             case CBXPErrorCode.BAD_INCLUDE.value:
@@ -92,8 +95,10 @@ def cbxp(
         filters_string,
         debug=debug,
     )
+    if response["error"]:
+        raise CBXPError(CBXPErrorCode.PY_MEMORY_ERROR.value, control_block)
     if response["return_code"]:
         raise CBXPError(response["return_code"], control_block)
-    if response["result_json"] == "null" and filters != []:
+    if response["result_json"] == "null":
         return None
     return json.loads(response["result_json"])
