@@ -17,5 +17,6 @@ void cbxp_free(cbxp_result_t* cbxp_result);
 #endif
 
 #pragma export(cbxp)
+#pragma export(cbxp_free)
 
 #endif
