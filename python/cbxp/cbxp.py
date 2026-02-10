@@ -94,6 +94,6 @@ def cbxp(
     )
     if response["return_code"]:
         raise CBXPError(response["return_code"], control_block)
-    if response["result_json"] == "null":
+    if response["result_json"] == "null" or response["result_json"] == "[]":
         return None
     return json.loads(response["result_json"])
