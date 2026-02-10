@@ -10,15 +10,128 @@
 namespace CBXP {
 void ControlBlock::createOptionsMap(const std::vector<std::string>& includes,
                                     const std::vector<std::string>& filters) {
-  // createFilterList depends on the construction of the "includes" portion
-  // of the options_map_ structure and must be called after createIncludeList
-  ControlBlock::createIncludeList(includes);
-  ControlBlock::createFilterList(filters);
+  // createFilterLists depends on the construction of the "includes" portion
+  // of the options_map_ structure and must be called after createIncludeLists
+  ControlBlock::createIncludeLists(includes);
+  ControlBlock::createFilterLists(filters);
 }
 
-void ControlBlock::createFilterList(const std::vector<std::string>& filters) {
-  Logger::getInstance().debug("Creating filter list for the '" +
-                              control_block_name_ + "' control block...");
+void ControlBlock::createIncludeLists(
+    const std::vector<std::string>& includes) {
+  Logger::getInstance().debug(
+      "Creating include lists for child control blocks to include with the '" +
+      control_block_name_ + "' control block...");
+  for (std::string include : includes) {
+    if (include == "**") {
+      Logger::getInstance().debug("Processing '**' include...");
+      ControlBlock::processDoubleAsteriskInclude();
+      return;
+    } else if (include == "*") {
+      Logger::getInstance().debug("Processing '*' include...");
+      ControlBlock::processAsteriskInclude();
+    } else {
+      Logger::getInstance().debug("Processing '" + include + "' include...");
+      ControlBlock::processExplicitInclude(include);
+    }
+  }
+  Logger::getInstance().debug(
+      "Include lists for child control blocks to include with the '" +
+      control_block_name_ + "' control block have been created");
+}
+
+void ControlBlock::processDoubleAsteriskInclude() {
+  // Any existing entries in the hash map are redundant, so clear them
+  options_map_.clear();
+  for (const std::string& includable : includables_) {
+    // Build a map of all includables_ but with "**" at the next level
+    Logger::getInstance().debug("Adding '**' to the include list for the '" +
+                                includable + "' control block...");
+    options_map_[includable].include_patterns = {"**"};
+    Logger::getInstance().debug("Done");
+  }
+}
+
+void ControlBlock::processAsteriskInclude() {
+  if (options_map_.empty()) {
+    for (const std::string& includable : includables_) {
+      // Build a map of all includables_
+      Logger::getInstance().debug("Initializing include list for the '" +
+                                  includable + "' control block...");
+      options_map_[includable].include_patterns = {};
+      Logger::getInstance().debug("Done");
+    }
+  }
+  for (const std::string& includable : includables_) {
+    if (options_map_.find(includable) != options_map_.end()) {
+      Logger::getInstance().debug("Include list already exists for the '" +
+                                  includable + "' control block");
+      continue;
+    }
+    // Add all includables_ not already present to the map
+    Logger::getInstance().debug("Initializing include list for the '" +
+                                includable + "' control block...");
+    options_map_[includable].include_patterns = {};
+    Logger::getInstance().debug("Done");
+  }
+}
+
+void ControlBlock::processExplicitInclude(std::string& include) {
+  // Default case; have to validate against an includable
+  const std::string del        = ".";
+  std::string include_includes = "";
+  size_t del_pos               = include.find(del);
+  if (del_pos != std::string::npos) {
+    // If there's a "." then separate include into the include and its
+    // includes
+    include_includes = include.substr(del_pos + 1);
+    include.resize(del_pos);
+  }
+  if (std::find(includables_.begin(), includables_.end(), include) ==
+      includables_.end()) {
+    Logger::getInstance().debug("'" + include +
+                                "' is not a known includable for the '" +
+                                control_block_name_ + "' control block");
+    throw IncludeError();
+  }
+  if (options_map_.find(include) == options_map_.end()) {
+    // If we don't already have this include in our map, add it with its
+    // includes
+    if (include_includes == "") {
+      Logger::getInstance().debug("Initializing include list for the '" +
+                                  include + "' control block...");
+      options_map_[include].include_patterns = {};
+      Logger::getInstance().debug("Done");
+    } else {
+      Logger::getInstance().debug("Adding '" + include_includes +
+                                  "' to the include list for the '" + include +
+                                  "' control block...");
+      options_map_[include].include_patterns = {include_includes};
+      Logger::getInstance().debug("Done");
+    }
+  } else {
+    // If we DO already have this in our map, then we should add its
+    // includes if they are useful or new
+    if (std::find(options_map_[include].include_patterns.begin(),
+                  options_map_[include].include_patterns.end(),
+                  include_includes) !=
+        options_map_[include].include_patterns.end()) {
+      return;
+    }
+    if (include_includes == "") {
+      return;
+    }
+    Logger::getInstance().debug("Adding '" + include_includes +
+                                "' to the include list for the '" + include +
+                                "' control block...");
+    options_map_[include].include_patterns.push_back(include_includes);
+    Logger::getInstance().debug("Done");
+  }
+}
+
+void ControlBlock::createFilterLists(const std::vector<std::string>& filters) {
+  Logger::getInstance().debug(
+      "Creating filter lists for the '" + control_block_name_ +
+      "' control block and included child control blocks...");
   for (const std::string& filter : filters) {
     // Only case; specific non-generic filter
     const std::string del = ".";
@@ -45,8 +158,9 @@ void ControlBlock::createFilterList(const std::vector<std::string>& filters) {
       ControlBlock::addCurrentFilter(filter);
     }
   }
-  Logger::getInstance().debug("'" + control_block_name_ +
-                              "' filter list has been created");
+  Logger::getInstance().debug(
+      "Filter lists for the '" + control_block_name_ +
+      "' control block and included child control blocks have been created");
 }
 
 void ControlBlock::addCurrentFilter(const std::string& filter) {
@@ -109,7 +223,7 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
       filter_uint = std::stoul(filter_value, nullptr, 0);
     } catch (...) {
       Logger::getInstance().debug("'" + filter_value +
-                                  "' cannot be compared to an numeric value");
+                                  "' cannot be compared to a numeric value");
       throw FilterError();
     }
     Logger::getInstance().debug(std::to_string(value_uint) + " " + operation +
@@ -134,15 +248,6 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
 bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
   Logger::getInstance().debug("Applying filters to the '" +
                               control_block_name_ + "' control block...");
-  for (const auto& [json_key, json_value] : control_block_json.items()) {
-    if (json_value.is_null()) {
-      // If any element in our json structure is null, we already failed a
-      // filter match
-      Logger::getInstance().debug("Child control block pointed to by '" +
-                                  json_key + "' was filtered out");
-      return false;
-    }
-  }
   if (current_filters_.empty()) {
     // If the filter map is empty then we want to return the control block
     Logger::getInstance().debug("No filters were provided for the '" +
@@ -176,118 +281,6 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
   Logger::getInstance().debug("All filters for the '" + control_block_name_ +
                               "' control block matched");
   return true;
-}
-
-void ControlBlock::createIncludeList(const std::vector<std::string>& includes) {
-  Logger::getInstance().debug("Creating include list for the '" +
-                              control_block_name_ + "' control block...");
-  for (std::string include : includes) {
-    if (include == "**") {
-      Logger::getInstance().debug("Processing '**' include...");
-      ControlBlock::processDoubleAsteriskInclude();
-      return;
-    } else if (include == "*") {
-      Logger::getInstance().debug("Processing '*' include...");
-      ControlBlock::processAsteriskInclude();
-    } else {
-      Logger::getInstance().debug("Processing '" + include + "' include...");
-      ControlBlock::processExplicitInclude(include);
-    }
-  }
-  Logger::getInstance().debug("'" + control_block_name_ +
-                              "' include list has been created");
-}
-
-void ControlBlock::processDoubleAsteriskInclude() {
-  // Any existing entries in the hash map are redundant, so clear them
-  options_map_.clear();
-  for (const std::string& includable : includables_) {
-    // Build a map of all includables_ but with "**" at the next level
-    Logger::getInstance().debug("Adding '**' to the include list for the '" +
-                                includable + "' control block...");
-    options_map_[includable].include_patterns = {"**"};
-    Logger::getInstance().debug("Done");
-  }
-}
-
-void ControlBlock::processAsteriskInclude() {
-  if (options_map_.empty()) {
-    for (const std::string& includable : includables_) {
-      // Build a map of all includables_
-      Logger::getInstance().debug(
-          "Creating an entry in the include list for the '" + includable +
-          "' control block...");
-      options_map_[includable].include_patterns = {};
-      Logger::getInstance().debug("Done");
-    }
-  }
-  for (const std::string& includable : includables_) {
-    if (options_map_.find(includable) != options_map_.end()) {
-      Logger::getInstance().debug("'" + includable +
-                                  "' already in inclusion list.");
-      continue;
-    }
-    // Add all includables_ not already present to the map
-    Logger::getInstance().debug(
-        "Creating an entry in the include list for the '" + includable +
-        "' control block...");
-    options_map_[includable].include_patterns = {};
-    Logger::getInstance().debug("Done");
-  }
-}
-
-void ControlBlock::processExplicitInclude(std::string& include) {
-  // Default case; have to validate against an includable
-  const std::string del        = ".";
-  std::string include_includes = "";
-  size_t del_pos               = include.find(del);
-  if (del_pos != std::string::npos) {
-    // If there's a "." then separate include into the include and its
-    // includes
-    include_includes = include.substr(del_pos + 1);
-    include.resize(del_pos);
-  }
-  if (std::find(includables_.begin(), includables_.end(), include) ==
-      includables_.end()) {
-    Logger::getInstance().debug("'" + include +
-                                "' is not a known includable for the '" +
-                                control_block_name_ + "' control block");
-    throw IncludeError();
-  }
-  if (options_map_.find(include) == options_map_.end()) {
-    // If we don't already have this include in our map, add it with its
-    // includes
-    if (include_includes == "") {
-      Logger::getInstance().debug(
-          "Creating an entry in the include list for the '" + include +
-          "' control block...");
-      options_map_[include].include_patterns = {};
-      Logger::getInstance().debug("Done");
-    } else {
-      Logger::getInstance().debug("Adding '" + include_includes +
-                                  "' to the include list for the '" + include +
-                                  "' control block...");
-      options_map_[include].include_patterns = {include_includes};
-      Logger::getInstance().debug("Done");
-    }
-  } else {
-    // If we DO already have this in our map, then we should add its
-    // includes if they are useful or new
-    if (std::find(options_map_[include].include_patterns.begin(),
-                  options_map_[include].include_patterns.end(),
-                  include_includes) !=
-        options_map_[include].include_patterns.end()) {
-      return;
-    }
-    if (include_includes == "") {
-      return;
-    }
-    Logger::getInstance().debug("Adding '" + include_includes +
-                                "' to the include list for the '" + include +
-                                "' control block...");
-    options_map_[include].include_patterns.push_back(include_includes);
-    Logger::getInstance().debug("Done");
-  }
 }
 }  // namespace CBXP
 

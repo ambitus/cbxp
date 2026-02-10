@@ -21,12 +21,12 @@ class ControlBlock {
  private:
   const std::string control_block_name_;
   const std::vector<std::string> includables_;
+  void createIncludeLists(const std::vector<std::string>& includes);
   void processDoubleAsteriskInclude();
   void processAsteriskInclude();
   void processExplicitInclude(std::string& include);
+  void createFilterLists(const std::vector<std::string>& filters);
   void addCurrentFilter(const std::string& filter);
-  void createIncludeList(const std::vector<std::string>& includes);
-  void createFilterList(const std::vector<std::string>& filters);
   bool compare(const nlohmann::json& json_value,
                const std::string& filter_value, const std::string& operation);
 
@@ -34,9 +34,9 @@ class ControlBlock {
   ControlBlockFieldFormatter formatter_;
   std::unordered_map<std::string, cbxp_options_t> options_map_;
   std::unordered_map<std::string, std::vector<cbxp_filter_t>> current_filters_;
-  bool matchFilter(nlohmann::json& control_block_json);
   void createOptionsMap(const std::vector<std::string>& includes,
                         const std::vector<std::string>& filters);
+  bool matchFilter(nlohmann::json& control_block_json);
 
  public:
   virtual nlohmann::json get(void* __ptr32 p_control_block = nullptr) = 0;

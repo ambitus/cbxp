@@ -1,14 +1,11 @@
 #define PY_SSIZE_T_CLEAN
 
 #include <Python.h>
-#include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
 #include "cbxp.h"
 #include "cbxp_result.h"
-
-pthread_mutex_t cbxp_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // Entry point to the call_cbxp() function
 static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
@@ -34,23 +31,11 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
   cbxp_result_t* cbxp_result =
       cbxp(control_block, includes_string, filters_string, debug);
 
-  pthread_mutex_lock(&cbxp_mutex);
-  static char* result_json;
-  static int result_json_length, rc;
-
-  result_json_length = cbxp_result->result_json_length;
-  rc                 = cbxp_result->return_code;
-  result_json        = malloc(result_json_length);
-  if (result_json != NULL) {
-    memcpy(result_json, cbxp_result->result_json, result_json_length);
-  }
+  result_dictionary = Py_BuildValue(
+      "{s:s#, s:i}", "result_json", cbxp_result->result_json,
+      cbxp_result->result_json_length, "return_code", cbxp_result->return_code);
 
   cbxp_free(cbxp_result);
-
-  result_dictionary = Py_BuildValue("{s:s#, s:i}", "result_json", result_json,
-                                    result_json_length, "return_code", rc);
-
-  pthread_mutex_unlock(&cbxp_mutex);
 
   return result_dictionary;
 }

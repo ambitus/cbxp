@@ -172,7 +172,7 @@ class TestCBXP(unittest.TestCase):
     # ============================================================================
     # Filters
     # ============================================================================
-    def test_cbxp_can_use_basic_filter(self):
+    def test_cbxp_can_use_filter(self):
         cbdata = cbxp(
             "psa",
             filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSA")],
@@ -306,14 +306,14 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_hex_filter_with_equal(self):
+    def test_cbxp_can_use_int_filter_with_hex_field_equal(self):
         cbdata = cbxp(
             "cvt",
             filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, 2281701376)],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_decimal_filter_for_hex_field(self):
+    def test_cbxp_can_use_hex_filter_with_equal(self):
         cbdata = cbxp(
             "cvt",
             filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, "0x88000000")],
@@ -379,16 +379,16 @@ class TestCBXP(unittest.TestCase):
     ):
         self.assertIsNone(
             cbxp(
-                "psa",
-                includes=["**"],
+                "ascb",
+                includes=["assb"],
                 filters=[
                     CBXPFilter(
-                        "cvt.asvt.ascb.assb.assbjbns",
+                        "assb.assbjbns",
                         CBXPFilterOperation.EQUAL,
                         "*MASTER*",
                     ),
                     CBXPFilter(
-                        "cvt.asvt.ascb.ascbasid",
+                        "ascbasid",
                         CBXPFilterOperation.GREATER_THAN,
                         2,
                     ),
