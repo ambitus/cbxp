@@ -31,6 +31,9 @@ nlohmann::json PSA::get(void* __ptr32 p_control_block) {
   for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "cvt") {
       psa_json["flccvt"] = CBXP::CVT(cbxp_options).get(p_psa->flccvt);
+      if (psa_json["flccvt"].is_null()) {
+        return {};
+      }
     }
   }
 

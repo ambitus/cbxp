@@ -68,6 +68,9 @@ nlohmann::json ASVT::get(void* __ptr32 p_control_block) {
         p_ascb_addr++;  // This SHOULD increment the pointer by 4 bytes.
       }
       asvt_json["asvtenty"] = ascbs_json;
+      if (asvt_json["asvtenty"].is_null()) {
+        return {};
+      }
     }
   }
 
