@@ -74,7 +74,7 @@ run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<0x88000001" cvt
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>=0x87FFFFFF" cvt
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<=0x88000000" cvt
 run_with_expected_null_response ./dist/cbxp -f psapsa=psb psa
-run_with_expected_null_response ./dist/cbxp -f "assb.assbjbns=*MASTER*" -f "ascbasid=2" -i assb ascb
+run_with_expected_null_response ./dist/cbxp -f "ascb.assb.assbjbns=*MASTER*" -f "ascb.ascbasid=2" -i ascb.assb asvt
 
 # Debug Mode
 run_with_expected_exit_code 0 ./dist/cbxp -d psa
