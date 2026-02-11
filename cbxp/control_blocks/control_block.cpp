@@ -88,9 +88,10 @@ void ControlBlock::processExplicitInclude(std::string& include) {
   }
   if (std::find(includables_.begin(), includables_.end(), include) ==
       includables_.end()) {
-    Logger::getInstance().debug("'" + include +
-                                "' is not a known includable for the '" +
-                                control_block_name_ + "' control block");
+    Logger::getInstance().debug(
+        "'" + include +
+        "' is not a known child control block that can be included with the '" +
+        control_block_name_ + "' control block");
     throw IncludeError();
   }
   if (options_map_.find(include) == options_map_.end()) {
@@ -145,8 +146,10 @@ void ControlBlock::createFilterLists(const std::vector<std::string>& filters) {
       // Check to make sure we are including the specified control block
       auto it = options_map_.find(control_block);
       if (it == options_map_.end()) {
-        Logger::getInstance().debug("'" + control_block +
-                                    "' is not found in the inclusion list");
+        Logger::getInstance().debug(
+            "A filter that requires the '" + control_block +
+            "' control block was provided, but the '" + control_block +
+            "' control block was not included");
         throw FilterError();
       }
       Logger::getInstance().debug("Adding '" + control_block_filter +
