@@ -15,7 +15,7 @@ typedef const cbxp_result_t* (*cbxp_t)(const char* control_block_name,
                                        const char* includes_string,
                                        const char* filters_string, bool debug);
 
-typedef const void (*cbxp_free_t)(const cbxp_result_t* cbxp_result);
+typedef const void (*cbxp_free_t)(const cbxp_result_t* cbxp_result, bool debug);
 
 static void show_usage(const char* argv[]);
 static void show_dll_errors();
@@ -182,6 +182,6 @@ int main(int argc, const char* argv[]) {
       exit_rc = 0;
   }
 
-  cbxp_free(cbxp_result);
+  cbxp_free(cbxp_result, debug);
   cleanup_and_exit(exit_rc, lib_handle);
 }

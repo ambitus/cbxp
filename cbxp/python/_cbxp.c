@@ -36,7 +36,7 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
                     p_cbxp_result->result_json_length, "return_code",
                     p_cbxp_result->return_code);
 
-  cbxp_free(p_cbxp_result);
+  cbxp_free(p_cbxp_result, debug);
 
   return result_dictionary;
 }
