@@ -10,7 +10,7 @@ extern "C" {
 cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
                     const char* filters_string, bool debug);
 
-void cbxp_free(cbxp_result_t* cbxp_result);
+void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
 
 #ifdef __cplusplus
 }
