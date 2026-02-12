@@ -28,14 +28,15 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
 
   debug = PyObject_IsTrue(debug_pyobj);
 
-  cbxp_result_t* cbxp_result =
+  cbxp_result_t* p_cbxp_result =
       cbxp(p_control_block, p_includes_string, p_filters_string, debug);
 
-  result_dictionary = Py_BuildValue(
-      "{s:s#, s:i}", "result_json", cbxp_result->result_json,
-      cbxp_result->result_json_length, "return_code", cbxp_result->return_code);
+  result_dictionary =
+      Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
+                    p_cbxp_result->result_json_length, "return_code",
+                    p_cbxp_result->return_code);
 
-  cbxp_free(cbxp_result);
+  cbxp_free(p_cbxp_result);
 
   return result_dictionary;
 }

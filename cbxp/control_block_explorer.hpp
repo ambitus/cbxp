@@ -13,7 +13,7 @@ class ControlBlockExplorer {
       const std::string& comma_separated_string);
 
  public:
-  ControlBlockExplorer(cbxp_result_t* p_result, bool debug);
+  explicit ControlBlockExplorer(cbxp_result_t* p_result);
   void exploreControlBlock(const std::string& control_block_name,
                            const std::string& includes_string,
                            const std::string& filters_string);

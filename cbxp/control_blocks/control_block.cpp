@@ -44,8 +44,9 @@ void ControlBlock::processDoubleAsteriskInclude() {
   options_map_.clear();
   for (const std::string& includable : includables_) {
     // Build a map of all includables_ but with "**" at the next level
-    Logger::getInstance().debug("Adding '**' to the include list for the '" +
-                                includable + "' control block...");
+    Logger::getInstance().debug(
+        "Initializing and adding '**' to the include list for the '" +
+        includable + "' control block...");
     options_map_[includable].include_patterns = {"**"};
     Logger::getInstance().debug("Done");
   }
