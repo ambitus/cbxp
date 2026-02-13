@@ -177,7 +177,7 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
       filter_value = filter.substr(operation_pos + operation.length());
       filter_key   = filter.substr(0, operation_pos);
       if (filter_value == "") {
-        Logger::getInstance().debug("Filter patterns cannot be null");
+        Logger::getInstance().debug("Filter values cannot be null");
         throw FilterError();
       }
       cbxp_filter_t filter_data = {operation, filter_value};
@@ -217,7 +217,7 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
       return (fnmatch(filter_value.c_str(), value_str.c_str(), 0) == 0);
     } else {
       Logger::getInstance().debug(
-          "<, <=, >, and >= cannot be used with string filter patterns");
+          "<, <=, >, and >= cannot be used with string filter values");
       throw FilterError();
     }
   }  // Filter is testing non-strings

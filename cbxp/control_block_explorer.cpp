@@ -43,17 +43,12 @@ std::vector<std::string> ControlBlockExplorer::createOptionsList(
   }
   entry = comma_separated_string.substr(index, pos);
   options_list.push_back(entry);
-  Logger::getInstance().debug("Options list created.");
+  Logger::getInstance().debug("Options list created");
 
   return options_list;
 }
 
 ControlBlockExplorer::ControlBlockExplorer(cbxp_result_t* p_result) {
-  if (p_result->result_json != nullptr) {
-    Logger::getInstance().debugFree(p_result->result_json);
-    delete[] p_result->result_json;
-  }
-
   p_result->result_json_length = 0;
   p_result->result_json        = nullptr;
   p_result->return_code        = 0;
@@ -95,15 +90,16 @@ void ControlBlockExplorer::exploreControlBlock(
 
   std::string control_block_json_string = control_block_json.dump();
 
-  Logger::getInstance().debug("Control block data extracted.");
+  Logger::getInstance().debug("'" + control_block_name +
+                              "' control block data extracted");
 
   Logger::getInstance().debug("Control Block JSON: " +
                               control_block_json_string);
 
   p_result_->result_json_length = control_block_json_string.length();
-  Logger::getInstance().debug("Allocating cbxp result json buffer...");
-  p_result_->result_json = new char[p_result_->result_json_length];
-  Logger::getInstance().debug("Cbxp result json buffer allocated.");
+  p_result_->result_json        = new char[p_result_->result_json_length];
+  Logger::getInstance().debugAllocate(p_result_->result_json, 64,
+                                      p_result_->result_json_length);
   p_result_->result_json[p_result_->result_json_length] = 0;
 
   Logger::getInstance().debugAllocate(p_result_->result_json, 64,
