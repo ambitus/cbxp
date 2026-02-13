@@ -48,7 +48,6 @@ void ControlBlock::processDoubleAsteriskInclude() {
         "Initializing and adding '**' to the include list for the '" +
         includable + "' control block...");
     options_map_[includable].include_patterns = {"**"};
-    Logger::getInstance().debug("Done");
   }
 }
 
@@ -59,7 +58,6 @@ void ControlBlock::processAsteriskInclude() {
       Logger::getInstance().debug("Initializing include list for the '" +
                                   includable + "' control block...");
       options_map_[includable].include_patterns = {};
-      Logger::getInstance().debug("Done");
     }
   }
   for (const std::string& includable : includables_) {
@@ -72,7 +70,6 @@ void ControlBlock::processAsteriskInclude() {
     Logger::getInstance().debug("Initializing include list for the '" +
                                 includable + "' control block...");
     options_map_[includable].include_patterns = {};
-    Logger::getInstance().debug("Done");
   }
 }
 
@@ -102,13 +99,11 @@ void ControlBlock::processExplicitInclude(std::string& include) {
       Logger::getInstance().debug("Initializing include list for the '" +
                                   include + "' control block...");
       options_map_[include].include_patterns = {};
-      Logger::getInstance().debug("Done");
     } else {
       Logger::getInstance().debug("Adding '" + include_includes +
                                   "' to the include list for the '" + include +
                                   "' control block...");
       options_map_[include].include_patterns = {include_includes};
-      Logger::getInstance().debug("Done");
     }
   } else {
     // If we DO already have this in our map, then we should add its
@@ -126,7 +121,6 @@ void ControlBlock::processExplicitInclude(std::string& include) {
                                 "' to the include list for the '" + include +
                                 "' control block...");
     options_map_[include].include_patterns.push_back(include_includes);
-    Logger::getInstance().debug("Done");
   }
 }
 
@@ -157,7 +151,6 @@ void ControlBlock::createFilterLists(const std::vector<std::string>& filters) {
                                   "' to the filter list for the '" +
                                   control_block + "' control block...");
       options_map_[control_block].filters.push_back(control_block_filter);
-      Logger::getInstance().debug("Done");
     } else {
       ControlBlock::addCurrentFilter(filter);
     }
@@ -186,7 +179,6 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
                                   "' to the current filters list for the '" +
                                   control_block_name_ + "' control block...");
       current_filters_[filter_key].push_back(filter_data);
-      Logger::getInstance().debug("Done");
       return;
     }
   }

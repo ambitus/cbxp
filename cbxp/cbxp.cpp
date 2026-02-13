@@ -15,7 +15,7 @@ cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
 
   CBXP::Logger::getInstance().setDebug(debug);
 
-  cbxp_result_t* p_cbxp_result = new cbxp_result_t({nullptr, 0, -1});
+  cbxp_result_t* p_cbxp_result = new cbxp_result_t();
   CBXP::Logger::getInstance().debugAllocate(p_cbxp_result, 64,
                                             sizeof(cbxp_result_t));
 
