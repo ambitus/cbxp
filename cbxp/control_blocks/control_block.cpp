@@ -197,7 +197,7 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
     value_str       = json_value.get<std::string>();
     value_is_string = true;
     if (value_str.substr(0, 2) == "0x") {
-      value_uint      = std::stoul(value_str, nullptr, 0);
+      value_uint      = std::stoull(value_str, nullptr, 0);
       value_is_string = false;
     }
   }

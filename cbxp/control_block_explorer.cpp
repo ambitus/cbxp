@@ -92,7 +92,6 @@ void ControlBlockExplorer::exploreControlBlock(
   p_result_->result_json        = new char[p_result_->result_json_length + 1]{};
   Logger::getInstance().debugAllocate(p_result_->result_json, 64,
                                       p_result_->result_json_length + 1);
-  p_result_->result_json[p_result_->result_json_length] = 0;
 
   std::strncpy(p_result_->result_json, control_block_json_string.c_str(),
                p_result_->result_json_length);
