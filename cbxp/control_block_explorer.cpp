@@ -48,10 +48,6 @@ std::vector<std::string> ControlBlockExplorer::createOptionsList(
   return options_list;
 }
 
-ControlBlockExplorer::ControlBlockExplorer(cbxp_result_t* p_result) {
-  p_result_ = p_result;
-}
-
 void ControlBlockExplorer::exploreControlBlock(
     const std::string& control_block_name, const std::string& includes_string,
     const std::string& filters_string) {
