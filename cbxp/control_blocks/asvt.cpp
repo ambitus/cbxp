@@ -47,10 +47,10 @@ nlohmann::json ASVT::get(void* __ptr32 p_control_block) {
   Logger::getInstance().debug("ASVT hex dump:");
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_asvt),
                                 sizeof(asvt_t));
-  for (const auto& [include, include_includes] : include_map_) {
+  for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "ascb") {
       nlohmann::json ascbs_json;
-      CBXP::ASCB ascb(include_includes);
+      CBXP::ASCB ascb(cbxp_options);
       uint32_t* __ptr32 p_ascb_addr = const_cast<uint32_t* __ptr32>(
           reinterpret_cast<const uint32_t* __ptr32>(&p_asvt->asvtenty));
       for (int i = 0; i < p_asvt->asvtmaxu; i++) {
@@ -62,10 +62,15 @@ nlohmann::json ASVT::get(void* __ptr32 p_control_block) {
         }
         nlohmann::json ascb_json =
             ascb.get(reinterpret_cast<void*>(*p_ascb_addr));
-        ascbs_json.push_back(ascb_json);
+        if (!ascb_json.is_null()) {
+          ascbs_json.push_back(ascb_json);
+        }
         p_ascb_addr++;  // This SHOULD increment the pointer by 4 bytes.
       }
       asvt_json["asvtenty"] = ascbs_json;
+      if (asvt_json["asvtenty"].is_null()) {
+        return {};
+      }
     }
   }
 
@@ -85,6 +90,10 @@ nlohmann::json ASVT::get(void* __ptr32 p_control_block) {
   asvt_json["asvtmdsc"]        = p_asvt->asvtmdsc;
   asvt_json["asvtfrst"]        = formatter_.getHex<uint32_t>(p_asvt->asvtfrst);
 
-  return asvt_json;
+  if (ASVT::matchFilter(asvt_json)) {
+    return asvt_json;
+  } else {
+    return {};
+  }
 }
 }  // namespace CBXP

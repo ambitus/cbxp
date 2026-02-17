@@ -1,6 +1,6 @@
 import unittest
 
-from cbxp import CBXPError, cbxp
+from cbxp import CBXPError, CBXPFilter, CBXPFilterOperation, cbxp
 
 
 class TestCBXP(unittest.TestCase):
@@ -170,6 +170,233 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry["ascbassb"]), dict)
 
     # ============================================================================
+    # Filters
+    # ============================================================================
+    def test_cbxp_can_use_filter(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSA")],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_filter_with_wildcard_include(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "*MASTER*",
+                ),
+            ],
+            includes=["**"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_filter_with_explicit_include(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "*MASTER*",
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_multiple_filters(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "*MASTER*",
+                ),
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.GREATER_THAN,
+                    0,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_wildcard_filter_with_string(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "?MAS?ER?",
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_equal(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter("cvt.asvt.ascb.ascbasid", CBXPFilterOperation.EQUAL, 1),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_greater_than(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.GREATER_THAN,
+                    0,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_less_than(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.LESS_THAN,
+                    2,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_greater_than_or_equal(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.GREATER_THAN_OR_EQUAL,
+                    1,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_less_than_or_equal(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.LESS_THAN_OR_EQUAL,
+                    2,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_with_hex_field_equal(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, 2281701376)],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_hex_filter_with_equal(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, "0x88000000")],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_hex_filter_with_greater_than(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[
+                CBXPFilter("cvtasmvt", CBXPFilterOperation.GREATER_THAN, "0x87FFFFFF"),
+            ],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_hex_filter_with_less_than(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[
+                CBXPFilter("cvtasmvt", CBXPFilterOperation.LESS_THAN, "0x88000001"),
+            ],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_hex_filter_with_greater_than_or_equal(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[
+                CBXPFilter(
+                    "cvtasmvt",
+                    CBXPFilterOperation.GREATER_THAN_OR_EQUAL,
+                    "0x87FFFFFF",
+                ),
+            ],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_hex_filter_with_less_than_or_equal(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[
+                CBXPFilter(
+                    "cvtasmvt",
+                    CBXPFilterOperation.LESS_THAN_OR_EQUAL,
+                    "0x88000000",
+                ),
+            ],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_returns_none_if_no_filter_match(
+        self,
+    ):
+        self.assertIsNone(
+            cbxp(
+                "psa",
+                filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSB")],
+            ),
+        )
+
+    def test_cbxp_returns_none_if_one_of_two_filters_fails(
+        self,
+    ):
+        self.assertIsNone(
+            cbxp(
+                "ascb",
+                includes=["assb"],
+                filters=[
+                    CBXPFilter(
+                        "assb.assbjbns",
+                        CBXPFilterOperation.EQUAL,
+                        "*MASTER*",
+                    ),
+                    CBXPFilter(
+                        "ascbasid",
+                        CBXPFilterOperation.GREATER_THAN,
+                        2,
+                    ),
+                ],
+            ),
+        )
+
+    # ============================================================================
     # Debug Mode
     # ============================================================================
     def test_cbxp_can_run_in_debug_mode(self):
@@ -235,6 +462,82 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp("cvt", includes=["asvt,as"])
         self.assertEqual("Include patterns cannot contain commas", str(e.exception))
+
+    # ============================================================================
+    # Errors: Bad Filters
+    # ============================================================================
+    def test_cbxp_raises_cbxp_error_if_filter_uses_non_included_control_block(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                filters=[
+                    CBXPFilter(
+                        "cvt.asvt.ascb.assb.assbjbns",
+                        CBXPFilterOperation.EQUAL,
+                        "*MASTER*",
+                    ),
+                ],
+            )
+        self.assertEqual("A bad filter was provided", str(e.exception))
+
+    def test_cbxp_raises_cbxp_error_if_non_equality_filter_used_with_string(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                includes=["**"],
+                filters=[
+                    CBXPFilter(
+                        "cvt.asvt.ascb.assb.assbjbns",
+                        CBXPFilterOperation.LESS_THAN_OR_EQUAL,
+                        "*MASTER*",
+                    ),
+                ],
+            )
+        self.assertEqual("A bad filter was provided", str(e.exception))
+
+    def test_cbxp_raises_cbxp_error_if_filter_uses_unknown_key(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                filters=["psapsb", CBXPFilterOperation.EQUAL, "PSA"],
+            )
+        self.assertEqual("A bad filter was provided", str(e.exception))
+
+    def test_cbxp_raises_cbxp_error_if_filter_passes_null_value(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                filters=["psapsa", CBXPFilterOperation.EQUAL, ""],
+            )
+        self.assertEqual("A bad filter was provided", str(e.exception))
+
+    def test_cbxp_raises_cbxp_error_if_filter_uses_string_for_numeric_field(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "ascb",
+                filters=["ascbasid", CBXPFilterOperation.LESS_THAN, "junk"],
+            )
+        self.assertEqual("A bad filter was provided", str(e.exception))
+
+    def test_cbxp_raises_cbxp_error_if_filter_has_comma(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                filters=["psapsa", CBXPFilterOperation.EQUAL, "PSA,PSB"],
+            )
+        self.assertEqual("Filters cannot contain commas", str(e.exception))
 
 
 if __name__ == "__main__":

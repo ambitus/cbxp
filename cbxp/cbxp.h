@@ -7,13 +7,16 @@
 extern "C" {
 #endif
 
-const cbxp_result_t* cbxp(const char* control_block_name,
-                          const char* includes_string, bool debug);
+cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
+                    const char* filters_string, bool debug);
+
+void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
 
 #ifdef __cplusplus
 }
 #endif
 
 #pragma export(cbxp)
+#pragma export(cbxp_free)
 
 #endif
