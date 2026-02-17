@@ -47,9 +47,14 @@ typedef struct {
     int32_t oucbdrfr;
     char* __ptr32 oucbact;
     int32_t oucbcsw; // speak to team
-    uint8_t oucbacn;
-    uint8_t oucbcfl;
-    uint8_t oucbcsbt;
+    union {
+        uint32_t word;  
+        struct {
+            uint16_t oucbacn;  
+            uint8_t  oucbcfl;  
+            uint8_t  oucbcsbt; 
+        } fields;
+    } oucbcsw;
     int32_t oucbcmrv;
     int32_t oucbwmrl;
     int16_t  oucbval;
