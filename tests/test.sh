@@ -114,9 +114,6 @@ run_with_expected_exit_code 255 ./dist/cbxp -f psapsa= psa
 run_with_expected_exit_code 255 ./dist/cbxp -f 'ascbasid<=junk' ascb
 run_with_expected_exit_code 255 ./dist/cbxp -f "psapsa=psa,cvt.asvt.ascb.ascbasid<2" cvt
 
-
-
-
 echo " -------------------------------- "
 echo " -------------------------------- "
 echo " All tests completed successfully"

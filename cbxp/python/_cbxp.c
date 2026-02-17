@@ -17,8 +17,8 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
   Py_ssize_t request_length;
   bool debug            = false;
 
-  static char* kwlist[] = {"request", "include", "p_filters_string", "debug",
-                           NULL};
+  static char* kwlist[] = {"control_block", "includes_string", "filters_string",
+                           "debug", NULL};
 
   if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|ssO", kwlist,
                                    &p_control_block, &p_includes_string,
