@@ -17,57 +17,43 @@
 
 namespace CBXP {
 
-std::vector<std::string> ControlBlockExplorer::createIncludeList(
-    const std::string& includes_string) {
-  if (includes_string == "") {
+std::vector<std::string> ControlBlockExplorer::createOptionsList(
+    const std::string& comma_separated_string) {
+  if (comma_separated_string == "") {
     return {};
   }
 
-  std::vector<std::string> includes = {};
+  std::vector<std::string> options_list = {};
 
   Logger::getInstance().debug(
-      "Creating include list from the provided include list string: " +
-      includes_string);
+      "Creating options list from the provided comma-separated list string: " +
+      comma_separated_string);
 
   const std::string del = ",";
   std::string entry;
   size_t index = 0;
 
-  auto pos     = includes_string.find(del);
+  auto pos     = comma_separated_string.find(del);
 
   while (pos != std::string::npos) {
-    entry = includes_string.substr(index, pos);
-    includes.push_back(entry);
+    entry = comma_separated_string.substr(index, pos);
+    options_list.push_back(entry);
     index += pos + 1;
-    pos = includes_string.substr(index, std::string::npos).find(del);
+    pos = comma_separated_string.substr(index, std::string::npos).find(del);
   }
-  entry = includes_string.substr(index, pos);
-  includes.push_back(entry);
-  Logger::getInstance().debug("Done.");
+  entry = comma_separated_string.substr(index, pos);
+  options_list.push_back(entry);
+  Logger::getInstance().debug("Options list created");
 
-  return includes;
-}
-
-ControlBlockExplorer::ControlBlockExplorer(cbxp_result_t* p_result,
-                                           bool debug) {
-  Logger::getInstance().setDebug(debug);
-
-  if (p_result->result_json != nullptr) {
-    Logger::getInstance().debugFree(p_result->result_json);
-    delete[] p_result->result_json;
-  }
-
-  p_result->result_json_length = 0;
-  p_result->result_json        = nullptr;
-  p_result->return_code        = 0;
-
-  p_result_                    = p_result;
+  return options_list;
 }
 
 void ControlBlockExplorer::exploreControlBlock(
-    const std::string& control_block_name, const std::string& includes_string) {
-  std::vector<std::string> includes =
-      ControlBlockExplorer::createIncludeList(includes_string);
+    const std::string& control_block_name, const std::string& includes_string,
+    const std::string& filters_string) {
+  cbxp_options_t cbxp_options = {
+      ControlBlockExplorer::createOptionsList(includes_string),
+      ControlBlockExplorer::createOptionsList(filters_string)};
 
   Logger::getInstance().debug("Extracting '" + control_block_name +
                               "' control block data...");
@@ -75,17 +61,17 @@ void ControlBlockExplorer::exploreControlBlock(
   nlohmann::json control_block_json;
   try {
     if (control_block_name == "psa") {
-      control_block_json = PSA(includes).get();
+      control_block_json = PSA(cbxp_options).get();
     } else if (control_block_name == "cvt") {
-      control_block_json = CVT(includes).get();
+      control_block_json = CVT(cbxp_options).get();
     } else if (control_block_name == "ecvt") {
-      control_block_json = ECVT(includes).get();
+      control_block_json = ECVT(cbxp_options).get();
     } else if (control_block_name == "ascb") {
-      control_block_json = ASCB(includes).get();
+      control_block_json = ASCB(cbxp_options).get();
     } else if (control_block_name == "asvt") {
-      control_block_json = ASVT(includes).get();
+      control_block_json = ASVT(cbxp_options).get();
     } else if (control_block_name == "assb") {
-      control_block_json = ASSB(includes).get();
+      control_block_json = ASSB(cbxp_options).get();
     } else {
       throw ControlBlockError();
     }
@@ -96,17 +82,16 @@ void ControlBlockExplorer::exploreControlBlock(
 
   std::string control_block_json_string = control_block_json.dump();
 
-  Logger::getInstance().debug("Done.");
+  Logger::getInstance().debug("'" + control_block_name +
+                              "' control block data extracted");
 
   Logger::getInstance().debug("Control Block JSON: " +
                               control_block_json_string);
 
   p_result_->result_json_length = control_block_json_string.length();
-  p_result_->result_json        = new char[p_result_->result_json_length];
-  p_result_->result_json[p_result_->result_json_length] = 0;
-
+  p_result_->result_json        = new char[p_result_->result_json_length + 1]{};
   Logger::getInstance().debugAllocate(p_result_->result_json, 64,
-                                      p_result_->result_json_length);
+                                      p_result_->result_json_length + 1);
 
   std::strncpy(p_result_->result_json, control_block_json_string.c_str(),
                p_result_->result_json_length);

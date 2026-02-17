@@ -43,11 +43,17 @@ nlohmann::json CVT::get(void* __ptr32 p_control_block) {
   cvt_json["cvtasvt"] = formatter_.getHex<uint32_t>(&p_cvtmap->cvtasvt);
   cvt_json["cvtecvt"] = formatter_.getHex<uint32_t>(&p_cvtmap->cvtecvt);
 
-  for (const auto& [include, include_includes] : include_map_) {
+  for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "asvt") {
-      cvt_json["cvtasvt"] = CBXP::ASVT(include_includes).get(p_cvtmap->cvtasvt);
+      cvt_json["cvtasvt"] = CBXP::ASVT(cbxp_options).get(p_cvtmap->cvtasvt);
+      if (cvt_json["cvtasvt"].is_null()) {
+        return {};
+      }
     } else if (include == "ecvt") {
-      cvt_json["cvtecvt"] = CBXP::ECVT(include_includes).get(p_cvtmap->cvtecvt);
+      cvt_json["cvtecvt"] = CBXP::ECVT(cbxp_options).get(p_cvtmap->cvtecvt);
+      if (cvt_json["cvtecvt"].is_null()) {
+        return {};
+      }
     }
   }
 
@@ -139,6 +145,10 @@ nlohmann::json CVT::get(void* __ptr32 p_control_block) {
   cvt_json["cvt0pt03"] = formatter_.getHex<uint32_t>(p_cvtmap->cvt0pt03);
   cvt_json["cvt0scr1"] = formatter_.getHex<uint32_t>(p_cvtmap->cvt0scr1);
 
-  return cvt_json;
+  if (CVT::matchFilter(cvt_json)) {
+    return cvt_json;
+  } else {
+    return {};
+  }
 }
 }  // namespace CBXP

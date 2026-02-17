@@ -46,8 +46,11 @@ nlohmann::json ASSB::get(void* __ptr32 p_control_block) {
       //
       const struct ascb* __ptr32 p_ascb =
           reinterpret_cast<struct ascb* __ptr32>(*p_ascb_addr);
-      assbs.push_back(
-          ASSB::get(reinterpret_cast<void* __ptr32>(p_ascb->ascbassb)));
+      nlohmann::json next_assb =
+          ASSB::get(reinterpret_cast<void* __ptr32>(p_ascb->ascbassb));
+      if (!next_assb.is_null()) {
+        assbs.push_back(next_assb);
+      }
       p_ascb_addr++;  // This SHOULD increment the pointer by 4 bytes.
     }
     return assbs;
@@ -195,6 +198,10 @@ nlohmann::json ASSB::get(void* __ptr32 p_control_block) {
       formatter_.uint<uint64_t>(p_assb->assbinitiatorjobid);
   assb_json["assbend"] = formatter_.uint<uint64_t>(p_assb->assbend);
 
-  return assb_json;
+  if (ASSB::matchFilter(assb_json)) {
+    return assb_json;
+  } else {
+    return {};
+  }
 }
 }  // namespace CBXP
