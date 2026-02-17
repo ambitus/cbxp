@@ -216,7 +216,7 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
   else {
     uint64_t filter_uint;
     try {
-      filter_uint = std::stoul(filter_value, nullptr, 0);
+      filter_uint = std::stoull(filter_value, nullptr, 0);
     } catch (...) {
       Logger::getInstance().debug("'" + filter_value +
                                   "' cannot be compared to a numeric value");
