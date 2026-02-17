@@ -46,7 +46,7 @@ typedef struct {
     int32_t oucbtmo;
     int32_t oucbdrfr;
     char* __ptr32 oucbact;
-    int32_t oucbcsw; // speak to team
+    //int32_t oucbcsw; // speak to team
     union {
         uint32_t word;  
         struct {
@@ -106,7 +106,6 @@ typedef struct {
     int32_t oucbrst1;
     int32_t oucbrst2;
     int32_t oucbx1_0;
-
 } oucb_t;
 #pragma pack(pop)  // Restore default structure packing options.
 
