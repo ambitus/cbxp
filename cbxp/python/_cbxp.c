@@ -20,7 +20,7 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
   static char* kwlist[] = {"control_block", "includes_string", "filters_string",
                            "debug", NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|ssO", kwlist,
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "sss|O", kwlist,
                                    &p_control_block, &p_includes_string,
                                    &p_filters_string, &debug_pyobj)) {
     return NULL;
