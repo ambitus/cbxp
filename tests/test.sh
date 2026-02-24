@@ -79,26 +79,6 @@ run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<=0x88000000" cvt
 run_with_expected_null_response ./dist/cbxp -f psapsa=PSB psa
 run_with_expected_null_response ./dist/cbxp -f "ascb.assb.assbjbns=*MASTER*" -f "ascb.ascbasid=2" -i ascb.assb asvt
 
-# Filters
-run_with_expected_exit_code 0 ./dist/cbxp -f psapsa=PSA psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -i cvt.asvt.ascb.assb psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=?MAS?ER?" -i cvt.asvt.ascb.assb psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid=1" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid<2" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid>=1" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid<=2" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt=2281701376" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt=0x88000000" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>0x87FFFFFF" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<0x88000001" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>=0x87FFFFFF" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<=0x88000000" cvt
-run_with_expected_null_response ./dist/cbxp -f psapsa=PSB psa
-run_with_expected_null_response ./dist/cbxp -f "ascb.assb.assbjbns=*MASTER*" -f "ascb.ascbasid=2" -i ascb.assb asvt
-
 # Debug Mode
 run_with_expected_exit_code 0 ./dist/cbxp -d psa
 run_with_expected_exit_code 0 ./dist/cbxp --debug psa
