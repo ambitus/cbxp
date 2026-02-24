@@ -425,6 +425,233 @@ class TestCBXP(unittest.TestCase):
         )
 
     # ============================================================================
+    # Filters
+    # ============================================================================
+    def test_cbxp_can_use_filter(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSA")],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_filter_with_wildcard_include(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "*MASTER*",
+                ),
+            ],
+            includes=["**"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_filter_with_explicit_include(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "*MASTER*",
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_multiple_filters(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "*MASTER*",
+                ),
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.GREATER_THAN,
+                    0,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_wildcard_filter_with_string(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.assb.assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "?MAS?ER?",
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_equal(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter("cvt.asvt.ascb.ascbasid", CBXPFilterOperation.EQUAL, 1),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_greater_than(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.GREATER_THAN,
+                    0,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_less_than(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.LESS_THAN,
+                    2,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_greater_than_or_equal(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.GREATER_THAN_OR_EQUAL,
+                    1,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_less_than_or_equal(self):
+        cbdata = cbxp(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.ascbasid",
+                    CBXPFilterOperation.LESS_THAN_OR_EQUAL,
+                    2,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb"],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_int_filter_with_hex_field_equal(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, 2281701376)],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_hex_filter_with_equal(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, "0x88000000")],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_hex_filter_with_greater_than(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[
+                CBXPFilter("cvtasmvt", CBXPFilterOperation.GREATER_THAN, "0x87FFFFFF"),
+            ],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_hex_filter_with_less_than(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[
+                CBXPFilter("cvtasmvt", CBXPFilterOperation.LESS_THAN, "0x88000001"),
+            ],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_hex_filter_with_greater_than_or_equal(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[
+                CBXPFilter(
+                    "cvtasmvt",
+                    CBXPFilterOperation.GREATER_THAN_OR_EQUAL,
+                    "0x87FFFFFF",
+                ),
+            ],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_use_hex_filter_with_less_than_or_equal(self):
+        cbdata = cbxp(
+            "cvt",
+            filters=[
+                CBXPFilter(
+                    "cvtasmvt",
+                    CBXPFilterOperation.LESS_THAN_OR_EQUAL,
+                    "0x88000000",
+                ),
+            ],
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_returns_none_if_no_filter_match(
+        self,
+    ):
+        self.assertIsNone(
+            cbxp(
+                "psa",
+                filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSB")],
+            ),
+        )
+
+    def test_cbxp_returns_none_if_one_of_two_filters_fails(
+        self,
+    ):
+        self.assertIsNone(
+            cbxp(
+                "ascb",
+                includes=["assb"],
+                filters=[
+                    CBXPFilter(
+                        "assb.assbjbns",
+                        CBXPFilterOperation.EQUAL,
+                        "*MASTER*",
+                    ),
+                    CBXPFilter(
+                        "ascbasid",
+                        CBXPFilterOperation.GREATER_THAN,
+                        2,
+                    ),
+                ],
+            ),
+        )
+
+    # ============================================================================
     # Debug Mode
     # ============================================================================
     def test_cbxp_can_run_in_debug_mode(self):
