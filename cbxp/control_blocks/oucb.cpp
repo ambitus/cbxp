@@ -89,8 +89,6 @@ nlohmann::json OUCB::get(void* __ptr32 p_control_block) {
   oucb_json["oucbdmn"]  = p_oucb->oucbdmn;
   oucb_json["oucbsrc"]  = p_oucb->oucbsrc;
   oucb_json["oucbswc"]  = p_oucb->oucbswc;
-  oucb_json["oucbascb"] = formatter_.getHex<uint32_t>(&(p_oucb->oucbascb));
-  oucb_json["oucbpagp"] = formatter_.getHex<uint32_t>(&(p_oucb->oucbpagp));
   oucb_json["oucbtmw"]  = p_oucb->oucbtmw;
   oucb_json["oucbwms"]  = p_oucb->oucbwms;
   oucb_json["oucbcpu"]  = p_oucb->oucbcpu;
@@ -113,7 +111,6 @@ nlohmann::json OUCB::get(void* __ptr32 p_control_block) {
   oucb_json["oucbwmrl"] = p_oucb->oucbwmrl;
   oucb_json["oucbval"]  = p_oucb->oucbval;
   oucb_json["oucbpfl"]  = formatter_.getBitmap<uint8_t>(p_oucb->oucbpfl);
-  oucb_json["oucbactl"] = p_oucb->oucbactl;
   oucb_json["oucbiocl"] = p_oucb->oucbiocl;
   oucb_json["oucbdspc"] = formatter_.getBitmap<uint8_t>(p_oucb->oucbdspc);
   oucb_json["oucbdspn"] = formatter_.getBitmap<uint8_t>(p_oucb->oucbdspn);
@@ -135,7 +132,6 @@ nlohmann::json OUCB::get(void* __ptr32 p_control_block) {
   oucb_json["oucbdlyt"] = p_oucb->oucbdlyt;
   oucb_json["oucbhst"]  = p_oucb->oucbhst;
   oucb_json["oucbcfs"]  = p_oucb->oucbcfs;
-  oucb_json["oucbsubn"] = formatter_.getString(p_oucb->oucbsubn, 4);
   oucb_json["oucbrpg"]  = p_oucb->oucbrpg;
   oucb_json["oucbspg"]  = p_oucb->oucbspg;
   oucb_json["oucbnpg"]  = p_oucb->oucbnpg;
@@ -150,7 +146,6 @@ nlohmann::json OUCB::get(void* __ptr32 p_control_block) {
   oucb_json["oucbcls"]  = formatter_.getString(p_oucb->oucbcls, 8);
   oucb_json["oucbtrs"]  = p_oucb->oucbtrs;
   oucb_json["oucbtrr"]  = p_oucb->oucbtrr;
-  oucb_json["oucbactp"] = p_oucb->oucbactp;
   oucb_json["oucbswss"] = p_oucb->oucbswss;
   oucb_json["oucbpsum"] = p_oucb->oucbpsum;
   oucb_json["oucbfixb"] = p_oucb->oucbfixb;

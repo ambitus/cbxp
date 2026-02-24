@@ -197,6 +197,7 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry["ascbassb"]), dict)
             self.assertIs(type(entry["ascboucb"]), dict)
 
+
     # ============================================================================
     # Filters
     # ============================================================================
@@ -206,7 +207,7 @@ class TestCBXP(unittest.TestCase):
             filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSA")],
         )
         self.assertIs(type(cbdata), dict)
-
+    
     def test_cbxp_can_use_filter_with_wildcard_include(self):
         cbdata = cbxp(
             "psa",
@@ -423,6 +424,35 @@ class TestCBXP(unittest.TestCase):
                 ],
             ),
         )
+
+    def test_cbxp_can_use_filter_oucbsubn_from_oucb(self):
+        cbdata = cbxp(
+            "oucb",
+            filters=[CBXPFilter("oucbsubn", CBXPFilterOperation.EQUAL, "OMVS")],
+        )
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertEqual(entry["oucbsubn"], "OMVS")
+        
+    
+    def test_cbxp_can_use_filter_on_ascb_oucb_oucbsubn_with_explicit_include_oucb(self):
+        cbdata = cbxp(
+            "ascb",
+            filters=[
+                CBXPFilter(
+                    "oucb.oucbsubn",
+                    CBXPFilterOperation.EQUAL,
+                    "OMVS",
+                ),
+            ],
+            includes=["oucb"],
+        )
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertEqual(entry["ascboucb"]["oucbsubn"], "OMVS")
+        
 
     # ============================================================================
     # Debug Mode
