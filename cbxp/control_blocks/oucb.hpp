@@ -25,7 +25,6 @@ typedef struct {
   int8_t oucbiac;
   int8_t oucbrsv1;
   int8_t oucbpgp;
-  // int8_t oucbwmg; //need to bring up with team
   int16_t oucbwsci;
   int16_t oucbwrci;
   uint8_t oucbmfl2;
@@ -45,15 +44,14 @@ typedef struct {
   int32_t oucbtmo;
   int32_t oucbdrfr;
   char* __ptr32 oucbact;
-  // int32_t oucbcsw; // speak to team
   union {
-    uint32_t word;
+    uint32_t oucbcsw;
     struct {
       uint16_t oucbacn;
       uint8_t oucbcfl;
       uint8_t oucbcsbt;
-    } fields;
-  } oucbcsw;
+    };
+  };
   int32_t oucbcmrv;
   int32_t oucbwmrl;
   int16_t oucbval;
@@ -66,7 +64,6 @@ typedef struct {
   int32_t oucbps1;
   int32_t oucbps2;
   int32_t oucbpst;
-  // OUCBCHE2
   int32_t oucbrct;
   int32_t oucbiit;
   int16_t oucbnds;
