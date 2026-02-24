@@ -41,7 +41,7 @@ All versions of the **IBM Open Enterprise SDK for Python** that are fully suppor
 Currently, the following interfaces are provided for CBXP. Additional interfaces can be added in the future if there are use cases for them.
 * [Python Interface](./interfaces/python)
 * [Shell Interface](./interfaces/shell)
-* [C Interface](./interfaces/C)
+* [C/C++ Interface](./interfaces/c_cpp)
 
 
 ## Supported Control Blocks

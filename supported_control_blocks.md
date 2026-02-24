@@ -30,6 +30,7 @@ CBXP currently supports extracting the following **System-Level Control Blocks**
 * [ASVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-asvt-information)
 * [ASCB](https://www.ibm.com/docs/en/zos/latest?topic=iar-ascb-information)
 * [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information)
+* [OUCB](https://www.ibm.com/docs/en/zos/latest?topic=rqe-oucb-information)
 
 &nbsp;
 
@@ -43,12 +44,12 @@ CBXP currently supports extracting the following **System-Level Control Blocks**
     subgraph ASCBs["ASCB Array"]
         ASCB1["ASCB"]
         ASCB1--> ASSB1["ASSB"]
-        ASCB1--> ASXB1["ASXB"]
+        ASCB1--> OUCB1["OUCB"]
         ASCB2["ASCB"]
         ASCB2--> ASSB2["ASSB"]
-        ASCB2--> ASXB2["ASXB"]
+        ASCB2--> OUCB2["OUCB"]
         ASCB3["ASCB"]
         ASCB3--> ASSB3["ASSB"]
-        ASCB3--> ASXB3["ASXB"]
+        ASCB3--> OUCB3["OUCB"]
     end
 </pre>

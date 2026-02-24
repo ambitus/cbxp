@@ -22,7 +22,7 @@ permalink: /:title/
 logo: "/assets/images/logo.svg"
 
 # Build settings
-remote_theme: just-the-docs/just-the-docs@v0.11.1
+remote_theme: just-the-docs/just-the-docs@v0.12.0
 include:
   - contribute.markdown
 color_scheme: dark
@@ -72,7 +72,7 @@ callouts:
 mermaid:
   # Version of mermaid library
   # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
-  version: "11.12.2"
+  version: "11.12.3"
 
 # Exclude from processing.
 # The following items will not be processed, by default.

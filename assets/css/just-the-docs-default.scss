@@ -469,12 +469,12 @@ img {
     padding-bottom: 40px;
 }
 
-.site-footer {
+.site-footer-div {
     text-align: center;
     color: #959396;
 }
 
-.site-footer > a > img {
+.site-footer-div > a > img {
     width: 75%;
 }
 
@@ -517,7 +517,7 @@ img {
   }
 
 @media only screen and (max-height: 549px) {
-    .site-footer {
+    .site-footer-div {
         padding-top: 0;
         line-height: 1;
     }
@@ -544,7 +544,7 @@ img {
 }
 
 @media only screen and (max-width: 1066px) {
-    .site-footer {
+    .site-footer-div {
         position: inherit;
     }
 }
@@ -556,7 +556,10 @@ img {
     .site-nav > .nav-list > li:last-child {
         margin-bottom: 10px;
     }
-    .site-footer > a > img {
+    .site-footer-div {
+        margin-left: -20px;
+    }
+    .site-footer-div > a > img {
         width: 50%;
     }    
     .side-bar {

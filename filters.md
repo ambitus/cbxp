@@ -10,28 +10,32 @@ How to use filters to filter repeated control block data.
 
 &nbsp;
 
-{: .note }
-> _**Filters** can **ONLY** be used with **Repeated** control blocks like the [ASCB](https://www.ibm.com/docs/en/zos/latest?topic=iar-ascb-information). **Filters** cannot be used with **Singleton** control blocks like the [PSA](https://www.ibm.com/docs/en/zos/latest?topic=rqe-psa-information)._
-
-&nbsp;
-
 Some control blocks like the [ASCB](https://www.ibm.com/docs/en/zos/latest?topic=iar-ascb-information) are **Repeated**. When extracting these **Repeated** control blocks, you may want to only extract the entries that match one or more **Filters**. CBXP allows **Filters** to be provided when extracting **Repeated** control block data.
 
 ## Filter Basics
 
 &nbsp;
 
-**Filters** are specified as key-value pairs, where the key is a **Control Block Field** and the value is a **Filter Pattern**.
+**Filters** are specified as key-value pairs, where the key is a **Control Block Field** and the value is a **Filter Value**.
 
 &nbsp;
 
-The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Pattern** `IBMUSER`.
+The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `IBMUSER`.
 
 ###### Python Script
 ```python
-from cbxp import cbxp
+from cbxp import CBXPFilter, CBXPFilterOperation, cbxp
 
-cbdata = cbxp("assb", filters=["assbjbni=IBMUSER"])
+cbdata = cbxp(
+    "assb",
+    filters=[
+        CBXPFilter(
+            "assbjbni",
+            CBXPFilterOperation.EQUAL,
+            "IBMUSER"
+        )
+    ]
+)
 ```
 
 ###### Shell Script
@@ -47,18 +51,32 @@ Multiple **Filters** can be used.
 
 &nbsp;
 
-The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where both the **Control Block Field** `ASSBJBNI` matches the **Filter Pattern** `IBMUSER` and the **Control Block Field** `ASSBJBNS` matches the **Filter Pattern** `BPXAS`.
+The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where both the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `IBMUSER` and the **Control Block Field** `ASSBJBNS` matches the **Filter Value** `BPXAS`.
 
 ###### Python Script
 ```python
-from cbxp import cbxp
+from cbxp import CBXPFilter, CBXPFilterOperation, cbxp
 
-cbdata = cbxp("ascb", filters=["assbjbni=IBMUSER", "assbjbns=BPXAS"])
+cbdata = cbxp(
+    "assb", 
+    filters=[
+        CBXPFilter(
+            "assbjbni",
+            CBXPFilterOperation.EQUAL,
+            "IBMUSER"
+        ),
+        CBXPFilter(
+            "assbjbns",
+            CBXPFilterOperation.EQUAL,
+            "BPXAS"
+        )
+    ]
+)
 ```
 
 ###### Shell Script
 ```shell
-cbxp -i assb -f assb.assbjbni=IBMUSER ascb
+cbxp -f assbjbni=IBMUSER -f assbjbns=BPXAS ascb
 ```
 
 ## Using Filters With Include Patterns
@@ -69,13 +87,23 @@ cbxp -i assb -f assb.assbjbni=IBMUSER ascb
 
 &nbsp;
 
-The following example extracts all [ASCB](https://www.ibm.com/docs/en/zos/latest?topic=iar-ascb-information) and corresponding [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Pattern** `IBMUSER`.
+The following example extracts all [ASCB](https://www.ibm.com/docs/en/zos/latest?topic=iar-ascb-information) and corresponding [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `IBMUSER`.
 
 ###### Python Script
 ```python
-from cbxp import cbxp
+from cbxp import CBXPFilter, CBXPFilterOperation, cbxp
 
-cbdata = cbxp("ascb", includes=["assb"], filters=["assb.assbjbni=IBMUSER"])
+cbdata = cbxp(
+    "ascb",
+    includes=["assb"],
+    filters=[
+        CBXPFilter(
+            "assb.assbjbni",
+            CBXPFilterOperation.EQUAL,
+            "IBMUSER"
+        )
+    ]
+)
 ```
 
 ###### Shell Script
@@ -87,22 +115,31 @@ cbxp -i assb -f assb.assbjbni=IBMUSER ascb
 
 &nbsp;
 
-[`fnmatch`](https://www.man7.org/linux/man-pages/man3/fnmatch.3.html) patterns can be used with **Filter Patterns**.
+[`fnmatch`](https://www.man7.org/linux/man-pages/man3/fnmatch.3.html) patterns can be used as **Filter Values**.
 
 &nbsp;
 
-The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Pattern** `JOB*`.
+The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `JOB*`.
 
 ###### Python Script
 ```python
-from cbxp import cbxp
+from cbxp import CBXPFilter, CBXPFilterOperation, cbxp
 
-cbdata = cbxp("assb", filters=["assbjbni=JOB*"])
+cbdata = cbxp(
+    "assb", 
+    filters=[
+        CBXPFilter(
+            "assbjbni",
+            CBXPFilterOperation.EQUAL,
+            "JOB*"
+        )
+    ]
+)
 ```
 
 ###### Shell Script
 ```shell
-cbxp -f assbjbni=IBMUSER assb
+cbxp -f 'assbjbni=JOB*' assb
 ```
 
 ## Filtering Numeric Data
@@ -117,12 +154,20 @@ The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest
 
 ###### Python Script
 ```python
-from cbxp import cbxp
+from cbxp import CBXPFilter, CBXPFilterOperation, cbxp
 
-cbdata = cbxp("assb", filters=["assb_time_on_cp<30000"])
+cbdata = cbxp(
+    "assb",
+    filters=[
+        CBXPFilter(
+            "assb_time_on_cp",
+            CBXPFilterOperation.LESS_THAN,
+            30000
+    ]
+)
 ```
 
 ###### Shell Script
 ```shell
-cbxp -f 'assb_time_on_cp>3000' assb
+cbxp -f 'assb_time_on_cp<3000' assb
 ```

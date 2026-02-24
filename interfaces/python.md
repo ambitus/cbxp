@@ -27,7 +27,7 @@ The following Python interface is provided to facilitate exploitation of CBXP by
 def cbxp(
         control_block: str, 
         includes: list[str] = [],
-        filters: list[str] = [],
+        filters: list[CBXPFilter] = [],
         debug: bool = False
 ) -> dict:
 ```
@@ -81,13 +81,23 @@ cbdata = cbxp("cvt", includes=["ecvt", "asvt.*"])
 
 &nbsp;
 
-The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Pattern** `IBMUSER`. The built-in Python library `json` is then used to convert the resulting Python dictionary into a **JSON String**.
+The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `IBMUSER`. The built-in Python library `json` is then used to convert the resulting Python dictionary into a **JSON String**.
 
 ###### Python Script
 ```python
 import json
-from cbxp import cbxp
+from cbxp import CBXPFilter, CBXPFilterOperation, cbxp
 
-cbdata = cbxp("assb", filters=["assbjbni=IBMUSER"])
+cbdata = cbxp(
+    "assb",
+    filters=[
+        CBXPFilter(
+            "assbjbni",
+            CBXPFilterOperation.EQUAL,
+            "IBMUSER"
+        )
+    ]
+)
+
 cbjson = json(cbdata, indent=2)
 ```

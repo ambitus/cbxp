@@ -38,7 +38,7 @@ cbxp [options] [CONTROL_BLOCK]
   **Include** control blocks that are **Accessible** from the **Root Control Block** being extracted using an [Include Pattern](../../include_patterns).
 
 * `-f`, `--filter` <br>
-  **Filter** repeated control block data using a [Filter Pattern](../../filters).
+  **Filter** repeated control block data using a [Filter](../../filters).
 
 * `-v`, `--version` <br>
   Display **Version Information**.
@@ -66,9 +66,9 @@ cbxp -i ecvt -i 'asvt.*' cvt
 
 &nbsp;
 
-The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where both the **Control Block Field** `ASSBJBNI` matches the **Filter Pattern** `IBMUSER` and the **Control Block Field** `ASSBJBNS` matches the **Filter Pattern** `BPXAS`. The output is then piped into `jq` to **Format** it.
+The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where both the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `IBMUSER` and the **Control Block Field** `ASSBJBNS` matches the **Filter Value** `BPXAS`. The output is then piped into `jq` to **Format** it.
 
 ###### Shell Script
 ```shell
-cbxp -i assb -f assb.assbjbni=IBMUSER ascb | jq
+cbxp -f assb.assbjbni=IBMUSER assb | jq
 ```
