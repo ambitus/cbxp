@@ -101,12 +101,12 @@ nlohmann::json OUCB::get(void* __ptr32 p_control_block) {
   oucb_json["oucbdrfr"] = p_oucb->oucbdrfr;
   oucb_json["oucbact"]  = formatter_.getHex<uint32_t>(&(p_oucb->oucbact));
   // Union
-  oucb_json["oucbcsw"]["word"] = p_oucb->oucbcsw;
-  oucb_json["oucbcsw"]["oucbacn"] =
+  oucb_json["oucbcsw"] = p_oucb->oucbcsw;
+  oucb_json["oucbacn"] =
       formatter_.getBitmap<uint16_t>(p_oucb->oucbacn);
-  oucb_json["oucbcsw"]["oucbcfl"] =
+  oucb_json["oucbcfl"] =
       formatter_.getBitmap<uint8_t>(p_oucb->oucbcfl);
-  oucb_json["oucbcsw"]["oucbcsbt"] =
+  oucb_json["oucbcsbt"] =
       formatter_.getBitmap<uint8_t>(p_oucb->oucbcsbt);
 
   oucb_json["oucbcmrv"] = p_oucb->oucbcmrv;
