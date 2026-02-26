@@ -76,8 +76,8 @@ run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>0x87FFFFFF" cvt
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<0x88000001" cvt
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>=0x87FFFFFF" cvt
 run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<=0x88000000" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f 'oucbsubn=OMVS' oucb
-run_with_expected_exit_code 0 ./dist/cbxp -i oucb -f 'oucb.oucbsubn=OMVS' ascb
+run_with_expected_exit_code 0 ./dist/cbxp -f 'oucbtrxn=OMVS' oucb
+run_with_expected_exit_code 0 ./dist/cbxp -i oucb -f 'oucb.oucbtrxn=OMVS' ascb
 run_with_expected_null_response ./dist/cbxp -f psapsa=PSB psa
 run_with_expected_null_response ./dist/cbxp -f "ascb.assb.assbjbns=*MASTER*" -f "ascb.ascbasid=2" -i ascb.assb asvt
 

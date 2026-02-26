@@ -425,23 +425,23 @@ class TestCBXP(unittest.TestCase):
             ),
         )
 
-    def test_cbxp_can_use_filter_oucbsubn_from_oucb(self):
+    def test_cbxp_can_use_filter_oucbtrxn_from_oucb(self):
         cbdata = cbxp(
             "oucb",
-            filters=[CBXPFilter("oucbsubn", CBXPFilterOperation.EQUAL, "OMVS")],
+            filters=[CBXPFilter("oucbtrxn", CBXPFilterOperation.EQUAL, "OMVS")],
         )
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
             self.assertIs(type(entry), dict)
-            self.assertEqual(entry["oucbsubn"], "OMVS")
+            self.assertEqual(entry["oucbtrxn"], "OMVS")
         
     
-    def test_cbxp_can_use_filter_on_ascb_oucb_oucbsubn_with_explicit_include_oucb(self):
+    def test_cbxp_can_use_filter_on_ascb_oucb_oucbtrxn_with_explicit_include_oucb(self):
         cbdata = cbxp(
             "ascb",
             filters=[
                 CBXPFilter(
-                    "oucb.oucbsubn",
+                    "oucb.oucbtrxn",
                     CBXPFilterOperation.EQUAL,
                     "OMVS",
                 ),

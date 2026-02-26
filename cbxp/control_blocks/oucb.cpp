@@ -97,7 +97,6 @@ nlohmann::json OUCB::get(void* __ptr32 p_control_block) {
   oucb_json["oucbtms"]  = p_oucb->oucbtms;
   oucb_json["oucbtmo"]  = p_oucb->oucbtmo;
   oucb_json["oucbdrfr"] = p_oucb->oucbdrfr;
-  oucb_json["oucbact"]  = formatter_.getHex<uint32_t>(&(p_oucb->oucbact));
   // Union
   oucb_json["oucbcsw"]  = p_oucb->oucbcsw;
   oucb_json["oucbacn"]  = formatter_.getBitmap<uint16_t>(p_oucb->oucbacn);
