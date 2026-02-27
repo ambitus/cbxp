@@ -4,7 +4,7 @@
 
 #include <cstdint>
 #include <nlohmann/json.hpp>
-#include <oucb.hpp>
+#include "oucb.hpp"
 #include <string>
 #include <vector>
 
@@ -106,6 +106,7 @@ nlohmann::json OUCB::get(void* __ptr32 p_control_block) {
   oucb_json["oucbwmrl"] = p_oucb->oucbwmrl;
   oucb_json["oucbval"]  = p_oucb->oucbval;
   oucb_json["oucbpfl"]  = formatter_.getBitmap<uint8_t>(p_oucb->oucbpfl);
+  oucb_json["oucbactl"] = p_oucb->oucbactl;
   oucb_json["oucbiocl"] = p_oucb->oucbiocl;
   oucb_json["oucbdspc"] = formatter_.getBitmap<uint8_t>(p_oucb->oucbdspc);
   oucb_json["oucbdspn"] = formatter_.getBitmap<uint8_t>(p_oucb->oucbdspn);
