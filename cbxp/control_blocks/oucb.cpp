@@ -1,10 +1,11 @@
+#include "oucb.hpp"
+
 #include <cvt.h>
 #include <ihaascb.h>
 #include <ihapsa.h>
 
 #include <cstdint>
 #include <nlohmann/json.hpp>
-#include "oucb.hpp"
 #include <string>
 #include <vector>
 
