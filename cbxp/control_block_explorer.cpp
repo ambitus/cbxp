@@ -12,6 +12,7 @@
 #include "control_blocks/control_block.hpp"
 #include "control_blocks/cvt.hpp"
 #include "control_blocks/ecvt.hpp"
+#include "control_blocks/oucb.hpp"
 #include "control_blocks/psa.hpp"
 #include "logger.hpp"
 
@@ -72,6 +73,8 @@ void ControlBlockExplorer::exploreControlBlock(
       control_block_json = ASVT(cbxp_options).get();
     } else if (control_block_name == "assb") {
       control_block_json = ASSB(cbxp_options).get();
+    } else if (control_block_name == "oucb") {
+      control_block_json = OUCB(cbxp_options).get();
     } else {
       throw ControlBlockError();
     }

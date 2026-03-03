@@ -34,6 +34,12 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
             self.assertIs(type(entry), dict)
+    
+    def test_cbxp_can_extract_oucb(self):
+        cbdata = cbxp("oucb")
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
 
     # ============================================================================
     # Include Patterns
@@ -69,6 +75,13 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
+    
+    def test_cbxp_can_extract_the_ascb_and_include_the_oucb(self):
+        cbdata = cbxp("ascb", includes=["oucb"])
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascboucb"]), dict)
 
     def test_cbxp_can_extract_the_psa_and_include_the_cvt_ecvt(self):
         cbdata = cbxp("psa", includes=["cvt.ecvt"])
@@ -126,6 +139,19 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
+    
+    def test_cbxp_include_can_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb_oucb(
+        self,
+    ):
+        cbdata = cbxp("psa", includes=["cvt.ecvt", "cvt.asvt.ascb.oucb"])
+        self.assertIs(type(cbdata), dict)
+        self.assertIs(type(cbdata["flccvt"]), dict)
+        self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascboucb"]), dict)
 
     def test_cbxp_can_extract_psa_and_include_cvt_recursive_wildcard(self):
         cbdata = cbxp("psa", includes=["cvt.**"])
@@ -137,6 +163,7 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascboucb"]), dict)
 
     def test_cbxp_can_extract_psa_and_include_cvt_wildcard(self):
         cbdata = cbxp("psa", includes=["cvt.*"])
@@ -168,6 +195,8 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascboucb"]), dict)
+
 
     # ============================================================================
     # Filters
@@ -178,7 +207,7 @@ class TestCBXP(unittest.TestCase):
             filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSA")],
         )
         self.assertIs(type(cbdata), dict)
-
+    
     def test_cbxp_can_use_filter_with_wildcard_include(self):
         cbdata = cbxp(
             "psa",
@@ -395,6 +424,36 @@ class TestCBXP(unittest.TestCase):
                 ],
             ),
         )
+
+    def test_cbxp_can_use_filter_oucbtrxn_from_oucb(self):
+        cbdata = cbxp(
+            "oucb",
+            filters=[CBXPFilter("oucbtrxn", CBXPFilterOperation.EQUAL, "OMVS")],
+        )
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertEqual(entry["oucbtrxn"], "OMVS")
+        
+    
+    def test_cbxp_can_use_filter_on_ascb_oucb_oucbtrxn_with_explicit_include_oucb(self):
+        cbdata = cbxp(
+            "ascb",
+            filters=[
+                CBXPFilter(
+                    "oucb.oucbtrxn",
+                    CBXPFilterOperation.EQUAL,
+                    "OMVS",
+                ),
+            ],
+            includes=["oucb"],
+        )
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascboucb"]), dict)
+            self.assertEqual(entry["ascboucb"]["oucbtrxn"], "OMVS")
+        
 
     # ============================================================================
     # Debug Mode
