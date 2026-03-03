@@ -451,7 +451,7 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
             self.assertIs(type(entry), dict)
-            self.asserIs(type(entry["ascboucb"]), dict)
+            self.assertIs(type(entry["ascboucb"]), dict)
             self.assertEqual(entry["ascboucb"]["oucbtrxn"], "OMVS")
         
 
