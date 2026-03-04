@@ -5,7 +5,6 @@
 #include <stdlib.h>
 
 #include "cbxp.h"
-#include "cbxp_result.h"
 
 // Entry point to the call_cbxp() function
 static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
