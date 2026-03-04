@@ -5,7 +5,7 @@ project(CBXP VERSION 0.0.3
              LANGUAGES C CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./dist")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "./dist")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "./dist")
 
 execute_process(
     COMMAND uname
@@ -79,7 +79,7 @@ target_link_options(libcbxp PUBLIC ${LINK_OPTIONS})
 # ============================================================================
 add_executable(cbxp "cbxp/main.cpp")
 
-target_link_libraries(cbxp "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/libcbxp.a")
+target_link_libraries(cbxp libcbxp)
 
 target_include_directories(cbxp PUBLIC cbxp externals)
 
