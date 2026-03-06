@@ -17,11 +17,11 @@ A unified and standardized interface for extracting z/OS control block data.
 
 ## Mission Statement
 
-z/OS Control Blocks are in-memory data structures that describe and control countless process, operating system components, and subsystems. Control blocks are unbiquitous on z/OS, but not very straight forward to access and extract information from. The mission of CBXP *(Control Block EXPlorer)* is to make it easy to extract z/OS control block data using industry standard tools and methodologies. CBXP accomplishes this by implementing a **C/C++ XPLINK ASCII** interface for extracting control blocks and post processing them into **JSON**. This makes it straight forward to integrate with industry standard programming languages and tools, which generally have well documented and understood foreign language intefaces for C/C++, and native and or third party JSON support that makes working with JSON data easy.
+z/OS Control Blocks are in-memory data structures that describe and control countless process, operating system components, and subsystems. Control blocks are ubiquitous on z/OS, but not very straight forward to access and extract information from. The mission of CBXP *(Control Block EXPlorer)* is to make it easy to extract z/OS control block data using industry standard tools and methodologies. CBXP accomplishes this by implementing a **C/C++ XPLINK ASCII** interface for extracting control blocks and post processing them into **JSON**. This makes it straight forward to integrate with industry standard programming languages and tools, which generally have well documented and understood foreign language interfaces for C/C++, and native and or third party JSON support that makes working with JSON data easy.
 
 &nbsp;
 
-CBXP is the successor to the existing [cbxplorer](https://github.com/ambitus/cbexplorer) project. CBXP mainly improves upon this existing work by being implementing in C/C++ so that it is not limited to a specific programming language or tool. CBXP also focuses heavily on providing an interface that is simple and straight forward to use.
+CBXP is the successor to the existing [cbxplorer](https://github.com/ambitus/cbexplorer) project. CBXP mainly improves upon this existing work by being implemented in C/C++ so that it is not limited to a specific programming language or tool. CBXP also focuses heavily on providing an interface that is simple and straight forward to use.
 
 ## Minimum z/OS & Language Versions
 

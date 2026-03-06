@@ -83,7 +83,7 @@ cbxp -f assbjbni=IBMUSER -f assbjbns=BPXAS ascb
 
 &nbsp;
 
-**Filters** can be use with control blocks included using [Include Patterns](./include_patterns). 
+**Filters** can be use with control blocks included using [Include Patterns](../include_patterns). 
 
 &nbsp;
 
@@ -119,7 +119,7 @@ cbxp -i assb -f assb.assbjbni=IBMUSER ascb
 
 &nbsp;
 
-The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `JOB*`.
+The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `IBMUSER*`.
 
 ###### Python Script
 ```python
@@ -131,7 +131,7 @@ cbdata = cbxp(
         CBXPFilter(
             "assbjbni",
             CBXPFilterOperation.EQUAL,
-            "JOB*"
+            "IBMUSER*"
         )
     ]
 )
@@ -139,7 +139,7 @@ cbdata = cbxp(
 
 ###### Shell Script
 ```shell
-cbxp -f 'assbjbni=JOB*' assb
+cbxp -f 'assbjbni=IBMUSER*' assb
 ```
 
 ## Filtering Numeric Data

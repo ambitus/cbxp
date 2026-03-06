@@ -6,39 +6,40 @@ nav_order: 3
 
 # C/C++
 
-The following library interface is provided to facilitate exploitation of CBXP by C/C++ callers.
+The following C/C++ interface is provided to facilitate exploitation of CBXP by C/C++ callers.
 {: .fs-6 .fw-300 }
 
 &nbsp;
 
 {: .note }
-> _The **Library** interface for CBXP downloaded from [GitHub](https://github.com/ambitus/cbxp/releases)._
+> _The **C/C++** interface for CBXP downloaded from [GitHub](https://github.com/ambitus/cbxp/releases)._
 
 &nbsp;
 
 {: .note }
-> _Wherever you **Install**/**Extract** the **CBXP Pax File**, make sure to add the path to the `lib` directory where the `libcbxp.so` library resides to `LIBPATH` in `/etc/profile` (global) or `~/.profile`/`~/.bashrc` (local/individual)._
+> _The CBXP pax provides a **Static Library** for CBXP at `/lib/libcbxp.a` and a **C Header** for CBXP at `/include/cbxp.h`. To compile code that uses the **C/C++** interface for CBXP, **Include** `/include/cbxp.h` at **Compile Time** and **Link** with `/lib/libcbxp.a`._
 
 &nbsp;
 
-{: .warning }
-> _This interface is [Non-Rentrent](https://en.wikipedia.org/wiki/Reentrancy_(computing)), meaning that it is **NOT** [Thread Safe](https://en.wikipedia.org/wiki/Thread_safety). If multiple threads may be calling this interface simultaneously, you should use a **Mutex** or some other serialization mechanisim to avoid [Race Conditions](https://en.wikipedia.org/wiki/Race_condition)._
+{: .note }
+> _Users of the **C/C++** interface for CBXP must compile with **IBM Open XL C/C++ 2.1** or newer._
+
+&nbsp;
 
 ## `cbxp()`
 
 ```c
-typedef const cbxp_result_t* (*cbxp_t)(const char* control_block_name,
-                                       const char* includes_string,
-                                       const char* filters_string, bool debug);
+cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
+                    const char* filters_string, bool debug);
 ```
 
 ### 📄 Description
 
-Extract **Control Blocks** from **Live Memory** *(storage)*, post-process them into **JSON**, and return a pointer to a **C Struct** containing a pointer to the **Result JSON String**, the **Length** of the **Result JSON String**, and a **Return Code**.
+Extract **Control Blocks** from **Live Memory** *(storage)* and post-process them into **JSON**.
 
 ### 📥 Parameters
 
-* `control_block_name` <br>
+* `control_block` <br>
   The name of the **Control Block** to extract.
 
 * `includes_string` <br>
@@ -51,66 +52,96 @@ Extract **Control Blocks** from **Live Memory** *(storage)*, post-process them i
   A **Boolean** that if set to `true` indicates that **Debug Messages** should be printed. If set to `false`, no **Debug Messages** will be printed.
 
 ### 📤 Returns
-* `const cbxp_result_t*` <br>
-  A **C Struct** that contains a pointer to the **Result JSON String**, the **Length** of the **Result JSON String**, and a **Return Code**.
+* `cbxp_result_t*` <br>
+  A pointer to a [`cbxp_result_t`](#cbxp_result_t) **C Struct**.
 
-### 💻 Examples
+## `cbxp_free()`
 
-The following example extracts the [PSA](https://www.ibm.com/docs/en/zos/latest?topic=rqe-psa-information) control block and prints **Debug Messages**.
-
-###### C
 ```c
-#define _UNIX03_SOURCE
+void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
+```
 
-#include <dlfcn.h>
-#include <stdbool.h>
-#include <stdio.h>
+### 📄 Description
 
+&nbsp;
+
+{: .warning}
+> _The [`cbxp_result_t`](#cbxp_result_t) pointer and the `result_json` pointer within the [`cbxp_result_t`](#cbxp_result_t) **C Struct** it points to are no longer valid after calling `cbxp_free()`. Using these pointers after calling `cbxp_free()` will result in **Undefined Behavior** since `cbxp_free()` frees the memory that both of these pointer point to._
+
+&nbsp;
+
+Free all **Dynamically Allocated Memory** associated with a [`cbxp_result_t`](#cbxp_result_t) pointer returned by `cbxp()`.
+
+### 📥 Parameters
+
+* `cbxp_result` <br>
+  A pointer to a [`cbxp_result_t`](#cbxp_result_t) **C Struct**.
+
+* `debug` <br>
+  A **Boolean** that if set to `true` indicates that **Debug Messages** should be printed. If set to `false`, no **Debug Messages** will be printed.
+
+### 📤 Returns
+* `void` <br>
+  This function does not return anything.
+
+## `cbxp_result_t`
+
+```c
 typedef struct {
   char* result_json;
   int result_json_length;
   int return_code;
 } cbxp_result_t;
+```
 
-typedef const cbxp_result_t* (*cbxp_t)(const char* control_block_name,
-                                       const char* includes_string,
-                                       const char* filters_string, bool debug);
+### 📄 Description
+
+The **C Struct** that is used to store all **Result Information** returned by CBXP.
+
+### 📋 Fields
+
+* `result_json` <br>
+  When the call to `cbxp()` is **Successful**, this field contains pointer to a **NULL-Terminated ISO8859-1 Encoded JSON String**. When the call to `cbxp()` is **Unsucessful**, this field contains a **NULL Pointer**.
+
+* `result_json_length` <br>
+  When the call to `cbxp()` is **Successful**, this field contains the length of the **NULL-Terminated ISO8859-1 Encoded JSON String** stored in the `result_json` field. When the call to `cbxp()` is **Unsuccessful**, this field contains `0`.
+
+* `return_code` <br>
+  This field will be set by `cbxp()` to one of the following values:
+  * ✅ `0`<br>
+    The call to `cbxp()` was **Successful**.
+  * ❌ `1`<br>
+    The call to `cbxp()` was **Unsuccessful** due to an **Unknown Control Block** being specified with the `control_block` parameter.
+  * ❌ `2`<br>
+    The call to `cbxp()` was **Unsuccessful** due to a bad [Include Pattern](../../include_patterns) being specified within the `includes_string` parameter.
+  * ❌ `3`<br>
+    The call to `cbxp()` was **Unsuccessful** due to a bad [Filter](../../filters) being specified within the `filters_string` parameter.
+
+## 💻 Examples
+
+The following **C** example extracts the [PSA](https://www.ibm.com/docs/en/zos/latest?topic=rqe-psa-information) control block and prints the returned **JSON String**.
+
+###### C
+```c
+#include <cbxp.h>
+#include <stdbool.h>
+#include <stdio.h>
 
 int main() {
-  // Load 'libcbxp.so'
-  void* lib_handle = dlopen("libcbxp.so", RTLD_NOW);
-  if (lib_handle == NULL) {
-    perror("Unable to load 'libcbxp.so'.");
-    return -1;
+  // Call CBXP
+  puts("Calling CBXP from C...");
+  cbxp_result_t* cbxp_result = cbxp("psa", "", "", false);
+
+  // Make sure call was successful
+  if (cbxp_result->return_code != 0) {
+    fprintf(stderr, "Error: CBXP return with RC=%d\n", cbxp_result->return_code);
+  // Print Result JSON
+  } else {
+    puts(cbxp_result->result_json);
   }
 
-  // Resolve symbol 'cbxp()'
-  cbxp_t cbxp = (cbxp_t)dlsym(lib_handle, "cbxp");
-  if (cbxp == NULL) {
-    perror("Unable to resolve symbol 'cbxp()'.");
-    if (dlclose(lib_handle) != 0) {
-      const char* error_string = dlerror();
-      if (error_string != NULL) {
-        puts(error_string);
-      }
-    }
-    return -1;
-  }
-
-  // Call 'cbxp()'
-  const cbxp_result_t* cbxp_result = cbxp("psa", "", "", true);
-
-  // Print result json string
-  puts(cbxp_result->result_json);
-
-  // Close 'libcbxp.so'
-  if (dlclose(lib_handle) != 0) {
-    const char* error_string = dlerror();
-    if (error_string != NULL) {
-      puts(error_string);
-    }
-    return -1;
-  }
+  // Cleanup
+  cbxp_free(cbxp_result, false);
 
   return 0;
 }
@@ -118,5 +149,50 @@ int main() {
 
 ###### Shell
 ```shell
-ibm-clang64 -fzos-le-char-mode=ascii -o main main.c && ./main
+# Compile
+ibm-clang64 -c -fzos-le-char-mode=ascii -I./cbxp-0.0.3/include -o main.o main.c
+# Link
+ibm-clang++64 -fzos-le-char-mode=ascii -o main ./cbxp-0.0.3/lib/libcbxp.a main.o
+# Run
+./main
+```
+
+&nbsp;
+
+The following **C++** example extracts the [PSA](https://www.ibm.com/docs/en/zos/latest?topic=rqe-psa-information) control block and prints the returned **JSON String**.
+
+###### C++
+```cpp
+#include <iostream>
+
+#include <cbxp.h>
+
+int main() {
+  // Call CBXP
+  std::cout << "Calling CBXP from C++..." << std::endl;
+  cbxp_result_t * cbxp_result = cbxp("psa", "", "", false);
+
+  // Make sure call was successful
+  if (cbxp_result->return_code != 0) {
+    std::cerr << "Error: CBXP returned with RC=" << cbxp_result->return_code << std::endl;
+  // Print result JSON
+  } else {
+    std::cout << cbxp_result->result_json << std::endl;
+  }
+
+  // Cleanup
+  cbxp_free(cbxp_result, false);
+
+  return 0;
+}
+```
+
+###### Shell
+```shell
+# Compile
+ibm-clang++64 -c -fzos-le-char-mode=ascii -I./cbxp-0.0.3/include -o main.o main.cpp
+# Link
+ibm-clang++64 -fzos-le-char-mode=ascii -o main ./cbxp-0.0.3/lib/libcbxp.a main.o
+# Run
+./main
 ```
