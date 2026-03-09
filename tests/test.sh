@@ -80,6 +80,10 @@ run_with_expected_exit_code 0 ./dist/cbxp -f 'oucbtrxn=OMVS' oucb
 run_with_expected_exit_code 0 ./dist/cbxp -i oucb -f 'oucb.oucbtrxn=OMVS' ascb
 run_with_expected_null_response ./dist/cbxp -f psapsa=PSB psa
 run_with_expected_null_response ./dist/cbxp -f "ascb.assb.assbjbns=*MASTER*" -f "ascb.ascbasid=2" -i ascb.assb asvt
+run_with_expected_exit_code 0 ./dist/cbxp -f assbjbns="*MASTER*" -f assbjbni=  assb
+run_with_expected_exit_code 0 ./dist/cbxp -f assbjbns="*MASTER*" -f assbjbni=\"\" assb
+run_with_expected_exit_code 0 ./dist/cbxp -f assbjbns="*MASTER*" -f assbjbni=\'\' assb
+
 
 # Debug Mode
 run_with_expected_exit_code 0 ./dist/cbxp -d psa
@@ -115,7 +119,7 @@ run_with_expected_exit_code 255 ./dist/cbxp -i cvt cvt
 run_with_expected_exit_code 255 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" psa
 run_with_expected_exit_code 255 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns<*master*" -i "**" psa
 run_with_expected_exit_code 255 ./dist/cbxp -f psapsb=PSA psa
-run_with_expected_exit_code 255 ./dist/cbxp -f psapsa= psa
+run_with_expected_exit_code 255 ./dist/cbxp -f assbasid= assb
 run_with_expected_exit_code 255 ./dist/cbxp -f 'ascbasid<=junk' ascb
 run_with_expected_exit_code 255 ./dist/cbxp -f "psapsa=psa,cvt.asvt.ascb.ascbasid<2" cvt
 
