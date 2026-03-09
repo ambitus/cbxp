@@ -157,7 +157,7 @@ pipeline {
           """
 
           echo "'Function testing './dist/cbxp' ..."
-          sh "./tests/test.sh"
+          sh "gmake test"
 
           clean_git_repo()
         }

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 run_with_expected_exit_code() {
     expected_code=$1
