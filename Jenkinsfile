@@ -41,11 +41,11 @@ pipeline {
       )
     )
     string(
-      name: "gitHubMilestoneLink",
+      name: "releaseNotesLink",
       defaultValue: "",
       description: (
-        "(Required When Creating Releases) This is the GitHub "
-        + "Milestone URL that coresponds to the release."
+        "(Required When Creating Releases) This is the URL to "
+        + "the release notes for the release."
       )
     )
     booleanParam(
@@ -73,8 +73,8 @@ pipeline {
             if (params.releaseTitle == "") {
                 error("'releaseTitle' is a required parameter when creating a release.")
             }
-            if (params.gitHubMilestoneLink == "") {
-                error("'gitHubMilestoneLink' is a required parameter when creating a release.")
+            if (params.releaseNotesLink == "") {
+                error("'releaseNotesLink' is a required parameter when creating a release.")
             }
           }
         }
@@ -173,7 +173,7 @@ pipeline {
           params.releaseTitle,
           params.releaseTag, 
           env.BRANCH_NAME, 
-          params.gitHubMilestoneLink,
+          params.releaseNotesLink,
           params.preRelease
         )
       }
@@ -244,7 +244,7 @@ def publish(
     release_title,
     release_tag, 
     git_branch, 
-    milestone, 
+    release_notes_link, 
     pre_release
 ) {
   if (pre_release == true) {
@@ -274,7 +274,7 @@ def publish(
 
     echo "Creating '${release_title}' GitHub release ..."
 
-    def description = build_description(python_executables_and_wheels_map, release_tag, milestone)
+    def description = build_description(python_executables_and_wheels_map, release_tag, release_notes_link)
 
     def release_id = sh(
       returnStdout: true,
@@ -375,9 +375,9 @@ def upload_asset(release_id, release_asset) {
   )
 }
 
-def build_description(python_executables_and_wheels_map, release_tag, milestone) {
+def build_description(python_executables_and_wheels_map, release_tag, release_notes_link) {
   def description = (
-    "Release Notes: ${milestone}\\n"
+    "Release Notes: ${release_notes_link}\\n"
     + "## Python Interface Installation\\n"
   )
 
