@@ -452,6 +452,26 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry["ascboucb"]), dict)
             self.assertEqual(entry["ascboucb"]["oucbtrxn"], "OMVS")
 
+    def test_cbxp_can_use_null_filter_string(
+        self,
+    ):
+        cbdata = cbxp(
+            "assb",
+            filters=[
+                CBXPFilter(
+                    "assbjbns",
+                    CBXPFilterOperation.EQUAL,
+                    "*MASTER*",
+                ),
+                CBXPFilter(
+                    "assbjbni",
+                    CBXPFilterOperation.EQUAL,
+                    "",
+                ),
+            ],
+        )
+        self.assertIs(type(cbdata), list)
+
     def test_cbxp_can_use_empty_quotes_as_null_filter_string(
         self,
     ):
@@ -464,13 +484,13 @@ class TestCBXP(unittest.TestCase):
                     "*MASTER*",
                 ),
                 CBXPFilter(
-                    "ascbjbni",
+                    "assbjbni",
                     CBXPFilterOperation.EQUAL,
                     '""',
                 ),
             ],
         )
-        self.assertIs(type(cbdata), dict)
+        self.assertIs(type(cbdata), list)
 
     def test_cbxp_can_use_empty_single_quotes_as_null_filter_string(
         self,
@@ -484,33 +504,13 @@ class TestCBXP(unittest.TestCase):
                     "*MASTER*",
                 ),
                 CBXPFilter(
-                    "ascbjbni",
+                    "assbjbni",
                     CBXPFilterOperation.EQUAL,
                     "''",
                 ),
             ],
         )
-        self.assertIs(type(cbdata), dict)
-
-    def test_cbxp_can_use_null_filter_string(
-        self,
-    ):
-        cbdata = cbxp(
-            "assb",
-            filters=[
-                CBXPFilter(
-                    "assbjbns",
-                    CBXPFilterOperation.EQUAL,
-                    "*MASTER*",
-                ),
-                CBXPFilter(
-                    "ascbjbni",
-                    CBXPFilterOperation.EQUAL,
-                    "",
-                ),
-            ],
-        )
-        self.assertIs(type(cbdata), dict)
+        self.assertIs(type(cbdata), list)
 
     # ============================================================================
     # Debug Mode
