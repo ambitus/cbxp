@@ -24,9 +24,6 @@ class ControlBlockFieldFormatter {
     __e2a_l(ascii_field_tmp.data(), length);
     std::string ascii_field(ascii_field_tmp.begin(), ascii_field_tmp.end());
     size_t last_non_space = ascii_field.find_last_not_of(" \t\n\r\f\v");
-    if (last_non_space == std::string::npos) {
-      return "";
-    }
     ascii_field.resize(last_non_space + 1);
     return ascii_field;
   }
