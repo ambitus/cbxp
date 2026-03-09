@@ -122,6 +122,7 @@ run_with_expected_exit_code 255 ./dist/cbxp -f psapsb=PSA psa
 run_with_expected_exit_code 255 ./dist/cbxp -f assbasid= assb
 run_with_expected_exit_code 255 ./dist/cbxp -f 'ascbasid<=junk' ascb
 run_with_expected_exit_code 255 ./dist/cbxp -f "psapsa=psa,cvt.asvt.ascb.ascbasid<2" cvt
+run_with_expected_exit_code 255 ./dist/cbxp -f junk psa
 
 echo " -------------------------------- "
 echo " -------------------------------- "

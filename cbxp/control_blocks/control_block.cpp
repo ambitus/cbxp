@@ -179,12 +179,11 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
                                   control_block_name_ + "' control block...");
       current_filters_[filter_key].push_back(filter_data);
       return;
-    } else {
-      // If there's not a delimeter then this is not a valid include
-      Logger::getInstance().debug("Filter values must have an operation");
-      throw FilterError();
     }
   }
+  // If no delimeter is found then this is not a valid include
+  Logger::getInstance().debug("Filter values must have an operation");
+  throw FilterError();
 }
 
 bool ControlBlock::compare(const nlohmann::json& json_value,

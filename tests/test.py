@@ -625,6 +625,16 @@ class TestCBXP(unittest.TestCase):
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
+    def test_cbxp_raises_cbxp_error_if_no_operation_provided(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                filters=["junk", None, ""],
+            )
+        self.assertEqual("A bad filter was provided", str(e.exception))
+
     def test_cbxp_raises_cbxp_error_if_filter_has_comma(
         self,
     ):
