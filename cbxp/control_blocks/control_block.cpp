@@ -169,9 +169,9 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
       // If there's a delimeter then separate include into the key and its value
       filter_value = filter.substr(operation_pos + operation.length());
       filter_key   = filter.substr(0, operation_pos);
-      if (filter_value == "") {
-        Logger::getInstance().debug("Filter values cannot be null");
-        throw FilterError();
+      if (filter_value == "\"\"" || filter_value == "\'\'") {
+        Logger::getInstance().debug("Filter value converted to null");
+        filter_value = "";
       }
       cbxp_filter_t filter_data = {operation, filter_value};
       Logger::getInstance().debug("Adding '" + filter_key + operation +
