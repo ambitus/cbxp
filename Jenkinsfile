@@ -401,7 +401,7 @@ def build_description(python_executables_and_wheels_map, release_tag, release_no
     + "> :warning: _Requires z/OS Open XL C/C++ 2.1 compiler._\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${tar} "
     + "&& python3 -m pip install ${tar}\\n```\\n"
-    + "## Shell/C/C++ Installation\\n"
+    + "## Shell/C/C++ Interface Installation\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${pax} "
     + "&& pax -rf ${pax}\\n```\\n"
   )
