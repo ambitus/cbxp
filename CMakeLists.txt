@@ -117,7 +117,7 @@ add_custom_target(
                 "./cbxp/cbxp.h"
                 "cbxp-${CMAKE_PROJECT_VERSION}/include/"
     COMMAND "pax"
-                "-x pax"
+                "-x" "pax"
                 "-wzvf"
                 "./dist/cbxp-${CMAKE_PROJECT_VERSION}.pax.Z"
                 "-o saveext"
