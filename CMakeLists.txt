@@ -120,7 +120,6 @@ add_custom_target(
                 "-x" "pax"
                 "-wzvf"
                 "./dist/cbxp-${CMAKE_PROJECT_VERSION}.pax.Z"
-                "-o saveext"
                 "cbxp-${CMAKE_PROJECT_VERSION}/*"
     DEPENDS libcbxp cbxp
 )
