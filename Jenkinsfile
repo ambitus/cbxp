@@ -139,7 +139,7 @@ pipeline {
             clean_python_environment()
             clean_git_repo()
           }
-          // Shell/C/C++ pax
+          // Shell/C/C++ pax distribution
           def cbxp_version = get_cbxp_version()
           def pax = "cbxp-${cbxp_version}.pax.Z"
           echo "Building '${pax}' ..."
