@@ -178,7 +178,6 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
       return;
     }
   }
-  // If no delimeter is found then this is not a valid include
   Logger::getInstance().debug(
       "Filters must be key-value pairs (e.g., 'key=value')");
   throw FilterError();
