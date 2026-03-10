@@ -76,6 +76,7 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_ascb),
                                 sizeof(struct ascb));
 
+  ascb_json["ascbascb"] = formatter_.getString(p_ascb->ascbascb, 4);
   ascb_json["ascbasid"] = p_ascb->ascbasn;
   ascb_json["ascbasxb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbasxb));
   ascb_json["ascbdcti"] = p_ascb->ascbdcti;
