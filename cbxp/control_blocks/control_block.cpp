@@ -169,9 +169,6 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
       // If there's a delimeter then separate include into the key and its value
       filter_value = filter.substr(operation_pos + operation.length());
       filter_key   = filter.substr(0, operation_pos);
-      if (filter_value == "") {
-        Logger::getInstance().debug("Filter value is empty string");
-      }
       cbxp_filter_t filter_data = {operation, filter_value};
       Logger::getInstance().debug("Adding '" + filter_key + operation +
                                   filter_value +
@@ -182,7 +179,8 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
     }
   }
   // If no delimeter is found then this is not a valid include
-  Logger::getInstance().debug("Filter values must have an operation");
+  Logger::getInstance().debug(
+      "Filters must be key-value pairs (e.g., 'key=value')");
   throw FilterError();
 }
 

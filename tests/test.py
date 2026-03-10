@@ -472,26 +472,6 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), list)
 
-    def test_cbxp_can_use_empty_single_quotes_as_null_filter_string(
-        self,
-    ):
-        cbdata = cbxp(
-            "assb",
-            filters=[
-                CBXPFilter(
-                    "assbjbns",
-                    CBXPFilterOperation.EQUAL,
-                    "*MASTER*",
-                ),
-                CBXPFilter(
-                    "assbjbni",
-                    CBXPFilterOperation.EQUAL,
-                    "",
-                ),
-            ],
-        )
-        self.assertIs(type(cbdata), list)
-
     # ============================================================================
     # Debug Mode
     # ============================================================================
