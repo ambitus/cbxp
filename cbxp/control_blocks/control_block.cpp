@@ -169,10 +169,6 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
       // If there's a delimeter then separate include into the key and its value
       filter_value = filter.substr(operation_pos + operation.length());
       filter_key   = filter.substr(0, operation_pos);
-      if (filter_value == "") {
-        Logger::getInstance().debug("Filter values cannot be null");
-        throw FilterError();
-      }
       cbxp_filter_t filter_data = {operation, filter_value};
       Logger::getInstance().debug("Adding '" + filter_key + operation +
                                   filter_value +
@@ -182,6 +178,9 @@ void ControlBlock::addCurrentFilter(const std::string& filter) {
       return;
     }
   }
+  Logger::getInstance().debug(
+      "Filters must be key-value pairs (e.g., 'key=value')");
+  throw FilterError();
 }
 
 bool ControlBlock::compare(const nlohmann::json& json_value,
