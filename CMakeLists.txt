@@ -5,7 +5,7 @@ project(CBXP VERSION 0.0.3
              LANGUAGES C CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./dist")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "./dist")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "./dist")
 
 execute_process(
     COMMAND uname
@@ -18,7 +18,14 @@ execute_process(
 # ============================================================================
 set(CXX_STANDARD 17)
 
-set(COMPILE_OPTIONS -O2 -fzos-le-char-mode=ascii -Wno-trigraphs)
+set(
+    COMPILE_OPTIONS
+    -O2
+    -fzos-le-char-mode=ascii
+    -fstack-protector-strong
+    -Wno-trigraphs
+)
+
 set(LINK_OPTIONS -m64 -Wl,-b,edit=no)
 
 if(uname_output STREQUAL "OS/390\n")
@@ -51,9 +58,9 @@ file(
 )
 
 # ============================================================================
-# Build '/lib/libcbxp.so'
+# Build '/lib/libcbxp.a'
 # ============================================================================
-add_library(libcbxp SHARED ${CBXP_SRC_LIB})
+add_library(libcbxp STATIC ${CBXP_SRC_LIB})
 set_target_properties(libcbxp PROPERTIES OUTPUT_NAME "cbxp")
 
 target_include_directories(
@@ -71,6 +78,8 @@ target_link_options(libcbxp PUBLIC ${LINK_OPTIONS})
 # Build '/bin/cbxp'
 # ============================================================================
 add_executable(cbxp "cbxp/main.cpp")
+
+target_link_libraries(cbxp libcbxp)
 
 target_include_directories(cbxp PUBLIC cbxp externals)
 
@@ -91,6 +100,7 @@ add_custom_target(
                 "-p"
                 "cbxp-${CMAKE_PROJECT_VERSION}/bin"
                 "cbxp-${CMAKE_PROJECT_VERSION}/lib"
+                "cbxp-${CMAKE_PROJECT_VERSION}/include"
     COMMAND "cp"
                 "LICENSE"
                 "cbxp-${CMAKE_PROJECT_VERSION}/"
@@ -98,15 +108,18 @@ add_custom_target(
                 "NOTICES"
                 "cbxp-${CMAKE_PROJECT_VERSION}/"
     COMMAND "cp"
-                "./dist/libcbxp.so"
-                "cbxp-${CMAKE_PROJECT_VERSION}/lib/"
-    COMMAND "cp"
                 "./dist/cbxp"
                 "cbxp-${CMAKE_PROJECT_VERSION}/bin/"
+    COMMAND "cp"
+                "./dist/libcbxp.a"
+                "cbxp-${CMAKE_PROJECT_VERSION}/lib/"
+    COMMAND "cp"
+                "./cbxp/cbxp.h"
+                "cbxp-${CMAKE_PROJECT_VERSION}/include/"
     COMMAND "pax"
-                "-wzf"
+                "-x" "pax"
+                "-wzvf"
                 "./dist/cbxp-${CMAKE_PROJECT_VERSION}.pax.Z"
-                "-o saveext"
                 "cbxp-${CMAKE_PROJECT_VERSION}/*"
     DEPENDS libcbxp cbxp
 )

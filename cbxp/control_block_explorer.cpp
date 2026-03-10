@@ -1,6 +1,7 @@
 #include "control_block_explorer.hpp"
 
 #include <algorithm>
+#include <cstring>
 #include <iostream>
 #include <nlohmann/json.hpp>
 
@@ -92,12 +93,14 @@ void ControlBlockExplorer::exploreControlBlock(
                               control_block_json_string);
 
   p_result_->result_json_length = control_block_json_string.length();
-  p_result_->result_json        = new char[p_result_->result_json_length + 1]{};
+  p_result_->result_json        = new char[p_result_->result_json_length + 1];
   Logger::getInstance().debugAllocate(p_result_->result_json, 64,
                                       p_result_->result_json_length + 1);
 
-  std::strncpy(p_result_->result_json, control_block_json_string.c_str(),
-               p_result_->result_json_length);
+  std::memcpy(p_result_->result_json, control_block_json_string.c_str(),
+              p_result_->result_json_length);
+
+  p_result_->result_json[p_result_->result_json_length] = 0;
 
   return;
 }

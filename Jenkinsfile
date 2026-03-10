@@ -41,11 +41,11 @@ pipeline {
       )
     )
     string(
-      name: "gitHubMilestoneLink",
+      name: "releaseNotesLink",
       defaultValue: "",
       description: (
-        "(Required When Creating Releases) This is the GitHub "
-        + "Milestone URL that coresponds to the release."
+        "(Required When Creating Releases) This is the URL to "
+        + "the release notes for the release."
       )
     )
     booleanParam(
@@ -73,8 +73,8 @@ pipeline {
             if (params.releaseTitle == "") {
                 error("'releaseTitle' is a required parameter when creating a release.")
             }
-            if (params.gitHubMilestoneLink == "") {
-                error("'gitHubMilestoneLink' is a required parameter when creating a release.")
+            if (params.releaseNotesLink == "") {
+                error("'releaseNotesLink' is a required parameter when creating a release.")
             }
           }
         }
@@ -139,7 +139,7 @@ pipeline {
             clean_python_environment()
             clean_git_repo()
           }
-          // CLI/Library distribution
+          // Shell/C/C++ pax distribution
           def cbxp_version = get_cbxp_version()
           def pax = "cbxp-${cbxp_version}.pax.Z"
           echo "Building '${pax}' ..."
@@ -157,7 +157,7 @@ pipeline {
           """
 
           echo "'Function testing './dist/cbxp' ..."
-          sh "./tests/test.sh"
+          sh "gmake test"
 
           clean_git_repo()
         }
@@ -173,7 +173,7 @@ pipeline {
           params.releaseTitle,
           params.releaseTag, 
           env.BRANCH_NAME, 
-          params.gitHubMilestoneLink,
+          params.releaseNotesLink,
           params.preRelease
         )
       }
@@ -244,7 +244,7 @@ def publish(
     release_title,
     release_tag, 
     git_branch, 
-    milestone, 
+    release_notes_link, 
     pre_release
 ) {
   if (pre_release == true) {
@@ -274,7 +274,7 @@ def publish(
 
     echo "Creating '${release_title}' GitHub release ..."
 
-    def description = build_description(python_executables_and_wheels_map, release_tag, milestone)
+    def description = build_description(python_executables_and_wheels_map, release_tag, release_notes_link)
 
     def release_id = sh(
       returnStdout: true,
@@ -342,7 +342,7 @@ def publish(
     echo "Adding sha256 checksum for '${tar_publish}' to ${checksums_file}..."
     sh "cd dist && sha256sum -t ${tar_publish} >> ${checksums_file}"
 
-    // Build and publish CLI/Library distribution
+    // Build and publish Shell/C/C++ interface pax
     def cbxp_version = get_cbxp_version()
     def pax = "cbxp-${cbxp_version}.pax.Z"
     echo "Building '${pax}' ..."
@@ -375,9 +375,9 @@ def upload_asset(release_id, release_asset) {
   )
 }
 
-def build_description(python_executables_and_wheels_map, release_tag, milestone) {
+def build_description(python_executables_and_wheels_map, release_tag, release_notes_link) {
   def description = (
-    "Release Notes: ${milestone}\\n"
+    "Release Notes: ${release_notes_link}\\n"
     + "## Python Interface Installation\\n"
   )
 
@@ -401,7 +401,7 @@ def build_description(python_executables_and_wheels_map, release_tag, milestone)
     + "> :warning: _Requires z/OS Open XL C/C++ 2.1 compiler._\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${tar} "
     + "&& python3 -m pip install ${tar}\\n```\\n"
-    + "## CLI/Library Installation\\n"
+    + "## Shell/C/C++ Interface Installation\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${pax} "
     + "&& pax -rf ${pax}\\n```\\n"
   )

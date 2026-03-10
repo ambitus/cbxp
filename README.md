@@ -34,6 +34,7 @@ All versions of the **IBM Open Enterprise SDK for Python** that are fully suppor
 Currently, the following interfaces are provided for CBXP. Additional interfaces can be added in the future if there are use cases for them.
 * [Python Interface](https://ambitus.github.io/cbxp/interfaces/python)
 * [CLI Interface](https://ambitus.github.io/cbxp/interfaces/shell)
+* [C/C++ Interface](https://ambitus.github.io/cbxp/interfaces/c_cpp)
 
 ### Supported Control Blocks
 

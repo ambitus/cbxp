@@ -4,7 +4,6 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-#include "cbxp_result.h"
 #include "control_block_explorer.hpp"
 #include "logger.hpp"
 
@@ -31,8 +30,12 @@ cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
 void cbxp_free(cbxp_result_t* cbxp_result, bool debug) {
   CBXP::Logger::getInstance().setDebug(debug);
 
-  CBXP::Logger::getInstance().debugFree(cbxp_result->result_json);
-  delete cbxp_result->result_json;
-  CBXP::Logger::getInstance().debugFree(cbxp_result);
-  delete cbxp_result;
+  if (cbxp_result != nullptr) {
+    if (cbxp_result->result_json != nullptr) {
+      CBXP::Logger::getInstance().debugFree(cbxp_result->result_json);
+      delete cbxp_result->result_json;
+    }
+    CBXP::Logger::getInstance().debugFree(cbxp_result);
+    delete cbxp_result;
+  }
 }
