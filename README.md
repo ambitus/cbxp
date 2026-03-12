@@ -27,8 +27,8 @@ All versions of the **IBM Open Enterprise SDK for Python** that are fully suppor
 * [IBM Open Enterprise SDK for Python Product Lifecycle](https://www.ibm.com/support/pages/lifecycle/search?q=5655-PYT)
 
 ### Dependencies
-* **z/OS Language Environment Runtime Support**: CBXP is compiled using the **IBM Open XL C/C++ 2.1** compiler, which is still fairly new and requires **z/OS Language Environment** service updates for runtime support.
-  * More information can be found in section **5.2.2.2 Operational Requisites** on page **9** in the [Program Directory for IBM Open XL C/C++ 2.1 for z/OS](https://publibfp.dhe.ibm.com/epubs/pdf/i1357012.pdf).
+* **z/OS Language Environment Runtime Support**: CBXP is compiled using the [IBM Open XL C/C++ 2.2](https://www.ibm.com/docs/en/open-xl-c-cpp-zos/2.2.0) compiler, which is still fairly new and requires **z/OS Language Environment** service updates for runtime support.
+  * More information can be found in section **5.2.2.2 Operational Requisites** on page **8** in the [Program Directory for IBM Open XL C/C++ 2.2 for z/OS](https://publibfp.dhe.ibm.com/epubs/pdf/i1357013.pdf).
 
 ### Interfaces
 Currently, the following interfaces are provided for CBXP. Additional interfaces can be added in the future if there are use cases for them.
