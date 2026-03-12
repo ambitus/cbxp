@@ -17,7 +17,7 @@ The following shell interface is provided to facilitate exploitation of CBXP by 
 &nbsp;
 
 {: .note }
-> _Wherever you **Install**/**Extract** the **CBXP Pax File**, make sure to add the path to the `bin` directory where the `cbxp` executable resides to `PATH` and add the path to the `lib` directory where the `libcbxp.so` library resides to `LIBPATH` in `/etc/profile` (global) or `~/.profile`/`~/.bashrc` (local/individual)._
+> _Wherever you **Install**/**Extract** the **CBXP PAX**, make sure to add the path to the `bin` directory where the `cbxp` executable resides to `PATH` in `/etc/profile` (global) or `~/.profile`/`~/.bashrc` (local/individual)._
 
 &nbsp;
 

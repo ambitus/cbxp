@@ -17,12 +17,12 @@ The following C/C++ interface is provided to facilitate exploitation of CBXP by 
 &nbsp;
 
 {: .note }
-> _The CBXP pax provides a **Static Library** for CBXP at `/lib/libcbxp.a` and a **C Header** for CBXP at `/include/cbxp.h`. To compile code that uses the **C/C++** interface for CBXP, **Include** `/include/cbxp.h` at **Compile Time** and **Link** with `/lib/libcbxp.a`._
+> _The **CBXP PAX** provides a **Static Library** for CBXP at `/lib/libcbxp.a` and a **C Header** for CBXP at `/include/cbxp.h`. To compile code that uses the **C/C++** interface for CBXP, **Include** `/include/cbxp.h` at **Compile Time** and **Link** with `/lib/libcbxp.a`._
 
 &nbsp;
 
 {: .note }
-> _Users of the **C/C++** interface for CBXP must compile with **IBM Open XL C/C++ 2.1** or newer._
+> _When compiling and linking **C/C++** code with `/lib/libcbxp.a`, it is recommended to use [IBM Open XL C/C++ 2.2](https://www.ibm.com/docs/en/open-xl-c-cpp-zos/2.2.0) or newer. See [Binary Compatibility](https://www.ibm.com/docs/en/open-xl-c-cpp-zos/2.2.0?topic=guide-binary-compatibility) for more details._
 
 &nbsp;
 
@@ -35,18 +35,25 @@ cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
 
 ### 📄 Description
 
+&nbsp;
+
+{: .note }
+> _`includes_string` and `filters_string` are **Optional Parameters** that can be excluded by specifying `NULL` or `nullptr`._
+
+&nbsp;
+
 Extract **Control Blocks** from **Live Memory** *(storage)* and post-process them into **JSON**.
 
 ### 📥 Parameters
 
 * `control_block` <br>
-  The name of the **Control Block** to extract.
+  A **NULL-Terminated ISO8859-1 Encoded String** that contains name of the **Control Block** to extract.
 
 * `includes_string` <br>
-  A **Comma Delimited List** of [Include Patterns](../../include_patterns) that describe **Additional Control Blocks** to include that are accessible from the **Root Control Block** being extracted.
+  A **NULL-Terminated ISO8859-1 Encoded String** that contains a **Comma Delimited List** of [Include Patterns](../../include_patterns) that describe **Additional Control Blocks** to include that are accessible from the **Root Control Block** being extracted.
 
 * `filters_string` <br>
-  A **Comman Delimited List** of [Filters](../../filters) that are used to filter the entries returned in **Repeated** control block data.
+  A **NULL-Terminated ISO8859-1 Encoded String** that contains a **Comma Delimited List** of [Filters](../../filters) that are used to filter the entries returned in **Repeated** control block data.
 
 * `debug` <br>
   A **Boolean** that if set to `true` indicates that **Debug Messages** should be printed. If set to `false`, no **Debug Messages** will be printed.
@@ -119,6 +126,29 @@ The **C Struct** that is used to store all **Result Information** returned by CB
 
 ## 💻 Examples
 
+&nbsp;
+
+{: .note }
+> _The following examples assume that the **CBXP PAX** is extracted in the **Current Working Directory**._
+> <br><br>
+> ```
+> .
+> |-- cbxp-{{ site.cbxp_version }}
+> |   |-- LICENSE
+> |   |-- NOTICES
+> |   |-- bin
+> |   |   `-- cbxp
+> |   |-- include
+> |   |   `-- cbxp.h
+> |   `-- lib
+> |       `-- libcbxp.a
+> |-- cbxp-{{ site.cbxp_version }}.pax.Z
+> |-- main.c
+> |-- main.cpp
+> ```
+
+&nbsp;
+
 The following **C** example extracts the [PSA](https://www.ibm.com/docs/en/zos/latest?topic=rqe-psa-information) control block and prints the returned **JSON String**.
 
 ###### C
@@ -130,7 +160,7 @@ The following **C** example extracts the [PSA](https://www.ibm.com/docs/en/zos/l
 int main() {
   // Call CBXP
   puts("Calling CBXP from C...");
-  cbxp_result_t* cbxp_result = cbxp("psa", "", "", false);
+  cbxp_result_t* cbxp_result = cbxp("psa", NULL, NULL, false);
 
   // Make sure call was successful
   if (cbxp_result->return_code != 0) {
@@ -150,9 +180,9 @@ int main() {
 ###### Shell
 ```shell
 # Compile
-ibm-clang64 -c -fzos-le-char-mode=ascii -I./cbxp-0.0.3/include -o main.o main.c
+ibm-clang64 -c -fzos-le-char-mode=ascii -I./cbxp-{{ site.cbxp_version }}/include -o main.o main.c
 # Link
-ibm-clang++64 -fzos-le-char-mode=ascii -o main ./cbxp-0.0.3/lib/libcbxp.a main.o
+ibm-clang++64 -fzos-le-char-mode=ascii -o main ./cbxp-{{ site.cbxp_version }}/lib/libcbxp.a main.o
 # Run
 ./main
 ```
@@ -170,7 +200,7 @@ The following **C++** example extracts the [PSA](https://www.ibm.com/docs/en/zos
 int main() {
   // Call CBXP
   std::cout << "Calling CBXP from C++..." << std::endl;
-  cbxp_result_t * cbxp_result = cbxp("psa", "", "", false);
+  cbxp_result_t * cbxp_result = cbxp("psa", nullptr, nullptr, false);
 
   // Make sure call was successful
   if (cbxp_result->return_code != 0) {
@@ -190,9 +220,9 @@ int main() {
 ###### Shell
 ```shell
 # Compile
-ibm-clang++64 -c -fzos-le-char-mode=ascii -I./cbxp-0.0.3/include -o main.o main.cpp
+ibm-clang++64 -c -fzos-le-char-mode=ascii -I./cbxp-{{ site.cbxp_version }}/include -o main.o main.cpp
 # Link
-ibm-clang++64 -fzos-le-char-mode=ascii -o main ./cbxp-0.0.3/lib/libcbxp.a main.o
+ibm-clang++64 -fzos-le-char-mode=ascii -o main ./cbxp-{{ site.cbxp_version }}/lib/libcbxp.a main.o
 # Run
 ./main
 ```

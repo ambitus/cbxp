@@ -7,7 +7,7 @@ has_toc: false
 
 &nbsp;
 
-A unified and standardized interface for extracting z/OS control block data. 
+{{ site.description }}
 {: .fs-6 .fw-300 }
 
 &nbsp;
@@ -25,7 +25,7 @@ CBXP is the successor to the existing [cbxplorer](https://github.com/ambitus/cbe
 
 ## Minimum z/OS & Language Versions
 
-Currently, CBXP is being developed on **z/OS 3.1**. We hope to eventually support all z/OS versions that are fully supported by IBM.
+Currently, CBXP is being developed on **z/OS 3.2**. We hope to eventually support all z/OS versions that are fully supported by IBM.
 * [z/OS Product Lifecycle](https://www.ibm.com/support/pages/lifecycle/search/?q=5655-ZOS,%205650-ZOS)
 
 All versions of the **IBM Open Enterprise SDK for Python** that are fully supported by IBM are supported by CBXP.
@@ -33,8 +33,8 @@ All versions of the **IBM Open Enterprise SDK for Python** that are fully suppor
 
 ## Dependencies
 
-* **z/OS Language Environment Runtime Support**: CBXP is compiled using the **IBM Open XL C/C++ 2.1** compiler, which is still fairly new and requires **z/OS Language Environment** service updates for runtime support.
-  * More information can be found in section **5.2.2.2 Operational Requisites** on page **9** in the [Program Directory for IBM Open XL C/C++ 2.1 for z/OS](https://publibfp.dhe.ibm.com/epubs/pdf/i1357012.pdf).
+* **z/OS Language Environment Runtime Support**: CBXP is compiled using the [IBM Open XL C/C++ 2.2](https://www.ibm.com/docs/en/open-xl-c-cpp-zos/2.2.0) compiler, which is still fairly new and requires **z/OS Language Environment** service updates for runtime support.
+  * More information can be found in section **5.2.2.2 Operational Requisites** on page **8** in the [Program Directory for IBM Open XL C/C++ 2.2 for z/OS](https://publibfp.dhe.ibm.com/epubs/pdf/i1357013.pdf).
 
 
 ## Interfaces
@@ -47,10 +47,6 @@ Currently, the following interfaces are provided for CBXP. Additional interfaces
 ## Supported Control Blocks
 
 Currently, CBXP only has support for extracting a handful of **System-Level Control Blocks** from **Live Memory** *(storage)*. See [Supported Control Blocks](./supported_control_blocks) for more details.
-
-&nbsp;
-
-We plan on adding support for extracting control blocks from **Files** and **Data Sets**, and extracting control blocks based on a **User Defined Structure**. We also plan on continuously expanding upon the following list of natively supported control blocks. The community is encouraged to assist in these efforts. See the [Contribution Guidelines](https://github.com/ambitus/cbxp/blob/main/CONTRIBUTING.md) for more details.
 
 
 ## Architecture
