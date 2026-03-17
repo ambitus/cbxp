@@ -206,13 +206,26 @@ def create_python_executables_and_wheels_map(python_versions) {
   python_executables_and_wheels_map = [:]
 
   for (python_version in python_versions) {
-    python_executables_and_wheels_map["python3.${python_version}"] = [
-      "wheelDefault": (
-        "cbxp-${cbxp_version}-cp3${python_version}-cp3${python_version}-${os}_${zos_release}_${processor}.whl"
-      ),
-      "wheelPublish": "cbxp-${cbxp_version}-cp3${python_version}-none-any.whl",
-      "tarPublish": "cbxp-${cbxp_version}.tar.gz"
-    ]
+    // New wheel naming convention in Python 3.14:
+    if (python_version > "13") {
+        python_executables_and_wheels_map["python3.${python_version}"] = [
+        "wheelDefault": (
+          "cbxp-${cbxp_version}-cp3${python_version}-cp3${python_version}-zos.whl"
+        ),
+        "wheelPublish": "cbxp-${cbxp_version}-cp3${python_version}-zos.whl",
+        "tarPublish": "cbxp-${cbxp_version}.tar.gz"
+      ]
+    }
+    // Old wheel naming convention
+    else {
+      python_executables_and_wheels_map["python3.${python_version}"] = [
+        "wheelDefault": (
+          "cbxp-${cbxp_version}-cp3${python_version}-cp3${python_version}-${os}_${zos_release}_${processor}.whl"
+        ),
+        "wheelPublish": "cbxp-${cbxp_version}-cp3${python_version}-none-any.whl",
+        "tarPublish": "cbxp-${cbxp_version}.tar.gz"
+      ]
+    }
   }
 
   return python_executables_and_wheels_map
