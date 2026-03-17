@@ -206,7 +206,7 @@ def create_python_executables_and_wheels_map(python_versions) {
   python_executables_and_wheels_map = [:]
 
   for (python_version in python_versions) {
-    // New wheel naming convention in Python 3.14:
+    // New wheel naming convention in Python 3.14
     if (python_version > "13") {
         python_executables_and_wheels_map["python3.${python_version}"] = [
         "wheelDefault": (
@@ -336,8 +336,12 @@ def publish(
       sh """
         ${python} -m pip install build>=1.2.2
         ${python} -m build -w
-        mv ./dist/${wheel_default} ./dist/${wheel_publish}
       """
+
+      // Rename wheel file if the old naming convention is being used
+      if (wheel_default != wheel_publish) {
+        sh "mv ./dist/${wheel_default} ./dist/${wheel_publish}"
+      }
 
       if (tar_built == false) {
         tar_publish = python_executables_and_wheels_map[python]["tarPublish"]
