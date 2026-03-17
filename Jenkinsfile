@@ -212,7 +212,9 @@ def create_python_executables_and_wheels_map(python_versions) {
         "wheelDefault": (
           "cbxp-${cbxp_version}-cp3${python_version}-cp3${python_version}-zos.whl"
         ),
-        "wheelPublish": "cbxp-${cbxp_version}-cp3${python_version}-zos.whl",
+        "wheelPublish": (
+          "cbxp-${cbxp_version}-cp3${python_version}-cp3${python_version}-zos.whl"
+        ),
         "tarPublish": "cbxp-${cbxp_version}.tar.gz"
       ]
     }
@@ -222,7 +224,9 @@ def create_python_executables_and_wheels_map(python_versions) {
         "wheelDefault": (
           "cbxp-${cbxp_version}-cp3${python_version}-cp3${python_version}-${os}_${zos_release}_${processor}.whl"
         ),
-        "wheelPublish": "cbxp-${cbxp_version}-cp3${python_version}-none-any.whl",
+        "wheelPublish": (
+          "cbxp-${cbxp_version}-cp3${python_version}-none-any.whl"
+        ),
         "tarPublish": "cbxp-${cbxp_version}.tar.gz"
       ]
     }
