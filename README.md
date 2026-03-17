@@ -46,9 +46,9 @@ Currently, CBXP only has support for extracting a handful of **System-Level Cont
 ## Authors
 * Leonard J. Carcaramo Jr: lcarcaramo@ibm.com
 * Elijah Swift: elijah.swift@ibm.com
-* Varun Chennamadhava: varunchennamadhava@ibm.com
+* Varun Chennamadhava: varunchennamadhava@gmail.com
 
 ## Maintainers
 * Leonard J. Carcaramo Jr: lcarcaramo@ibm.com
 * Elijah Swift: elijah.swift@ibm.com
-* Varun Chennamadhava: varunchennamadhava@ibm.com
+* Varun Chennamadhava: varunchennamadhava@gmail.com
