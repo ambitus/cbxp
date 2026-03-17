@@ -9,12 +9,12 @@
     authors = [
         { name = "Leonard J. Carcaramo Jr", email = "lcarcaramo@ibm.com" },
         { name = "Elijah Swift", email = "elijah.swift@ibm.com" },
-        { name = "Varun Chennamadhava", email = "varunchennamadhava@ibm.com" },
+        { name = "Varun Chennamadhava", email = "varunchennamadhava@gmail.com" },
     ]
     maintainers = [
         { name = "Leonard J. Carcaramo Jr", email = "lcarcaramo@ibm.com" },
         { name = "Elijah Swift", email = "elijah.swift@ibm.com" },
-        { name = "Varun Chennamadhava", email = "varunchennamadhava@ibm.com" },
+        { name = "Varun Chennamadhava", email = "varunchennamadhava@gmail.com" },
     ]
     description="A unified and standardized interface for extracting z/OS control block data."
     readme = "README.md"
