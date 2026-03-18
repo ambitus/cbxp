@@ -25,7 +25,7 @@ CBXP is the successor to the existing [cbxplorer](https://github.com/ambitus/cbe
 
 ## Minimum z/OS & Language Versions
 
-Currently, CBXP is being developed on **z/OS 3.2**. We hope to eventually support all z/OS versions that are fully supported by IBM.
+Currently, CBXP is being developed on **z/OS 3.1**. We hope to eventually support all z/OS versions that are fully supported by IBM.
 * [z/OS Product Lifecycle](https://www.ibm.com/support/pages/lifecycle/search/?q=5655-ZOS,%205650-ZOS)
 
 All versions of the **IBM Open Enterprise SDK for Python** that are fully supported by IBM are supported by CBXP.
