@@ -1,6 +1,7 @@
 ---
 layout: default
 parent: Interfaces
+nav_order: 1
 ---
 
 # Python
@@ -25,7 +26,8 @@ The following Python interface is provided to facilitate exploitation of CBXP by
 ```python
 def cbxp(
         control_block: str, 
-        includes: list[str] = [], 
+        includes: list[str] = [],
+        filters: list[CBXPFilter] = [],
         debug: bool = False
 ) -> dict:
 ```
@@ -40,6 +42,9 @@ Extract **Control Blocks** from **Live Memory** *(storage)* and post-process the
 
 * `includes` <br>
   A **List** of [Include Patterns](../../include_patterns) that describe **Additional Control Blocks** to include that are accessible from the **Root Control Block** being extracted.
+
+* `filters` <br>
+  A **List** of [Filters](../../filters) that are used to filter the entries returned in **Repeated** control block data.
 
 * `debug` <br>
   A **Boolean** that if set to `True` indicates that **Debug Messages** should be printed. If set to `False`, no **Debug Messages** will be printed.
@@ -76,13 +81,23 @@ cbdata = cbxp("cvt", includes=["ecvt", "asvt.*"])
 
 &nbsp;
 
-The followng example extracts all [ASCB](https://www.ibm.com/docs/en/zos/latest?topic=iar-ascb-information) control blocks and uses the built-in Python library `json` to convert the resulting Python dictionary into a **JSON String**.
+The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `IBMUSER`. The built-in Python library `json` is then used to convert the resulting Python dictionary into a **JSON String**.
 
 ###### Python Script
 ```python
 import json
-from cbxp import cbxp
+from cbxp import CBXPFilter, CBXPFilterOperation, cbxp
 
-cbdata = cbxp("ascb")
+cbdata = cbxp(
+    "assb",
+    filters=[
+        CBXPFilter(
+            "assbjbni",
+            CBXPFilterOperation.EQUAL,
+            "IBMUSER"
+        )
+    ]
+)
+
 cbjson = json(cbdata, indent=2)
 ```

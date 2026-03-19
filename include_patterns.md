@@ -1,10 +1,11 @@
 ---
 layout: default
+nav_order: 2
 ---
 
 # Include Patterns
 
-What are include patterns and how are they used?
+How to use include patterns to include additional control blocks.
 {: .fs-6 .fw-300 }
 
 &nbsp;
@@ -143,7 +144,7 @@ cbxp -i "*" -i "asvt.*" cvt
     subgraph ASCBs["ASCB Array"]
         ASCB1["ASCB"]
         ASCB2["ASCB"]
-        ASCB3["..."]
+        ASCB3["ASCB"]
     end
 </pre>
 
@@ -172,7 +173,7 @@ cbxp -i "cvt.**" psa
 &nbsp;
 
 <pre class="mermaid">
-  flowchart LR
+  flowchart TD
     PSA
     PSA--> CVT
     CVT--> ECVT
@@ -180,7 +181,13 @@ cbxp -i "cvt.**" psa
     ASVT--> ASCBs
     subgraph ASCBs["ASCB Array"]
         ASCB1["ASCB"]
+        ASCB1--> ASSB1["ASSB"]
+        ASCB1--> OUCB1["OUCB"]
         ASCB2["ASCB"]
-        ASCB3["..."]
+        ASCB2--> ASSB2["ASSB"]
+        ASCB2--> OUCB2["OUCB"]
+        ASCB3["ASCB"]
+        ASCB3--> ASSB3["ASSB"]
+        ASCB3--> OUCB3["OUCB"]
     end
 </pre>
