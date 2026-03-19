@@ -44,6 +44,12 @@ Currently, the following interfaces are provided for CBXP. Additional interfaces
 * [C/C++ Interface](./interfaces/c_cpp)
 
 
+## Interfaces
+Currently, the following interfaces are provided for CBXP. Additional interfaces can be added in the future if there are use cases for them.
+* [Python Interface](./interfaces/python)
+* [Shell Interface](./interfaces/shell)
+
+
 ## Supported Control Blocks
 
 Currently, CBXP only has support for extracting a handful of **System-Level Control Blocks** from **Live Memory** *(storage)*. See [Supported Control Blocks](./supported_control_blocks) for more details.
