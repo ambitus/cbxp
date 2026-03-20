@@ -1,6 +1,7 @@
 ---
 layout: default
 parent: Interfaces
+nav_order: 2
 ---
 
 # Shell
@@ -16,7 +17,7 @@ The following shell interface is provided to facilitate exploitation of CBXP by 
 &nbsp;
 
 {: .note }
-> _Wherever you **Install**/**Extract** the **CBXP Pax File**, make sure to add the path to the `bin` directory where the `cbxp` executable resides to `PATH` in `/etc/profile` (global) or `~/.profile`/`~/.bashrc` (local/individual)._
+> _Wherever you **Install**/**Extract** the **CBXP PAX**, make sure to add the path to the `bin` directory where the `cbxp` executable resides to `PATH` in `/etc/profile` (global) or `~/.profile`/`~/.bashrc` (local/individual)._
 
 &nbsp;
 
@@ -35,6 +36,9 @@ cbxp [options] [CONTROL_BLOCK]
 
 * `-i`, `--include <pattern>` <br>
   **Include** control blocks that are **Accessible** from the **Root Control Block** being extracted using an [Include Pattern](../../include_patterns).
+
+* `-f`, `--filter` <br>
+  **Filter** repeated control block data using a [Filter](../../filters).
 
 * `-v`, `--version` <br>
   Display **Version Information**.
@@ -62,10 +66,9 @@ cbxp -i ecvt -i 'asvt.*' cvt
 
 &nbsp;
 
-
-The followng example extracts all [ASCB](https://www.ibm.com/docs/en/zos/latest?topic=iar-ascb-information) control blocks and pipes the output into `jq` to **Format** the JSON output.
+The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks where both the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `IBMUSER` and the **Control Block Field** `ASSBJBNS` matches the **Filter Value** `BPXAS`. The output is then piped into `jq` to **Format** it.
 
 ###### Shell Script
 ```shell
-cbxp ascb | jq
+cbxp -f assb.assbjbni=IBMUSER assb | jq
 ```
