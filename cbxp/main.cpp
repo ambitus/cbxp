@@ -1,11 +1,19 @@
+#define _UNIX03_SOURCE
+
+#include <dlfcn.h>
+
 #include <algorithm>
+#include <cstdio>
 #include <cstring>
 #include <iostream>
 #include <nlohmann/json.hpp>
 
-#include "cbxp_result.h"
+#include "cbxp.h"
 #include "control_block_error.hpp"
-#include "control_block_explorer.hpp"
+
+static void show_usage(const char* argv[]);
+
+enum CLIReturnCode { SUCCESS = 0, FAILURE = -1 };
 
 static void show_usage(const char* argv[]) {
   std::cout << "Usage: " << argv[0] << " [options] <control block>" << std::endl
@@ -17,6 +25,9 @@ static void show_usage(const char* argv[]) {
             << "  -i, --include <pattern>          Include additional control "
                "blocks based on a pattern"
             << std::endl
+            << "  -f, --filter <filter>            Filter repeated control "
+               "block data"
+            << std::endl
             << "  -v, --version                    Show version number"
             << std::endl
             << "  -h, --help                       Show usage information"
@@ -24,54 +35,78 @@ static void show_usage(const char* argv[]) {
             << std::endl;
 }
 
+bool check_for_comma(const std::string& string) {
+  return std::any_of(string.begin(), string.end(),
+                     [](char c) { return c == ','; });
+}
+
 int main(int argc, const char* argv[]) {
   bool debug                     = false;
-  std::string control_block_name = "", includes_string = "";
+  std::string control_block_name = "", includes_string = "",
+              filters_string = "";
 
   if (argc < 2) {
     show_usage(argv);
-    return -1;
+    return CLIReturnCode::FAILURE;
   }
 
   if (argc == 2) {
     if (std::strcmp(argv[1], "-v") == 0 ||
         std::strcmp(argv[1], "--version") == 0) {
       std::cout << "CBXP " << VERSION << std::endl;
-      return 0;
+      return CLIReturnCode::SUCCESS;
     }
 
     if (std::strcmp(argv[1], "-h") == 0 ||
         std::strcmp(argv[1], "--help") == 0) {
       show_usage(argv);
-      return 0;
+      return CLIReturnCode::SUCCESS;
     }
   }
 
   for (int i = 1; i < argc; i++) {
     std::string flag = argv[i];
     if (flag == "-d" || flag == "--debug") {
-      debug = true;
+      if (!debug) {
+        debug = true;
+      } else {
+        show_usage(argv);
+        return CLIReturnCode::FAILURE;
+      }
     } else if (flag == "-i" || flag == "--include") {
       if (i + 1 >= argc - 1) {
         show_usage(argv);
-        return -1;
+        return CLIReturnCode::FAILURE;
       }
       std::string include = std::string(argv[++i]);
-      bool has_comma      = std::any_of(include.begin(), include.end(),
-                                        [](char c) { return c == ','; });
-      if (has_comma) {
+      if (check_for_comma(include)) {
         std::cerr << "Include patterns cannot contain commas" << std::endl;
-        return -1;
+        return CLIReturnCode::FAILURE;
       }
       if (includes_string == "") {
         includes_string = include;
       } else {
         includes_string += "," + include;
       }
+    } else if (flag == "-f" || flag == "--filter") {
+      if (i + 1 >= argc - 1) {
+        show_usage(argv);
+        return CLIReturnCode::FAILURE;
+      }
+      std::string filter = std::string(argv[++i]);
+      if (check_for_comma(filter)) {
+        std::cerr << "Filters cannot contain commas" << std::endl;
+        return CLIReturnCode::FAILURE;
+      }
+      if (filters_string == "") {
+        filters_string = filter;
+      } else {
+        filters_string += "," + filter;
+      }
     } else {
       if (i != argc - 1) {
         show_usage(argv);
-        return -1;
+        return CLIReturnCode::FAILURE;
       }
       control_block_name = std::string(argv[i]);
     }
@@ -79,28 +114,34 @@ int main(int argc, const char* argv[]) {
 
   if (control_block_name == "") {
     show_usage(argv);
-    return -1;
+    return CLIReturnCode::FAILURE;
   }
 
   nlohmann::json control_block_json;
 
-  static cbxp_result_t cbxp_result = {nullptr, 0, -1};
+  cbxp_result_t* cbxp_result =
+      cbxp(control_block_name.c_str(), includes_string.c_str(),
+           filters_string.c_str(), debug);
 
-  CBXP::ControlBlockExplorer explorer =
-      CBXP::ControlBlockExplorer(&cbxp_result, debug);
+  CLIReturnCode cli_return_code = CLIReturnCode::FAILURE;
 
-  explorer.exploreControlBlock(control_block_name, includes_string);
-
-  if (cbxp_result.return_code == CBXP::Error::BadControlBlock) {
-    std::cerr << "Unknown control block '" << control_block_name
-              << "' was specified." << std::endl;
-    return -1;
-  } else if (cbxp_result.return_code == CBXP::Error::BadInclude) {
-    std::cerr << "A bad include pattern was provided" << std::endl;
-    return -1;
-  } else {
-    std::cout << cbxp_result.result_json << std::endl;
+  switch (cbxp_result->return_code) {
+    case CBXP::Error::BadControlBlock:
+      std::cerr << "Unknown control block '" << control_block_name
+                << "' was specified." << std::endl;
+      break;
+    case CBXP::Error::BadInclude:
+      std::cerr << "A bad include pattern was provided" << std::endl;
+      break;
+    case CBXP::Error::BadFilter:
+      std::cerr << "A bad filter was provided" << std::endl;
+      break;
+    default:
+      std::cout << cbxp_result->result_json << std::endl;
+      cli_return_code = CLIReturnCode::SUCCESS;
   }
 
-  return 0;
+  cbxp_free(cbxp_result, debug);
+
+  return cli_return_code;
 }

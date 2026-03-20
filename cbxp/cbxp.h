@@ -1,28 +1,25 @@
 #ifndef __CBXP_H_
 #define __CBXP_H_
 
-#include "cbxp_result.h"
-
 #ifdef __cplusplus
 extern "C" {
+#else
+#include <stdbool.h>
 #endif
 
-/*
-This is the main interface to CBXP.
+typedef struct {
+  char* result_json;
+  int result_json_length;
+  int return_code;
+} cbxp_result_t;
 
-The following pointers must be freed after calling this interface to
-avoid memory leaks:
+cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
+                    const char* filters_string, bool debug);
 
-  result.result_json
-
-*/
-cbxp_result_t* cbxp(const char* control_block_name, const char* includes_string,
-                    bool debug);
+void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
 
 #ifdef __cplusplus
 }
 #endif
-
-#pragma export(cbxp)
 
 #endif

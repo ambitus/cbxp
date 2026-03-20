@@ -1,46 +1,41 @@
 #define PY_SSIZE_T_CLEAN
 
 #include <Python.h>
-#include <pthread.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
 #include "cbxp.h"
-#include "cbxp_result.h"
-
-pthread_mutex_t cbxp_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 // Entry point to the call_cbxp() function
 static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
   PyObject* result_dictionary;
   PyObject* debug_pyobj;
-  const char* control_block;
-  const char* includes_string;
+  const char* p_control_block;
+  const char* p_includes_string;
+  const char* p_filters_string;
   Py_ssize_t request_length;
   bool debug            = false;
 
-  static char* kwlist[] = {"request", "include", "debug", NULL};
+  static char* kwlist[] = {"control_block", "includes_string", "filters_string",
+                           "debug", NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|sO", kwlist, &control_block,
-                                   &includes_string, &debug_pyobj)) {
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "sss|O", kwlist,
+                                   &p_control_block, &p_includes_string,
+                                   &p_filters_string, &debug_pyobj)) {
     return NULL;
   }
 
   debug = PyObject_IsTrue(debug_pyobj);
 
-  // Since cbxp manages cbxp_result_t as a static structure,
-  // we need to use a mutex to make this thread safe.
-  // Technically we shouldn't need this because the Python GIL,
-  // but we will set this up anyways to be safe.
-  pthread_mutex_lock(&cbxp_mutex);
+  cbxp_result_t* p_cbxp_result =
+      cbxp(p_control_block, p_includes_string, p_filters_string, debug);
 
-  cbxp_result_t* result = cbxp(control_block, includes_string, debug);
+  result_dictionary =
+      Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
+                    p_cbxp_result->result_json_length, "return_code",
+                    p_cbxp_result->return_code);
 
-  result_dictionary     = Py_BuildValue(
-      "{s:s#, s:i}", "result_json", result->result_json,
-      result->result_json_length, "return_code", result->return_code);
-
-  pthread_mutex_unlock(&cbxp_mutex);
+  cbxp_free(p_cbxp_result, debug);
 
   return result_dictionary;
 }

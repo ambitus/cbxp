@@ -10,7 +10,7 @@
 
 namespace CBXP {
 class ControlBlockFieldFormatter {
- private:
+ public:
   template <typename T>
   static T uint(const void* p_field) {
     T uint_field;
@@ -18,12 +18,15 @@ class ControlBlockFieldFormatter {
     return uint_field;
   }
 
- public:
   static const std::string getString(const void* p_field, int length) {
-    auto ascii_field_unique_ptr = std::make_unique<char[]>(length);
-    std::memcpy(ascii_field_unique_ptr.get(), p_field, length);
-    __e2a_l(ascii_field_unique_ptr.get(), length);
-    return ascii_field_unique_ptr.get();
+    std::vector<char> ascii_field_tmp(length, 0);
+    std::memcpy(ascii_field_tmp.data(), p_field, length);
+    __e2a_l(ascii_field_tmp.data(), length);
+    std::string ascii_field(ascii_field_tmp.begin(), ascii_field_tmp.end());
+    size_t last_non_space =
+        ascii_field.find_last_not_of({'\0', ' ', '\t', '\n', '\r', '\f', '\v'});
+    ascii_field.resize(last_non_space + 1);
+    return ascii_field;
   }
   template <typename T>
   static const std::string getHex(const void* p_field) {

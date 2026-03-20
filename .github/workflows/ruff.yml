@@ -1,0 +1,17 @@
+name: ruff
+on: [push, pull_request]
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.x"
+    - name: Install ruff
+      run: python3 -m pip install --upgrade pip ruff
+    - name: Run ruff
+      run: ruff check
