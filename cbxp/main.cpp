@@ -16,23 +16,42 @@ static void show_usage(const char* argv[]);
 enum CLIReturnCode { SUCCESS = 0, FAILURE = -1 };
 
 static void show_usage(const char* argv[]) {
-  std::cout << "Usage: " << argv[0] << " [options] <control block>" << std::endl
+  std::cout << "Usage: " << argv[0] << "[operation] [options] <control block>"
+            << std::endl
             << std::endl;
 
-  std::cout << "Options:" << std::endl
-            << "  -d, --debug                      Write debug messages"
+  std::cout << "Operations:" << std::endl
+            << "explore                            Explore control blocks in "
+               "system memory"
             << std::endl
-            << "  -i, --include <pattern>          Include additional control "
-               "blocks based on a pattern"
+            << "format                             Format control blocks from "
+               "a buffer/file"
             << std::endl
-            << "  -f, --filter <filter>            Filter repeated control "
-               "block data"
-            << std::endl
-            << "  -v, --version                    Show version number"
-            << std::endl
-            << "  -h, --help                       Show usage information"
-            << std::endl
+            << "Note: format requires either -F/--file option or piping binary "
+               "data as input"
             << std::endl;
+
+  std::cout
+      << "Options:" << std::endl
+      << "  -d, --debug                      Write debug messages" << std::endl
+      << "  -i, --include <pattern>          Include additional control "
+         "blocks based on a pattern (explore only)"
+      << std::endl
+      << "  -f, --filter <filter>            Filter repeated control "
+         "block data (explore only)"
+      << std::endl
+      << "  -F, --file  <path>               Format control block data "
+         "from a specified file or dataset (format only)"
+      << std::endl
+      << "  -o, --offset <value>             Specify an offset into "
+         "a memory buffer to start formatting (format only)"
+      << std::endl
+      << "  -v, --version                    Show version number (no operation)"
+      << std::endl
+      << "  -h, --help                       Show usage information (no "
+         "operation)"
+      << std::endl
+      << std::endl;
 }
 
 bool check_for_comma(const std::string& string) {
@@ -44,11 +63,8 @@ int main(int argc, const char* argv[]) {
   bool debug                     = false;
   std::string control_block_name = "", includes_string = "",
               filters_string = "";
-
-  if (argc < 2) {
-    show_usage(argv);
-    return CLIReturnCode::FAILURE;
-  }
+  uint64_t offset = -1, buffer_length = -1;
+  char* data_buffer = nullptr;
 
   if (argc == 2) {
     if (std::strcmp(argv[1], "-v") == 0 ||
@@ -64,7 +80,18 @@ int main(int argc, const char* argv[]) {
     }
   }
 
-  for (int i = 1; i < argc; i++) {
+  if (argc < 3) {
+    show_usage(argv);
+    return CLIReturnCode::FAILURE;
+  }
+
+  std::string operation = argv[1];
+  if (operation != "explore" && operation != "format") {
+    show_usage(argv);
+    return CLIReturnCode::FAILURE;
+  }
+
+  for (int i = 2; i < argc; i++) {
     std::string flag = argv[i];
     if (flag == "-d" || flag == "--debug") {
       if (!debug) {
@@ -103,6 +130,19 @@ int main(int argc, const char* argv[]) {
       } else {
         filters_string += "," + filter;
       }
+    } else if (flag == "-F" || flag == "--file") {
+      if (i + 1 >= argc - 1) {
+        show_usage(argv);
+        return CLIReturnCode::FAILURE;
+      }
+      std::string file = std::string(argv[++i]);
+      // process file here
+    } else if (flag == "-o" || flag == "--offset") {
+      if (i + 1 >= argc - 1) {
+        show_usage(argv);
+        return CLIReturnCode::FAILURE;
+      }
+      offset = std::stoull(argv[++i], nullptr, 0);
     } else {
       if (i != argc - 1) {
         show_usage(argv);
@@ -117,11 +157,43 @@ int main(int argc, const char* argv[]) {
     return CLIReturnCode::FAILURE;
   }
 
-  nlohmann::json control_block_json;
+  if (operation == "format") {
+    if (filters_string != "" || includes_string != "") {
+      std::cerr
+          << "Filters and Includes cannot be used with the 'format' operation"
+          << std::endl;
+      show_usage(argv);
+      return CLIReturnCode::FAILURE;
+    }
+  }
 
-  cbxp_result_t* cbxp_result =
-      cbxp(control_block_name.c_str(), includes_string.c_str(),
-           filters_string.c_str(), debug);
+  if (operation == "explore") {
+    if (offset != -1 || data_buffer != nullptr) {
+      std::cerr
+          << "Files and Offsets cannot be used with the 'explore' operation"
+          << std::endl;
+      show_usage(argv);
+      return CLIReturnCode::FAILURE;
+    }
+  }
+
+  nlohmann::json control_block_json;
+  cbxp_result_t* cbxp_result;
+
+  if (operation == "explore") {
+    cbxp_result =
+        cbxp_extract(control_block_name.c_str(), includes_string.c_str(),
+                     filters_string.c_str(), debug);
+  }
+
+  if (operation == "format") {
+    if (offset == -1) {
+      offset = 0;
+    }
+    cbxp_result = cbxp_format(control_block_name.c_str(),
+                              static_cast<void*>(data_buffer + offset),
+                              buffer_length - offset, debug);
+  }
 
   CLIReturnCode cli_return_code = CLIReturnCode::FAILURE;
 

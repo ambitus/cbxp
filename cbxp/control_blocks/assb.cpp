@@ -14,7 +14,9 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json ASSB::get(void* __ptr32 p_control_block) {
+nlohmann::json ASSB::get(void* __ptr32 p_control_block,
+                         const uint64_t buffer_length) {
+  checkBufferLength(buffer_length);
   const assb* __ptr32 p_assb;
   nlohmann::json assb_json = {};
   if (p_control_block == nullptr) {

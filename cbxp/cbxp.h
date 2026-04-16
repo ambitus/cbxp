@@ -13,8 +13,12 @@ typedef struct {
   int return_code;
 } cbxp_result_t;
 
-cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
-                    const char* filters_string, bool debug);
+cbxp_result_t* cbxp_extract(const char* control_block,
+                            const char* includes_string,
+                            const char* filters_string, bool debug);
+
+cbxp_result_t* cbxp_format(const char* control_block, void* bytes_buffer,
+                           const uint64_t buffer_length, bool debug);
 
 void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
 

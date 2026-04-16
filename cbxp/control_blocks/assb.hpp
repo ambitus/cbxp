@@ -1,15 +1,20 @@
 #ifndef __ASSB_H_
 #define __ASSB_H_
 
+#include <ihaassb.h>
+
 #include "control_block.hpp"
 
 namespace CBXP {
 
 class ASSB : public ControlBlock {
  public:
-  nlohmann::json get(void* __ptr32 p_control_block = nullptr) override;
+  nlohmann::json get(void* __ptr32 p_control_block = nullptr,
+                     const uint64_t buffer_length  = -1) override;
   explicit ASSB(const cbxp_options_t& cbxp_options)
-      : ControlBlock("assb", {}, cbxp_options) {}
+      : ControlBlock("assb", {}, cbxp_options) {
+    control_block_length = sizeof(assb);
+  }
 };
 
 }  // namespace CBXP

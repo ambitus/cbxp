@@ -37,9 +37,12 @@ class ControlBlock {
   void createOptionsMap(const std::vector<std::string>& includes,
                         const std::vector<std::string>& filters);
   bool matchFilter(nlohmann::json& control_block_json);
+  uint64_t control_block_length = -1;
 
  public:
-  virtual nlohmann::json get(void* __ptr32 p_control_block = nullptr) = 0;
+  void checkBufferLength(const uint64_t buffer_length) const;
+  virtual nlohmann::json get(void* __ptr32 p_control_block = nullptr,
+                             const uint64_t buffer_length  = -1) = 0;
   explicit ControlBlock(const std::string& name,
                         const std::vector<std::string>& includables,
                         const cbxp_options_t& cbxp_options)

@@ -12,7 +12,9 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json ECVT::get(void* __ptr32 p_control_block) {
+nlohmann::json ECVT::get(void* __ptr32 p_control_block,
+                         const uint64_t buffer_length) {
+  checkBufferLength(buffer_length);
   const struct ecvt* __ptr32 p_ecvt;
   nlohmann::json ecvt_json = {};
 

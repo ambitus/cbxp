@@ -15,7 +15,9 @@
 #include "oucb.hpp"
 
 namespace CBXP {
-nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
+nlohmann::json ASCB::get(void* __ptr32 p_control_block,
+                         const uint64_t buffer_length) {
+  checkBufferLength(buffer_length);
   nlohmann::json ascb_json = {};
   const ascb* __ptr32 p_ascb;
 

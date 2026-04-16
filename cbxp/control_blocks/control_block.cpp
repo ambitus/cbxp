@@ -277,5 +277,11 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
                               "' control block matched");
   return true;
 }
+
+void ControlBlock::checkBufferLength(const uint64_t buffer_length) const {
+  if (buffer_length < control_block_length) {
+    throw BufferLengthError();
+  }
+}
 }  // namespace CBXP
 

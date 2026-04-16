@@ -2,7 +2,12 @@
 #define __CONTROL_BLOCK_ERROR_H_
 
 namespace CBXP {
-enum Error { BadControlBlock = 1, BadInclude = 2, BadFilter = 3 };
+enum Error {
+  BadControlBlock = 1,
+  BadInclude      = 2,
+  BadFilter       = 3,
+  BufferTooSmall  = 4
+};
 class CBXPError : public std::exception {
  private:
   Error error_code_;
@@ -25,6 +30,11 @@ class IncludeError : public CBXPError {
 class FilterError : public CBXPError {
  public:
   FilterError() : CBXPError(Error::BadFilter) {}
+};
+
+class BufferLengthError : public CBXPError {
+ public:
+  BufferLengthError() : CBXPError(Error::BufferTooSmall) {}
 };
 
 }  // namespace CBXP

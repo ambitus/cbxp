@@ -7,8 +7,9 @@
 #include "control_block_explorer.hpp"
 #include "logger.hpp"
 
-cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
-                    const char* filters_string, bool debug) {
+cbxp_result_t* cbxp_extract(const char* control_block,
+                            const char* includes_string,
+                            const char* filters_string, bool debug) {
   nlohmann::json control_block_json;
 
   std::string control_block_cpp_string;
@@ -37,6 +38,31 @@ cbxp_result_t* cbxp(const char* control_block, const char* includes_string,
   explorer.exploreControlBlock(control_block_cpp_string,
                                includes_string_cpp_string,
                                filters_string_cpp_string);
+
+  return p_cbxp_result;
+}
+
+cbxp_result_t* cbxp_format(const char* control_block, void* bytes_buffer,
+                           const uint64_t buffer_length, bool debug) {
+  nlohmann::json control_block_json;
+
+  std::string control_block_cpp_string;
+
+  if (control_block != nullptr) {
+    control_block_cpp_string = control_block;
+  }
+
+  CBXP::Logger::getInstance().setDebug(debug);
+
+  cbxp_result_t* p_cbxp_result = new cbxp_result_t();
+  CBXP::Logger::getInstance().debugAllocate(p_cbxp_result, 64,
+                                            sizeof(cbxp_result_t));
+
+  CBXP::ControlBlockExplorer explorer =
+      CBXP::ControlBlockExplorer(p_cbxp_result);
+
+  explorer.formatControlBlock(control_block_cpp_string, bytes_buffer,
+                              buffer_length);
 
   return p_cbxp_result;
 }
