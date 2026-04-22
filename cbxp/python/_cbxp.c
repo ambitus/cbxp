@@ -6,8 +6,9 @@
 
 #include "cbxp.h"
 
-// Entry point to the call_cbxp() function
-static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
+// Entry point to the call_cbxp_extract() function
+static PyObject* call_cbxp_extract(PyObject* self, PyObject* args,
+                                   PyObject* kwargs) {
   PyObject* result_dictionary;
   PyObject* debug_pyobj;
   const char* p_control_block;
@@ -28,7 +29,45 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
   debug = PyObject_IsTrue(debug_pyobj);
 
   cbxp_result_t* p_cbxp_result =
-      cbxp(p_control_block, p_includes_string, p_filters_string, debug);
+      cbxp_extract(p_control_block, p_includes_string, p_filters_string, debug);
+
+  result_dictionary =
+      Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
+                    p_cbxp_result->result_json_length, "return_code",
+                    p_cbxp_result->return_code);
+
+  cbxp_free(p_cbxp_result, debug);
+
+  return result_dictionary;
+}
+
+// Entry point to the call_cbxp_format() function
+static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
+                                  PyObject* kwargs) {
+  PyObject* result_dictionary;
+  PyObject* debug_pyobj;
+  const char* p_control_block;
+  const char* p_bytes_buffer;
+  uint64_t buffer_length;
+  uint64_t offset = 0;
+  Py_ssize_t request_length;
+  bool debug            = false;
+
+  static char* kwlist[] = {"control_block", "includes_string", "filters_string",
+                           "debug", NULL};
+
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "ss#|kO", kwlist,
+                                   &p_control_block, &p_bytes_buffer,
+                                   &buffer_length, &offset, &debug_pyobj)) {
+    return NULL;
+  }
+
+  debug = PyObject_IsTrue(debug_pyobj);
+  p_bytes_buffer += offset;
+  buffer_length -= offset;
+
+  cbxp_result_t* p_cbxp_result =
+      cbxp_format(p_control_block, p_bytes_buffer, buffer_length, debug);
 
   result_dictionary =
       Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
@@ -42,8 +81,13 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
 
 // Method definition
 static PyMethodDef _C_methods[] = {
-    {"call_cbxp", (PyCFunction)call_cbxp, METH_VARARGS | METH_KEYWORDS,
+    {"call_cbxp_extract", (PyCFunction)call_cbxp_extract,
+     METH_VARARGS | METH_KEYWORDS,
      "A unified and standardized interface for extracting z/OS control block "
+     "data."},
+    {"call_cbxp_format", (PyCFunction)call_cbxp_format,
+     METH_VARARGS | METH_KEYWORDS,
+     "A unified and standardized interface for formatting z/OS control block "
      "data."},
     {NULL}
 };

@@ -91,6 +91,8 @@ int main(int argc, const char* argv[]) {
 
   std::string operation = argv[1];
   if (operation != "explore" && operation != "format") {
+    std::cerr << "cbxp must perform 'format' or 'explore' operation"
+              << std::endl;
     show_usage(argv);
     return CLIReturnCode::FAILURE;
   }
@@ -178,15 +180,14 @@ int main(int argc, const char* argv[]) {
     return CLIReturnCode::FAILURE;
   }
 
-  if (operation == "format") {
-    if (filters_string != "" || includes_string != "") {
-      std::cerr
-          << "Filters and Includes cannot be used with the 'format' operation"
-          << std::endl;
-      show_usage(argv);
-      return CLIReturnCode::FAILURE;
-    }
+  if (!stdin_buffer.empty() && file_specified) {
+    std::cerr << "File parameter cannot be used with STDIN data" << std::endl;
+    show_usage(argv);
+    return CLIReturnCode::FAILURE;
   }
+
+  nlohmann::json control_block_json;
+  cbxp_result_t* cbxp_result;
 
   if (operation == "explore") {
     if (offset_specified || data_buffer != nullptr) {
@@ -196,24 +197,31 @@ int main(int argc, const char* argv[]) {
       show_usage(argv);
       return CLIReturnCode::FAILURE;
     }
-  }
-
-  if (!stdin_buffer.empty() && file_specified) {
-    std::cerr << "File cannot be used with STDIN data" << std::endl;
-    show_usage(argv);
-    return CLIReturnCode::FAILURE;
-  }
-
-  nlohmann::json control_block_json;
-  cbxp_result_t* cbxp_result;
-
-  if (operation == "explore") {
     cbxp_result =
         cbxp_extract(control_block_name.c_str(), includes_string.c_str(),
                      filters_string.c_str(), debug);
   }
 
   if (operation == "format") {
+    if (filters_string != "" || includes_string != "") {
+      std::cerr
+          << "Filters and Includes cannot be used with the 'format' operation"
+          << std::endl;
+      show_usage(argv);
+      return CLIReturnCode::FAILURE;
+    }
+    if (data_buffer == nullptr) {
+      std::cerr
+          << "File parameter or STDIN data required for 'format' operation"
+          << std::endl;
+      show_usage(argv);
+      return CLIReturnCode::FAILURE;
+    }
+    if (offset >= buffer_length) {
+      std::cerr << "Offset is too large for specified data/file" << std::endl;
+      show_usage(argv);
+      return CLIReturnCode::FAILURE;
+    }
     cbxp_result = cbxp_format(control_block_name.c_str(),
                               static_cast<void*>(data_buffer + offset),
                               buffer_length - offset, debug);
