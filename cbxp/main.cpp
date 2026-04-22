@@ -5,8 +5,11 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <vector>
 
 #include "cbxp.h"
 #include "control_block_error.hpp"
@@ -63,7 +66,8 @@ int main(int argc, const char* argv[]) {
   bool debug                     = false;
   std::string control_block_name = "", includes_string = "",
               filters_string = "";
-  uint64_t offset = -1, buffer_length = -1;
+  uint64_t offset = 0, buffer_length = -1;
+  bool offset_specified = false, file_specified = false;
   char* data_buffer = nullptr;
 
   if (argc == 2) {
@@ -89,6 +93,13 @@ int main(int argc, const char* argv[]) {
   if (operation != "explore" && operation != "format") {
     show_usage(argv);
     return CLIReturnCode::FAILURE;
+  }
+
+  std::vector<char> stdin_buffer((std::istreambuf_iterator<char>(std::cin)),
+                                 (std::istreambuf_iterator<char>()));
+  if (!stdin_buffer.empty()) {
+    data_buffer   = stdin_buffer.data();
+    buffer_length = stdin_buffer.size();
   }
 
   for (int i = 2; i < argc; i++) {
@@ -135,14 +146,24 @@ int main(int argc, const char* argv[]) {
         show_usage(argv);
         return CLIReturnCode::FAILURE;
       }
-      std::string file = std::string(argv[++i]);
-      // process file here
+      file_specified       = true;
+      std::string filename = std::string(argv[++i]);
+      std::ifstream file(filename, std::ios::binary | std::ios::ate);
+      std::streamsize size = file.tellg();
+      buffer_length        = size;
+      file.seekg(0, std::ios::beg);  // Move back to start
+
+      std::vector<char> buffer(size);
+      if (file.read(buffer.data(), size)) {
+        data_buffer = buffer.data();
+      }
     } else if (flag == "-o" || flag == "--offset") {
       if (i + 1 >= argc - 1) {
         show_usage(argv);
         return CLIReturnCode::FAILURE;
       }
-      offset = std::stoull(argv[++i], nullptr, 0);
+      offset_specified = true;
+      offset           = std::stoull(argv[++i], nullptr, 0);
     } else {
       if (i != argc - 1) {
         show_usage(argv);
@@ -168,13 +189,19 @@ int main(int argc, const char* argv[]) {
   }
 
   if (operation == "explore") {
-    if (offset != -1 || data_buffer != nullptr) {
+    if (offset_specified || data_buffer != nullptr) {
       std::cerr
           << "Files and Offsets cannot be used with the 'explore' operation"
           << std::endl;
       show_usage(argv);
       return CLIReturnCode::FAILURE;
     }
+  }
+
+  if (!stdin_buffer.empty() && file_specified) {
+    std::cerr << "File cannot be used with STDIN data" << std::endl;
+    show_usage(argv);
+    return CLIReturnCode::FAILURE;
   }
 
   nlohmann::json control_block_json;
@@ -187,9 +214,6 @@ int main(int argc, const char* argv[]) {
   }
 
   if (operation == "format") {
-    if (offset == -1) {
-      offset = 0;
-    }
     cbxp_result = cbxp_format(control_block_name.c_str(),
                               static_cast<void*>(data_buffer + offset),
                               buffer_length - offset, debug);
