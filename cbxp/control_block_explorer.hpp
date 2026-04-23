@@ -10,10 +10,10 @@ namespace CBXP {
 class ControlBlockExplorer {
  private:
   cbxp_result_t* p_result_;
-  cbxp_options_t cbxp_options                = {{}, {}};
-  void* control_block_pointer                = nullptr;
-  const uint64_t control_block_buffer_length = -1;
-  std::string control_block_operation        = "";
+  cbxp_options_t cbxp_options          = {{}, {}};
+  void* control_block_pointer          = nullptr;
+  uint64_t control_block_buffer_length = -1;
+  std::string control_block_operation  = "";
   static std::vector<std::string> createOptionsList(
       const std::string& comma_separated_string);
 

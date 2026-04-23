@@ -32,6 +32,7 @@ static void show_usage(const char* argv[]) {
             << std::endl
             << "Note: format requires either -F/--file option or piping binary "
                "data as input"
+            << std::endl
             << std::endl;
 
   std::cout

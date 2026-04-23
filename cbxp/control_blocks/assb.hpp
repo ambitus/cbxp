@@ -13,7 +13,7 @@ class ASSB : public ControlBlock {
                      const uint64_t buffer_length  = -1) override;
   explicit ASSB(const cbxp_options_t& cbxp_options)
       : ControlBlock("assb", {}, cbxp_options) {
-    control_block_length = sizeof(assb);
+    control_block_length = sizeof(struct assb);
   }
 };
 

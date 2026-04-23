@@ -7,6 +7,8 @@ extern "C" {
 #include <stdbool.h>
 #endif
 
+#include <stdint.h>
+
 typedef struct {
   char* result_json;
   int result_json_length;

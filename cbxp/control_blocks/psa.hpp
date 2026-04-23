@@ -13,7 +13,7 @@ class PSA : public ControlBlock {
                      const uint64_t buffer_length  = -1) override;
   explicit PSA(const cbxp_options_t& cbxp_options)
       : ControlBlock("psa", {"cvt"}, cbxp_options) {
-    control_block_length = sizeof(psa);
+    control_block_length = sizeof(struct psa) / 2;
   }
 };
 }  // namespace CBXP

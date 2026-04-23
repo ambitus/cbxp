@@ -13,7 +13,7 @@ class CVT : public ControlBlock {
                      const uint64_t buffer_length  = -1) override;
   explicit CVT(const cbxp_options_t& cbxp_options)
       : ControlBlock("cvt", {"ecvt", "asvt"}, cbxp_options) {
-    control_block_length = sizeof(ecvt);
+    control_block_length = sizeof(struct cvtmap);
   }
 };
 

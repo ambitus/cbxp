@@ -69,9 +69,9 @@ void ControlBlockExplorer::formatControlBlock(
   control_block_pointer       = bytes_buffer;
   control_block_buffer_length = buffer_length;
 
-  control_block_operation     = "Format"
+  control_block_operation     = "Format";
 
-      processControlBlock(control_block_name);
+  processControlBlock(control_block_name);
 
   return;
 }
