@@ -1,8 +1,6 @@
 import json
 from enum import Enum
 
-from zoau.datasets import Dataset
-
 from cbxp._C import call_cbxp_extract, call_cbxp_format
 
 
