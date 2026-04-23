@@ -150,15 +150,38 @@ int main(int argc, const char* argv[]) {
       }
       file_specified       = true;
       std::string filename = std::string(argv[++i]);
-      std::ifstream file(filename, std::ios::binary | std::ios::ate);
-      std::streamsize size = file.tellg();
-      buffer_length        = size;
-      file.seekg(0, std::ios::beg);  // Move back to start
+      std::streamsize size;
+      if (filename.rfind("//", 0) == 0) {
+        std::ifstream dsFile(filename, std::ios::binary | std::ios::ate);
+        if (!dsFile.is_open()) {
+          std::cerr << "Error opening dataset: " << filename << std::endl;
+          show_usage(argv);
+          return CLIReturnCode::FAILURE;
+        }
+        size = dsFile.tellg();
+        dsFile.seekg(0, std::ios::beg);  // Move back to start
 
-      std::vector<char> buffer(size);
-      if (file.read(buffer.data(), size)) {
-        data_buffer = buffer.data();
+        std::vector<char> buffer(size);
+        if (dsFile.read(buffer.data(), size)) {
+          data_buffer = buffer.data();
+        }
+      } else {
+        std::ifstream file(filename, std::ios::binary | std::ios::ate);
+        if (!file.is_open()) {
+          std::cerr << "Error opening file: " << filename << std::endl;
+          show_usage(argv);
+          return CLIReturnCode::FAILURE;
+        }
+        size = file.tellg();
+        file.seekg(0, std::ios::beg);  // Move back to start
+
+        std::vector<char> buffer(size);
+        if (file.read(buffer.data(), size)) {
+          data_buffer = buffer.data();
+        }
       }
+      buffer_length = size;
+
     } else if (flag == "-o" || flag == "--offset") {
       if (i + 1 >= argc - 1) {
         show_usage(argv);

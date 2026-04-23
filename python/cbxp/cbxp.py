@@ -1,5 +1,6 @@
 import json
 from enum import Enum
+
 from zoau.datasets import Dataset
 
 from cbxp._C import call_cbxp_extract, call_cbxp_format
@@ -59,7 +60,10 @@ class CBXPError(Exception):
             case CBXPErrorCode.COMMA_IN_FILTER.value:
                 message = "Filters cannot contain commas"
             case CBXPErrorCode.BAD_EXPLORE_PARMS.value:
-                message = "'file_path', 'dataset_path', 'raw_data' and 'offset' parameters cannot be used with the 'explore' operation"
+                message = (
+                    "'file_path', 'dataset_path', 'raw_data' and 'offset' parameters "
+                    "cannot be used with the 'explore' operation"
+                )
             case CBXPErrorCode.BAD_FORMAT_PARMS.value:
                 message = (
                     "Filters and Includes cannot be used with the 'format' operation"
@@ -67,7 +71,10 @@ class CBXPError(Exception):
             case CBXPErrorCode.BAD_OPERATION.value:
                 message = "cbxp must perform 'format' or 'explore' operation"
             case CBXPErrorCode.MISSING_FORMAT_PARMS.value:
-                message = "Exactly one of 'file_path', 'dataset_path' and 'raw_data' parameters is required for 'format' operation"
+                message = (
+                    "Exactly one of 'file_path', 'dataset_path' and 'raw_data' "
+                    "parameters is required for 'format' operation"
+                )
             case CBXPErrorCode.OFFSET_TOO_BIG.value:
                 message = "Offset is too large for specified data/file"
             case CBXPErrorCode.BAD_CONTROL_BLOCK.value:
@@ -77,7 +84,10 @@ class CBXPError(Exception):
             case CBXPErrorCode.BAD_CONTROL_BLOCK_FILTER.value:
                 message = "A bad filter was provided"
             case CBXPErrorCode.BUFFER_TOO_SMALL.value:
-                message = f"The buffer is not large enough to contain a '{control_block_name}'"
+                message = (
+                    "The buffer is not large enough to contain a "
+                    f"'{control_block_name}'"
+                )
             case _:
                 message = "an unknown error occurred"
         super().__init__(message)
@@ -130,12 +140,12 @@ def cbxp(
         if filters is not None or includes is not None:
             raise CBXPError(CBXPErrorCode.BAD_FORMAT_PARMS.value, control_block)
         data_buffer = None
-        if raw_data is not None and dataset_path is None and file_path is None:
+        if raw_data is not None and file_path is None and dataset_path is None:
             data_buffer = raw_data
-        elif raw_data is None and dataset_path is None and file_path is not None:
+        elif raw_data is None and file_path is not None and dataset_path is None:
             with open(file_path, "rb") as f:
                 data_buffer = f.read()
-        elif raw_data is None and dataset_path is not None and file_path is None:
+        elif raw_data is None and file_path is None and dataset_path is not None:
             ds = Dataset(dataset_path)
             data_buffer = ds.read_as_bytes()
         else:
