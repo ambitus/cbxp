@@ -30,97 +30,97 @@ run_with_expected_null_response() {
 }
 
 # Basic Usage
-run_with_expected_exit_code 0 ./dist/cbxp psa
-run_with_expected_exit_code 0 ./dist/cbxp cvt
-run_with_expected_exit_code 0 ./dist/cbxp ecvt
-run_with_expected_exit_code 0 ./dist/cbxp asvt
-run_with_expected_exit_code 0 ./dist/cbxp ascb
-run_with_expected_exit_code 0 ./dist/cbxp assb
-run_with_expected_exit_code 0 ./dist/cbxp oucb
+run_with_expected_exit_code 0 ./dist/cbxp explore psa
+run_with_expected_exit_code 0 ./dist/cbxp explore cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore ecvt
+run_with_expected_exit_code 0 ./dist/cbxp explore asvt
+run_with_expected_exit_code 0 ./dist/cbxp explore ascb
+run_with_expected_exit_code 0 ./dist/cbxp explore assb
+run_with_expected_exit_code 0 ./dist/cbxp explore oucb
 
 # Include Patterns
-run_with_expected_exit_code 0 ./dist/cbxp -i cvt psa
-run_with_expected_exit_code 0 ./dist/cbxp --include cvt psa
-run_with_expected_exit_code 0 ./dist/cbxp -i ecvt cvt
-run_with_expected_exit_code 0 ./dist/cbxp -i asvt cvt
-run_with_expected_exit_code 0 ./dist/cbxp -i ascb asvt
-run_with_expected_exit_code 0 ./dist/cbxp -i cvt.ecvt psa
-run_with_expected_exit_code 0 ./dist/cbxp -i cvt.asvt.ascb psa
-run_with_expected_exit_code 0 ./dist/cbxp -i asvt.ascb cvt
-run_with_expected_exit_code 0 ./dist/cbxp -i ecvt -i asvt cvt
-run_with_expected_exit_code 0 ./dist/cbxp -i cvt.ecvt -i cvt.asvt.ascb psa
-run_with_expected_exit_code 0 ./dist/cbxp -i "cvt.**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -i "cvt.*" psa
-run_with_expected_exit_code 0 ./dist/cbxp -i "asvt.*" -i "*" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -i assb ascb
-run_with_expected_exit_code 0 ./dist/cbxp -i oucb ascb
-run_with_expected_exit_code 0 ./dist/cbxp -i cvt.ecvt -i cvt.asvt.ascb.assb psa
-run_with_expected_exit_code 0 ./dist/cbxp -i cvt.ecvt -i cvt.asvt.ascb.oucb psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -i cvt psa
+run_with_expected_exit_code 0 ./dist/cbxp explore --include cvt psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -i ecvt cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -i asvt cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -i ascb asvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -i cvt.ecvt psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -i cvt.asvt.ascb psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -i asvt.ascb cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -i ecvt -i asvt cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -i cvt.ecvt -i cvt.asvt.ascb psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -i "cvt.**" psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -i "cvt.*" psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -i "asvt.*" -i "*" cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -i assb ascb
+run_with_expected_exit_code 0 ./dist/cbxp explore -i oucb ascb
+run_with_expected_exit_code 0 ./dist/cbxp explore -i cvt.ecvt -i cvt.asvt.ascb.assb psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -i cvt.ecvt -i cvt.asvt.ascb.oucb psa
 
 # Filters
-run_with_expected_exit_code 0 ./dist/cbxp -f psapsa=PSA psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -i cvt.asvt.ascb.assb psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=?MAS?ER?" -i cvt.asvt.ascb.assb psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid=1" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid<2" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid>=1" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvt.asvt.ascb.ascbasid<=2" -i "**" psa
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt=2281701376" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt=0x88000000" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>0x87FFFFFF" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<0x88000001" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt>=0x87FFFFFF" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f "cvtasmvt<=0x88000000" cvt
-run_with_expected_exit_code 0 ./dist/cbxp -f 'oucbtrxn=OMVS' oucb
-run_with_expected_exit_code 0 ./dist/cbxp -i oucb -f 'oucb.oucbtrxn=OMVS' ascb
-run_with_expected_null_response ./dist/cbxp -f psapsa=PSB psa
-run_with_expected_null_response ./dist/cbxp -f "ascb.assb.assbjbns=*MASTER*" -f "ascb.ascbasid=2" -i ascb.assb asvt
-run_with_expected_exit_code 0 ./dist/cbxp -f assbjbns="*MASTER*" -f assbjbni=  assb
-run_with_expected_exit_code 0 ./dist/cbxp -f assbjbns="*MASTER*" -f assbjbni="" assb
-run_with_expected_exit_code 0 ./dist/cbxp -f assbjbns="*MASTER*" -f assbjbni='' assb
+run_with_expected_exit_code 0 ./dist/cbxp explore -f psapsa=PSA psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -i cvt.asvt.ascb.assb psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvt.asvt.ascb.assb.assbjbns=?MAS?ER?" -i cvt.asvt.ascb.assb psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvt.asvt.ascb.ascbasid=1" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvt.asvt.ascb.ascbasid>0" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvt.asvt.ascb.ascbasid<2" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvt.asvt.ascb.ascbasid>=1" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvt.asvt.ascb.ascbasid<=2" -i "**" psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvtasmvt=2281701376" cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvtasmvt=0x88000000" cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvtasmvt>0x87FFFFFF" cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvtasmvt<0x88000001" cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvtasmvt>=0x87FFFFFF" cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -f "cvtasmvt<=0x88000000" cvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -f 'oucbtrxn=OMVS' oucb
+run_with_expected_exit_code 0 ./dist/cbxp explore -i oucb -f 'oucb.oucbtrxn=OMVS' ascb
+run_with_expected_null_response ./dist/cbxp explore -f psapsa=PSB psa
+run_with_expected_null_response ./dist/cbxp explore -f "ascb.assb.assbjbns=*MASTER*" -f "ascb.ascbasid=2" -i ascb.assb asvt
+run_with_expected_exit_code 0 ./dist/cbxp explore -f assbjbns="*MASTER*" -f assbjbni=  assb
+run_with_expected_exit_code 0 ./dist/cbxp explore -f assbjbns="*MASTER*" -f assbjbni="" assb
+run_with_expected_exit_code 0 ./dist/cbxp explore -f assbjbns="*MASTER*" -f assbjbni='' assb
 
 
 # Debug Mode
-run_with_expected_exit_code 0 ./dist/cbxp -d psa
-run_with_expected_exit_code 0 ./dist/cbxp --debug psa
+run_with_expected_exit_code 0 ./dist/cbxp explore -d psa
+run_with_expected_exit_code 0 ./dist/cbxp explore --debug psa
 # Show Usage
-run_with_expected_exit_code 0 ./dist/cbxp -h
-run_with_expected_exit_code 0 ./dist/cbxp --help
+run_with_expected_exit_code 0 ./dist/cbxp explore -h
+run_with_expected_exit_code 0 ./dist/cbxp explore --help
 # Show Version
-run_with_expected_exit_code 0 ./dist/cbxp -v
-run_with_expected_exit_code 0 ./dist/cbxp --version
+run_with_expected_exit_code 0 ./dist/cbxp explore -v
+run_with_expected_exit_code 0 ./dist/cbxp explore --version
 
 # Errors: Bad Usage
-run_with_expected_exit_code 255 ./dist/cbxp 
-run_with_expected_exit_code 255 ./dist/cbxp -x "unknown flag" cvt
-run_with_expected_exit_code 255 ./dist/cbxp -i cvt 
-run_with_expected_exit_code 255 ./dist/cbxp -i -i cvt psa
-run_with_expected_exit_code 255 ./dist/cbxp -d -d psa
-run_with_expected_exit_code 255 ./dist/cbxp -f psa
-run_with_expected_exit_code 255 ./dist/cbxp -f psapsa=psa
-run_with_expected_exit_code 255 ./dist/cbxp --debug -d psa
+run_with_expected_exit_code 255 ./dist/cbxp explore 
+run_with_expected_exit_code 255 ./dist/cbxp explore -x "unknown flag" cvt
+run_with_expected_exit_code 255 ./dist/cbxp explore -i cvt 
+run_with_expected_exit_code 255 ./dist/cbxp explore -i -i cvt psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -d -d psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -f psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -f psapsa=psa
+run_with_expected_exit_code 255 ./dist/cbxp explore --debug -d psa
 # Errors: Unknown Control Block
-run_with_expected_exit_code 255 ./dist/cbxp unknown
+run_with_expected_exit_code 255 ./dist/cbxp explore unknown
 # Errors: Bad Include Patterns
-run_with_expected_exit_code 255 ./dist/cbxp -i asvt,ascb cvt
-run_with_expected_exit_code 255 ./dist/cbxp -i asvt,as cvt
-run_with_expected_exit_code 255 ./dist/cbxp -i asvt.ascb psa
-run_with_expected_exit_code 255 ./dist/cbxp -i ascb psa
-run_with_expected_exit_code 255 ./dist/cbxp -i ecvt ascb
-run_with_expected_exit_code 255 ./dist/cbxp -i cvt.ecvt -i cvt.ascb psa
-run_with_expected_exit_code 255 ./dist/cbxp -i cvt.asvt.ascb -i ecvt psa
-run_with_expected_exit_code 255 ./dist/cbxp -i cvt cvt
+run_with_expected_exit_code 255 ./dist/cbxp explore -i asvt,ascb cvt
+run_with_expected_exit_code 255 ./dist/cbxp explore -i asvt,as cvt
+run_with_expected_exit_code 255 ./dist/cbxp explore -i asvt.ascb psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -i ascb psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -i ecvt ascb
+run_with_expected_exit_code 255 ./dist/cbxp explore -i cvt.ecvt -i cvt.ascb psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -i cvt.asvt.ascb -i ecvt psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -i cvt cvt
 # Errors: Bad Filters
-run_with_expected_exit_code 255 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns=*master*" psa
-run_with_expected_exit_code 255 ./dist/cbxp -f "cvt.asvt.ascb.assb.assbjbns<*master*" -i "**" psa
-run_with_expected_exit_code 255 ./dist/cbxp -f psapsb=PSA psa
-run_with_expected_exit_code 255 ./dist/cbxp -f assbasid= assb
-run_with_expected_exit_code 255 ./dist/cbxp -f 'ascbasid<=junk' ascb
-run_with_expected_exit_code 255 ./dist/cbxp -f "psapsa=psa,cvt.asvt.ascb.ascbasid<2" cvt
-run_with_expected_exit_code 255 ./dist/cbxp -f junk psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -f "cvt.asvt.ascb.assb.assbjbns=*master*" psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -f "cvt.asvt.ascb.assb.assbjbns<*master*" -i "**" psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -f psapsb=PSA psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -f assbasid= assb
+run_with_expected_exit_code 255 ./dist/cbxp explore -f 'ascbasid<=junk' ascb
+run_with_expected_exit_code 255 ./dist/cbxp explore -f "psapsa=psa,cvt.asvt.ascb.ascbasid<2" cvt
+run_with_expected_exit_code 255 ./dist/cbxp explore -f junk psa
 
 echo " -------------------------------- "
 echo " -------------------------------- "

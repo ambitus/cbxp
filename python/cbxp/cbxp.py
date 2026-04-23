@@ -95,7 +95,7 @@ class CBXPError(Exception):
 
 def cbxp(
     control_block: str,
-    operation: str,
+    operation: str = "explore",
     includes: list[str] = None,
     filters: list[CBXPFilter] = None,
     file_path: str = None,
