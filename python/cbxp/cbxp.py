@@ -61,7 +61,7 @@ class CBXPError(Exception):
                 message = "Filters cannot contain commas"
             case CBXPErrorCode.BAD_EXPLORE_PARMS.value:
                 message = (
-                    "'file_path', 'dataset_path', 'raw_data' and 'offset' parameters "
+                    "The 'data_buffer' and 'offset' parameters "
                     "cannot be used with the 'explore' operation"
                 )
             case CBXPErrorCode.BAD_FORMAT_PARMS.value:
@@ -72,8 +72,7 @@ class CBXPError(Exception):
                 message = "cbxp must perform 'format' or 'explore' operation"
             case CBXPErrorCode.MISSING_FORMAT_PARMS.value:
                 message = (
-                    "Exactly one of 'file_path', 'dataset_path' and 'raw_data' "
-                    "parameters is required for 'format' operation"
+                    "The 'data_buffer' parameter is required for 'format' operation"
                 )
             case CBXPErrorCode.OFFSET_TOO_BIG.value:
                 message = "Offset is too large for specified data/file"
@@ -98,19 +97,12 @@ def cbxp(
     operation: str = "explore",
     includes: list[str] = None,
     filters: list[CBXPFilter] = None,
-    file_path: str = None,
-    dataset_path: str = None,
-    raw_data: bytes = None,
+    data_buffer: bytes = None,
     offset: int = None,
     debug: bool = False,
 ) -> dict:
     if operation == "explore":
-        if (
-            file_path is not None
-            or dataset_path is not None
-            or offset is not None
-            or raw_data is not None
-        ):
+        if offset is not None or data_buffer is not None:
             raise CBXPError(CBXPErrorCode.BAD_EXPLORE_PARMS.value, control_block)
         # Includes processing
         if includes is None:
@@ -140,14 +132,8 @@ def cbxp(
         if filters is not None or includes is not None:
             raise CBXPError(CBXPErrorCode.BAD_FORMAT_PARMS.value, control_block)
         data_buffer = None
-        if raw_data is not None and file_path is None and dataset_path is None:
-            data_buffer = raw_data
-        elif raw_data is None and file_path is not None and dataset_path is None:
-            with open(file_path, "rb") as f:
-                data_buffer = f.read()
-        elif raw_data is None and file_path is None and dataset_path is not None:
-            ds = Dataset(dataset_path)
-            data_buffer = ds.read_as_bytes()
+        if data_buffer is not None:
+            data_buffer = data_buffer
         else:
             raise CBXPError(CBXPErrorCode.MISSING_FORMAT_PARMS.value, control_block)
 
