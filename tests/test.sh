@@ -87,11 +87,11 @@ run_with_expected_exit_code 0 ./dist/cbxp explore -f assbjbns="*MASTER*" -f assb
 run_with_expected_exit_code 0 ./dist/cbxp explore -d psa
 run_with_expected_exit_code 0 ./dist/cbxp explore --debug psa
 # Show Usage
-run_with_expected_exit_code 0 ./dist/cbxp explore -h
-run_with_expected_exit_code 0 ./dist/cbxp explore --help
+run_with_expected_exit_code 0 ./dist/cbxp -h
+run_with_expected_exit_code 0 ./dist/cbxp --help
 # Show Version
-run_with_expected_exit_code 0 ./dist/cbxp explore -v
-run_with_expected_exit_code 0 ./dist/cbxp explore --version
+run_with_expected_exit_code 0 ./dist/cbxp -v
+run_with_expected_exit_code 0 ./dist/cbxp --version
 
 # Errors: Bad Usage
 run_with_expected_exit_code 255 ./dist/cbxp explore 

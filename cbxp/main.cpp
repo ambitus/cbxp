@@ -1,6 +1,7 @@
 #define _UNIX03_SOURCE
 
 #include <dlfcn.h>
+#include <unistd.h>
 
 #include <algorithm>
 #include <cstdio>
@@ -68,7 +69,7 @@ int main(int argc, const char* argv[]) {
   std::string control_block_name = "", includes_string = "",
               filters_string = "";
   uint64_t offset = 0, buffer_length = -1;
-  bool offset_specified = false, file_specified = false;
+  bool offset_specified = false, file_specified = false, data_piped = false;
   char* data_buffer = nullptr;
 
   if (argc == 2) {
@@ -98,11 +99,14 @@ int main(int argc, const char* argv[]) {
     return CLIReturnCode::FAILURE;
   }
 
-  std::vector<char> stdin_buffer((std::istreambuf_iterator<char>(std::cin)),
-                                 (std::istreambuf_iterator<char>()));
-  if (!stdin_buffer.empty()) {
-    data_buffer   = stdin_buffer.data();
-    buffer_length = stdin_buffer.size();
+  if (isatty(STDIN_FILENO) == 0) {
+    std::vector<char> stdin_buffer((std::istreambuf_iterator<char>(std::cin)),
+                                   (std::istreambuf_iterator<char>()));
+    if (!stdin_buffer.empty()) {
+      data_buffer   = stdin_buffer.data();
+      buffer_length = stdin_buffer.size();
+    }
+    data_piped = true;
   }
 
   for (int i = 2; i < argc; i++) {
@@ -204,7 +208,7 @@ int main(int argc, const char* argv[]) {
     return CLIReturnCode::FAILURE;
   }
 
-  if (!stdin_buffer.empty() && file_specified) {
+  if (data_piped && file_specified) {
     std::cerr << "File parameter cannot be used with STDIN data" << std::endl;
     show_usage(argv);
     return CLIReturnCode::FAILURE;
