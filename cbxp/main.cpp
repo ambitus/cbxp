@@ -156,6 +156,7 @@ int main(int argc, const char* argv[]) {
       file_specified       = true;
       std::string filename = std::string(argv[++i]);
       std::streamsize size;
+      std::vector<char> buffer;
       if (filename.rfind("//", 0) == 0) {
         std::ifstream dsFile(filename, std::ios::binary | std::ios::ate);
         if (!dsFile.is_open()) {
@@ -166,7 +167,7 @@ int main(int argc, const char* argv[]) {
         size = dsFile.tellg();
         dsFile.seekg(0, std::ios::beg);  // Move back to start
 
-        std::vector<char> buffer(size);
+        buffer.resize(size);
         if (dsFile.read(buffer.data(), size)) {
           data_buffer = buffer.data();
         }
@@ -180,7 +181,7 @@ int main(int argc, const char* argv[]) {
         size = file.tellg();
         file.seekg(0, std::ios::beg);  // Move back to start
 
-        std::vector<char> buffer(size);
+        buffer.resize(size);
         if (file.read(buffer.data(), size)) {
           data_buffer = buffer.data();
         }
