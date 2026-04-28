@@ -145,8 +145,7 @@ nlohmann::json CVT::get(void* p_control_block, const uint64_t buffer_length) {
   cvt_json["cvtrelno"] = formatter_.getHex<uint32_t>(p_cvtfix->cvtrelno);
   // Read bitfield directly to avoid read-modify-write corruption
   cvt_json["cvtri"] = formatter_.getBitmap<uint8_t>(
-      reinterpret_cast<const unsigned char*>(p_cvtmap) +
-      offsetof(struct cvtmap, cvtri));
+      reinterpret_cast<const unsigned char*>(&p_cvtmap->cvtflags) + 3);
   cvt_json["cvtrtmct"] = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtrtmct));
   cvt_json["cvtsaf"]   = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtsaf));
   cvt_json["cvtscpin"] = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtscpin));
@@ -166,14 +165,11 @@ nlohmann::json CVT::get(void* p_control_block, const uint64_t buffer_length) {
   cvt_json["cvttvt"]   = formatter_.getHex<uint32_t>(&(p_cvtmap->cvttvt));
   // Read bitfields directly to avoid read-modify-write corruption
   cvt_json["cvttx"] = formatter_.getBitmap<uint8_t>(
-      reinterpret_cast<const unsigned char*>(p_cvtmap) +
-      offsetof(struct cvtmap, cvtflag4));
+      reinterpret_cast<const unsigned char*>(&p_cvtmap->cvtflags) + 3);
   cvt_json["cvttxc"] = formatter_.getBitmap<uint8_t>(
-      reinterpret_cast<const unsigned char*>(p_cvtmap) +
-      offsetof(struct cvtmap, cvtflag4));
+      reinterpret_cast<const unsigned char*>(&p_cvtmap->cvtflags) + 3);
   cvt_json["cvttxte"] = formatter_.getBitmap<uint8_t>(
-      reinterpret_cast<const unsigned char*>(p_cvtmap) +
-      offsetof(struct cvtmap, cvtctlfg));
+      reinterpret_cast<const unsigned char*>(&p_cvtmap->cvtctlfg));
   ;
   cvt_json["cvttz"]    = p_cvtmap->cvttz;
   cvt_json["cvtucbsc"] = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtucbsc));
