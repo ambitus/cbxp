@@ -64,21 +64,21 @@ nlohmann::json ASSB::get(void* p_control_block, const uint64_t buffer_length) {
                                 sizeof(struct assb));
 
   assb_json["assb_cms_lockinst_addr"] =
-      formatter_.getHexPtr<uint32_t>(p_assb->assb_cms_lockinst_addr);
+      formatter_.getHex<uint32_t>(&(p_assb->assb_cms_lockinst_addr));
   assb_json["assb_enqdeq_cms_lockinst_addr"] =
-      formatter_.getHexPtr<uint32_t>(p_assb->assb_enqdeq_cms_lockinst_addr);
+      formatter_.getHex<uint32_t>(&(p_assb->assb_enqdeq_cms_lockinst_addr));
   assb_json["assb_latch_cms_lockinst_addr"] =
-      formatter_.getHexPtr<uint32_t>(p_assb->assb_latch_cms_lockinst_addr);
+      formatter_.getHex<uint32_t>(&(p_assb->assb_latch_cms_lockinst_addr));
   assb_json["assb_local_lockinst_addr"] =
-      formatter_.getHexPtr<uint32_t>(p_assb->assb_local_lockinst_addr);
+      formatter_.getHex<uint32_t>(&(p_assb->assb_local_lockinst_addr));
   assb_json["assb_smfcms_lockinst_addr"] =
-      formatter_.getHexPtr<uint32_t>(p_assb->assb_smfcms_lockinst_addr);
-  assb_json["assbdlcb"] = formatter_.getHexPtr<uint32_t>(p_assb->assbdlcb);
-  assb_json["assbmqma"] = formatter_.getHexPtr<uint32_t>(p_assb->assbmqma);
-  assb_json["assboasb"] = formatter_.getHexPtr<uint32_t>(p_assb->assboasb);
-  assb_json["assbtasb"] = formatter_.getHexPtr<uint32_t>(p_assb->assbtasb);
-  assb_json["assbvab"]  = formatter_.getHexPtr<uint32_t>(p_assb->assbvab);
-  assb_json["assbldax"] = formatter_.getHexPtr<uint32_t>(p_assb->assbldax);
+      formatter_.getHex<uint32_t>(&(p_assb->assb_smfcms_lockinst_addr));
+  assb_json["assbdlcb"] = formatter_.getHex<uint32_t>(&(p_assb->assbdlcb));
+  assb_json["assbmqma"] = formatter_.getHex<uint32_t>(&(p_assb->assbmqma));
+  assb_json["assboasb"] = formatter_.getHex<uint32_t>(&(p_assb->assboasb));
+  assb_json["assbtasb"] = formatter_.getHex<uint32_t>(&(p_assb->assbtasb));
+  assb_json["assbvab"]  = formatter_.getHex<uint32_t>(&(p_assb->assbvab));
+  assb_json["assbldax"] = formatter_.getHex<uint32_t>(&(p_assb->assbldax));
   assb_json["assbisqn"] = p_assb->assbisqn;
   assb_json["assbjbni"] = formatter_.getString(p_assb->assbjbni, 8);
   assb_json["assbjbns"] = formatter_.getString(p_assb->assbjbns, 8);
