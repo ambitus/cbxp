@@ -41,8 +41,8 @@ class ControlBlock {
 
  public:
   void checkBufferLength(const uint64_t buffer_length) const;
-  virtual nlohmann::json get(void* __ptr32 p_control_block = nullptr,
-                             const uint64_t buffer_length  = -1) = 0;
+  virtual nlohmann::json get(void* p_control_block        = nullptr,
+                             const uint64_t buffer_length = -1) = 0;
   explicit ControlBlock(const std::string& name,
                         const std::vector<std::string>& includables,
                         const cbxp_options_t& cbxp_options)

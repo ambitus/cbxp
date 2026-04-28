@@ -12,8 +12,7 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json CVT::get(void* __ptr32 p_control_block,
-                        const uint64_t buffer_length) {
+nlohmann::json CVT::get(void* p_control_block, const uint64_t buffer_length) {
   checkBufferLength(buffer_length);
   const struct cvtmap* __ptr32 p_cvtmap;
   const struct cvtfix* __ptr32 p_cvtfix;

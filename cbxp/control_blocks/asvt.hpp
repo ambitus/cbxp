@@ -32,8 +32,8 @@ namespace CBXP {
 
 class ASVT : public ControlBlock {
  public:
-  nlohmann::json get(void* __ptr32 p_control_block = nullptr,
-                     const uint64_t buffer_length  = -1) override;
+  nlohmann::json get(void* p_control_block        = nullptr,
+                     const uint64_t buffer_length = -1) override;
   explicit ASVT(const cbxp_options_t& cbxp_options)
       : ControlBlock("asvt", {"ascb"}, cbxp_options) {
     control_block_length = sizeof(asvt_t);

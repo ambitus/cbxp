@@ -10,8 +10,7 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json PSA::get(void* __ptr32 p_control_block,
-                        const uint64_t buffer_length) {
+nlohmann::json PSA::get(void* p_control_block, const uint64_t buffer_length) {
   checkBufferLength(buffer_length);
   const struct psa* __ptr32 p_psa;
   nlohmann::json psa_json = {};
