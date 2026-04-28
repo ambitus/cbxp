@@ -63,8 +63,8 @@ nlohmann::json OUCB::get(void* p_control_block, const uint64_t buffer_length) {
                                 sizeof(oucb_t));
 
   oucb_json["oucbname"] = formatter_.getString(p_oucb->oucbname, 4);
-  oucb_json["oucbfwd"]  = formatter_.getHex<uint32_t>(&(p_oucb->oucbfwd));
-  oucb_json["oucbbck"]  = formatter_.getHex<uint32_t>(&(p_oucb->oucbbck));
+  oucb_json["oucbfwd"]  = formatter_.getHexPtr<uint32_t>(p_oucb->oucbfwd);
+  oucb_json["oucbbck"]  = formatter_.getHexPtr<uint32_t>(p_oucb->oucbbck);
   oucb_json["oucbtma"]  = p_oucb->oucbtma;
   oucb_json["oucbqfl"]  = formatter_.getBitmap<uint8_t>(p_oucb->oucbqfl);
   oucb_json["oucbsfl"]  = formatter_.getBitmap<uint8_t>(p_oucb->oucbsfl);

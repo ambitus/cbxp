@@ -37,6 +37,14 @@ class ControlBlockFieldFormatter {
     return oss.str();
   }
   template <typename T>
+  static const std::string getHexPtr(const void* p_field) {
+    std::ostringstream oss;
+    oss << "0x" << std::hex << std::setfill('0');
+    oss << std::setw(sizeof(T) * 2)
+        << ControlBlockFieldFormatter::uint<T>(&p_field);
+    return oss.str();
+  }
+  template <typename T>
   static const std::string getBitmap(const void* p_field) {
     std::ostringstream oss;
     oss << std::bitset<sizeof(T) * 8>{

@@ -56,8 +56,8 @@ nlohmann::json ASCB::get(void* p_control_block, const uint64_t buffer_length) {
     p_ascb = static_cast<ascb*>(p_control_block);
   }
 
-  ascb_json["ascbassb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbassb));
-  ascb_json["ascboucb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascboucb));
+  ascb_json["ascbassb"] = formatter_.getHexPtr<uint32_t>(p_ascb->ascbassb);
+  ascb_json["ascboucb"] = formatter_.getHexPtr<uint32_t>(p_ascb->ascboucb);
 
   for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "assb") {
@@ -79,28 +79,28 @@ nlohmann::json ASCB::get(void* p_control_block, const uint64_t buffer_length) {
 
   ascb_json["ascbascb"] = formatter_.getString(p_ascb->ascbascb, 4);
   ascb_json["ascbasid"] = p_ascb->ascbasn;
-  ascb_json["ascbasxb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbasxb));
+  ascb_json["ascbasxb"] = formatter_.getHexPtr<uint32_t>(p_ascb->ascbasxb);
   ascb_json["ascbdcti"] = p_ascb->ascbdcti;
   ascb_json["ascbejst"] = formatter_.getBitmap<uint64_t>(
       reinterpret_cast<const char*>(&p_ascb->ascbejst));
   ascb_json["ascbflg3"] = formatter_.getBitmap<uint32_t>(p_ascb->ascbflg3);
   ascb_json["ascbfw3"]  = formatter_.getBitmap<uint32_t>(
       reinterpret_cast<const char*>(&p_ascb->ascbfw3));
-  ascb_json["ascbjbni"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbjbni));
-  ascb_json["ascbjbns"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbjbns));
+  ascb_json["ascbjbni"] = formatter_.getHexPtr<uint32_t>(p_ascb->ascbjbni);
+  ascb_json["ascbjbns"] = formatter_.getHexPtr<uint32_t>(p_ascb->ascbjbns);
   ascb_json["ascblsqe"] = p_ascb->ascblsqe;
   ascb_json["ascblsqt"] = p_ascb->ascblsqt;
   ascb_json["ascbnoft"] = formatter_.getBitmap<uint32_t>(p_ascb->ascbnoft);
-  ascb_json["ascbouxb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbouxb));
+  ascb_json["ascbouxb"] = formatter_.getHexPtr<uint32_t>(p_ascb->ascbouxb);
   ascb_json["ascbpo1m"] = formatter_.getBitmap<uint32_t>(p_ascb->ascbpo1m);
   ascb_json["ascbp1m0"] = formatter_.getBitmap<uint32_t>(p_ascb->ascbp1m0);
-  ascb_json["ascbrsme"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbrsme));
+  ascb_json["ascbrsme"] = formatter_.getHexPtr<uint32_t>(p_ascb->ascbrsme);
   ascb_json["ascbsdbf"] = formatter_.getBitmap<uint32_t>(p_ascb->ascbsdbf);
   ascb_json["ascbsrbt"] = formatter_.getBitmap<uint64_t>(
       reinterpret_cast<const char*>(&p_ascb->ascbsrbt));
   ascb_json["ascbtcbe"] = formatter_.getBitmap<uint32_t>(p_ascb->ascbtcbe);
   ascb_json["ascbtcbs"] = p_ascb->ascbtcbs;
-  ascb_json["ascbxtcb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbxtcb));
+  ascb_json["ascbxtcb"] = formatter_.getHexPtr<uint32_t>(p_ascb->ascbxtcb);
   ascb_json["ascbzcx"]  = formatter_.getBitmap<uint32_t>(p_ascb->ascbzcx);
 
   if (ASCB::matchFilter(ascb_json)) {
