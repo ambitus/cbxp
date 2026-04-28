@@ -14,7 +14,7 @@
 namespace CBXP {
 nlohmann::json ECVT::get(void* p_control_block, const uint64_t buffer_length) {
   checkBufferLength(buffer_length);
-  const struct ecvt* __ptr32 p_ecvt;
+  const struct ecvt* p_ecvt;
   nlohmann::json ecvt_json = {};
 
   if (p_control_block == nullptr) {
@@ -28,7 +28,7 @@ nlohmann::json ECVT::get(void* p_control_block, const uint64_t buffer_length) {
     // Get the address of the EVCT from the CVT
     p_ecvt = static_cast<struct ecvt* __ptr32>(p_cvt->cvtecvt);
   } else {
-    p_ecvt = static_cast<struct ecvt* __ptr32>(p_control_block);
+    p_ecvt = static_cast<struct ecvt*>(p_control_block);
   }
 
   Logger::getInstance().debug("ECVT hex dump:");

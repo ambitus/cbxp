@@ -15,7 +15,7 @@
 namespace CBXP {
 nlohmann::json OUCB::get(void* p_control_block, const uint64_t buffer_length) {
   checkBufferLength(buffer_length);
-  const oucb_t* __ptr32 p_oucb;
+  const oucb_t* p_oucb;
   nlohmann::json oucb_json = {};
   if (p_control_block == nullptr) {
     // PSA starts at address 0
@@ -55,7 +55,7 @@ nlohmann::json OUCB::get(void* p_control_block, const uint64_t buffer_length) {
     }
     return oucbs;
   } else {
-    p_oucb = static_cast<oucb_t* __ptr32>(p_control_block);
+    p_oucb = static_cast<oucb_t*>(p_control_block);
   }
 
   Logger::getInstance().debug("oucb hex dump:");

@@ -18,7 +18,7 @@ namespace CBXP {
 nlohmann::json ASCB::get(void* p_control_block, const uint64_t buffer_length) {
   checkBufferLength(buffer_length);
   nlohmann::json ascb_json = {};
-  const ascb* __ptr32 p_ascb;
+  const ascb* p_ascb;
 
   if (p_control_block == nullptr) {
     // PSA starts at address 0
@@ -53,7 +53,7 @@ nlohmann::json ASCB::get(void* p_control_block, const uint64_t buffer_length) {
     }
     return ascbs;
   } else {
-    p_ascb = static_cast<ascb* __ptr32>(p_control_block);
+    p_ascb = static_cast<ascb*>(p_control_block);
   }
 
   ascb_json["ascbassb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbassb));

@@ -12,14 +12,14 @@
 namespace CBXP {
 nlohmann::json PSA::get(void* p_control_block, const uint64_t buffer_length) {
   checkBufferLength(buffer_length);
-  const struct psa* __ptr32 p_psa;
+  const struct psa* p_psa;
   nlohmann::json psa_json = {};
 
   if (p_control_block == nullptr) {
     // PSA starts at address 0
     p_psa = 0;
   } else {
-    p_psa = static_cast<struct psa* __ptr32>(p_control_block);
+    p_psa = static_cast<struct psa*>(p_control_block);
   }
 
   Logger::getInstance().debug("PSA hex dump:");

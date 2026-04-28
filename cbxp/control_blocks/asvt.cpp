@@ -14,7 +14,7 @@
 namespace CBXP {
 nlohmann::json ASVT::get(void* p_control_block, const uint64_t buffer_length) {
   checkBufferLength(buffer_length);
-  const asvt_t* __ptr32 p_asvt;
+  const asvt_t* p_asvt;
   nlohmann::json asvt_json = {};
 
   if (p_control_block == nullptr) {
@@ -25,7 +25,7 @@ nlohmann::json ASVT::get(void* p_control_block, const uint64_t buffer_length) {
         static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
     p_asvt = static_cast<asvt_t* __ptr32>(p_cvtmap->cvtasvt);
   } else {
-    p_asvt = static_cast<asvt_t* __ptr32>(p_control_block);
+    p_asvt = static_cast<asvt_t*>(p_control_block);
   }
 
   Logger::getInstance().debug("ASCB pointers:");
@@ -34,8 +34,8 @@ nlohmann::json ASVT::get(void* p_control_block, const uint64_t buffer_length) {
 
   std::vector<std::string> ascbs;
   ascbs.reserve(p_asvt->asvtmaxu);
-  const uint32_t* __ptr32 p_ascb = const_cast<uint32_t* __ptr32>(
-      reinterpret_cast<const uint32_t* __ptr32>(&p_asvt->asvtenty));
+  const uint32_t* p_ascb = const_cast<uint32_t*>(
+      reinterpret_cast<const uint32_t*>(&p_asvt->asvtenty));
 
   for (int i = 0; i < p_asvt->asvtmaxu; i++) {
     ascbs.push_back(formatter_.getHex<uint32_t>(p_ascb));
