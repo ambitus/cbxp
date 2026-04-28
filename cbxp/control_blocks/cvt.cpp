@@ -167,13 +167,13 @@ nlohmann::json CVT::get(void* p_control_block, const uint64_t buffer_length) {
   // Read bitfields directly to avoid read-modify-write corruption
   cvt_json["cvttx"] = formatter_.getBitmap<uint8_t>(
       reinterpret_cast<const unsigned char*>(p_cvtmap) +
-      offsetof(struct cvtmap, cvttx));
+      offsetof(struct cvtmap, cvtflag4));
   cvt_json["cvttxc"] = formatter_.getBitmap<uint8_t>(
       reinterpret_cast<const unsigned char*>(p_cvtmap) +
-      offsetof(struct cvtmap, cvttxc));
+      offsetof(struct cvtmap, cvtflag4));
   cvt_json["cvttxte"] = formatter_.getBitmap<uint8_t>(
       reinterpret_cast<const unsigned char*>(p_cvtmap) +
-      offsetof(struct cvtmap, cvttxte));
+      offsetof(struct cvtmap, cvtctlfg));
   ;
   cvt_json["cvttz"]    = p_cvtmap->cvttz;
   cvt_json["cvtucbsc"] = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtucbsc));
