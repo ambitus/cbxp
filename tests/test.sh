@@ -40,12 +40,12 @@ run_with_expected_exit_code 0 ./dist/cbxp explore oucb
 
 # Format
 run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascb.bin ascb
-run_with_expected_exit_code 0 _BPXK_AUTOCVT=OFF cat -B tests/samples/cvt.bin | ./dist/cbxp format cvt
+run_with_expected_exit_code 0 cat tests/samples/cvt.bin | ./dist/cbxp format cvt
 run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/oucb.bin oucb
 run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascboffset40.bin -o 0x40 ascb
 run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascboffset40.bin -o 64 ascb
-run_with_expected_exit_code 0 _BPXK_AUTOCVT=OFF cat -B tests/samples/oucboffset3A8.bin | ./dist/cbxp format -o 0x3A8 oucb
-run_with_expected_exit_code 0 _BPXK_AUTOCVT=OFF cat -B tests/samples/oucboffset3A8.bin | ./dist/cbxp format -o 936 oucb
+run_with_expected_exit_code 0 cat tests/samples/oucboffset3A8.bin | ./dist/cbxp format -o 0x3A8 oucb
+run_with_expected_exit_code 0 cat tests/samples/oucboffset3A8.bin | ./dist/cbxp format -o 936 oucb
 
 # Include Patterns
 run_with_expected_exit_code 0 ./dist/cbxp explore -i cvt psa
@@ -140,7 +140,7 @@ run_with_expected_exit_code 255 ./dist/cbxp explore -f junk psa
 # Errors: Error Opening File
 run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/notreal.bin psa
 # Errors: File and STDIN
-run_with_expected_exit_code 255 sh -c '_BPXK_AUTOCVT=OFF cat -B tests/samples/cvt.bin | ./dist/cbxp format -F tests/samples/cvt.bin cvt'
+run_with_expected_exit_code 255 sh -c 'cat tests/samples/cvt.bin | ./dist/cbxp format -F tests/samples/cvt.bin cvt'
 # Errors: Buffer Too Small
 run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin psa
 
