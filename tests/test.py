@@ -570,8 +570,38 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), dict)
 
     # ============================================================================
-    # Testing Errors: Format
+    # Testing Errors: Operation and Format
     # ============================================================================
+    def test_cbxp_raises_cbxp_error_if_explore_uses_data_buffer(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp("psa", data_buffer=self.read_sample("ascb.bin"))
+        self.assertEqual(
+            (
+                "The 'data_buffer' and 'offset' parameters cannot be used with "
+                "the 'explore' operation"
+            ),
+            str(e.exception),
+        )
+
+    def test_cbxp_raises_cbxp_error_if_explore_uses_offset(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp("psa", offset=1)
+        self.assertEqual(
+            (
+                "The 'data_buffer' and 'offset' parameters cannot be used with "
+                "the 'explore' operation"
+            ),
+            str(e.exception),
+        )
+
+    def test_cbxp_raises_cbxp_error_if_bad_operation_is_provided(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp("psa", operation="junk")
+        self.assertEqual(
+            "cbxp must perform 'format' or 'explore' operation",
+            str(e.exception),
+        )
+
     def test_cbxp_raises_cbxp_error_if_format_uses_includes(self):
         with self.assertRaises(CBXPError) as e:
             cbxp(
@@ -624,7 +654,7 @@ class TestCBXP(unittest.TestCase):
             cbxp(
                 "psa",
                 operation="format",
-                data_buffer=self.read_sample("oucb.bin"),
+                data_buffer=self.read_sample("ascb.bin"),
             )
         self.assertEqual(
             "The buffer is not large enough to contain a 'psa'",

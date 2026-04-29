@@ -111,7 +111,10 @@ run_with_expected_exit_code 255 ./dist/cbxp explore -d -d psa
 run_with_expected_exit_code 255 ./dist/cbxp explore -f psa
 run_with_expected_exit_code 255 ./dist/cbxp explore -f psapsa=psa
 run_with_expected_exit_code 255 ./dist/cbxp explore --debug -d psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -F tests/samples/ascb.bin psa
+run_with_expected_exit_code 255 ./dist/cbxp explore -o 1 psa
 run_with_expected_exit_code 255 ./dist/cbxp format
+run_with_expected_exit_code 255 ./dist/cbxp format psa
 run_with_expected_exit_code 255 ./dist/cbxp format -i cvt psa
 run_with_expected_exit_code 255 ./dist/cbxp format -f psapsa=PSA psa
 run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o 999999 ascb
@@ -134,8 +137,10 @@ run_with_expected_exit_code 255 ./dist/cbxp explore -f assbasid= assb
 run_with_expected_exit_code 255 ./dist/cbxp explore -f 'ascbasid<=junk' ascb
 run_with_expected_exit_code 255 ./dist/cbxp explore -f "psapsa=psa,cvt.asvt.ascb.ascbasid<2" cvt
 run_with_expected_exit_code 255 ./dist/cbxp explore -f junk psa
-# Errors: Bad File
+# Errors: Error Opening File
 run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/notreal.bin psa
+# Errors: File and STDIN
+run_with_expected_exit_code 255 sh -c 'cat -B tests/samples/cvt.bin | ./dist/cbxp format -F tests/samples/cvt.bin cvt'
 # Errors: Buffer Too Small
 run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin psa
 
