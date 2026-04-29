@@ -70,6 +70,7 @@ int main(int argc, const char* argv[]) {
               filters_string = "";
   uint64_t offset = 0, buffer_length = -1;
   bool offset_specified = false, file_specified = false, data_piped = false;
+  std::vector<char> input_buffer;
   char* data_buffer = nullptr;
 
   if (argc == 2) {
@@ -100,9 +101,9 @@ int main(int argc, const char* argv[]) {
   }
 
   if (isatty(STDIN_FILENO) == 0) {
-    std::vector<char> stdin_buffer((std::istreambuf_iterator<char>(std::cin)),
-                                   (std::istreambuf_iterator<char>()));
-    if (!stdin_buffer.empty()) {
+    input_buffer.assign((std::istreambuf_iterator<char>(std::cin)),
+                        (std::istreambuf_iterator<char>()));
+    if (!input_buffer.empty()) {
       data_buffer   = stdin_buffer.data();
       buffer_length = stdin_buffer.size();
     }
@@ -156,7 +157,6 @@ int main(int argc, const char* argv[]) {
       file_specified       = true;
       std::string filename = std::string(argv[++i]);
       std::streamsize size;
-      std::vector<char> buffer;
       if (filename.rfind("//", 0) == 0) {
         std::ifstream dsFile(filename, std::ios::binary | std::ios::ate);
         if (!dsFile.is_open()) {
@@ -167,9 +167,9 @@ int main(int argc, const char* argv[]) {
         size = dsFile.tellg();
         dsFile.seekg(0, std::ios::beg);  // Move back to start
 
-        buffer.resize(size);
-        if (dsFile.read(buffer.data(), size)) {
-          data_buffer = buffer.data();
+        input_buffer.resize(size);
+        if (dsFile.read(input_buffer.data(), size)) {
+          data_buffer = input_buffer.data();
         }
       } else {
         std::ifstream file(filename, std::ios::binary | std::ios::ate);
@@ -181,9 +181,9 @@ int main(int argc, const char* argv[]) {
         size = file.tellg();
         file.seekg(0, std::ios::beg);  // Move back to start
 
-        buffer.resize(size);
-        if (file.read(buffer.data(), size)) {
-          data_buffer = buffer.data();
+        input_buffer.resize(size);
+        if (file.read(input_buffer.data(), size)) {
+          data_buffer = input_buffer.data();
         }
       }
       buffer_length = size;
