@@ -1,9 +1,16 @@
 import unittest
+from pathlib import Path
 
 from cbxp import CBXPError, CBXPFilter, CBXPFilterOperation, cbxp
 
 
 class TestCBXP(unittest.TestCase):
+    SAMPLE_DIR = Path(__file__).resolve().parent / "samples"
+
+    @staticmethod
+    def read_sample(filename: str) -> bytes:
+        return (TestCBXP.SAMPLE_DIR / filename).read_bytes()
+
     # ============================================================================
     # Basic Usage
     # ============================================================================
@@ -40,6 +47,69 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
             self.assertIs(type(entry), dict)
+
+    # ============================================================================
+    # Format
+    # ============================================================================
+    def test_cbxp_can_format_ascb_from_a_file_buffer(self):
+        cbdata = cbxp(
+            "ascb",
+            operation="format",
+            data_buffer=self.read_sample("ascb.bin"),
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_format_cvt_from_a_file_buffer(self):
+        cbdata = cbxp(
+            "cvt",
+            operation="format",
+            data_buffer=self.read_sample("cvt.bin"),
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_format_oucb_from_a_file_buffer(self):
+        cbdata = cbxp(
+            "oucb",
+            operation="format",
+            data_buffer=self.read_sample("oucb.bin"),
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_format_ascb_with_hex_offset(self):
+        cbdata = cbxp(
+            "ascb",
+            operation="format",
+            data_buffer=self.read_sample("ascboffset40.bin"),
+            offset=0x40,
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_format_ascb_with_decimal_offset(self):
+        cbdata = cbxp(
+            "ascb",
+            operation="format",
+            data_buffer=self.read_sample("ascboffset40.bin"),
+            offset=64,
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_format_oucb_with_hex_offset(self):
+        cbdata = cbxp(
+            "oucb",
+            operation="format",
+            data_buffer=self.read_sample("oucboffset3A8.bin"),
+            offset=0x3A8,
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_can_format_oucb_with_decimal_offset(self):
+        cbdata = cbxp(
+            "oucb",
+            operation="format",
+            data_buffer=self.read_sample("oucboffset3A8.bin"),
+            offset=936,
+        )
+        self.assertIs(type(cbdata), dict)
 
     # ============================================================================
     # Include Patterns
@@ -478,6 +548,67 @@ class TestCBXP(unittest.TestCase):
     def test_cbxp_can_run_in_debug_mode(self):
         cbdata = cbxp("psa", debug=True)
         self.assertIs(type(cbdata), dict)
+
+    # ============================================================================
+    # Errors: Format
+    # ============================================================================
+    def test_cbxp_raises_cbxp_error_if_format_uses_includes(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                operation="format",
+                includes=["cvt"],
+                data_buffer=self.read_sample("cvt.bin"),
+            )
+        self.assertEqual(
+            "Filters and Includes cannot be used with the 'format' operation",
+            str(e.exception),
+        )
+
+    def test_cbxp_raises_cbxp_error_if_format_uses_filters(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                operation="format",
+                filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSA")],
+                data_buffer=self.read_sample("cvt.bin"),
+            )
+        self.assertEqual(
+            "Filters and Includes cannot be used with the 'format' operation",
+            str(e.exception),
+        )
+
+    def test_cbxp_raises_cbxp_error_if_format_is_missing_data_buffer(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp("psa", operation="format")
+        self.assertEqual(
+            "The 'data_buffer' parameter is required for 'format' operation",
+            str(e.exception),
+        )
+
+    def test_cbxp_raises_cbxp_error_if_format_offset_is_too_large(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "ascb",
+                operation="format",
+                data_buffer=self.read_sample("ascb.bin"),
+                offset=999999,
+            )
+        self.assertEqual(
+            "Offset is too large for specified data/file", str(e.exception)
+        )
+
+    def test_cbxp_raises_cbxp_error_if_format_buffer_is_too_small(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp(
+                "psa",
+                operation="format",
+                data_buffer=self.read_sample("oucb.bin"),
+            )
+        self.assertEqual(
+            "The buffer is not large enough to contain a 'psa'",
+            str(e.exception),
+        )
 
     # ============================================================================
     # Errors: Unknown Control Block
