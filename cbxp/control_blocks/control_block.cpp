@@ -280,6 +280,8 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
 
 void ControlBlock::checkBufferLength(const uint64_t buffer_length) const {
   if (buffer_length < control_block_length) {
+    Logger::getInstance().debug("specified buffer too small to contain the '" +
+                                control_block_name_ + "' control block...");
     throw BufferLengthError();
   }
 }

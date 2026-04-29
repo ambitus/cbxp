@@ -119,7 +119,8 @@ void ControlBlockExplorer::processControlBlock(
     return;
   }
 
-  std::string control_block_json_string = control_block_json.dump();
+  std::string control_block_json_string =
+      control_block_json.dump(-1, ' ', false, json::error_handler_t::replace);
 
   Logger::getInstance().debug(control_block_operation + "ed '" +
                               control_block_name + "' control block data");
