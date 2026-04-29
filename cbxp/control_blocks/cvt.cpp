@@ -166,7 +166,7 @@ nlohmann::json CVT::get(void* p_control_block, const uint64_t buffer_length) {
   // cvtflgbt)
   const unsigned char* p_cvtundvm =
       reinterpret_cast<const unsigned char*>(p_cvtxtnt2) + 5;
-  cvt_json["cvtundvm"] = formatter_.getBitmap(p_cvtundvm);
+  cvt_json["cvtundvm"] = formatter_.getBitmap<uint32_t>(p_cvtundvm);
   cvt_json["cvtuser"]  = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtuser));
   cvt_json["cvtverid"] = formatter_.getHex<uint64_t>(p_cvtfix->cvtverid);
   cvt_json["cvtvfget"] = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtvfget));
