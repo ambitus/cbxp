@@ -550,7 +550,7 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), dict)
 
     # ============================================================================
-    # Errors: Format
+    # Testing Errors: Format
     # ============================================================================
     def test_cbxp_raises_cbxp_error_if_format_uses_includes(self):
         with self.assertRaises(CBXPError) as e:
@@ -595,7 +595,8 @@ class TestCBXP(unittest.TestCase):
                 offset=999999,
             )
         self.assertEqual(
-            "Offset is too large for specified data/file", str(e.exception)
+            "Offset is too large for specified data/file",
+            str(e.exception),
         )
 
     def test_cbxp_raises_cbxp_error_if_format_buffer_is_too_small(self):
@@ -611,7 +612,7 @@ class TestCBXP(unittest.TestCase):
         )
 
     # ============================================================================
-    # Errors: Unknown Control Block
+    # Testing Errors: Unknown Control Block
     # ============================================================================
     def test_cbxp_raises_cbxp_error_when_unknown_control_block_is_provided(self):
         with self.assertRaises(CBXPError) as e:
@@ -622,7 +623,7 @@ class TestCBXP(unittest.TestCase):
         )
 
     # ============================================================================
-    # Errors: Bad Include Patterns
+    # Testing Errors: Bad Include Patterns
     # ============================================================================
     def test_cbxp_raises_cbxp_error_if_asvt_ascb_is_included_with_the_psa(
         self,
@@ -671,7 +672,7 @@ class TestCBXP(unittest.TestCase):
         self.assertEqual("Include patterns cannot contain commas", str(e.exception))
 
     # ============================================================================
-    # Errors: Bad Filters
+    # Testing Errors: Bad Filters
     # ============================================================================
     def test_cbxp_raises_cbxp_error_if_filter_uses_non_included_control_block(
         self,
