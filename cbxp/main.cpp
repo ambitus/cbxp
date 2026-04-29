@@ -104,8 +104,8 @@ int main(int argc, const char* argv[]) {
     input_buffer.assign((std::istreambuf_iterator<char>(std::cin)),
                         (std::istreambuf_iterator<char>()));
     if (!input_buffer.empty()) {
-      data_buffer   = stdin_buffer.data();
-      buffer_length = stdin_buffer.size();
+      data_buffer   = input_buffer.data();
+      buffer_length = input_buffer.size();
     }
     data_piped = true;
   }
