@@ -107,7 +107,7 @@ int main(int argc, const char* argv[]) {
       data_buffer   = input_buffer.data();
       buffer_length = input_buffer.size();
       std::string env_p(std::getenv("_BPXK_AUTOCVT"));
-      if (!env_p.empty() && env_p == "ON") {
+      if (!env_p.empty() && (env_p == "ON" || env_p == "ALL")) {
         __a2e_l(data_buffer, buffer_length);
       }
     }
