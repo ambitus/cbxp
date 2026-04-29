@@ -18,6 +18,12 @@ class TestCBXP(unittest.TestCase):
         cbdata = cbxp("psa")
         self.assertIs(type(cbdata), dict)
 
+    @staticmethod
+    def get_cvtasmvt_values() -> tuple[int, str]:
+        cbdata = cbxp("cvt")
+        cvtasmvt_hex = cbdata["cvtasmvt"]
+        return int(cvtasmvt_hex, 16), cvtasmvt_hex
+
     def test_cbxp_can_extract_cvt(self):
         cbdata = cbxp("cvt")
         self.assertIs(type(cbdata), dict)
@@ -405,58 +411,72 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), dict)
 
     def test_cbxp_can_use_int_filter_with_hex_field_equal(self):
+        cvtasmvt_int, _ = self.get_cvtasmvt_values()
         cbdata = cbxp(
             "cvt",
-            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, 2281701376)],
+            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, cvtasmvt_int)],
         )
         self.assertIs(type(cbdata), dict)
 
     def test_cbxp_can_use_hex_filter_with_equal(self):
+        _, cvtasmvt_hex = self.get_cvtasmvt_values()
         cbdata = cbxp(
             "cvt",
-            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, "0x88000000")],
+            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, cvtasmvt_hex)],
         )
         self.assertIs(type(cbdata), dict)
 
     def test_cbxp_can_use_hex_filter_with_greater_than(self):
+        cvtasmvt_int, _ = self.get_cvtasmvt_values()
         cbdata = cbxp(
             "cvt",
             filters=[
-                CBXPFilter("cvtasmvt", CBXPFilterOperation.GREATER_THAN, "0x87FFFFFF"),
+                CBXPFilter(
+                    "cvtasmvt",
+                    CBXPFilterOperation.GREATER_THAN,
+                    hex(cvtasmvt_int - 1),
+                ),
             ],
         )
         self.assertIs(type(cbdata), dict)
 
     def test_cbxp_can_use_hex_filter_with_less_than(self):
+        cvtasmvt_int, _ = self.get_cvtasmvt_values()
         cbdata = cbxp(
             "cvt",
             filters=[
-                CBXPFilter("cvtasmvt", CBXPFilterOperation.LESS_THAN, "0x88000001"),
+                CBXPFilter(
+                    "cvtasmvt",
+                    CBXPFilterOperation.LESS_THAN,
+                    hex(cvtasmvt_int + 1),
+                ),
             ],
         )
         self.assertIs(type(cbdata), dict)
 
     def test_cbxp_can_use_hex_filter_with_greater_than_or_equal(self):
+        cvtasmvt_int, _ = self.get_cvtasmvt_values()
         cbdata = cbxp(
             "cvt",
             filters=[
                 CBXPFilter(
                     "cvtasmvt",
                     CBXPFilterOperation.GREATER_THAN_OR_EQUAL,
-                    "0x87FFFFFF",
+                    hex(cvtasmvt_int),
                 ),
             ],
         )
         self.assertIs(type(cbdata), dict)
 
     def test_cbxp_can_use_hex_filter_with_less_than_or_equal(self):
+        cvtasmvt_int, _ = self.get_cvtasmvt_values()
         cbdata = cbxp(
             "cvt",
             filters=[
                 CBXPFilter(
                     "cvtasmvt",
                     CBXPFilterOperation.LESS_THAN_OR_EQUAL,
-                    "0x88000000",
+                    hex(cvtasmvt_int),
                 ),
             ],
         )

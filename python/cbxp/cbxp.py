@@ -129,7 +129,6 @@ def cbxp(
     elif operation == "format":
         if filters is not None or includes is not None:
             raise CBXPError(CBXPErrorCode.BAD_FORMAT_PARMS.value, control_block)
-        data_buffer = None
         if data_buffer is not None:
             data_buffer = data_buffer
         else:
