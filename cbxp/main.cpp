@@ -269,6 +269,10 @@ int main(int argc, const char* argv[]) {
     case CBXP::Error::BadFilter:
       std::cerr << "A bad filter was provided" << std::endl;
       break;
+    case CBXP::Error::BufferTooSmall:
+      std::cerr << "The buffer is not large enough to contain a '"
+                << control_block_name << "'" << std::endl;
+      break;
     default:
       std::cout << cbxp_result->result_json << std::endl;
       cli_return_code = CLIReturnCode::SUCCESS;
