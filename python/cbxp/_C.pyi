@@ -6,7 +6,7 @@ def call_cbxp_extract(  # noqa: N999
 ) -> dict: ...
 def call_cbxp_format(  # noqa: N999
     control_block: str,
-    bytes_buffer: bytes,
+    data: bytes,
     offset: int = 0,
     debug: bool = False,
 ) -> dict: ...

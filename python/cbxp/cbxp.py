@@ -67,14 +67,14 @@ class CBXPError(Exception):
             case CBXPErrorCode.BUFFER_TOO_SMALL.value:
                 message = (
                     "The buffer is not large enough to contain a "
-                    f"'{control_block_name}'"
+                    f"'{control_block_name}' control block"
                 )
             case _:
                 message = "an unknown error occurred"
         super().__init__(message)
 
 
-def cbxp_extract(
+def extract(
     control_block: str,
     includes: list[str] = None,
     filters: list[CBXPFilter] = None,
@@ -111,7 +111,7 @@ def cbxp_extract(
     return json.loads(response["result_json"])
 
 
-def cbxp_format(
+def format(  # noqa: A001
     control_block: str,
     data: bytes,
     offset: int = None,
@@ -127,7 +127,7 @@ def cbxp_format(
     response = call_cbxp_format(
         control_block.lower(),
         data,
-        offset,
+        offset=offset,
         debug=debug,
     )
     if response["return_code"]:

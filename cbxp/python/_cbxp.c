@@ -46,26 +46,25 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
   PyObject* result_dictionary;
   PyObject* debug_pyobj;
   const char* p_control_block;
-  const char* p_bytes_buffer;
+  const char* p_data_buffer;
   int buffer_length;
   int offset            = 0;
   bool debug            = false;
 
-  static char* kwlist[] = {"control_block", "bytes_buffer", "offset", "debug",
-                           NULL};
+  static char* kwlist[] = {"control_block", "data", "offset", "debug", NULL};
 
   if (!PyArg_ParseTupleAndKeywords(args, kwargs, "ss#|iO", kwlist,
-                                   &p_control_block, &p_bytes_buffer,
+                                   &p_control_block, &p_data_buffer,
                                    &buffer_length, &offset, &debug_pyobj)) {
     return NULL;
   }
 
   debug = PyObject_IsTrue(debug_pyobj);
-  p_bytes_buffer += offset;
+  p_data_buffer += offset;
   buffer_length -= offset;
 
   cbxp_result_t* p_cbxp_result =
-      cbxp_format(p_control_block, p_bytes_buffer, buffer_length, debug);
+      cbxp_format(p_control_block, p_data_buffer, buffer_length, debug);
 
   result_dictionary =
       Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
