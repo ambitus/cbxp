@@ -563,7 +563,7 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), dict)
 
     # ============================================================================
-    # Testing Errors: Operation and Format
+    # Testing Errors: Format
     # ============================================================================
     def test_cbxp_raises_cbxp_error_if_explore_uses_data_buffer(self):
         with self.assertRaises(CBXPError) as e:
@@ -596,6 +596,18 @@ class TestCBXP(unittest.TestCase):
             )
         self.assertEqual(
             "Offset is too large for data provided",
+            str(e.exception),
+        )
+
+    def test_cbxp_raises_cbxp_error_if_format_offset_is_negative(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp_format(
+                "ascb",
+                data_buffer=self.read_sample("ascb.bin"),
+                offset=-1,
+            )
+        self.assertEqual(
+            "Offset parameter can not be negative",
             str(e.exception),
         )
 

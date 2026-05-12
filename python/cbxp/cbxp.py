@@ -37,6 +37,7 @@ class CBXPErrorCode(Enum):
     COMMA_IN_INCLUDE = -1
     COMMA_IN_FILTER = -2
     OFFSET_TOO_BIG = -3
+    OFFSET_NEGATIVE = -4
     BAD_CONTROL_BLOCK = 1
     BAD_INCLUDE = 2
     BAD_CONTROL_BLOCK_FILTER = 3
@@ -55,6 +56,8 @@ class CBXPError(Exception):
                 message = "Filters cannot contain commas"
             case CBXPErrorCode.OFFSET_TOO_BIG.value:
                 message = "Offset is too large for data provided"
+            case CBXPErrorCode.OFFSET_TOO_BIG.value:
+                message = "Offset parameter can not be negative"
             case CBXPErrorCode.BAD_CONTROL_BLOCK.value:
                 message = f"Unknown control block '{control_block_name}' was specified."
             case CBXPErrorCode.BAD_INCLUDE.value:
@@ -116,6 +119,8 @@ def cbxp_format(
 ) -> dict:
     if offset is None:
         offset = 0
+    elif offset < 0:
+        raise CBXPError(CBXPErrorCode.OFFSET_NEGATIVE.value, control_block)
     elif offset >= len(data):
         raise CBXPError(CBXPErrorCode.OFFSET_TOO_BIG.value, control_block)
 

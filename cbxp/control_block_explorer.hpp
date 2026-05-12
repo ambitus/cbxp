@@ -11,7 +11,7 @@ class ControlBlockExplorer {
  private:
   cbxp_result_t* p_result_;
   cbxp_options_t cbxp_options_         = {{}, {}};
-  const void* p_control_block_pointer_ = nullptr;
+  const void* p_control_block_         = nullptr;
   int control_block_buffer_length_     = -1;
   std::string control_block_operation_ = "";
   static std::vector<std::string> createOptionsList(

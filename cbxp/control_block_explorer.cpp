@@ -66,7 +66,7 @@ void ControlBlockExplorer::extractControlBlock(
 void ControlBlockExplorer::formatControlBlock(
     const std::string& control_block_name, const void* bytes_buffer,
     const int buffer_length) {
-  p_control_block_pointer_     = bytes_buffer;
+  p_control_block_             = bytes_buffer;
   control_block_buffer_length_ = buffer_length;
 
   control_block_operation_     = "Format";
@@ -86,31 +86,31 @@ void ControlBlockExplorer::processControlBlock(
     if (control_block_name == "psa") {
       control_block_json =
           PSA(cbxp_options_)
-              .get(p_control_block_pointer_, control_block_buffer_length_);
+              .get(p_control_block_, control_block_buffer_length_);
     } else if (control_block_name == "cvt") {
       control_block_json =
           CVT(cbxp_options_)
-              .get(p_control_block_pointer_, control_block_buffer_length_);
+              .get(p_control_block_, control_block_buffer_length_);
     } else if (control_block_name == "ecvt") {
       control_block_json =
           ECVT(cbxp_options_)
-              .get(p_control_block_pointer_, control_block_buffer_length_);
+              .get(p_control_block_, control_block_buffer_length_);
     } else if (control_block_name == "ascb") {
       control_block_json =
           ASCB(cbxp_options_)
-              .get(p_control_block_pointer_, control_block_buffer_length_);
+              .get(p_control_block_, control_block_buffer_length_);
     } else if (control_block_name == "asvt") {
       control_block_json =
           ASVT(cbxp_options_)
-              .get(p_control_block_pointer_, control_block_buffer_length_);
+              .get(p_control_block_, control_block_buffer_length_);
     } else if (control_block_name == "assb") {
       control_block_json =
           ASSB(cbxp_options_)
-              .get(p_control_block_pointer_, control_block_buffer_length_);
+              .get(p_control_block_, control_block_buffer_length_);
     } else if (control_block_name == "oucb") {
       control_block_json =
           OUCB(cbxp_options_)
-              .get(p_control_block_pointer_, control_block_buffer_length_);
+              .get(p_control_block_, control_block_buffer_length_);
     } else {
       throw ControlBlockError();
     }

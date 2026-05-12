@@ -14,7 +14,6 @@ static PyObject* call_cbxp_extract(PyObject* self, PyObject* args,
   const char* p_control_block;
   const char* p_includes_string;
   const char* p_filters_string;
-  Py_ssize_t request_length;
   bool debug            = false;
 
   static char* kwlist[] = {"control_block", "includes_string", "filters_string",
@@ -49,14 +48,13 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
   const char* p_control_block;
   const char* p_bytes_buffer;
   int buffer_length;
-  uint64_t offset = 0;
-  Py_ssize_t request_length;
+  int offset            = 0;
   bool debug            = false;
 
   static char* kwlist[] = {"control_block", "bytes_buffer", "offset", "debug",
                            NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "ss#|kO", kwlist,
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "ss#|iO", kwlist,
                                    &p_control_block, &p_bytes_buffer,
                                    &buffer_length, &offset, &debug_pyobj)) {
     return NULL;
