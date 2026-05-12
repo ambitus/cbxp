@@ -218,6 +218,7 @@ int parseOptions(int argc, const char* argv[], cbxp_command_t* cbxp_command) {
     return CLIReturnCode::FAILURE;
   }
   cbxp_command->command = argv[1];
+  cbxp_command->debug   = false;
 
   if (cbxp_command->command == "format") {
     if (std::strcmp(argv[2], "-h") == 0 ||
