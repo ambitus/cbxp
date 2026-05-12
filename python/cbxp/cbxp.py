@@ -56,7 +56,7 @@ class CBXPError(Exception):
                 message = "Filters cannot contain commas"
             case CBXPErrorCode.OFFSET_TOO_BIG.value:
                 message = "Offset is too large for data provided"
-            case CBXPErrorCode.OFFSET_TOO_BIG.value:
+            case CBXPErrorCode.OFFSET_NEGATIVE.value:
                 message = "Offset parameter can not be negative"
             case CBXPErrorCode.BAD_CONTROL_BLOCK.value:
                 message = f"Unknown control block '{control_block_name}' was specified."

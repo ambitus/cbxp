@@ -47,7 +47,7 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
   PyObject* debug_pyobj;
   const char* p_control_block;
   const char* p_data_buffer;
-  int buffer_length;
+  Py_ssize_t py_buffer_length;
   int offset            = 0;
   bool debug            = false;
 
@@ -55,12 +55,13 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
 
   if (!PyArg_ParseTupleAndKeywords(args, kwargs, "ss#|iO", kwlist,
                                    &p_control_block, &p_data_buffer,
-                                   &buffer_length, &offset, &debug_pyobj)) {
+                                   &py_buffer_length, &offset, &debug_pyobj)) {
     return NULL;
   }
 
   debug = PyObject_IsTrue(debug_pyobj);
   p_data_buffer += offset;
+  int buffer_length = Py_SAFE_DOWNCAST(py_buffer_length, Py_ssize_t, int);
   buffer_length -= offset;
 
   cbxp_result_t* p_cbxp_result =

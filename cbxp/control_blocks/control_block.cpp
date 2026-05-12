@@ -285,7 +285,7 @@ void ControlBlock::checkBufferLength(const int buffer_length) const {
   if (buffer_length < control_block_length_) {
     Logger::getInstance().debug(
         "specified buffer (" + std::to_string(buffer_length) +
-        " bytes)too small to contain the '" + control_block_name_ +
+        " bytes) too small to contain the '" + control_block_name_ +
         "' control block (requires " + std::to_string(buffer_length) +
         " bytes)...");
     throw BufferLengthError();
