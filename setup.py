@@ -6,6 +6,8 @@ from glob import glob
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
+cli_files = ["cbxp/main.cpp", "cbxp/cli_processing.cpp"]
+
 
 def main():
     """Python extension build entrypoint."""
@@ -19,7 +21,7 @@ def main():
                 "cbxp._C",
                 sources=(
                     glob("cbxp/**/*.cpp")
-                    + [file for file in glob("cbxp/*.cpp") if file != "cbxp/main.cpp"]
+                    + [file for file in glob("cbxp/*.cpp") if file not in cli_files]
                     + ["cbxp/python/_cbxp.c"]
                 ),
                 include_dirs=(
