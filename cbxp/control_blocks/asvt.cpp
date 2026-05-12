@@ -12,7 +12,7 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json ASVT::get(void* p_control_block, const int buffer_length) {
+nlohmann::json ASVT::get(const void* p_control_block, const int buffer_length) {
   ASVT::checkBufferLength(buffer_length);
   const asvt_t* p_asvt;
   nlohmann::json asvt_json = {};
@@ -51,7 +51,7 @@ nlohmann::json ASVT::get(void* p_control_block, const int buffer_length) {
     if (include == "ascb") {
       nlohmann::json ascbs_json;
       CBXP::ASCB ascb(cbxp_options);
-      uint32_t* __ptr32 p_ascb_addr = const_cast<uint32_t* __ptr32>(
+      uint32_t const* __ptr32 p_ascb_addr = const_cast<uint32_t* __ptr32>(
           reinterpret_cast<const uint32_t* __ptr32>(&p_asvt->asvtenty));
       for (int i = 0; i < p_asvt->asvtmaxu; i++) {
         if (0x80000000 & *p_ascb_addr) {

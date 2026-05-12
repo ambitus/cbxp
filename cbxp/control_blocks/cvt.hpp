@@ -9,8 +9,8 @@ namespace CBXP {
 
 class CVT : public ControlBlock {
  public:
-  nlohmann::json get(void* p_control_block   = nullptr,
-                     const int buffer_length = -1) override;
+  nlohmann::json get(const void* p_control_block = nullptr,
+                     const int buffer_length     = -1) override;
   explicit CVT(const cbxp_options_t& cbxp_options)
       : ControlBlock("cvt", {"ecvt", "asvt"}, cbxp_options) {
     control_block_length_ = sizeof(struct cvtmap);
