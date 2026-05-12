@@ -64,12 +64,12 @@ int main(int argc, const char* argv[]) {
   int returnCode = CLIReturnCode::NONE;
   cbxp_command_t cbxp_command;
 
-  returnCode = parseOptions(argc, argv, &cbxp_command);
+  returnCode = parseFlags(argc, argv, &cbxp_command);
   if (returnCode != CLIReturnCode::NONE) {
     return returnCode;
   }
 
-  returnCode = processOptions(argv, &cbxp_command);
+  returnCode = processFlags(argv, &cbxp_command);
   if (returnCode != CLIReturnCode::NONE) {
     return returnCode;
   }

@@ -10,9 +10,7 @@
 #include <vector>
 
 static void showGeneralUsage(const char* argv[]) {
-  std::cout << "Usage: " << argv[0] << " [command] [options] <control block>"
-            << std::endl
-            << std::endl;
+  std::cout << "Usage: " << argv[0] << " [command]" << std::endl << std::endl;
 
   std::cout << "Available Commands:" << std::endl
             << "extract                            Extract control block data "
@@ -24,10 +22,10 @@ static void showGeneralUsage(const char* argv[]) {
             << std::endl;
 
   std::cout
-      << "Options:" << std::endl
-      << "  -d, --debug                      Write debug messages" << std::endl
+      << "Flags:" << std::endl
       << "  -v, --version                    Show version number" << std::endl
       << "  -h, --help                       Show usage information"
+      << std::endl
       << std::endl
       << "Use \"cbxp [command] --help\" for more information about a command."
       << std::endl
@@ -35,41 +33,94 @@ static void showGeneralUsage(const char* argv[]) {
 }
 
 static void showExtractUsage(const char* argv[]) {
-  std::cout << "Usage: " << argv[0] << " extract [options] <control block>"
+  std::cout << "Extract and format control block data from live memory"
             << std::endl
             << std::endl;
 
-  std::cout << "Options:" << std::endl
-            << "  -d, --debug                      Write debug messages"
+  std::cout << "Usage: " << argv[0] << " extract [flags] <control block>"
             << std::endl
+            << std::endl;
+
+  std::cout << "Examples: " << std::endl
+            << "  # Extract the PSA control block from live memory and write "
+               "debug messages."
+            << std::endl
+            << "  cbxp extract -d psa" << std::endl
+            << "  # Extract the CVT control block from live memory, including "
+               "the ECVT, ASVT,"
+            << std::endl
+            << "  # and all known control blocks that are pointed to directly "
+               "by the ASVT "
+            << std::endl
+            << " # control block." << std::endl
+            << "  cbxp extract -i ecvt -i 'asvt.*' cvt" << std::endl
+            << "  # Extract all ASSB control blocks from live memory where the "
+               "control block"
+            << std::endl
+            << "   # field 'ASSBJBNI' matches the filter value 'IBMUSER'."
+            << std::endl
+            << "  cbxp extract -f assb.assbjbni=IBMUSER assb" << std::endl
+            << std::endl;
+
+  std::cout << "Flags:" << std::endl
             << "  -i, --include <pattern>          Include additional control "
                "blocks based on a pattern"
             << std::endl
             << "  -f, --filter <filter>            Filter repeated control "
                "block data"
             << std::endl
-            << "  -h, --help                       Show usage information (no "
-               "operation)"
+            << std::endl;
+
+  std::cout << "Global Flags:" << std::endl
+            << "  -d, --debug                      Write debug messages"
+            << std::endl
+            << "  -h, --help                       Show usage information"
             << std::endl
             << std::endl;
 }
 
 static void showFormatUsage(const char* argv[]) {
-  std::cout << "Usage: " << argv[0] << " format [options] <control block>"
+  std::cout << "Format control block data from file/pipe" << std::endl
+            << std::endl;
+
+  std::cout << "Usage: " << argv[0] << " format [flags] <control block>"
             << std::endl
             << std::endl;
 
-  std::cout << "Options:" << std::endl
-            << "  -d, --debug                      Write debug messages"
+  std::cout << "Examples: " << std::endl
+            << "  # Format the CVT control block from a binary file and write "
+               "debug messages."
             << std::endl
+            << "  cbxp format -F tests/samples/cvt.bin -d cvt" << std::endl
+            << "  # Format the CVT control block from a binary data piped to "
+               "cbxp through stdin"
+            << std::endl
+            << "  cat tests/samples/cvt.bin | cbxp format cvt" << std::endl
+            << "  # Format the OUCB control block from a binary file at offset "
+               "'x3A8' bytes"
+            << std::endl
+            << "  cbxp format -F tests/samples/oucboffset3A8.bin -o x3A8 oucb"
+            << std::endl
+            << "  # Format the ASCB control block from a dataset at offset "
+               "64 bytes"
+            << std::endl
+            << "  cbxp format -F \"//'CBXPUSR.ASCBOF64'\" -o 64 ascb"
+            << std::endl
+            << std::endl;
+
+  std::cout << "Flags:" << std::endl
             << "  -F, --file  <path>               Format control block data "
                "from a specified file or dataset"
             << std::endl
             << "  -o, --offset <value>             Specify an offset into "
                "a memory buffer to start formatting"
             << std::endl
-            << "  -h, --help                       Show usage information (no "
-               "operation)"
+            << std::endl;
+
+  std::cout << "Global Flags:" << std::endl
+            << "  -d, --debug                      Write debug messages"
+            << std::endl
+            << "  -h, --help                       Show usage information"
             << std::endl
             << std::endl;
 }
@@ -79,7 +130,7 @@ bool checkForComma(const std::string& string) {
                      [](char c) { return c == ','; });
 }
 
-int parseOptions(int argc, const char* argv[], cbxp_command_t* cbxp_command) {
+int parseFlags(int argc, const char* argv[], cbxp_command_t* cbxp_command) {
   if (argc == 2) {
     if (std::strcmp(argv[1], "-v") == 0 ||
         std::strcmp(argv[1], "--version") == 0) {
@@ -105,16 +156,16 @@ int parseOptions(int argc, const char* argv[], cbxp_command_t* cbxp_command) {
       showFormatUsage(argv);
       return CLIReturnCode::SUCCESS;
     }
-    return parseFormatOptions(argc, argv, cbxp_command);
+    return parseFormatFlags(argc, argv, cbxp_command);
   } else if (cbxp_command->command == "extract") {
     if (std::strcmp(argv[2], "-h") == 0 ||
         std::strcmp(argv[2], "--help") == 0) {
       showExtractUsage(argv);
       return CLIReturnCode::SUCCESS;
     }
-    return parseExtractOptions(argc, argv, cbxp_command);
+    return parseExtractFlags(argc, argv, cbxp_command);
   } else {
-    std::cerr << "cbxp must perform 'format' or 'extract' operation"
+    std::cerr << "unknown command \"" << cbxp_command->command << "\"for cbxp"
               << std::endl;
     showGeneralUsage(argv);
     return CLIReturnCode::FAILURE;
@@ -123,8 +174,8 @@ int parseOptions(int argc, const char* argv[], cbxp_command_t* cbxp_command) {
   return CLIReturnCode::NONE;
 }
 
-int parseExtractOptions(int argc, const char* argv[],
-                        cbxp_command_t* cbxp_command) {
+int parseExtractFlags(int argc, const char* argv[],
+                      cbxp_command_t* cbxp_command) {
   for (int i = 2; i < argc; i++) {
     std::string flag = argv[i];
     if (flag == "-d" || flag == "--debug") {
@@ -176,8 +227,8 @@ int parseExtractOptions(int argc, const char* argv[],
   return CLIReturnCode::NONE;
 }
 
-int parseFormatOptions(int argc, const char* argv[],
-                       cbxp_command_t* cbxp_command) {
+int parseFormatFlags(int argc, const char* argv[],
+                     cbxp_command_t* cbxp_command) {
   cbxp_command->format_options.file = "";
 
   for (int i = 2; i < argc; i++) {
@@ -214,20 +265,20 @@ int parseFormatOptions(int argc, const char* argv[],
   return CLIReturnCode::NONE;
 }
 
-int processOptions(const char* argv[], cbxp_command_t* cbxp_command) {
+int processFlags(const char* argv[], cbxp_command_t* cbxp_command) {
   if (cbxp_command->control_block_name == "") {
     showGeneralUsage(argv);
     return CLIReturnCode::FAILURE;
   }
 
   if (cbxp_command->command == "format") {
-    return processFormatOptions(argv, cbxp_command);
+    return processFormatFlags(argv, cbxp_command);
   }
 
   return CLIReturnCode::NONE;
 }
 
-int processFormatOptions(const char* argv[], cbxp_command_t* cbxp_command) {
+int processFormatFlags(const char* argv[], cbxp_command_t* cbxp_command) {
   cbxp_command->format_options.data_buffer   = nullptr;
   cbxp_command->format_options.buffer_length = -1;
   std::vector<char> input_buffer;
