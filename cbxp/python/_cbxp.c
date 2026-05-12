@@ -48,13 +48,13 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
   PyObject* debug_pyobj;
   const char* p_control_block;
   const char* p_bytes_buffer;
-  uint64_t buffer_length;
+  int buffer_length;
   uint64_t offset = 0;
   Py_ssize_t request_length;
   bool debug            = false;
 
-  static char* kwlist[] = {"control_block", "includes_string", "filters_string",
-                           "debug", NULL};
+  static char* kwlist[] = {"control_block", "bytes_buffer", "offset", "debug",
+                           NULL};
 
   if (!PyArg_ParseTupleAndKeywords(args, kwargs, "ss#|kO", kwlist,
                                    &p_control_block, &p_bytes_buffer,
@@ -83,20 +83,17 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
 static PyMethodDef _C_methods[] = {
     {"call_cbxp_extract", (PyCFunction)call_cbxp_extract,
      METH_VARARGS | METH_KEYWORDS,
-     "A unified and standardized interface for extracting z/OS control block "
-     "data."},
+     "Extract z/OS control block data from live memory."},
     {"call_cbxp_format", (PyCFunction)call_cbxp_format,
-     METH_VARARGS | METH_KEYWORDS,
-     "A unified and standardized interface for formatting z/OS control block "
-     "data."},
+     METH_VARARGS | METH_KEYWORDS, "Format user provided control block data."},
     {NULL}
 };
 
 // Module definition
 static struct PyModuleDef _C_module_def = {
     PyModuleDef_HEAD_INIT, "_C",
-    "A unified and standardized interface for extracting z/OS control block "
-    "data.",
+    "A unified and standardized interface and extracting and formatting "
+    "z/OS control block data.",
     -1, _C_methods};
 
 // Module initialization function

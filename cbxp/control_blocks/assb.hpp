@@ -9,11 +9,11 @@ namespace CBXP {
 
 class ASSB : public ControlBlock {
  public:
-  nlohmann::json get(void* p_control_block        = nullptr,
-                     const uint64_t buffer_length = -1) override;
+  nlohmann::json get(void* p_control_block   = nullptr,
+                     const int buffer_length = -1) override;
   explicit ASSB(const cbxp_options_t& cbxp_options)
       : ControlBlock("assb", {}, cbxp_options) {
-    control_block_length = sizeof(struct assb);
+    control_block_length_ = sizeof(struct assb);
   }
 };
 

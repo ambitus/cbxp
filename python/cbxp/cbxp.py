@@ -36,11 +36,7 @@ class CBXPErrorCode(Enum):
 
     COMMA_IN_INCLUDE = -1
     COMMA_IN_FILTER = -2
-    BAD_FORMAT_PARMS = -3
-    BAD_EXPLORE_PARMS = -4
-    BAD_OPERATION = -5
-    MISSING_FORMAT_PARMS = -6
-    OFFSET_TOO_BIG = -7
+    OFFSET_TOO_BIG = -3
     BAD_CONTROL_BLOCK = 1
     BAD_INCLUDE = 2
     BAD_CONTROL_BLOCK_FILTER = 3
@@ -57,23 +53,8 @@ class CBXPError(Exception):
                 message = "Include patterns cannot contain commas"
             case CBXPErrorCode.COMMA_IN_FILTER.value:
                 message = "Filters cannot contain commas"
-            case CBXPErrorCode.BAD_EXPLORE_PARMS.value:
-                message = (
-                    "The 'data_buffer' and 'offset' parameters "
-                    "cannot be used with the 'explore' operation"
-                )
-            case CBXPErrorCode.BAD_FORMAT_PARMS.value:
-                message = (
-                    "Filters and Includes cannot be used with the 'format' operation"
-                )
-            case CBXPErrorCode.BAD_OPERATION.value:
-                message = "cbxp must perform 'format' or 'explore' operation"
-            case CBXPErrorCode.MISSING_FORMAT_PARMS.value:
-                message = (
-                    "The 'data_buffer' parameter is required for 'format' operation"
-                )
             case CBXPErrorCode.OFFSET_TOO_BIG.value:
-                message = "Offset is too large for specified data/file"
+                message = "Offset is too large for data provided"
             case CBXPErrorCode.BAD_CONTROL_BLOCK.value:
                 message = f"Unknown control block '{control_block_name}' was specified."
             case CBXPErrorCode.BAD_INCLUDE.value:
@@ -90,64 +71,60 @@ class CBXPError(Exception):
         super().__init__(message)
 
 
-def cbxp(
+def cbxp_extract(
     control_block: str,
-    operation: str = "explore",
     includes: list[str] = None,
     filters: list[CBXPFilter] = None,
-    data_buffer: bytes = None,
+    debug: bool = False,
+) -> dict:
+    # Includes processing
+    if includes is None:
+        includes = []
+    for include in includes:
+        if "," in include:
+            raise CBXPError(CBXPErrorCode.COMMA_IN_INCLUDE.value, control_block)
+
+    # Filter Processing
+    if filters is None:
+        filters = []
+    filters_string = ""
+    for filter_obj in filters:
+        if filters_string != "":
+            filters_string += ","
+        if "," in str(filter_obj):
+            raise CBXPError(CBXPErrorCode.COMMA_IN_FILTER.value, control_block)
+        filters_string += str(filter_obj)
+
+    response = call_cbxp_extract(
+        control_block.lower(),
+        ",".join(includes),
+        filters_string,
+        debug=debug,
+    )
+    if response["return_code"]:
+        raise CBXPError(response["return_code"], control_block)
+    if response["result_json"] == "null" or response["result_json"] == "[]":
+        return None
+    return json.loads(response["result_json"])
+
+
+def cbxp_format(
+    control_block: str,
+    data: bytes,
     offset: int = None,
     debug: bool = False,
 ) -> dict:
-    if operation == "explore":
-        if offset is not None or data_buffer is not None:
-            raise CBXPError(CBXPErrorCode.BAD_EXPLORE_PARMS.value, control_block)
-        # Includes processing
-        if includes is None:
-            includes = []
-        for include in includes:
-            if "," in include:
-                raise CBXPError(CBXPErrorCode.COMMA_IN_INCLUDE.value, control_block)
+    if offset is None:
+        offset = 0
+    elif offset >= len(data):
+        raise CBXPError(CBXPErrorCode.OFFSET_TOO_BIG.value, control_block)
 
-        # Filter Processing
-        if filters is None:
-            filters = []
-        filters_string = ""
-        for filter_obj in filters:
-            if filters_string != "":
-                filters_string += ","
-            if "," in str(filter_obj):
-                raise CBXPError(CBXPErrorCode.COMMA_IN_FILTER.value, control_block)
-            filters_string += str(filter_obj)
-
-        response = call_cbxp_extract(
-            control_block.lower(),
-            ",".join(includes),
-            filters_string,
-            debug=debug,
-        )
-    elif operation == "format":
-        if filters is not None or includes is not None:
-            raise CBXPError(CBXPErrorCode.BAD_FORMAT_PARMS.value, control_block)
-        if data_buffer is not None:
-            data_buffer = data_buffer
-        else:
-            raise CBXPError(CBXPErrorCode.MISSING_FORMAT_PARMS.value, control_block)
-
-        if offset is None:
-            offset = 0
-        elif offset >= len(data_buffer):
-            raise CBXPError(CBXPErrorCode.OFFSET_TOO_BIG.value, control_block)
-
-        response = call_cbxp_format(
-            control_block.lower(),
-            data_buffer,
-            offset,
-            debug=debug,
-        )
-
-    else:
-        raise CBXPError(CBXPErrorCode.BAD_OPERATION.value, control_block)
+    response = call_cbxp_format(
+        control_block.lower(),
+        data,
+        offset,
+        debug=debug,
+    )
     if response["return_code"]:
         raise CBXPError(response["return_code"], control_block)
     if response["result_json"] == "null" or response["result_json"] == "[]":

@@ -9,7 +9,7 @@
 
 # CBXP (Control Block EXPlorer)
 
-A unified and standardized interface for extracting z/OS control block data.
+A unified and standardized interface and extracting and formatting z/OS control block data.
 
 ## Description
 

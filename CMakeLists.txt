@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 project(CBXP VERSION 0.0.3
-             DESCRIPTION "A unified and standardized interface for extracting z/OS control block data."
+             DESCRIPTION "A unified and standardized interface and extracting and formatting z/OS control block data."
              LANGUAGES C CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./dist")

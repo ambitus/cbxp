@@ -1,6 +1,5 @@
 #include "cvt.hpp"
 
-#include <cvt.h>
 #include <ihapsa.h>
 
 #include <cstdint>
@@ -12,8 +11,8 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json CVT::get(void* p_control_block, const uint64_t buffer_length) {
-  checkBufferLength(buffer_length);
+nlohmann::json CVT::get(void* p_control_block, const int buffer_length) {
+  CVT::checkBufferLength(buffer_length);
   const struct cvtmap* p_cvtmap;
   const struct cvtfix* p_cvtfix;
   const struct cvtxtnt2* p_cvtxtnt2;

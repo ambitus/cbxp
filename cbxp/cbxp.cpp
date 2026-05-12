@@ -1,8 +1,5 @@
 #include "cbxp.h"
 
-#include <algorithm>
-#include <cstdint>
-#include <iostream>
 #include <nlohmann/json.hpp>
 
 #include "control_block_explorer.hpp"
@@ -36,15 +33,15 @@ cbxp_result_t* cbxp_extract(const char* control_block,
   CBXP::ControlBlockExplorer explorer =
       CBXP::ControlBlockExplorer(p_cbxp_result);
 
-  explorer.exploreControlBlock(control_block_cpp_string,
+  explorer.extractControlBlock(control_block_cpp_string,
                                includes_string_cpp_string,
                                filters_string_cpp_string);
 
   return p_cbxp_result;
 }
 
-cbxp_result_t* cbxp_format(const char* control_block, void* bytes_buffer,
-                           const uint64_t buffer_length, bool debug) {
+cbxp_result_t* cbxp_format(const char* control_block, const void* bytes_buffer,
+                           const int buffer_length, bool debug) {
   nlohmann::json control_block_json;
 
   std::string control_block_cpp_string;

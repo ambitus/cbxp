@@ -1,7 +1,6 @@
 #include "ecvt.hpp"
 
 #include <cvt.h>
-#include <ihaecvt.h>
 #include <ihapsa.h>
 #include <unistd.h>
 
@@ -12,8 +11,8 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json ECVT::get(void* p_control_block, const uint64_t buffer_length) {
-  checkBufferLength(buffer_length);
+nlohmann::json ECVT::get(void* p_control_block, const int buffer_length) {
+  ECVT::checkBufferLength(buffer_length);
   const struct ecvt* p_ecvt;
   nlohmann::json ecvt_json = {};
 

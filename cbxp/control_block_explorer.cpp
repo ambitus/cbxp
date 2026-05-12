@@ -50,67 +50,67 @@ std::vector<std::string> ControlBlockExplorer::createOptionsList(
   return options_list;
 }
 
-void ControlBlockExplorer::exploreControlBlock(
+void ControlBlockExplorer::extractControlBlock(
     const std::string& control_block_name, const std::string& includes_string,
     const std::string& filters_string) {
-  cbxp_options = {ControlBlockExplorer::createOptionsList(includes_string),
-                  ControlBlockExplorer::createOptionsList(filters_string)};
+  cbxp_options_ = {ControlBlockExplorer::createOptionsList(includes_string),
+                   ControlBlockExplorer::createOptionsList(filters_string)};
 
-  control_block_operation = "Extract";
+  control_block_operation_ = "Extract";
 
-  processControlBlock(control_block_name);
+  ControlBlockExplorer::processControlBlock(control_block_name);
 
   return;
 }
 
 void ControlBlockExplorer::formatControlBlock(
-    const std::string& control_block_name, void* bytes_buffer,
-    const uint64_t buffer_length) {
-  control_block_pointer       = bytes_buffer;
-  control_block_buffer_length = buffer_length;
+    const std::string& control_block_name, const void* bytes_buffer,
+    const int buffer_length) {
+  p_control_block_pointer_     = bytes_buffer;
+  control_block_buffer_length_ = buffer_length;
 
-  control_block_operation     = "Format";
+  control_block_operation_     = "Format";
 
-  processControlBlock(control_block_name);
+  ControlBlockExplorer::processControlBlock(control_block_name);
 
   return;
 }
 
 void ControlBlockExplorer::processControlBlock(
     const std::string& control_block_name) {
-  Logger::getInstance().debug(control_block_operation + "ing '" +
+  Logger::getInstance().debug(control_block_operation_ + "ing '" +
                               control_block_name + "' control block data...");
 
   nlohmann::json control_block_json;
   try {
     if (control_block_name == "psa") {
       control_block_json =
-          PSA(cbxp_options)
-              .get(control_block_pointer, control_block_buffer_length);
+          PSA(cbxp_options_)
+              .get(p_control_block_pointer_, control_block_buffer_length_);
     } else if (control_block_name == "cvt") {
       control_block_json =
-          CVT(cbxp_options)
-              .get(control_block_pointer, control_block_buffer_length);
+          CVT(cbxp_options_)
+              .get(p_control_block_pointer_, control_block_buffer_length_);
     } else if (control_block_name == "ecvt") {
       control_block_json =
-          ECVT(cbxp_options)
-              .get(control_block_pointer, control_block_buffer_length);
+          ECVT(cbxp_options_)
+              .get(p_control_block_pointer_, control_block_buffer_length_);
     } else if (control_block_name == "ascb") {
       control_block_json =
-          ASCB(cbxp_options)
-              .get(control_block_pointer, control_block_buffer_length);
+          ASCB(cbxp_options_)
+              .get(p_control_block_pointer_, control_block_buffer_length_);
     } else if (control_block_name == "asvt") {
       control_block_json =
-          ASVT(cbxp_options)
-              .get(control_block_pointer, control_block_buffer_length);
+          ASVT(cbxp_options_)
+              .get(p_control_block_pointer_, control_block_buffer_length_);
     } else if (control_block_name == "assb") {
       control_block_json =
-          ASSB(cbxp_options)
-              .get(control_block_pointer, control_block_buffer_length);
+          ASSB(cbxp_options_)
+              .get(p_control_block_pointer_, control_block_buffer_length_);
     } else if (control_block_name == "oucb") {
       control_block_json =
-          OUCB(cbxp_options)
-              .get(control_block_pointer, control_block_buffer_length);
+          OUCB(cbxp_options_)
+              .get(p_control_block_pointer_, control_block_buffer_length_);
     } else {
       throw ControlBlockError();
     }
@@ -122,7 +122,7 @@ void ControlBlockExplorer::processControlBlock(
   std::string control_block_json_string = control_block_json.dump(
       -1, ' ', false, nlohmann::json::error_handler_t::replace);
 
-  Logger::getInstance().debug(control_block_operation + "ed '" +
+  Logger::getInstance().debug(control_block_operation_ + "ed '" +
                               control_block_name + "' control block data");
 
   Logger::getInstance().debug("Control Block JSON: " +

@@ -1,5 +1,4 @@
 #include <cvt.h>
-#include <ihaascb.h>
 #include <ihaassb.h>
 #include <ihapsa.h>
 
@@ -14,8 +13,8 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json ASSB::get(void* p_control_block, const uint64_t buffer_length) {
-  checkBufferLength(buffer_length);
+nlohmann::json ASSB::get(void* p_control_block, const int buffer_length) {
+  ASSB::checkBufferLength(buffer_length);
   const assb* p_assb;
   nlohmann::json assb_json = {};
   if (p_control_block == nullptr) {

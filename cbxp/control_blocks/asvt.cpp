@@ -12,8 +12,8 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json ASVT::get(void* p_control_block, const uint64_t buffer_length) {
-  checkBufferLength(buffer_length);
+nlohmann::json ASVT::get(void* p_control_block, const int buffer_length) {
+  ASVT::checkBufferLength(buffer_length);
   const asvt_t* p_asvt;
   nlohmann::json asvt_json = {};
 

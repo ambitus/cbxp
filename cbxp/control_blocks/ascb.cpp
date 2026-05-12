@@ -1,7 +1,6 @@
 #include "ascb.hpp"
 
 #include <cvt.h>
-#include <ihaascb.h>
 #include <ihapsa.h>
 
 #include <cstdint>
@@ -15,8 +14,8 @@
 #include "oucb.hpp"
 
 namespace CBXP {
-nlohmann::json ASCB::get(void* p_control_block, const uint64_t buffer_length) {
-  checkBufferLength(buffer_length);
+nlohmann::json ASCB::get(void* p_control_block, const int buffer_length) {
+  ASCB::checkBufferLength(buffer_length);
   nlohmann::json ascb_json = {};
   const ascb* p_ascb;
 
