@@ -1,7 +1,6 @@
 #ifndef __CONTROL_BLOCK_EXPLORER_H_
 #define __CONTROL_BLOCK_EXPLORER_H_
 
-#include <climits>
 #include <nlohmann/json.hpp>
 
 #include "cbxp.h"
@@ -13,7 +12,7 @@ class ControlBlockExplorer {
   cbxp_result_t* p_result_;
   cbxp_options_t cbxp_options_         = {{}, {}};
   const void* p_control_block_pointer_ = nullptr;
-  int control_block_buffer_length_     = INT_MAX;
+  int control_block_buffer_length_     = -1;
   std::string control_block_operation_ = "";
   static std::vector<std::string> createOptionsList(
       const std::string& comma_separated_string);
