@@ -55,7 +55,7 @@ nlohmann::json ASSB::get(const void* p_control_block, const int buffer_length) {
     }
     return assbs;
   } else {
-    p_assb = static_cast<assb*>(p_control_block);
+    p_assb = static_cast<assb const*>(p_control_block);
   }
 
   Logger::getInstance().debug("assb hex dump:");
