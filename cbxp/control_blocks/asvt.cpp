@@ -22,7 +22,7 @@ nlohmann::json ASVT::get(const void* p_control_block, const int buffer_length) {
     const struct cvtmap* __ptr32 p_cvtmap =
         // 'nullPointer' is a false positive because the PSA starts at address 0
         // cppcheck-suppress nullPointer
-        static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
+        static_cast<struct cvtmap const* __ptr32>(p_psa->flccvt);
     p_asvt = static_cast<asvt_t* __ptr32>(p_cvtmap->cvtasvt);
   } else {
     p_asvt = static_cast<asvt_t*>(p_control_block);

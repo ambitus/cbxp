@@ -11,7 +11,7 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json CVT::get(const void* p_control_block, const int buffer_length) {
+nlohmann::json CVT::get(void* p_control_block, const int buffer_length) {
   CVT::checkBufferLength(buffer_length);
   const struct cvtmap* p_cvtmap;
   const struct cvtfix* p_cvtfix;
@@ -24,9 +24,9 @@ nlohmann::json CVT::get(const void* p_control_block, const int buffer_length) {
     const struct psa* __ptr32 p_psa = 0;
     // 'nullPointer' is a false positive because the PSA starts at address 0
     // cppcheck-suppress-begin nullPointer
-    p_cvtmap = static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
+    p_cvtmap = static_cast<struct cvtmap const* __ptr32>(p_psa->flccvt);
   } else {
-    p_cvtmap = static_cast<struct cvtmap*>(p_control_block);
+    p_cvtmap = static_cast<struct cvtmap const*>(p_control_block);
   }
   p_cvtfix = const_cast<struct cvtfix*>(
       reinterpret_cast<const struct cvtfix*>(p_cvtmap));

@@ -24,7 +24,7 @@ nlohmann::json OUCB::get(const void* p_control_block, const int buffer_length) {
     const struct cvtmap* __ptr32 p_cvtmap =
         // 'nullPointer' is a false  positive because the PSA starts at address
         // cppcheck-suppress nullPointer
-        static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
+        static_cast<struct cvtmap const* __ptr32>(p_psa->flccvt);
     const asvt_t* __ptr32 p_asvt =
         static_cast<asvt_t* __ptr32>(p_cvtmap->cvtasvt);
 

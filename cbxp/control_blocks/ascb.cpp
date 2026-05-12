@@ -26,7 +26,7 @@ nlohmann::json ASCB::get(const void* p_control_block, const int buffer_length) {
     const struct cvtmap* __ptr32 p_cvtmap =
         // 'nullPointer' is a false positive because the PSA starts at address 0
         // cppcheck-suppress nullPointer
-        static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
+        static_cast<struct cvtmap const* __ptr32>(p_psa->flccvt);
     asvt_t* __ptr32 p_asvt = static_cast<asvt_t* __ptr32>(p_cvtmap->cvtasvt);
 
     ascb_json["ascbs"]     = std::vector<nlohmann::json>();
@@ -52,7 +52,7 @@ nlohmann::json ASCB::get(const void* p_control_block, const int buffer_length) {
     }
     return ascbs;
   } else {
-    p_ascb = static_cast<ascb*>(p_control_block);
+    p_ascb = static_cast<ascb const*>(p_control_block);
   }
 
   ascb_json["ascbassb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbassb));

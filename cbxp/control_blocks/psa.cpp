@@ -17,7 +17,7 @@ nlohmann::json PSA::get(const void* p_control_block, const int buffer_length) {
     // PSA starts at address 0
     p_psa = 0;
   } else {
-    p_psa = static_cast<struct psa*>(p_control_block);
+    p_psa = static_cast<struct psa const*>(p_control_block);
   }
 
   Logger::getInstance().debug("PSA hex dump:");
