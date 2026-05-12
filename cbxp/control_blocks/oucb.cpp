@@ -55,7 +55,7 @@ nlohmann::json OUCB::get(const void* p_control_block, const int buffer_length) {
     }
     return oucbs;
   } else {
-    p_oucb = static_cast<oucb_t*>(p_control_block);
+    p_oucb = static_cast<oucb_t const*>(p_control_block);
   }
 
   Logger::getInstance().debug("oucb hex dump:");
