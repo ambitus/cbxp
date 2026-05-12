@@ -60,28 +60,28 @@ class TestCBXP(unittest.TestCase):
     def test_cbxp_can_format_ascb(self):
         cbdata = cbxp.format(
             "ascb",
-            data_buffer=self.read_sample("ascb.bin"),
+            data=self.read_sample("ascb.bin"),
         )
         self.assertIs(type(cbdata), dict)
 
     def test_cbxp_can_format_cvt(self):
         cbdata = cbxp.format(
             "cvt",
-            data_buffer=self.read_sample("cvt.bin"),
+            data=self.read_sample("cvt.bin"),
         )
         self.assertIs(type(cbdata), dict)
 
     def test_cbxp_can_format_oucb(self):
         cbdata = cbxp.format(
             "oucb",
-            data_buffer=self.read_sample("oucb.bin"),
+            data=self.read_sample("oucb.bin"),
         )
         self.assertIs(type(cbdata), dict)
 
     def test_cbxp_can_format_ascb_with_hex_offset(self):
         cbdata = cbxp.format(
             "ascb",
-            data_buffer=self.read_sample("ascboffset40.bin"),
+            data=self.read_sample("ascboffset40.bin"),
             offset=0x40,
         )
         self.assertIs(type(cbdata), dict)
@@ -89,7 +89,7 @@ class TestCBXP(unittest.TestCase):
     def test_cbxp_can_format_ascb_with_decimal_offset(self):
         cbdata = cbxp.format(
             "ascb",
-            data_buffer=self.read_sample("ascboffset40.bin"),
+            data=self.read_sample("ascboffset40.bin"),
             offset=64,
         )
         self.assertIs(type(cbdata), dict)
@@ -97,7 +97,7 @@ class TestCBXP(unittest.TestCase):
     def test_cbxp_can_format_oucb_with_hex_offset(self):
         cbdata = cbxp.format(
             "oucb",
-            data_buffer=self.read_sample("oucboffset3A8.bin"),
+            data=self.read_sample("oucboffset3A8.bin"),
             offset=0x3A8,
         )
         self.assertIs(type(cbdata), dict)
@@ -105,7 +105,7 @@ class TestCBXP(unittest.TestCase):
     def test_cbxp_can_format_oucb_with_decimal_offset(self):
         cbdata = cbxp.format(
             "oucb",
-            data_buffer=self.read_sample("oucboffset3A8.bin"),
+            data=self.read_sample("oucboffset3A8.bin"),
             offset=936,
         )
         self.assertIs(type(cbdata), dict)
@@ -570,7 +570,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp.format(
                 "ascb",
-                data_buffer=self.read_sample("ascb.bin"),
+                data=self.read_sample("ascb.bin"),
                 offset=999999,
             )
         self.assertEqual(
@@ -582,7 +582,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp.format(
                 "ascb",
-                data_buffer=self.read_sample("ascb.bin"),
+                data=self.read_sample("ascb.bin"),
                 offset=-1,
             )
         self.assertEqual(
@@ -594,7 +594,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp.format(
                 "psa",
-                data_buffer=self.read_sample("ascb.bin"),
+                data=self.read_sample("ascb.bin"),
             )
         self.assertEqual(
             "The buffer is not large enough to contain a 'psa' control block",
