@@ -25,7 +25,7 @@ nlohmann::json ASVT::get(const void* p_control_block, const int buffer_length) {
         static_cast<struct cvtmap const* __ptr32>(p_psa->flccvt);
     p_asvt = static_cast<asvt_t* __ptr32>(p_cvtmap->cvtasvt);
   } else {
-    p_asvt = static_cast<asvt_t*>(p_control_block);
+    p_asvt = static_cast<asvt_t const*>(p_control_block);
   }
 
   Logger::getInstance().debug("ASCB pointers:");
