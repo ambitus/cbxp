@@ -62,8 +62,9 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
   static char* kwlist[] = {"control_block", "data", "offset", "debug", NULL};
 
   if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s#s#|iO", kwlist,
-                                   &p_control_block, &p_data_buffer,
-                                   &py_buffer_length, &offset, &debug_pyobj)) {
+                                   &p_control_block, &py_control_block_length,
+                                   &p_data_buffer, &py_buffer_length, &offset,
+                                   &debug_pyobj)) {
     return NULL;
   }
 
