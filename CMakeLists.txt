@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 project(CBXP VERSION 0.0.4
-             DESCRIPTION "A unified and standardized interface and extracting and formatting z/OS control block data."
+             DESCRIPTION "A unified and standardized interface for extracting and formatting z/OS control block data."
              LANGUAGES C CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./dist")
@@ -57,6 +57,20 @@ file(
     "cbxp/**/*.h"
 )
 
+file(
+    GLOB CBXP_SRC_CLI
+    "cbxp/cli/*.cpp"
+    "cbxp/cli/*.hpp"
+    "cbxp/cli/*.c"
+    "cbxp/cli/*.h"
+)
+
+foreach(SRC_CLI ${CBXP_SRC_CLI})
+list(
+    REMOVE_ITEM CBXP_SRC_ALL ${SRC_CLI}
+)
+endforeach()
+
 # ============================================================================
 # Build '/lib/libcbxp.a'
 # ============================================================================
@@ -77,7 +91,7 @@ target_link_options(libcbxp PUBLIC ${LINK_OPTIONS})
 # ============================================================================
 # Build '/bin/cbxp'
 # ============================================================================
-add_executable(cbxp "cbxp/main.cpp" "cbxp/cli_processing.cpp")
+add_executable(cbxp ${CBXP_SRC_CLI})
 
 target_link_libraries(cbxp libcbxp)
 

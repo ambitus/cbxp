@@ -7,13 +7,14 @@
 
 namespace CBXP {
 
-enum CLIReturnCode { SUCCESS = 0, FAILURE = -1, NONE = 1 };
+class CLIExitSuccess : public std::exception {};
+
+class CLIExitFailure : public std::exception {};
 
 typedef struct {
   bool debug;
   bool version;
   bool help;
-  int debug_ind;
 } cbxp_global_options_t;
 
 typedef struct {
@@ -36,31 +37,29 @@ class CommandProcessor {
   std::string control_block_name_;
   int argc_;
   const char** argv_;
-  CLIReturnCode return_code_;
   cbxp_global_options_t global_options_;
   cbxp_extract_options_t extract_options_;
   cbxp_format_options_t format_options_;
   void showGeneralUsage() const;
   void showExtractUsage() const;
   void showFormatUsage() const;
-  void parse();
-  CLIReturnCode parseGlobalFlags();
-  CLIReturnCode parseFormatFlags();
-  CLIReturnCode parseExtractFlags();
+  void process();
+  void processGlobalFlags();
   void processFormatFlags();
+  void processExtractFlags();
+  void processFormatFromPipe();
+  void processFormatFromFile(const std::string& file_path);
 
  public:
   explicit CommandProcessor(int argc, const char* argv[])
       : argc_(argc),
         argv_(argv),
-        return_code_(CLIReturnCode::NONE),
-        global_options_({false, false, false, 0}),
+        global_options_({false, false, false}),
         extract_options_({"", ""}),
         format_options_({"", nullptr, 0, 0}) {
-    parse();
+    process();
   };
-  CLIReturnCode getReturnCode() const;
-  CLIReturnCode process();
+  void run();
 };
 }  // namespace CBXP
 

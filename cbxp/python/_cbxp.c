@@ -14,21 +14,29 @@ static PyObject* call_cbxp_extract(PyObject* self, PyObject* args,
   const char* p_control_block;
   const char* p_includes_string;
   const char* p_filters_string;
+  Py_ssize_t py_control_block_length, py_includes_length, py_filters_length;
   bool debug            = false;
 
   static char* kwlist[] = {"control_block", "includes_string", "filters_string",
                            "debug", NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "sss|O", kwlist,
-                                   &p_control_block, &p_includes_string,
-                                   &p_filters_string, &debug_pyobj)) {
+  if (!PyArg_ParseTupleAndKeywords(
+          args, kwargs, "s#s#s#|O", kwlist, &p_control_block,
+          &py_control_block_length, &p_includes_string, &py_includes_length,
+          &p_filters_string, &py_filters_length, &debug_pyobj)) {
     return NULL;
   }
 
   debug = PyObject_IsTrue(debug_pyobj);
 
+  int control_block_length =
+      Py_SAFE_DOWNCAST(py_control_block_length, Py_ssize_t, int);
+  int includes_length = Py_SAFE_DOWNCAST(py_includes_length, Py_ssize_t, int);
+  int filters_length  = Py_SAFE_DOWNCAST(py_filters_length, Py_ssize_t, int);
+
   cbxp_result_t* p_cbxp_result =
-      cbxp_extract(p_control_block, p_includes_string, p_filters_string, debug);
+      cbxp_extract(p_control_block, control_block_length, p_includes_string,
+                   includes_length, p_filters_string, filters_length, debug);
 
   result_dictionary =
       Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
@@ -47,13 +55,13 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
   PyObject* debug_pyobj;
   const char* p_control_block;
   const char* p_data_buffer;
-  Py_ssize_t py_buffer_length;
+  Py_ssize_t py_buffer_length, py_control_block_length;
   int offset            = 0;
   bool debug            = false;
 
   static char* kwlist[] = {"control_block", "data", "offset", "debug", NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "ss#|iO", kwlist,
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s#s#|iO", kwlist,
                                    &p_control_block, &p_data_buffer,
                                    &py_buffer_length, &offset, &debug_pyobj)) {
     return NULL;
@@ -64,8 +72,12 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
   int buffer_length = Py_SAFE_DOWNCAST(py_buffer_length, Py_ssize_t, int);
   buffer_length -= offset;
 
+  int control_block_length =
+      Py_SAFE_DOWNCAST(py_control_block_length, Py_ssize_t, int);
+
   cbxp_result_t* p_cbxp_result =
-      cbxp_format(p_control_block, p_data_buffer, buffer_length, debug);
+      cbxp_format(p_control_block, control_block_length, p_data_buffer,
+                  buffer_length, debug);
 
   result_dictionary =
       Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,

@@ -14,11 +14,15 @@ typedef struct {
 } cbxp_result_t;
 
 cbxp_result_t* cbxp_extract(const char* control_block,
-                            const char* includes_string,
-                            const char* filters_string, bool debug);
+                            const int control_block_length,
+                            const char* includes, const int includes_length,
+                            const char* filters, const int filters_length,
+                            bool debug);
 
-cbxp_result_t* cbxp_format(const char* control_block, const void* bytes_buffer,
-                           const int buffer_length, bool debug);
+cbxp_result_t* cbxp_format(const char* control_block,
+                           const int control_block_length,
+                           const void* bytes_buffer, const int buffer_length,
+                           bool debug);
 
 void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
 
