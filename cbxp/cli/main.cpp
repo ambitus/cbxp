@@ -1,5 +1,3 @@
-#define _UNIX03_SOURCE
-
 #include "command_processor.hpp"
 
 int main(int argc, const char* argv[]) {

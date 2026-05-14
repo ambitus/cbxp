@@ -278,8 +278,8 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
   return true;
 }
 
-void ControlBlock::checkBufferLength(const int buffer_length) const {
-  if (buffer_length < 0) {
+void ControlBlock::checkBufferLength(const unsigned int buffer_length) const {
+  if (ignore_buffer_length_) {
     return;
   }
   if (buffer_length < control_block_length_) {

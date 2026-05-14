@@ -140,6 +140,8 @@ run_with_expected_exit_code 255 ./dist/cbxp extract -f "psapsa=psa,cvt.asvt.ascb
 run_with_expected_exit_code 255 ./dist/cbxp extract -f junk psa
 # Errors: Error Opening File
 run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/notreal.bin psa
+# Errors: No File/Pipe provided
+run_with_expected_exit_code 255 ./dist/cbxp format psa
 # Errors: File and STDIN
 run_with_expected_exit_code 255 sh -c 'cat tests/samples/cvt.bin | ./dist/cbxp format -F tests/samples/cvt.bin cvt'
 # Errors: Buffer Too Small

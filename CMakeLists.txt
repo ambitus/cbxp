@@ -46,6 +46,12 @@ file(
 )
 
 file(
+    GLOB CBXP_SRC_CLI
+    "cbxp/cli/*.cpp"
+    "cbxp/cli/*.c"
+)
+
+file(
     GLOB CBXP_SRC_ALL
     "cbxp/*.cpp"
     "cbxp/*.hpp"
@@ -55,14 +61,6 @@ file(
     "cbxp/**/*.hpp"
     "cbxp/**/*.c"
     "cbxp/**/*.h"
-)
-
-file(
-    GLOB CBXP_SRC_CLI
-    "cbxp/cli/*.cpp"
-    "cbxp/cli/*.hpp"
-    "cbxp/cli/*.c"
-    "cbxp/cli/*.h"
 )
 
 foreach(SRC_CLI ${CBXP_SRC_CLI})

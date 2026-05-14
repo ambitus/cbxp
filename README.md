@@ -38,7 +38,7 @@ Currently, the following interfaces are provided for CBXP. Additional interfaces
 
 ### Supported Control Blocks
 
-Currently, CBXP only has support for extracting a handful of **System-Level Control Blocks** from **Live Memory** *(storage)*. See [Supported Control Blocks](https://ambitus.github.io/cbxp/supported_control_blocks) for more details.
+Currently, CBXP only has support for extracting and formatting a handful of **System-Level Control Blocks**. See [Supported Control Blocks](https://ambitus.github.io/cbxp/supported_control_blocks) for more details.
 
 ## Help
 * [GitHub Discussions](https://github.com/ambitus/cbxp/discussions)

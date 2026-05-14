@@ -1,25 +1,23 @@
 #include "command_processor.hpp"
 
-#include <dlfcn.h>
 #include <unistd.h>
 
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <vector>
 
 #include "cbxp.h"
 #include "control_block_error.hpp"
 
 namespace CBXP {
 
-bool checkForComma(const std::string& string) {
-  return std::any_of(string.begin(), string.end(),
-                     [](char c) { return c == ','; });
-}
-
 void CommandProcessor::showGeneralUsage() const {
+  std::cout << "Full CLI documentation is available at: "
+               "https://ambitus.github.io/cbxp/interfaces/shell/"
+            << std::endl
+            << std::endl;
+
   std::cout << "Usage:" << std::endl
             << "  " << argv_[0] << " [command]" << std::endl
             << std::endl;
@@ -45,10 +43,6 @@ void CommandProcessor::showGeneralUsage() const {
             << " [command] --help\" for more information about a command."
             << std::endl
             << std::endl;
-
-  std::cout << "Full CLI documentation is available at: "
-               "https://ambitus.github.io/cbxp/interfaces/shell/"
-            << std::endl;
 }
 
 void CommandProcessor::showExtractUsage() const {
@@ -73,14 +67,14 @@ void CommandProcessor::showExtractUsage() const {
             << "  # and all known control blocks that are pointed to directly "
                "by the ASVT "
             << std::endl
-            << " # control block." << std::endl
+            << "  # control block." << std::endl
             << "  " << argv_[0] << " extract -i ecvt -i 'asvt.*' cvt"
             << std::endl
             << std::endl
             << "  # Extract all ASSB control blocks from live memory where the "
                "control block."
             << std::endl
-            << "   # field 'ASSBJBNI' matches the filter value 'IBMUSER'."
+            << "  # field 'ASSBJBNI' matches the filter value 'IBMUSER'."
             << std::endl
             << "  " << argv_[0] << " extract -f assb.assbjbni=IBMUSER assb"
             << std::endl
@@ -134,7 +128,6 @@ void CommandProcessor::showFormatUsage() const {
             << std::endl
             << "  " << argv_[0]
             << " format -F \"//'CBXPUSR.ASCBOF64'\" -o 64 ascb" << std::endl
-            << std::endl
             << std::endl;
 
   std::cout << "Flags:" << std::endl
@@ -158,7 +151,7 @@ void CommandProcessor::process() {
 
   if (command_ == "format") {
     if (global_options_.help) {
-      showFormatUsage();
+      CommandProcessor::showFormatUsage();
       throw CLIExitSuccess();
     } else {
       CommandProcessor::processFormatFlags();
@@ -170,14 +163,15 @@ void CommandProcessor::process() {
     } else {
       CommandProcessor::processExtractFlags();
     }
-  } else {
-    std::cerr << "Unknown command \"" << command_ << "\" for " << argv_[0]
-              << std::endl;
-    throw CLIExitFailure();
   }
 }
 
 void CommandProcessor::processGlobalFlags() {
+  if (argc_ < 2) {
+    CommandProcessor::showGeneralUsage();
+    throw CLIExitFailure();
+  }
+
   if (argc_ == 2) {
     if (std::strcmp(argv_[1], "-v") == 0 ||
         std::strcmp(argv_[1], "--version") == 0) {
@@ -189,18 +183,19 @@ void CommandProcessor::processGlobalFlags() {
       global_options_.help = true;
       CommandProcessor::showGeneralUsage();
       throw CLIExitSuccess();
-    } else if (std::strcmp(argv_[1], "format") != 0 &&
-               std::strcmp(argv_[1], "extract") != 0) {
-      std::cerr << "Unknown command \"" << command_ << "\" for " << argv_[0]
-                << std::endl;
-      throw CLIExitFailure();
     }
   }
-  if (argc_ < 3) {
-    CommandProcessor::showGeneralUsage();
+  command_ = argv_[1];
+
+  if (command_ == "format" || command_ == "extract") {
+    std::cerr << "Need control block for \"" << command_ << "\" command. Use \""
+              << argv_[0] << " " << command_
+              << "--help\" for more information about a command.";
+  } else {
+    std::cerr << "Unknown command \"" << command_ << "\" for " << argv_[0]
+              << std::endl;
     throw CLIExitFailure();
   }
-  command_       = argv_[1];
 
   int argv_index = 2;  // argv 1 is the command, 2 is the first flag
 
@@ -223,6 +218,11 @@ void CommandProcessor::processGlobalFlags() {
   }
 
   control_block_name_ = std::string(argv_[argc_ - 1]);
+
+  if (control_block_name_ == "") {
+    CommandProcessor::showGeneralUsage();
+    throw CLIExitFailure();
+  }
 }
 
 void CommandProcessor::processExtractFlags() {
@@ -234,7 +234,7 @@ void CommandProcessor::processExtractFlags() {
         throw CLIExitFailure();
       }
       std::string include = std::string(argv_[++i]);
-      if (checkForComma(include)) {
+      if (CommandProcessor::checkForComma(include)) {
         std::cerr << "Include patterns cannot contain commas" << std::endl;
         throw CLIExitFailure();
       }
@@ -249,7 +249,7 @@ void CommandProcessor::processExtractFlags() {
         throw CLIExitFailure();
       }
       std::string filter = std::string(argv_[++i]);
-      if (checkForComma(filter)) {
+      if (CommandProcessor::checkForComma(filter)) {
         std::cerr << "Filters cannot contain commas" << std::endl;
         throw CLIExitFailure();
       }
@@ -259,11 +259,11 @@ void CommandProcessor::processExtractFlags() {
         extract_options_.filter += "," + filter;
       }
     } else {
-      if (i != argc_ - 1) {
-        if (flag == "-d" || flag == "--debug") {
+      if (i != argc_ - 1 || flag[0] == '-') {
+        if (CommandProcessor::isGlobalFlag(flag)) {
           continue;
         }
-        std::cerr << "Unknown flag:" << flag << std::endl;
+        std::cerr << "Unknown flag: " << flag << std::endl;
         throw CLIExitFailure();
       }
     }
@@ -280,14 +280,19 @@ void CommandProcessor::processFormatFlags() {
         std::cerr << "Flag needs an argument:" << flag << std::endl;
         throw CLIExitFailure();
       }
-      processFormatFromFile(std::string(argv_[++i]));
+      CommandProcessor::readFormatDataFromFile(std::string(argv_[++i]));
     } else if (flag == "-o" || flag == "--offset") {
       if (i + 1 >= argc_ - 1) {
         std::cerr << "Flag needs an argument:" << flag << std::endl;
         throw CLIExitFailure();
       }
+      std::string offset = argv_[++i];
+      if (offset.find('.') != std::string::npos) {
+        std::cerr << "Offset must be a positive integer" << std::endl;
+        throw CLIExitFailure();
+      }
       try {
-        format_options_.offset = std::stoi(argv_[++i], nullptr, 0);
+        format_options_.offset = std::stoi(offset, nullptr, 0);
       }
       // Standard exceptions for stoi
       catch (const std::invalid_argument& e) {
@@ -300,89 +305,76 @@ void CommandProcessor::processFormatFlags() {
         throw CLIExitFailure();
       }
       if (format_options_.offset < 0) {
-        std::cerr << "Offset parameter can not be negative" << std::endl;
-        CommandProcessor::showFormatUsage();
+        std::cerr << "Offset must be a positive integer" << std::endl;
         throw CLIExitFailure();
       }
     } else {
-      if ((i != argc_ - 1)) {
-        if (flag == "-d" || flag == "--debug") {
+      if (i != argc_ - 1 || flag[0] == '-') {
+        if (CommandProcessor::isGlobalFlag(flag)) {
           continue;
         }
-        std::cerr << "Unknown flag:" << flag << std::endl;
+        std::cerr << "Unknown flag: " << flag << std::endl;
         throw CLIExitFailure();
       }
     }
   }
   if (isatty(STDIN_FILENO) == 0) {
-    processFormatFromPipe();
+    CommandProcessor::readFormatDataFromPipe();
   }
-  if (format_options_.data_buffer == nullptr) {
+  if (format_options_.data_buffer.empty()) {
     std::cerr << "File or pipe expected for \"format\" command" << std::endl;
-    CommandProcessor::showFormatUsage();
     throw CLIExitFailure();
   }
 
-  if (format_options_.buffer_length < 0) {
-    std::cerr << "Error opening input: " << format_options_.file << std::endl;
-    throw CLIExitFailure();
-  }
-
-  if (format_options_.offset >= format_options_.buffer_length) {
+  if (format_options_.offset >= format_options_.data_buffer.size()) {
     std::cerr << "Offset is too large for data provided" << std::endl;
-    CommandProcessor::showFormatUsage();
     throw CLIExitFailure();
   }
 }
 
-void CommandProcessor::processFormatFromPipe() {
-  std::vector<char> input_buffer;
-
+void CommandProcessor::readFormatDataFromPipe() {
   if (!format_options_.file.empty()) {
     std::cerr << "File parameter cannot be used with STDIN data" << std::endl;
-    CommandProcessor::showFormatUsage();
     throw CLIExitFailure();
   }
-  input_buffer.assign((std::istreambuf_iterator<char>(std::cin)),
-                      (std::istreambuf_iterator<char>()));
-  if (!input_buffer.empty()) {
-    format_options_.data_buffer   = input_buffer.data();
-    format_options_.buffer_length = input_buffer.size();
+  format_options_.data_buffer.assign((std::istreambuf_iterator<char>(std::cin)),
+                                     (std::istreambuf_iterator<char>()));
+  if (!format_options_.data_buffer.empty()) {
     std::string env_p(std::getenv("_BPXK_AUTOCVT"));
     if (!env_p.empty() && (env_p == "ON" || env_p == "ALL")) {
-      __a2e_l(format_options_.data_buffer, format_options_.buffer_length);
+      __a2e_l(format_options_.data_buffer.data(),
+              format_options_.data_buffer.size());
     }
   }
 }
 
-void CommandProcessor::processFormatFromFile(const std::string& file_path) {
-  std::vector<char> input_buffer;
+void CommandProcessor::readFormatDataFromFile(const std::string& file_path) {
   format_options_.file = file_path;
   std::ifstream file(format_options_.file, std::ios::binary | std::ios::ate);
   if (!file.is_open()) {
-    std::cerr << "Error opening input: " << format_options_.file << std::endl;
+    std::cerr << "Error opening file: " << format_options_.file << std::endl;
     throw CLIExitFailure();
   }
   std::streamsize size = file.tellg();
   file.seekg(0, std::ios::beg);  // Move back to start
 
-  input_buffer.resize(size);
-  if (file.read(input_buffer.data(), size)) {
-    format_options_.data_buffer = input_buffer.data();
+  format_options_.data_buffer.resize(size);
+  file.read(format_options_.data_buffer.data(), size);
+}
+
+bool CommandProcessor::isGlobalFlag(const std::string& flag) {
+  if (flag == "-d" || flag == "--debug") {
+    return true;
   }
-  format_options_.buffer_length = size;
+  return false;
+}
+
+bool CommandProcessor::checkForComma(const std::string& string) {
+  return std::any_of(string.begin(), string.end(),
+                     [](char c) { return c == ','; });
 }
 
 void CommandProcessor::run() {
-  if (control_block_name_ == "") {
-    CommandProcessor::showGeneralUsage();
-    throw CLIExitFailure();
-  }
-
-  if (command_ == "format") {
-    CommandProcessor::processFormatFlags();
-  }
-
   cbxp_result_t* cbxp_result;
 
   if (command_ == "extract") {
@@ -394,9 +386,9 @@ void CommandProcessor::run() {
   } else {
     cbxp_result =
         cbxp_format(control_block_name_.c_str(), control_block_name_.length(),
-                    static_cast<void*>(format_options_.data_buffer +
+                    static_cast<void*>(format_options_.data_buffer.data() +
                                        format_options_.offset),
-                    format_options_.buffer_length - format_options_.offset,
+                    format_options_.data_buffer.size() - format_options_.offset,
                     global_options_.debug);
   }
 

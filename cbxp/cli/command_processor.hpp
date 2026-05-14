@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cstring>
 #include <string>
+#include <vector>
 
 namespace CBXP {
 
@@ -24,12 +25,9 @@ typedef struct {
 
 typedef struct {
   std::string file;
-  char* data_buffer;
-  int buffer_length;
+  std::vector<char> data_buffer;
   int offset;
 } cbxp_format_options_t;
-
-static bool checkForComma(const std::string& string);
 
 class CommandProcessor {
  private:
@@ -47,8 +45,10 @@ class CommandProcessor {
   void processGlobalFlags();
   void processFormatFlags();
   void processExtractFlags();
-  void processFormatFromPipe();
-  void processFormatFromFile(const std::string& file_path);
+  void readFormatDataFromPipe();
+  void readFormatDataFromFile(const std::string& file_path);
+  static bool isGlobalFlag(const std::string& flag);
+  static bool checkForComma(const std::string& string);
 
  public:
   explicit CommandProcessor(int argc, const char* argv[])
@@ -56,7 +56,7 @@ class CommandProcessor {
         argv_(argv),
         global_options_({false, false, false}),
         extract_options_({"", ""}),
-        format_options_({"", nullptr, 0, 0}) {
+        format_options_({"", {}, 0}) {
     process();
   };
   void run();

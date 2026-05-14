@@ -7,6 +7,7 @@
 #include "control_blocks/control_block.hpp"
 
 namespace CBXP {
+
 class ControlBlockExplorer {
  private:
   cbxp_result_t* p_result_;
@@ -24,7 +25,8 @@ class ControlBlockExplorer {
                            const std::string& includes_string,
                            const std::string& filters_string);
   void formatControlBlock(const std::string& control_block_name,
-                          const void* bytes_buffer, const int buffer_length);
+                          const void* bytes_buffer,
+                          const unsigned int buffer_length);
   void processControlBlock(const std::string& control_block_name);
 };
 }  // namespace CBXP

@@ -13,7 +13,8 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json OUCB::get(const void* p_control_block, const int buffer_length) {
+nlohmann::json OUCB::get(const void* p_control_block,
+                         const unsigned int buffer_length) {
   OUCB::checkBufferLength(buffer_length);
   const oucb_t* p_oucb;
   nlohmann::json oucb_json = {};

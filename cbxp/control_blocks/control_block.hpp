@@ -21,6 +21,7 @@ class ControlBlock {
  private:
   const std::string control_block_name_;
   const std::vector<std::string> includables_;
+  bool ignore_buffer_length_ = false;
   void createIncludeLists(const std::vector<std::string>& includes);
   void processDoubleAsteriskInclude();
   void processAsteriskInclude();
@@ -40,13 +41,16 @@ class ControlBlock {
   int control_block_length_ = -1;
 
  public:
-  void checkBufferLength(const int buffer_length) const;
-  virtual nlohmann::json get(const void* p_control_block = nullptr,
-                             const int buffer_length     = -1) = 0;
+  void checkBufferLength(const unsigned int buffer_length) const;
+  virtual nlohmann::json get(const void* p_control_block      = nullptr,
+                             const unsigned int buffer_length = 0) = 0;
   explicit ControlBlock(const std::string& name,
                         const std::vector<std::string>& includables,
-                        const cbxp_options_t& cbxp_options)
-      : control_block_name_(name), includables_(includables) {
+                        const cbxp_options_t& cbxp_options,
+                        bool ignore_buffer_length)
+      : control_block_name_(name),
+        includables_(includables),
+        ignore_buffer_length_(ignore_buffer_length) {
     createOptionsMap(cbxp_options.include_patterns, cbxp_options.filters);
   }
   virtual ~ControlBlock() = default;

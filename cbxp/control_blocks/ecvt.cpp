@@ -11,7 +11,8 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json ECVT::get(const void* p_control_block, const int buffer_length) {
+nlohmann::json ECVT::get(const void* p_control_block,
+                         const unsigned int buffer_length) {
   ECVT::checkBufferLength(buffer_length);
   const struct ecvt* p_ecvt;
   nlohmann::json ecvt_json = {};
