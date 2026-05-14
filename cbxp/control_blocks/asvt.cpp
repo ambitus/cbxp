@@ -51,7 +51,7 @@ nlohmann::json ASVT::get(const void* p_control_block,
   for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "ascb") {
       nlohmann::json ascbs_json;
-      CBXP::ASCB ascb(cbxp_options);
+      CBXP::ASCB ascb(cbxp_options, ignore_buffer_length_);
       uint32_t const* __ptr32 p_ascb_addr = const_cast<uint32_t* __ptr32>(
           reinterpret_cast<const uint32_t* __ptr32>(&p_asvt->asvtenty));
       for (int i = 0; i < p_asvt->asvtmaxu; i++) {
