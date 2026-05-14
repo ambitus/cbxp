@@ -61,12 +61,14 @@ nlohmann::json ASCB::get(const void* p_control_block,
 
   for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "assb") {
-      ascb_json["ascbassb"] = CBXP::ASSB(cbxp_options).get(p_ascb->ascbassb);
+      ascb_json["ascbassb"] =
+          CBXP::ASSB(cbxp_options, ignore_buffer_length_).get(p_ascb->ascbassb);
       if (ascb_json["ascbassb"].is_null()) {
         return {};
       }
     } else if (include == "oucb") {
-      ascb_json["ascboucb"] = CBXP::OUCB(cbxp_options).get(p_ascb->ascboucb);
+      ascb_json["ascboucb"] =
+          CBXP::OUCB(cbxp_options, ignore_buffer_length_).get(p_ascb->ascboucb);
       if (ascb_json["ascboucb"].is_null()) {
         return {};
       }
