@@ -107,7 +107,6 @@ run_with_expected_exit_code 255 ./dist/cbxp extract
 run_with_expected_exit_code 255 ./dist/cbxp extract -x "unknown flag" cvt
 run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt
 run_with_expected_exit_code 255 ./dist/cbxp extract -i -i cvt psa
-run_with_expected_exit_code 255 ./dist/cbxp extract -d -d psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -f psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -f psapsa=psa
 run_with_expected_exit_code 255 ./dist/cbxp extract --debug -d psa

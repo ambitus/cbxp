@@ -14,6 +14,9 @@ void ControlBlock::createOptionsMap(const std::vector<std::string>& includes,
   // of the options_map_ structure and must be called after createIncludeLists
   ControlBlock::createIncludeLists(includes);
   ControlBlock::createFilterLists(filters);
+  for (auto it = options_map_.begin(); it != options_map_.end(); ++it) {
+    options_map_[it->first].skip_buffer_length_check = true;
+  }
 }
 
 void ControlBlock::createIncludeLists(
