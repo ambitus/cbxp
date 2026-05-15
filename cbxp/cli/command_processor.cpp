@@ -188,12 +188,16 @@ void CommandProcessor::processGlobalFlags() {
   command_ = argv_[1];
 
   if (command_ == "format" || command_ == "extract") {
-    std::cerr << "Need control block for \"" << command_ << "\" command. Use \""
-              << argv_[0] << " " << command_
-              << "--help\" for more information about a command.";
-  } else {
+    if (argc_ < 3) {
+      std::cerr << "Positional argument <control block> expected.";
+      throw CLIExitFailure();
+    }
+  } else if (command_[0] != '-') {
     std::cerr << "Unknown command \"" << command_ << "\" for " << argv_[0]
               << std::endl;
+    throw CLIExitFailure();
+  } else {
+    std::cerr << "Unknown flag: " << command_ << std::endl;
     throw CLIExitFailure();
   }
 
@@ -208,12 +212,7 @@ void CommandProcessor::processGlobalFlags() {
   for (int i = argv_index; i < argc_; i++) {
     std::string flag = argv_[i];
     if (flag == "-d" || flag == "--debug") {
-      if (!global_options_.debug) {
-        global_options_.debug = true;
-      } else {
-        CommandProcessor::showGeneralUsage();
-        throw CLIExitFailure();
-      }
+      global_options_.debug = true;
     }
   }
 
@@ -292,20 +291,16 @@ void CommandProcessor::processFormatFlags() {
         throw CLIExitFailure();
       }
       try {
-        format_options_.offset = std::stoi(offset, nullptr, 0);
+        format_options_.offset = std::stoul(offset, nullptr, 0);
       }
       // Standard exceptions for stoi
       catch (const std::invalid_argument& e) {
-        std::cerr << "Flag produced an error:" << flag << std::endl;
-        std::cerr << e.what() << "\n";
+        // Offset not positive or not integer
+        std::cerr << "Offset must be a positive integer" << std::endl;
         throw CLIExitFailure();
       } catch (const std::out_of_range& e) {
-        std::cerr << "Flag produced an error:" << flag << std::endl;
-        std::cerr << e.what() << "\n";
-        throw CLIExitFailure();
-      }
-      if (format_options_.offset < 0) {
-        std::cerr << "Offset must be a positive integer" << std::endl;
+        // Offset too large
+        std::cerr << "Offset is too large for data provided" << std::endl;
         throw CLIExitFailure();
       }
     } else {

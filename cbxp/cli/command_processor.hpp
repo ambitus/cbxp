@@ -26,7 +26,7 @@ typedef struct {
 typedef struct {
   std::string file;
   std::vector<char> data_buffer;
-  int offset;
+  unsigned int offset;
 } cbxp_format_options_t;
 
 class CommandProcessor {

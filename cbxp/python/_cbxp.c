@@ -11,34 +11,32 @@ static PyObject* call_cbxp_extract(PyObject* self, PyObject* args,
                                    PyObject* kwargs) {
   PyObject* result_dictionary;
   PyObject* debug_pyobj;
-  const char* p_control_block_name;
+  const char* p_control_block;
   const char* p_includes_string;
   const char* p_filters_string;
-  Py_ssize_t py_control_block_name_length, py_includes_length,
-      py_filters_length;
+  Py_ssize_t py_control_block_length, py_includes_length, py_filters_length;
   bool debug            = false;
 
-  static char* kwlist[] = {"control_block_name", "includes_string",
-                           "filters_string", "debug", NULL};
+  static char* kwlist[] = {"control_block", "includes_string", "filters_string",
+                           "debug", NULL};
 
   if (!PyArg_ParseTupleAndKeywords(
-          args, kwargs, "s#s#s#|O", kwlist, &p_control_block_name,
-          &py_control_block_name_length, &p_includes_string,
-          &py_includes_length, &p_filters_string, &py_filters_length,
-          &debug_pyobj)) {
+          args, kwargs, "s#s#s#|O", kwlist, &p_control_block,
+          &py_control_block_length, &p_includes_string, &py_includes_length,
+          &p_filters_string, &py_filters_length, &debug_pyobj)) {
     return NULL;
   }
 
   debug = PyObject_IsTrue(debug_pyobj);
 
-  int control_block_name_length =
-      Py_SAFE_DOWNCAST(py_control_block_name_length, Py_ssize_t, int);
+  int control_block_length =
+      Py_SAFE_DOWNCAST(py_control_block_length, Py_ssize_t, int);
   int includes_length = Py_SAFE_DOWNCAST(py_includes_length, Py_ssize_t, int);
   int filters_length  = Py_SAFE_DOWNCAST(py_filters_length, Py_ssize_t, int);
 
-  cbxp_result_t* p_cbxp_result = cbxp_extract(
-      p_control_block_name, control_block_name_length, p_includes_string,
-      includes_length, p_filters_string, filters_length, debug);
+  cbxp_result_t* p_cbxp_result =
+      cbxp_extract(p_control_block, control_block_length, p_includes_string,
+                   includes_length, p_filters_string, filters_length, debug);
 
   result_dictionary =
       Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
@@ -55,33 +53,32 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
                                   PyObject* kwargs) {
   PyObject* result_dictionary;
   PyObject* debug_pyobj;
-  const char* p_control_block_name;
+  const char* p_control_block;
   const char* p_data_buffer;
-  Py_ssize_t py_buffer_length, py_control_block_name_length;
-  int offset            = 0;
+  Py_ssize_t py_buffer_length, py_control_block_length;
+  unsigned int offset   = 0;
   bool debug            = false;
 
-  static char* kwlist[] = {"control_block_name", "data", "offset", "debug",
-                           NULL};
+  static char* kwlist[] = {"control_block", "data", "offset", "debug", NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(
-          args, kwargs, "s#s#|iO", kwlist, &p_control_block_name,
-          &py_control_block_name_length, &p_data_buffer, &py_buffer_length,
-          &offset, &debug_pyobj)) {
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s#s#|IO", kwlist,
+                                   &p_control_block, &py_control_block_length,
+                                   &p_data_buffer, &py_buffer_length, &offset,
+                                   &debug_pyobj)) {
     return NULL;
   }
 
   debug = PyObject_IsTrue(debug_pyobj);
-  int control_block_name_length =
-      Py_SAFE_DOWNCAST(py_control_block_name_length, Py_ssize_t, int);
+  int control_block_length =
+      Py_SAFE_DOWNCAST(py_control_block_length, Py_ssize_t, int);
   int buffer_length = Py_SAFE_DOWNCAST(py_buffer_length, Py_ssize_t, int);
 
   p_data_buffer += offset;
   buffer_length -= offset;
 
   cbxp_result_t* p_cbxp_result =
-      cbxp_format(p_control_block_name, control_block_name_length,
-                  p_data_buffer, buffer_length, debug);
+      cbxp_format(p_control_block, control_block_length, p_data_buffer,
+                  buffer_length, debug);
 
   result_dictionary =
       Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
@@ -106,7 +103,7 @@ static PyMethodDef _C_methods[] = {
 // Module definition
 static struct PyModuleDef _C_module_def = {
     PyModuleDef_HEAD_INIT, "_C",
-    "A unified and standardized interface and extracting and formatting "
+    "A unified and standardized interface for extracting and formatting "
     "z/OS control block data.",
     -1, _C_methods};
 

@@ -48,7 +48,6 @@ file(
 file(
     GLOB CBXP_SRC_CLI
     "cbxp/cli/*.cpp"
-    "cbxp/cli/*.c"
 )
 
 file(
@@ -62,12 +61,6 @@ file(
     "cbxp/**/*.c"
     "cbxp/**/*.h"
 )
-
-foreach(SRC_CLI ${CBXP_SRC_CLI})
-list(
-    REMOVE_ITEM CBXP_SRC_ALL ${SRC_CLI}
-)
-endforeach()
 
 # ============================================================================
 # Build '/lib/libcbxp.a'

@@ -15,6 +15,7 @@ typedef struct {
 typedef struct {
   std::vector<std::string> include_patterns;
   std::vector<std::string> filters;
+  bool skip_buffer_length_check;
 } cbxp_options_t;
 
 class ControlBlock {
@@ -37,8 +38,8 @@ class ControlBlock {
   void createOptionsMap(const std::vector<std::string>& includes,
                         const std::vector<std::string>& filters);
   bool matchFilter(nlohmann::json& control_block_json);
-  int control_block_length_  = -1;
-  bool ignore_buffer_length_ = false;
+  unsigned int control_block_length_ = 0;
+  bool skip_buffer_length_check_     = false;
 
  public:
   void checkBufferLength(const unsigned int buffer_length) const;
@@ -46,11 +47,10 @@ class ControlBlock {
                              const unsigned int buffer_length = 0) = 0;
   explicit ControlBlock(const std::string& name,
                         const std::vector<std::string>& includables,
-                        const cbxp_options_t& cbxp_options,
-                        bool ignore_buffer_length)
+                        const cbxp_options_t& cbxp_options)
       : control_block_name_(name),
         includables_(includables),
-        ignore_buffer_length_(ignore_buffer_length) {
+        skip_buffer_length_check_(cbxp_options.skip_buffer_length_check) {
     createOptionsMap(cbxp_options.include_patterns, cbxp_options.filters);
   }
   virtual ~ControlBlock() = default;
