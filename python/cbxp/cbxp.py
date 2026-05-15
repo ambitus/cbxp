@@ -119,17 +119,19 @@ def format(  # noqa: A001
 ) -> dict:
     if offset is None:
         offset = 0
-    elif offset < 0:
-        raise CBXPError(CBXPErrorCode.OFFSET_NEGATIVE.value, control_block)
     elif offset >= len(data):
         raise CBXPError(CBXPErrorCode.OFFSET_TOO_BIG.value, control_block)
 
-    response = call_cbxp_format(
-        control_block.lower(),
-        data,
-        offset=offset,
-        debug=debug,
-    )
+    try:
+        response = call_cbxp_format(
+            control_block.lower(),
+            data,
+            offset=offset,
+            debug=debug,
+        )
+    except ValueError as error:
+        raise CBXPError(CBXPErrorCode.OFFSET_NEGATIVE.value, control_block) from error
+
     if response["return_code"]:
         raise CBXPError(response["return_code"], control_block)
     if response["result_json"] == "null" or response["result_json"] == "[]":

@@ -1,6 +1,7 @@
 #define PY_SSIZE_T_CLEAN
 
 #include <Python.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -72,6 +73,10 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
   int control_block_length =
       Py_SAFE_DOWNCAST(py_control_block_length, Py_ssize_t, int);
   int buffer_length = Py_SAFE_DOWNCAST(py_buffer_length, Py_ssize_t, int);
+
+  if (offset >= INT_MAX) {
+    PyErr_SetString(PyExc_ValueError, "Offset parameter can not be negative");
+  }
 
   p_data_buffer += offset;
   buffer_length -= offset;

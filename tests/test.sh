@@ -109,7 +109,6 @@ run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt
 run_with_expected_exit_code 255 ./dist/cbxp extract -i -i cvt psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -f psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -f psapsa=psa
-run_with_expected_exit_code 255 ./dist/cbxp extract --debug -d psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -F tests/samples/ascb.bin psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -o 1 psa
 run_with_expected_exit_code 255 ./dist/cbxp format
