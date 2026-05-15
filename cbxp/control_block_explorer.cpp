@@ -67,10 +67,11 @@ void ControlBlockExplorer::extractControlBlock(
 void ControlBlockExplorer::formatControlBlock(
     const std::string& control_block_name, const void* bytes_buffer,
     const unsigned int buffer_length) {
-  p_control_block_             = bytes_buffer;
-  control_block_buffer_length_ = buffer_length;
+  p_control_block_                       = bytes_buffer;
+  control_block_buffer_length_           = buffer_length;
+  cbxp_options_.skip_buffer_length_check = false;
 
-  control_block_operation_     = "Format";
+  control_block_operation_               = "Format";
 
   ControlBlockExplorer::processControlBlock(control_block_name);
 

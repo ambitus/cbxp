@@ -41,7 +41,6 @@ void CommandProcessor::showGeneralUsage() const {
             << std::endl
             << "Use \"" << argv_[0]
             << " [command] --help\" for more information about a command."
-            << std::endl
             << std::endl;
 }
 
@@ -228,8 +227,8 @@ void CommandProcessor::processExtractFlags() {
   for (int i = 2; i < argc_; i++) {
     std::string flag = argv_[i];
     if (flag == "-i" || flag == "--include") {
-      if (i + 1 >= argc_ - 1) {
-        std::cerr << "Flag needs an argument:" << flag << std::endl;
+      if (i + 1 >= argc_ - 1 && argv_[++i][0] != '-') {
+        std::cerr << "Flag needs an argument: " << flag << std::endl;
         throw CLIExitFailure();
       }
       std::string include = std::string(argv_[++i]);
@@ -243,8 +242,8 @@ void CommandProcessor::processExtractFlags() {
         extract_options_.include += "," + include;
       }
     } else if (flag == "-f" || flag == "--filter") {
-      if (i + 1 >= argc_ - 1) {
-        std::cerr << "Flag needs an argument:" << flag << std::endl;
+      if (i + 1 >= argc_ - 1 && argv_[++i][0] != '-') {
+        std::cerr << "Flag needs an argument: " << flag << std::endl;
         throw CLIExitFailure();
       }
       std::string filter = std::string(argv_[++i]);
@@ -275,13 +274,13 @@ void CommandProcessor::processFormatFlags() {
   for (int i = 2; i < argc_; i++) {
     std::string flag = argv_[i];
     if (flag == "-F" || flag == "--file") {
-      if (i + 1 >= argc_ - 1) {
+      if (i + 1 >= argc_ - 1 && argv_[++i][0] != '-') {
         std::cerr << "Flag needs an argument:" << flag << std::endl;
         throw CLIExitFailure();
       }
       CommandProcessor::readFormatDataFromFile(std::string(argv_[++i]));
     } else if (flag == "-o" || flag == "--offset") {
-      if (i + 1 >= argc_ - 1) {
+      if (i + 1 >= argc_ - 1 && argv_[++i][0] != '-') {
         std::cerr << "Flag needs an argument:" << flag << std::endl;
         throw CLIExitFailure();
       }
