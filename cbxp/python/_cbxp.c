@@ -76,6 +76,7 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
 
   if (offset >= INT_MAX) {
     PyErr_SetString(PyExc_ValueError, "Offset parameter can not be negative");
+    return NULL;
   }
 
   p_data_buffer += offset;
