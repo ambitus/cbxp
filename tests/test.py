@@ -586,7 +586,7 @@ class TestCBXP(unittest.TestCase):
                 offset=-1,
             )
         self.assertEqual(
-            "Offset parameter can not be negative",
+            "Offset is too large for data provided",
             str(e.exception),
         )
 
