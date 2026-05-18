@@ -31,6 +31,34 @@ typedef struct {
 
 class CommandProcessor {
  private:
+  // Error Strings
+  // General
+  const std::string ERROR_FLAG_NEEDS_AN_ARGUMENT_ = "Flag needs an argument: ";
+  const std::string ERROR_UNKNOWN_COMMMAND_       = "Unknown command: ";
+  const std::string ERROR_UNKNOWN_FLAG_           = "Unknown flag: ";
+  const std::string ERROR_CONTROL_BLOCK_EXPECTED_ =
+      "Positional argument <control block> expected";
+  // Format
+  const std::string ERROR_OFFSET_MUST_BE_A_POSITIVE_INTEGER_ =
+      "Offset must be positive integer";
+  const std::string ERROR_OFFSET_TOO_LARGE_ =
+      "Offset is too large for data provided";
+  const std::string ERROR_FILE_OR_PIPE_EXPECTED_ =
+      "File or pipe expected for \"format\" command";
+  const std::string ERROR_FILE_CANT_HAVE_STDIN_ =
+      "File and pipe cannot be used together";
+  // Extract
+  const std::string ERROR_INCLUDES_CANT_HAVE_COMMAS_ =
+      "Include patterns cannot contain commas";
+  const std::string ERROR_FILTERS_CANT_HAVE_COMMAS_ =
+      "Include patterns cannot contain commas";
+  // Return Codes
+  const std::string ERROR_UNKNOWN_CONTROL_BLOCK_ = "Unknown control block: ";
+  const std::string ERROR_BAD_INCLUDE_ = "A bad include pattern was provided";
+  const std::string ERROR_BAD_FILTER_  = "A bad filter was provided";
+  const std::string ERROR_BUFFER_TOO_SMALL_ =
+      "The provided buffer is not large enought for specified control block: ";
+
   std::string command_;
   std::string control_block_name_;
   int argc_;

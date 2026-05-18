@@ -13,7 +13,7 @@
 
 namespace CBXP {
 nlohmann::json ASVT::get(const void* p_control_block,
-                         const unsigned int buffer_length) {
+                         const size_t buffer_length) {
   ASVT::checkBufferLength(buffer_length);
   const asvt_t* p_asvt;
   nlohmann::json asvt_json = {};

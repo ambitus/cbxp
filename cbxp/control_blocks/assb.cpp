@@ -14,7 +14,7 @@
 
 namespace CBXP {
 nlohmann::json ASSB::get(const void* p_control_block,
-                         const unsigned int buffer_length) {
+                         const size_t buffer_length) {
   ASSB::checkBufferLength(buffer_length);
   const assb* p_assb;
   nlohmann::json assb_json = {};

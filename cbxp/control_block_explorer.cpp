@@ -66,7 +66,7 @@ void ControlBlockExplorer::extractControlBlock(
 
 void ControlBlockExplorer::formatControlBlock(
     const std::string& control_block_name, const void* bytes_buffer,
-    const unsigned int buffer_length) {
+    const size_t buffer_length) {
   p_control_block_             = bytes_buffer;
   control_block_buffer_length_ = buffer_length;
 

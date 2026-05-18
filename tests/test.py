@@ -597,7 +597,7 @@ class TestCBXP(unittest.TestCase):
                 data=self.read_sample("ascb.bin"),
             )
         self.assertEqual(
-            "The buffer is not large enough to contain a 'psa' control block",
+            "The provided buffer is not large enought for specified control block: psa",
             str(e.exception),
         )
 
@@ -608,7 +608,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp.extract("unknown")
         self.assertEqual(
-            "Unknown control block 'unknown' was specified.",
+            "Unknown control block: unknown",
             str(e.exception),
         )
 

@@ -2,9 +2,11 @@
 #define __CBXP_H_
 
 #ifdef __cplusplus
+#include <cstddef>
 extern "C" {
 #else
 #include <stdbool.h>
+#include <stddef.h>
 #endif
 
 typedef struct {
@@ -14,16 +16,15 @@ typedef struct {
 } cbxp_result_t;
 
 cbxp_result_t* cbxp_extract(const char* control_block_name,
-                            const unsigned int control_block_name_length,
-                            const char* includes,
-                            const unsigned int includes_length,
-                            const char* filters,
-                            const unsigned int filters_length, bool debug);
+                            const size_t control_block_name_length,
+                            const char* includes, const size_t includes_length,
+                            const char* filters, const size_t filters_length,
+                            bool debug);
 
 cbxp_result_t* cbxp_format(const char* control_block_name,
-                           const unsigned int control_block_name_length,
-                           const void* bytes_buffer,
-                           const unsigned int buffer_length, bool debug);
+                           const size_t control_block_name_length,
+                           const void* bytes_buffer, const size_t buffer_length,
+                           bool debug);
 
 void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
 

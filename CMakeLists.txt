@@ -39,10 +39,8 @@ endif()
 # ============================================================================
 file(
     GLOB CBXP_SRC_LIB
-    "cbxp/cbxp.cpp"
-    "cbxp/control_block_explorer.cpp"
-    "cbxp/logger.cpp"
-    "cbxp/control_blocks/*.cpp"
+    "cbxp/*.cpp"
+    "cbxp/*/*.cpp"
 )
 
 file(

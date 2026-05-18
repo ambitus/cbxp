@@ -56,18 +56,16 @@ class CBXPError(Exception):
                 message = "Filters cannot contain commas"
             case CBXPErrorCode.OFFSET_TOO_BIG.value:
                 message = "Offset is too large for data provided"
-            case CBXPErrorCode.OFFSET_NEGATIVE.value:
-                message = "Offset parameter can not be negative"
             case CBXPErrorCode.BAD_CONTROL_BLOCK.value:
-                message = f"Unknown control block '{control_block_name}' was specified."
+                message = f"Unknown control block: {control_block_name}"
             case CBXPErrorCode.BAD_INCLUDE.value:
                 message = "A bad include pattern was provided"
             case CBXPErrorCode.BAD_CONTROL_BLOCK_FILTER.value:
                 message = "A bad filter was provided"
             case CBXPErrorCode.BUFFER_TOO_SMALL.value:
                 message = (
-                    "The buffer is not large enough to contain a "
-                    f"'{control_block_name}' control block"
+                    "The provided buffer is not large enought for "
+                    f"specified control block: {control_block_name}"
                 )
             case _:
                 message = "an unknown error occurred"
@@ -119,8 +117,6 @@ def format(  # noqa: A001
 ) -> dict:
     if offset is None:
         offset = 0
-    elif offset >= len(data):
-        raise CBXPError(CBXPErrorCode.OFFSET_TOO_BIG.value, control_block)
 
     try:
         response = call_cbxp_format(
@@ -130,7 +126,7 @@ def format(  # noqa: A001
             debug=debug,
         )
     except ValueError as error:
-        raise CBXPError(CBXPErrorCode.OFFSET_NEGATIVE.value, control_block) from error
+        raise CBXPError(CBXPErrorCode.OFFSET_TOO_BIG.value, control_block) from error
 
     if response["return_code"]:
         raise CBXPError(response["return_code"], control_block)

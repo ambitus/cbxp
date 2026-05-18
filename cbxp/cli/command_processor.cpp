@@ -108,25 +108,24 @@ void CommandProcessor::showFormatUsage() const {
             << "  # Format CVT control block data from a file and write "
                "debug messages."
             << std::endl
-            << "  " << argv_[0] << " format -F tests/samples/cvt.bin -d cvt"
+            << "  " << argv_[0] << " format -F /path/to/cvt.bin -d cvt"
             << std::endl
             << std::endl
             << "  # Format CVT control block data from a pipe." << std::endl
-            << "  cat tests/samples/cvt.bin | " << argv_[0] << " format cvt"
+            << "  cat /path/to/cvt.bin | " << argv_[0] << " format cvt"
             << std::endl
             << std::endl
             << "  # Format OUCB control block data from a file at an offset "
                "of 0x03A8 bytes."
             << std::endl
             << "  " << argv_[0]
-            << " format -F tests/samples/oucboffset3A8.bin -o x3A8 oucb"
-            << std::endl
+            << " format -F /path/to/oucboffset.bin -o x3A8 oucb" << std::endl
             << std::endl
             << "  # Format ASCB control block data from a data set at an "
                "offset of 64 bytes."
             << std::endl
-            << "  " << argv_[0]
-            << " format -F \"//'CBXPUSR.ASCBOF64'\" -o 64 ascb" << std::endl
+            << "  " << argv_[0] << " format -F \"//'HLQ.ASCBOF64'\" -o 64 ascb"
+            << std::endl
             << std::endl;
 
   std::cout << "Flags:" << std::endl
@@ -171,32 +170,33 @@ void CommandProcessor::processGlobalFlags() {
     throw CLIExitFailure();
   }
 
-  if (argc_ == 2) {
-    if (std::strcmp(argv_[1], "-v") == 0 ||
-        std::strcmp(argv_[1], "--version") == 0) {
-      global_options_.version = true;
-      std::cout << "CBXP " << VERSION << std::endl;
-      throw CLIExitSuccess();
-    } else if (std::strcmp(argv_[1], "-h") == 0 ||
-               std::strcmp(argv_[1], "--help") == 0) {
-      global_options_.help = true;
-      CommandProcessor::showGeneralUsage();
-      throw CLIExitSuccess();
-    }
+  if (std::strcmp(argv_[1], "-v") == 0 ||
+      std::strcmp(argv_[1], "--version") == 0) {
+    global_options_.version = true;
+    std::cout << "CBXP " << VERSION << std::endl;
+    throw CLIExitSuccess();
+  } else if (std::strcmp(argv_[1], "-h") == 0 ||
+             std::strcmp(argv_[1], "--help") == 0) {
+    global_options_.help = true;
+    CommandProcessor::showGeneralUsage();
+    throw CLIExitSuccess();
   }
+
   command_ = argv_[1];
 
   if (command_ == "format" || command_ == "extract") {
     if (argc_ < 3) {
-      std::cerr << "Positional argument <control block> expected.";
+      std::cerr << ERROR_CONTROL_BLOCK_EXPECTED_ << std::endl;
       throw CLIExitFailure();
     }
   } else if (command_[0] != '-') {
-    std::cerr << "Unknown command \"" << command_ << "\" for " << argv_[0]
-              << std::endl;
+    std::cerr << ERROR_UNKNOWN_COMMMAND_ << command_ << std::endl;
+    throw CLIExitFailure();
+  } else if (!CommandProcessor::isGlobalFlag(command_)) {
+    std::cerr << ERROR_UNKNOWN_FLAG_ << command_ << std::endl;
     throw CLIExitFailure();
   } else {
-    std::cerr << "Unknown flag: " << command_ << std::endl;
+    CommandProcessor::showGeneralUsage();
     throw CLIExitFailure();
   }
 
@@ -217,8 +217,8 @@ void CommandProcessor::processGlobalFlags() {
 
   control_block_name_ = std::string(argv_[argc_ - 1]);
 
-  if (control_block_name_ == "") {
-    CommandProcessor::showGeneralUsage();
+  if (control_block_name_ == "" || control_block_name_[0] == '-') {
+    std::cerr << ERROR_CONTROL_BLOCK_EXPECTED_ << std::endl;
     throw CLIExitFailure();
   }
 }
@@ -228,12 +228,12 @@ void CommandProcessor::processExtractFlags() {
     std::string flag = argv_[i];
     if (flag == "-i" || flag == "--include") {
       if (i + 1 >= argc_ - 1 || argv_[i + 1][0] == '-') {
-        std::cerr << "Flag needs an argument: " << flag << std::endl;
+        std::cerr << ERROR_FLAG_NEEDS_AN_ARGUMENT_ << flag << std::endl;
         throw CLIExitFailure();
       }
       std::string include = std::string(argv_[++i]);
       if (CommandProcessor::checkForComma(include)) {
-        std::cerr << "Include patterns cannot contain commas" << std::endl;
+        std::cerr << ERROR_INCLUDES_CANT_HAVE_COMMAS_ << std::endl;
         throw CLIExitFailure();
       }
       if (extract_options_.include == "") {
@@ -243,12 +243,12 @@ void CommandProcessor::processExtractFlags() {
       }
     } else if (flag == "-f" || flag == "--filter") {
       if (i + 1 >= argc_ - 1 || argv_[i + 1][0] == '-') {
-        std::cerr << "Flag needs an argument: " << flag << std::endl;
+        std::cerr << ERROR_FLAG_NEEDS_AN_ARGUMENT_ << flag << std::endl;
         throw CLIExitFailure();
       }
       std::string filter = std::string(argv_[++i]);
       if (CommandProcessor::checkForComma(filter)) {
-        std::cerr << "Filters cannot contain commas" << std::endl;
+        std::cerr << ERROR_FILTERS_CANT_HAVE_COMMAS_ << std::endl;
         throw CLIExitFailure();
       }
       if (extract_options_.filter == "") {
@@ -256,14 +256,12 @@ void CommandProcessor::processExtractFlags() {
       } else {
         extract_options_.filter += "," + filter;
       }
-    } else {
-      if (i != argc_ - 1 || flag[0] == '-') {
-        if (CommandProcessor::isGlobalFlag(flag)) {
-          continue;
-        }
-        std::cerr << "Unknown flag: " << flag << std::endl;
-        throw CLIExitFailure();
+    } else if (i != argc_ - 1 || flag[0] == '-') {
+      if (CommandProcessor::isGlobalFlag(flag)) {
+        continue;
       }
+      std::cerr << ERROR_UNKNOWN_FLAG_ << flag << std::endl;
+      throw CLIExitFailure();
     }
   }
 }
@@ -275,18 +273,18 @@ void CommandProcessor::processFormatFlags() {
     std::string flag = argv_[i];
     if (flag == "-F" || flag == "--file") {
       if (i + 1 >= argc_ - 1 || argv_[i + 1][0] == '-') {
-        std::cerr << "Flag needs an argument:" << flag << std::endl;
+        std::cerr << ERROR_FLAG_NEEDS_AN_ARGUMENT_ << flag << std::endl;
         throw CLIExitFailure();
       }
       CommandProcessor::readFormatDataFromFile(std::string(argv_[++i]));
     } else if (flag == "-o" || flag == "--offset") {
       if (i + 1 >= argc_ - 1 || argv_[i + 1][0] == '-') {
-        std::cerr << "Flag needs an argument:" << flag << std::endl;
+        std::cerr << ERROR_FLAG_NEEDS_AN_ARGUMENT_ << flag << std::endl;
         throw CLIExitFailure();
       }
       std::string offset = argv_[++i];
       if (offset.find('.') != std::string::npos) {
-        std::cerr << "Offset must be a positive integer" << std::endl;
+        std::cerr << ERROR_OFFSET_MUST_BE_A_POSITIVE_INTEGER_ << std::endl;
         throw CLIExitFailure();
       }
       try {
@@ -295,40 +293,38 @@ void CommandProcessor::processFormatFlags() {
       // Standard exceptions for stoi
       catch (const std::invalid_argument& e) {
         // Offset not positive or not integer
-        std::cerr << "Offset must be a positive integer" << std::endl;
+        std::cerr << ERROR_OFFSET_MUST_BE_A_POSITIVE_INTEGER_ << std::endl;
         throw CLIExitFailure();
       } catch (const std::out_of_range& e) {
         // Offset too large
-        std::cerr << "Offset is too large for data provided" << std::endl;
+        std::cerr << ERROR_OFFSET_TOO_LARGE_ << std::endl;
         throw CLIExitFailure();
       }
-    } else {
-      if (i != argc_ - 1 || flag[0] == '-') {
-        if (CommandProcessor::isGlobalFlag(flag)) {
-          continue;
-        }
-        std::cerr << "Unknown flag: " << flag << std::endl;
-        throw CLIExitFailure();
+    } else if (i != argc_ - 1 || flag[0] == '-') {
+      if (CommandProcessor::isGlobalFlag(flag)) {
+        continue;
       }
+      std::cerr << ERROR_UNKNOWN_FLAG_ << flag << std::endl;
+      throw CLIExitFailure();
     }
   }
   if (isatty(STDIN_FILENO) == 0) {
     CommandProcessor::readFormatDataFromPipe();
   }
   if (format_options_.data_buffer.empty()) {
-    std::cerr << "File or pipe expected for \"format\" command" << std::endl;
+    std::cerr << ERROR_FILE_OR_PIPE_EXPECTED_ << std::endl;
     throw CLIExitFailure();
   }
 
-  if (format_options_.offset >= format_options_.data_buffer.size()) {
-    std::cerr << "Offset is too large for data provided" << std::endl;
+  if (format_options_.offset > format_options_.data_buffer.size()) {
+    std::cerr << ERROR_OFFSET_TOO_LARGE_ << std::endl;
     throw CLIExitFailure();
   }
 }
 
 void CommandProcessor::readFormatDataFromPipe() {
   if (!format_options_.file.empty()) {
-    std::cerr << "File parameter cannot be used with STDIN data" << std::endl;
+    std::cerr << ERROR_FILE_CANT_HAVE_STDIN_ << std::endl;
     throw CLIExitFailure();
   }
   format_options_.data_buffer.assign((std::istreambuf_iterator<char>(std::cin)),
@@ -360,6 +356,12 @@ bool CommandProcessor::isGlobalFlag(const std::string& flag) {
   if (flag == "-d" || flag == "--debug") {
     return true;
   }
+  if (flag == "-h" || flag == "--help") {
+    return true;
+  }
+  if (flag == "-v" || flag == "--version") {
+    return true;
+  }
   return false;
 }
 
@@ -388,21 +390,20 @@ void CommandProcessor::run() {
 
   switch (cbxp_result->return_code) {
     case CBXP::Error::BadControlBlock:
-      std::cerr << "Unknown control block '" << control_block_name_
-                << "' was specified." << std::endl;
+      std::cerr << ERROR_UNKNOWN_CONTROL_BLOCK_ << control_block_name_
+                << std::endl;
       throw CLIExitFailure();
       break;
     case CBXP::Error::BadInclude:
-      std::cerr << "A bad include pattern was provided" << std::endl;
+      std::cerr << ERROR_BAD_INCLUDE_ << std::endl;
       throw CLIExitFailure();
       break;
     case CBXP::Error::BadFilter:
-      std::cerr << "A bad filter was provided" << std::endl;
+      std::cerr << ERROR_BAD_FILTER_ << std::endl;
       throw CLIExitFailure();
       break;
     case CBXP::Error::BufferTooSmall:
-      std::cerr << "The buffer is not large enough to contain a '"
-                << control_block_name_ << "' control block" << std::endl;
+      std::cerr << ERROR_BUFFER_TOO_SMALL_ << control_block_name_ << std::endl;
       throw CLIExitFailure();
       break;
     default:
