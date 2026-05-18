@@ -40,7 +40,7 @@ endif()
 file(
     GLOB CBXP_SRC_LIB
     "cbxp/*.cpp"
-    "cbxp/*/*.cpp"
+    "cbxp/control_blocks/*.cpp"
 )
 
 file(
