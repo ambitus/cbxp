@@ -81,7 +81,7 @@ class CommandProcessor {
   explicit CommandProcessor(int argc, const char* argv[])
       : argc_(argc),
         argv_(argv),
-        global_options_({false, false, false}),
+        global_options_({false, false}),
         extract_options_({"", ""}),
         format_options_({"", {}, 0}) {
     CommandProcessor::process();
