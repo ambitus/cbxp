@@ -10,7 +10,7 @@
 namespace CBXP {
 nlohmann::json PSA::get(const void* p_control_block,
                         const size_t buffer_length) {
-  PSA::checkBufferLength(buffer_length);
+  PSA::checkDataLength(buffer_length);
   const struct psa* p_psa;
   nlohmann::json psa_json = {};
 

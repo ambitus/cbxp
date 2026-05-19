@@ -393,7 +393,7 @@ void CommandProcessor::run() {
       std::cerr << ERROR_BAD_FILTER_ << std::endl;
       throw CLIExitFailure();
       break;
-    case CBXP::Error::BufferTooSmall:
+    case CBXP::Error::DataTooSmall:
       std::cerr << ERROR_DATA_TOO_SMALL_ << control_block_name_ << std::endl;
       throw CLIExitFailure();
       break;

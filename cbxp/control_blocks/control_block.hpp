@@ -42,7 +42,7 @@ class ControlBlock {
   bool skip_buffer_length_check_ = false;
 
  public:
-  void checkBufferLength(const size_t buffer_length) const;
+  void checkDataLength(const size_t buffer_length) const;
   virtual nlohmann::json get(const void* p_control_block = nullptr,
                              const size_t buffer_length  = 0) = 0;
   explicit ControlBlock(const std::string& name,

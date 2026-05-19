@@ -13,7 +13,7 @@
 namespace CBXP {
 nlohmann::json CVT::get(const void* p_control_block,
                         const size_t buffer_length) {
-  CVT::checkBufferLength(buffer_length);
+  CVT::checkDataLength(buffer_length);
   const struct cvtmap* p_cvtmap;
   const struct cvtfix* p_cvtfix;
   const struct cvtxtnt2* p_cvtxtnt2;

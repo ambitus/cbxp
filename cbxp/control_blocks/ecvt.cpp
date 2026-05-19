@@ -13,7 +13,7 @@
 namespace CBXP {
 nlohmann::json ECVT::get(const void* p_control_block,
                          const size_t buffer_length) {
-  ECVT::checkBufferLength(buffer_length);
+  ECVT::checkDataLength(buffer_length);
   const struct ecvt* p_ecvt;
   nlohmann::json ecvt_json = {};
 

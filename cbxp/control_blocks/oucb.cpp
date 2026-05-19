@@ -15,7 +15,7 @@
 namespace CBXP {
 nlohmann::json OUCB::get(const void* p_control_block,
                          const size_t buffer_length) {
-  OUCB::checkBufferLength(buffer_length);
+  OUCB::checkDataLength(buffer_length);
   const oucb_t* p_oucb;
   nlohmann::json oucb_json = {};
   if (p_control_block == nullptr) {
