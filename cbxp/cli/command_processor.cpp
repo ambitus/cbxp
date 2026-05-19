@@ -227,7 +227,7 @@ void CommandProcessor::processExtractFlags() {
       }
       std::string include = std::string(argv_[++i]);
       if (CommandProcessor::checkForComma(include)) {
-        std::cerr << ERROR_INCLUDES_CANT_HAVE_COMMAS_ << std::endl;
+        std::cerr << ERROR_COMMA_IN_INCLUDE_ << std::endl;
         throw CLIExitFailure();
       }
       if (extract_options_.include == "") {
@@ -242,7 +242,7 @@ void CommandProcessor::processExtractFlags() {
       }
       std::string filter = std::string(argv_[++i]);
       if (CommandProcessor::checkForComma(filter)) {
-        std::cerr << ERROR_FILTERS_CANT_HAVE_COMMAS_ << std::endl;
+        std::cerr << ERROR_COMMA_IN_FILTER_ << std::endl;
         throw CLIExitFailure();
       }
       if (extract_options_.filter == "") {
