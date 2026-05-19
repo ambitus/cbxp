@@ -295,7 +295,7 @@ void ControlBlock::checkBufferLength(const size_t buffer_length) const {
       "' control block (requires " + std::to_string(control_block_length_) +
       " bytes)...");
   if (buffer_length < control_block_length_) {
-    throw BufferLengthError();
+    throw DataLengthError();
   }
 }
 }  // namespace CBXP
