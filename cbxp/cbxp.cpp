@@ -15,14 +15,14 @@ cbxp_result_t* cbxp_extract(const char* control_block_name,
   std::string filters_string_string;
 
   if (control_block_name != nullptr) {
-    control_block_name_string.assign(
-        control_block_name, control_block_name + control_block_name_length);
+    control_block_name_string.assign(control_block_name,
+                                     control_block_name_length);
   }
   if (includes != nullptr) {
     includes_string_string.assign(includes, includes_length);
   }
   if (filters != nullptr) {
-    filters_string_string.assign(filters, filters + filters_length);
+    filters_string_string.assign(filters, filters_length);
   }
 
   CBXP::Logger::getInstance().setDebug(debug);
@@ -42,13 +42,13 @@ cbxp_result_t* cbxp_extract(const char* control_block_name,
 
 cbxp_result_t* cbxp_format(const char* control_block_name,
                            const size_t control_block_name_length,
-                           const void* bytes_buffer, const size_t buffer_length,
+                           const void* data, const size_t data_length,
                            bool debug) {
   std::string control_block_name_string;
 
   if (control_block_name != nullptr) {
-    control_block_name_string.assign(
-        control_block_name, control_block_name + control_block_name_length);
+    control_block_name_string.assign(control_block_name,
+                                     control_block_name_length);
   }
 
   CBXP::Logger::getInstance().setDebug(debug);
@@ -60,8 +60,7 @@ cbxp_result_t* cbxp_format(const char* control_block_name,
   CBXP::ControlBlockExplorer explorer =
       CBXP::ControlBlockExplorer(p_cbxp_result);
 
-  explorer.formatControlBlock(control_block_name_string, bytes_buffer,
-                              buffer_length);
+  explorer.formatControlBlock(control_block_name_string, data, data_length);
 
   return p_cbxp_result;
 }

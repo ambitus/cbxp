@@ -283,9 +283,10 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
 
 void ControlBlock::checkBufferLength(const size_t buffer_length) const {
   if (skip_buffer_length_check_) {
-    // Only checking the buffer length for actual buffers of data from format
-    // operations Extract has default buffers of length 0 pulling from live
-    // system memory
+    // Buffer length check is only done when formatting
+    // user provided control block data.
+    // This check is skipped when extracting and formatting
+    // control block data from live memory.
     return;
   }
   Logger::getInstance().debug(

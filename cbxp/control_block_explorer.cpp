@@ -65,12 +65,12 @@ void ControlBlockExplorer::extractControlBlock(
 }
 
 void ControlBlockExplorer::formatControlBlock(
-    const std::string& control_block_name, const void* bytes_buffer,
-    const size_t buffer_length) {
-  p_control_block_             = bytes_buffer;
-  control_block_buffer_length_ = buffer_length;
+    const std::string& control_block_name, const void* data,
+    const size_t data_length) {
+  p_control_block_           = data;
+  control_block_data_length_ = data_length;
 
-  control_block_operation_     = "Format";
+  control_block_operation_   = "Format";
 
   ControlBlockExplorer::processControlBlock(control_block_name);
 
@@ -87,32 +87,25 @@ void ControlBlockExplorer::processControlBlock(
   try {
     if (control_block_name == "psa") {
       control_block_json =
-          PSA(cbxp_options_)
-              .get(p_control_block_, control_block_buffer_length_);
+          PSA(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "cvt") {
       control_block_json =
-          CVT(cbxp_options_)
-              .get(p_control_block_, control_block_buffer_length_);
+          CVT(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "ecvt") {
       control_block_json =
-          ECVT(cbxp_options_)
-              .get(p_control_block_, control_block_buffer_length_);
+          ECVT(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "ascb") {
       control_block_json =
-          ASCB(cbxp_options_)
-              .get(p_control_block_, control_block_buffer_length_);
+          ASCB(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "asvt") {
       control_block_json =
-          ASVT(cbxp_options_)
-              .get(p_control_block_, control_block_buffer_length_);
+          ASVT(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "assb") {
       control_block_json =
-          ASSB(cbxp_options_)
-              .get(p_control_block_, control_block_buffer_length_);
+          ASSB(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "oucb") {
       control_block_json =
-          OUCB(cbxp_options_)
-              .get(p_control_block_, control_block_buffer_length_);
+          OUCB(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else {
       throw ControlBlockError();
     }

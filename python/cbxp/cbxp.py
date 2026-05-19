@@ -34,13 +34,15 @@ class CBXPFilter:
 class CBXPErrorCode(Enum):
     """An enum of error and return codes from the cbxp interface"""
 
+    # Negative Error Codes are from the interface
     COMMA_IN_INCLUDE = -1
     COMMA_IN_FILTER = -2
-    OFFSET_TOO_BIG = -3
+    OFFSET_TOO_LARGE = -3
     OFFSET_NEGATIVE = -4
-    BAD_CONTROL_BLOCK = 1
+    # Positive Error Codes are return codes from CBXP
+    UNKNOWN_CONTROL_BLOCK = 1
     BAD_INCLUDE = 2
-    BAD_CONTROL_BLOCK_FILTER = 3
+    BAD_FILTER = 3
     BUFFER_TOO_SMALL = 4
 
 
@@ -54,18 +56,20 @@ class CBXPError(Exception):
                 message = "Include patterns cannot contain commas"
             case CBXPErrorCode.COMMA_IN_FILTER.value:
                 message = "Filters cannot contain commas"
-            case CBXPErrorCode.OFFSET_TOO_BIG.value:
+            case CBXPErrorCode.OFFSET_TOO_LARGE.value:
                 message = "Offset is too large for data provided"
-            case CBXPErrorCode.BAD_CONTROL_BLOCK.value:
+            case CBXPErrorCode.OFFSET_NEGATIVE.value:
+                message = "Offset parameter can not be negative"
+            case CBXPErrorCode.UNKNOWN_CONTROL_BLOCK.value:
                 message = f"Unknown control block: {control_block_name}"
             case CBXPErrorCode.BAD_INCLUDE.value:
                 message = "A bad include pattern was provided"
-            case CBXPErrorCode.BAD_CONTROL_BLOCK_FILTER.value:
+            case CBXPErrorCode.BAD_FILTER.value:
                 message = "A bad filter was provided"
             case CBXPErrorCode.BUFFER_TOO_SMALL.value:
                 message = (
-                    "The provided buffer is not large enought for "
-                    f"specified control block: {control_block_name}"
+                    "Data provided is not large enough for specified "
+                    f"control block: {control_block_name}"
                 )
             case _:
                 message = "an unknown error occurred"
@@ -117,7 +121,8 @@ def format(  # noqa: A001
 ) -> dict:
     if offset is None:
         offset = 0
-
+    if offset < 0:
+        raise CBXPError(CBXPErrorCode.OFFSET_NEGATIVE.value, control_block)
     try:
         response = call_cbxp_format(
             control_block.lower(),
@@ -126,7 +131,7 @@ def format(  # noqa: A001
             debug=debug,
         )
     except ValueError as error:
-        raise CBXPError(CBXPErrorCode.OFFSET_TOO_BIG.value, control_block) from error
+        raise CBXPError(CBXPErrorCode.OFFSET_TOO_LARGE.value, control_block) from error
 
     if response["return_code"]:
         raise CBXPError(response["return_code"], control_block)

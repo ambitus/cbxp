@@ -38,8 +38,8 @@ class ControlBlock {
   void createOptionsMap(const std::vector<std::string>& includes,
                         const std::vector<std::string>& filters);
   bool matchFilter(nlohmann::json& control_block_json);
-  unsigned int control_block_length_ = 0;
-  bool skip_buffer_length_check_     = false;
+  size_t control_block_length_   = 0;
+  bool skip_buffer_length_check_ = false;
 
  public:
   void checkBufferLength(const size_t buffer_length) const;
@@ -51,7 +51,8 @@ class ControlBlock {
       : control_block_name_(name),
         includables_(includables),
         skip_buffer_length_check_(cbxp_options.skip_buffer_length_check) {
-    createOptionsMap(cbxp_options.include_patterns, cbxp_options.filters);
+    ControlBlock::createOptionsMap(cbxp_options.include_patterns,
+                                   cbxp_options.filters);
   }
   virtual ~ControlBlock() = default;
 };

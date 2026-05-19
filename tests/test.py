@@ -586,7 +586,7 @@ class TestCBXP(unittest.TestCase):
                 offset=-1,
             )
         self.assertEqual(
-            "Offset is too large for data provided",
+            "Offset parameter can not be negative",
             str(e.exception),
         )
 
@@ -597,7 +597,7 @@ class TestCBXP(unittest.TestCase):
                 data=self.read_sample("ascb.bin"),
             )
         self.assertEqual(
-            "The provided buffer is not large enought for specified control block: psa",
+            "Data provided is not large enough for specified control block: psa",
             str(e.exception),
         )
 

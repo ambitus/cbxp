@@ -115,16 +115,16 @@ void CommandProcessor::showFormatUsage() const {
             << "  cat /path/to/cvt.bin | " << argv_[0] << " format cvt"
             << std::endl
             << std::endl
-            << "  # Format OUCB control block data from a file at an offset "
-               "of 0x03A8 bytes."
+            << "  # Format ASCB control block data from a file at an offset "
+               "of 0x040 bytes."
             << std::endl
             << "  " << argv_[0]
-            << " format -F /path/to/oucboffset.bin -o x3A8 oucb" << std::endl
+            << " format -F /path/to/ascboffset.bin -o x40 oucb" << std::endl
             << std::endl
             << "  # Format ASCB control block data from a data set at an "
                "offset of 64 bytes."
             << std::endl
-            << "  " << argv_[0] << " format -F \"//'HLQ.ASCBOF64'\" -o 64 ascb"
+            << "  " << argv_[0] << " format -F \"//'HLQ.ASCBOFST'\" -o 64 ascb"
             << std::endl
             << std::endl;
 
@@ -172,12 +172,10 @@ void CommandProcessor::processGlobalFlags() {
 
   if (std::strcmp(argv_[1], "-v") == 0 ||
       std::strcmp(argv_[1], "--version") == 0) {
-    global_options_.version = true;
     std::cout << "CBXP " << VERSION << std::endl;
     throw CLIExitSuccess();
   } else if (std::strcmp(argv_[1], "-h") == 0 ||
              std::strcmp(argv_[1], "--help") == 0) {
-    global_options_.help = true;
     CommandProcessor::showGeneralUsage();
     throw CLIExitSuccess();
   }
@@ -200,24 +198,20 @@ void CommandProcessor::processGlobalFlags() {
     throw CLIExitFailure();
   }
 
-  int argv_index = 2;  // argv 1 is the command, 2 is the first flag
-
-  if (std::strcmp(argv_[2], "-h") == 0 ||
-      std::strcmp(argv_[2], "--help") == 0) {
-    argv_index++;
-    global_options_.help = true;
-  }
-
-  for (int i = argv_index; i < argc_; i++) {
+  for (int i = 2; i < argc_; i++) {
     std::string flag = argv_[i];
     if (flag == "-d" || flag == "--debug") {
       global_options_.debug = true;
+    }
+    if (flag == "-h" || flag == "--help") {
+      global_options_.help = true;
     }
   }
 
   control_block_name_ = std::string(argv_[argc_ - 1]);
 
-  if (control_block_name_ == "" || control_block_name_[0] == '-') {
+  if ((control_block_name_ == "" || control_block_name_[0] == '-') &&
+      !global_options_.help) {
     std::cerr << ERROR_CONTROL_BLOCK_EXPECTED_ << std::endl;
     throw CLIExitFailure();
   }
@@ -324,7 +318,7 @@ void CommandProcessor::processFormatFlags() {
 
 void CommandProcessor::readFormatDataFromPipe() {
   if (!format_options_.file.empty()) {
-    std::cerr << ERROR_FILE_CANT_HAVE_STDIN_ << std::endl;
+    std::cerr << ERROR_FILE_AND_PIPE_CANT_BE_USED_TOGETHER_ << std::endl;
     throw CLIExitFailure();
   }
   format_options_.data_buffer.assign((std::istreambuf_iterator<char>(std::cin)),
@@ -357,9 +351,6 @@ bool CommandProcessor::isGlobalFlag(const std::string& flag) {
     return true;
   }
   if (flag == "-h" || flag == "--help") {
-    return true;
-  }
-  if (flag == "-v" || flag == "--version") {
     return true;
   }
   return false;

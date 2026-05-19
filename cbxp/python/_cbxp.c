@@ -12,27 +12,27 @@ static PyObject* call_cbxp_extract(PyObject* self, PyObject* args,
                                    PyObject* kwargs) {
   PyObject* result_dictionary;
   PyObject* debug_pyobj;
-  const char* p_control_block;
+  const char* p_control_block_name;
   const char* p_includes_string;
   const char* p_filters_string;
-  Py_ssize_t control_block_length, includes_length, filters_length;
+  Py_ssize_t control_block_name_length, includes_length, filters_length;
   bool debug            = false;
 
   static char* kwlist[] = {"control_block", "includes_string", "filters_string",
                            "debug", NULL};
 
   if (!PyArg_ParseTupleAndKeywords(
-          args, kwargs, "s#s#s#|O", kwlist, &p_control_block,
-          &control_block_length, &p_includes_string, &includes_length,
+          args, kwargs, "s#s#s#|O", kwlist, &p_control_block_name,
+          &control_block_name_length, &p_includes_string, &includes_length,
           &p_filters_string, &filters_length, &debug_pyobj)) {
     return NULL;
   }
 
-  debug = PyObject_IsTrue(debug_pyobj);
+  debug                        = PyObject_IsTrue(debug_pyobj);
 
-  cbxp_result_t* p_cbxp_result =
-      cbxp_extract(p_control_block, control_block_length, p_includes_string,
-                   includes_length, p_filters_string, filters_length, debug);
+  cbxp_result_t* p_cbxp_result = cbxp_extract(
+      p_control_block_name, control_block_name_length, p_includes_string,
+      includes_length, p_filters_string, filters_length, debug);
 
   result_dictionary =
       Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
@@ -51,13 +51,12 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
   PyObject* debug_pyobj;
   const char* p_control_block_name;
   const char* p_data_buffer;
-  Py_ssize_t buffer_length, control_block_name_length;
-  unsigned int offset   = 0;
+  Py_ssize_t buffer_length, control_block_name_length, offset = 0;
   bool debug            = false;
 
   static char* kwlist[] = {"control_block", "data", "offset", "debug", NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s#s#|IO", kwlist,
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s#s#|nO", kwlist,
                                    &p_control_block_name,
                                    &control_block_name_length, &p_data_buffer,
                                    &buffer_length, &offset, &debug_pyobj)) {

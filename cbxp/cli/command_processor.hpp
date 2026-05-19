@@ -14,7 +14,6 @@ class CLIExitFailure : public std::exception {};
 
 typedef struct {
   bool debug;
-  bool version;
   bool help;
 } cbxp_global_options_t;
 
@@ -26,7 +25,7 @@ typedef struct {
 typedef struct {
   std::string file;
   std::vector<char> data_buffer;
-  unsigned int offset;
+  size_t offset;
 } cbxp_format_options_t;
 
 class CommandProcessor {
@@ -45,19 +44,19 @@ class CommandProcessor {
       "Offset is too large for data provided";
   const std::string ERROR_FILE_OR_PIPE_EXPECTED_ =
       "File or pipe expected for \"format\" command";
-  const std::string ERROR_FILE_CANT_HAVE_STDIN_ =
+  const std::string ERROR_FILE_AND_PIPE_CANT_BE_USED_TOGETHER_ =
       "File and pipe cannot be used together";
   // Extract
-  const std::string ERROR_INCLUDES_CANT_HAVE_COMMAS_ =
+  const std::string ERROR_COMMA_IN_INCLUDE_ =
       "Include patterns cannot contain commas";
-  const std::string ERROR_FILTERS_CANT_HAVE_COMMAS_ =
+  const std::string ERROR_COMMA_IN_FILTER_ =
       "Include patterns cannot contain commas";
   // Return Codes
   const std::string ERROR_UNKNOWN_CONTROL_BLOCK_ = "Unknown control block: ";
   const std::string ERROR_BAD_INCLUDE_ = "A bad include pattern was provided";
   const std::string ERROR_BAD_FILTER_  = "A bad filter was provided";
   const std::string ERROR_BUFFER_TOO_SMALL_ =
-      "The provided buffer is not large enought for specified control block: ";
+      "Data provided is not large enough for specified control block: ";
 
   std::string command_;
   std::string control_block_name_;
@@ -85,7 +84,7 @@ class CommandProcessor {
         global_options_({false, false, false}),
         extract_options_({"", ""}),
         format_options_({"", {}, 0}) {
-    process();
+    CommandProcessor::process();
   };
   void run();
 };

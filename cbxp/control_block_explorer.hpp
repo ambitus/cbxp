@@ -13,7 +13,7 @@ class ControlBlockExplorer {
   cbxp_result_t* p_result_;
   cbxp_options_t cbxp_options_         = {{}, {}, false};
   const void* p_control_block_         = nullptr;
-  size_t control_block_buffer_length_  = 0;
+  size_t control_block_data_length_    = 0;
   std::string control_block_operation_ = "";
   static std::vector<std::string> createOptionsList(
       const std::string& comma_separated_string);
@@ -25,7 +25,7 @@ class ControlBlockExplorer {
                            const std::string& includes_string,
                            const std::string& filters_string);
   void formatControlBlock(const std::string& control_block_name,
-                          const void* bytes_buffer, const size_t buffer_length);
+                          const void* data, const size_t data_length);
   void processControlBlock(const std::string& control_block_name);
 };
 }  // namespace CBXP
