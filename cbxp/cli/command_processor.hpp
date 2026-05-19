@@ -39,7 +39,7 @@ class CommandProcessor {
       "Positional argument <control block> expected";
   // Format
   const std::string ERROR_OFFSET_MUST_BE_A_POSITIVE_INTEGER_ =
-      "Offset must be positive integer";
+      "Offset must be a positive integer";
   const std::string ERROR_OFFSET_TOO_LARGE_ =
       "Offset is too large for data provided";
   const std::string ERROR_FILE_OR_PIPE_EXPECTED_ =
@@ -55,7 +55,7 @@ class CommandProcessor {
   const std::string ERROR_UNKNOWN_CONTROL_BLOCK_ = "Unknown control block: ";
   const std::string ERROR_BAD_INCLUDE_ = "A bad include pattern was provided";
   const std::string ERROR_BAD_FILTER_  = "A bad filter was provided";
-  const std::string ERROR_BUFFER_TOO_SMALL_ =
+  const std::string ERROR_DATA_TOO_SMALL_ =
       "Data provided is not large enough for specified control block: ";
 
   std::string command_;

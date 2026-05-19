@@ -586,7 +586,31 @@ class TestCBXP(unittest.TestCase):
                 offset=-1,
             )
         self.assertEqual(
-            "Offset parameter can not be negative",
+            "Offset must be positive integer",
+            str(e.exception),
+        )
+
+    def test_cbxp_raises_cbxp_error_if_format_offset_is_alpha(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.format(
+                "ascb",
+                data=self.read_sample("ascb.bin"),
+                offset="JUNK",
+            )
+        self.assertEqual(
+            "Offset must be positive integer",
+            str(e.exception),
+        )
+
+    def test_cbxp_raises_cbxp_error_if_format_offset_is_float(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.format(
+                "ascb",
+                data=self.read_sample("ascb.bin"),
+                offset=5.5,
+            )
+        self.assertEqual(
+            "Offset must be positive integer",
             str(e.exception),
         )
 

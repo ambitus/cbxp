@@ -117,6 +117,8 @@ run_with_expected_exit_code 255 ./dist/cbxp format -i cvt psa
 run_with_expected_exit_code 255 ./dist/cbxp format -f psapsa=PSA psa
 run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o 999999 ascb
 run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o -1 ascb
+run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o JUNK ascb
+run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o 5.5 ascb
 # Errors: Unknown Control Block
 run_with_expected_exit_code 255 ./dist/cbxp extract unknown
 # Errors: Bad Include Patterns

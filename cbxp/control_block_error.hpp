@@ -6,7 +6,7 @@ enum Error {
   BadControlBlock = 1,
   BadInclude      = 2,
   BadFilter       = 3,
-  BufferTooSmall  = 4
+  DataTooSmall    = 4
 };
 class CBXPError : public std::exception {
  private:
@@ -32,9 +32,9 @@ class FilterError : public CBXPError {
   FilterError() : CBXPError(Error::BadFilter) {}
 };
 
-class BufferLengthError : public CBXPError {
+class DataLengthError : public CBXPError {
  public:
-  BufferLengthError() : CBXPError(Error::BufferTooSmall) {}
+  DataLengthError() : CBXPError(Error::DataTooSmall) {}
 };
 
 }  // namespace CBXP

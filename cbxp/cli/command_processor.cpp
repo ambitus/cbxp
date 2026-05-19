@@ -116,10 +116,10 @@ void CommandProcessor::showFormatUsage() const {
             << std::endl
             << std::endl
             << "  # Format ASCB control block data from a file at an offset "
-               "of 0x040 bytes."
+               "of 0x40 bytes."
             << std::endl
             << "  " << argv_[0]
-            << " format -F /path/to/ascboffset.bin -o x40 oucb" << std::endl
+            << " format -F /path/to/ascboffset.bin -o x40 ascb" << std::endl
             << std::endl
             << "  # Format ASCB control block data from a data set at an "
                "offset of 64 bytes."
@@ -161,6 +161,12 @@ void CommandProcessor::process() {
     } else {
       CommandProcessor::processExtractFlags();
     }
+  }
+
+  if ((control_block_name_ == "" || control_block_name_[0] == '-') &&
+      !global_options_.help) {
+    std::cerr << ERROR_CONTROL_BLOCK_EXPECTED_ << std::endl;
+    throw CLIExitFailure();
   }
 }
 
@@ -209,12 +215,6 @@ void CommandProcessor::processGlobalFlags() {
   }
 
   control_block_name_ = std::string(argv_[argc_ - 1]);
-
-  if ((control_block_name_ == "" || control_block_name_[0] == '-') &&
-      !global_options_.help) {
-    std::cerr << ERROR_CONTROL_BLOCK_EXPECTED_ << std::endl;
-    throw CLIExitFailure();
-  }
 }
 
 void CommandProcessor::processExtractFlags() {
@@ -284,7 +284,7 @@ void CommandProcessor::processFormatFlags() {
       try {
         format_options_.offset = std::stoul(offset, nullptr, 0);
       }
-      // Standard exceptions for stoi
+      // Standard exceptions for stoul
       catch (const std::invalid_argument& e) {
         // Offset not positive or not integer
         std::cerr << ERROR_OFFSET_MUST_BE_A_POSITIVE_INTEGER_ << std::endl;
@@ -394,7 +394,7 @@ void CommandProcessor::run() {
       throw CLIExitFailure();
       break;
     case CBXP::Error::BufferTooSmall:
-      std::cerr << ERROR_BUFFER_TOO_SMALL_ << control_block_name_ << std::endl;
+      std::cerr << ERROR_DATA_TOO_SMALL_ << control_block_name_ << std::endl;
       throw CLIExitFailure();
       break;
     default:

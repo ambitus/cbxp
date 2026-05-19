@@ -12,9 +12,8 @@ class ASCB : public ControlBlock {
   nlohmann::json get(const void* p_control_block = nullptr,
                      const size_t buffer_length  = 0) override;
   explicit ASCB(const cbxp_options_t& cbxp_options)
-      : ControlBlock("ascb", {"assb", "oucb"}, cbxp_options) {
-    control_block_length_ = sizeof(struct ascb);
-  }
+      : ControlBlock("ascb", {"assb", "oucb"}, cbxp_options,
+                     sizeof(struct ascb)) {}
 };
 
 }  // namespace CBXP

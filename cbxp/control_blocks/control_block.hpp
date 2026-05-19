@@ -22,6 +22,7 @@ class ControlBlock {
  private:
   const std::string control_block_name_;
   const std::vector<std::string> includables_;
+  size_t control_block_length_ = 0;
   void createIncludeLists(const std::vector<std::string>& includes);
   void processDoubleAsteriskInclude();
   void processAsteriskInclude();
@@ -38,7 +39,6 @@ class ControlBlock {
   void createOptionsMap(const std::vector<std::string>& includes,
                         const std::vector<std::string>& filters);
   bool matchFilter(nlohmann::json& control_block_json);
-  size_t control_block_length_   = 0;
   bool skip_buffer_length_check_ = false;
 
  public:
@@ -47,9 +47,11 @@ class ControlBlock {
                              const size_t buffer_length  = 0) = 0;
   explicit ControlBlock(const std::string& name,
                         const std::vector<std::string>& includables,
-                        const cbxp_options_t& cbxp_options)
+                        const cbxp_options_t& cbxp_options,
+                        size_t control_block_length)
       : control_block_name_(name),
         includables_(includables),
+        control_block_length_(control_block_length),
         skip_buffer_length_check_(cbxp_options.skip_buffer_length_check) {
     ControlBlock::createOptionsMap(cbxp_options.include_patterns,
                                    cbxp_options.filters);

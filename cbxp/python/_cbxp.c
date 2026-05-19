@@ -1,7 +1,6 @@
 #define PY_SSIZE_T_CLEAN
 
 #include <Python.h>
-#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -65,8 +64,13 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
 
   debug = PyObject_IsTrue(debug_pyobj);
 
+  if (offset < 0) {
+    PyErr_SetString(PyExc_ValueError, "Offset cannot be negative");
+    return NULL;
+  }
+
   if (offset > buffer_length) {
-    PyErr_SetString(PyExc_ValueError, "Offset exceeds buffer length");
+    PyErr_SetString(PyExc_ArithmeticError, "Offset exceeds buffer length");
     return NULL;
   }
 
