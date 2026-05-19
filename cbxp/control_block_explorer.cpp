@@ -69,7 +69,7 @@ void ControlBlockExplorer::formatControlBlock(
     const size_t data_length) {
   p_control_block_ = data;
   if (p_control_block_ == nullptr) {
-    control_block_data_length = 0;
+    control_block_data_length_ = 0;
   } else {
     control_block_data_length_ = data_length;
   }
