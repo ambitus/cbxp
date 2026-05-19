@@ -29,6 +29,23 @@ run_with_expected_null_response() {
     echo
 }
 
+## General Test Cases
+
+# Show Usage
+run_with_expected_exit_code 0 ./dist/cbxp -h
+run_with_expected_exit_code 0 ./dist/cbxp --help
+# Show Version
+run_with_expected_exit_code 0 ./dist/cbxp -v
+run_with_expected_exit_code 0 ./dist/cbxp --version
+# Errors: Bad Usage
+run_with_expected_exit_code 255 ./dist/cbxp junk
+run_with_expected_exit_code 255 ./dist/cbxp --junk
+
+## Extract Command
+
+# Show Usage
+run_with_expected_exit_code 0 ./dist/cbxp extract --help
+run_with_expected_exit_code 0 ./dist/cbxp extract -h
 # Basic Usage
 run_with_expected_exit_code 0 ./dist/cbxp extract psa
 run_with_expected_exit_code 0 ./dist/cbxp extract cvt
@@ -37,16 +54,9 @@ run_with_expected_exit_code 0 ./dist/cbxp extract asvt
 run_with_expected_exit_code 0 ./dist/cbxp extract ascb
 run_with_expected_exit_code 0 ./dist/cbxp extract assb
 run_with_expected_exit_code 0 ./dist/cbxp extract oucb
-
-# Format
-run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascb.bin ascb
-run_with_expected_exit_code 0 cat tests/samples/cvt.bin | ./dist/cbxp format cvt
-run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/oucb.bin oucb
-run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascboffset40.bin -o 0x40 ascb
-run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascboffset40.bin -o 64 ascb
-run_with_expected_exit_code 0 cat tests/samples/oucboffset3A8.bin | ./dist/cbxp format -o 0x3A8 oucb
-run_with_expected_exit_code 0 cat tests/samples/oucboffset3A8.bin | ./dist/cbxp format -o 936 oucb
-
+# Debug Mode
+run_with_expected_exit_code 0 ./dist/cbxp extract -d psa
+run_with_expected_exit_code 0 ./dist/cbxp extract --debug psa
 # Include Patterns
 run_with_expected_exit_code 0 ./dist/cbxp extract -i cvt psa
 run_with_expected_exit_code 0 ./dist/cbxp extract --include cvt psa
@@ -65,7 +75,6 @@ run_with_expected_exit_code 0 ./dist/cbxp extract -i assb ascb
 run_with_expected_exit_code 0 ./dist/cbxp extract -i oucb ascb
 run_with_expected_exit_code 0 ./dist/cbxp extract -i cvt.ecvt -i cvt.asvt.ascb.assb psa
 run_with_expected_exit_code 0 ./dist/cbxp extract -i cvt.ecvt -i cvt.asvt.ascb.oucb psa
-
 # Filters
 run_with_expected_exit_code 0 ./dist/cbxp extract -f psapsa=PSA psa
 run_with_expected_exit_code 0 ./dist/cbxp extract -f "cvt.asvt.ascb.assb.assbjbns=*MASTER*" -i "**" psa
@@ -90,20 +99,10 @@ run_with_expected_null_response ./dist/cbxp extract -f "ascb.assb.assbjbns=*MAST
 run_with_expected_exit_code 0 ./dist/cbxp extract -f assbjbns="*MASTER*" -f assbjbni=  assb
 run_with_expected_exit_code 0 ./dist/cbxp extract -f assbjbns="*MASTER*" -f assbjbni="" assb
 run_with_expected_exit_code 0 ./dist/cbxp extract -f assbjbns="*MASTER*" -f assbjbni='' assb
-
-
-# Debug Mode
-run_with_expected_exit_code 0 ./dist/cbxp extract -d psa
-run_with_expected_exit_code 0 ./dist/cbxp extract --debug psa
-# Show Usage
-run_with_expected_exit_code 0 ./dist/cbxp -h
-run_with_expected_exit_code 0 ./dist/cbxp --help
-# Show Version
-run_with_expected_exit_code 0 ./dist/cbxp -v
-run_with_expected_exit_code 0 ./dist/cbxp --version
-
 # Errors: Bad Usage
 run_with_expected_exit_code 255 ./dist/cbxp extract
+run_with_expected_exit_code 255 ./dist/cbxp extract --junk
+run_with_expected_exit_code 255 ./dist/cbxp extract --junk junk
 run_with_expected_exit_code 255 ./dist/cbxp extract -x "unknown flag" cvt
 run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt
 run_with_expected_exit_code 255 ./dist/cbxp extract -i -i cvt psa
@@ -111,14 +110,6 @@ run_with_expected_exit_code 255 ./dist/cbxp extract -f psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -f psapsa=psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -F tests/samples/ascb.bin psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -o 1 psa
-run_with_expected_exit_code 255 ./dist/cbxp format
-run_with_expected_exit_code 255 ./dist/cbxp format psa
-run_with_expected_exit_code 255 ./dist/cbxp format -i cvt psa
-run_with_expected_exit_code 255 ./dist/cbxp format -f psapsa=PSA psa
-run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o 999999 ascb
-run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o -1 ascb
-run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o JUNK ascb
-run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o 5.5 ascb
 # Errors: Unknown Control Block
 run_with_expected_exit_code 255 ./dist/cbxp extract unknown
 # Errors: Bad Include Patterns
@@ -138,6 +129,37 @@ run_with_expected_exit_code 255 ./dist/cbxp extract -f assbasid= assb
 run_with_expected_exit_code 255 ./dist/cbxp extract -f 'ascbasid<=junk' ascb
 run_with_expected_exit_code 255 ./dist/cbxp extract -f "psapsa=psa,cvt.asvt.ascb.ascbasid<2" cvt
 run_with_expected_exit_code 255 ./dist/cbxp extract -f junk psa
+
+## Format Command
+
+# Show Usage
+run_with_expected_exit_code 0 ./dist/cbxp format -h
+run_with_expected_exit_code 0 ./dist/cbxp format --help
+# Basic Usage
+run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascb.bin ascb
+run_with_expected_exit_code 0 cat tests/samples/cvt.bin | ./dist/cbxp format cvt
+run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/oucb.bin oucb
+run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascboffset40.bin -o 0x40 ascb
+run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascboffset40.bin -o 64 ascb
+run_with_expected_exit_code 0 cat tests/samples/oucboffset3A8.bin | ./dist/cbxp format -o 0x3A8 oucb
+run_with_expected_exit_code 0 cat tests/samples/oucboffset3A8.bin | ./dist/cbxp format -o 936 oucb
+# Debug Mode
+run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascb.bin -d ascb
+run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascb.bin --debug ascb
+# Errors: Bad Usage
+run_with_expected_exit_code 255 ./dist/cbxp format
+run_with_expected_exit_code 255 ./dist/cbxp format --junk
+run_with_expected_exit_code 255 ./dist/cbxp format --junk junk
+run_with_expected_exit_code 255 ./dist/cbxp format psa
+run_with_expected_exit_code 255 ./dist/cbxp format -i cvt psa
+run_with_expected_exit_code 255 ./dist/cbxp format -f psapsa=PSA psa
+# Errors: Unknown Control Block
+run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -d unknown
+# Errors: Bad Offset
+run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o 999999 ascb
+run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o -1 ascb
+run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o JUNK ascb
+run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin -o 5.5 ascb
 # Errors: Error Opening File
 run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/notreal.bin psa
 # Errors: No File/Pipe provided

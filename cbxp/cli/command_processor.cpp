@@ -71,7 +71,7 @@ void CommandProcessor::showExtractUsage() const {
             << std::endl
             << std::endl
             << "  # Extract all ASSB control blocks from live memory where the "
-               "control block."
+               "control block"
             << std::endl
             << "  # field 'ASSBJBNI' matches the filter value 'IBMUSER'."
             << std::endl
@@ -119,7 +119,7 @@ void CommandProcessor::showFormatUsage() const {
                "of 0x40 bytes."
             << std::endl
             << "  " << argv_[0]
-            << " format -F /path/to/ascboffset.bin -o x40 ascb" << std::endl
+            << " format -F /path/to/ascboffset.bin -o 0x40 ascb" << std::endl
             << std::endl
             << "  # Format ASCB control block data from a data set at an "
                "offset of 64 bytes."
@@ -133,7 +133,7 @@ void CommandProcessor::showFormatUsage() const {
                "from a specified file or dataset"
             << std::endl
             << "  -o, --offset <value>             Specify an offset into "
-               "a memory buffer to start formatting"
+               "the provided data to start formatting"
             << std::endl
             << std::endl;
 
@@ -147,19 +147,19 @@ void CommandProcessor::showFormatUsage() const {
 void CommandProcessor::process() {
   CommandProcessor::processGlobalFlags();
 
-  if (command_ == "format") {
-    if (global_options_.help) {
-      CommandProcessor::showFormatUsage();
-      throw CLIExitSuccess();
-    } else {
-      CommandProcessor::processFormatFlags();
-    }
-  } else if (command_ == "extract") {
+  if (command_ == "extract") {
     if (global_options_.help) {
       CommandProcessor::showExtractUsage();
       throw CLIExitSuccess();
     } else {
       CommandProcessor::processExtractFlags();
+    }
+  } else if (command_ == "format") {
+    if (global_options_.help) {
+      CommandProcessor::showFormatUsage();
+      throw CLIExitSuccess();
+    } else {
+      CommandProcessor::processFormatFlags();
     }
   }
 

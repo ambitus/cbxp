@@ -14,7 +14,7 @@ class CBXPError : public std::exception {
 
  public:
   explicit CBXPError(const Error& rc) : error_code_(rc) {}
-  const int getErrorCode() const { return error_code_; }
+  const unsigned int getErrorCode() const { return error_code_; }
 };
 
 class ControlBlockError : public CBXPError {

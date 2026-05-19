@@ -12,7 +12,7 @@ extern "C" {
 typedef struct {
   char* result_json;
   int result_json_length;
-  int return_code;
+  unsigned int return_code;
 } cbxp_result_t;
 
 cbxp_result_t* cbxp_extract(const char* control_block_name,

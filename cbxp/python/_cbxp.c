@@ -34,7 +34,7 @@ static PyObject* call_cbxp_extract(PyObject* self, PyObject* args,
       includes_length, p_filters_string, filters_length, debug);
 
   result_dictionary =
-      Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
+      Py_BuildValue("{s:s#, s:I}", "result_json", p_cbxp_result->result_json,
                     p_cbxp_result->result_json_length, "return_code",
                     p_cbxp_result->return_code);
 
@@ -82,7 +82,7 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
                   p_data_buffer, buffer_length, debug);
 
   result_dictionary =
-      Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
+      Py_BuildValue("{s:s#, s:I}", "result_json", p_cbxp_result->result_json,
                     p_cbxp_result->result_json_length, "return_code",
                     p_cbxp_result->return_code);
 
