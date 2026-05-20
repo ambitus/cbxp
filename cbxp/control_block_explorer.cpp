@@ -85,7 +85,7 @@ void ControlBlockExplorer::processControlBlock(
   nlohmann::json control_block_json = {};
 
   try {
-    if (p_control_block_ == nullptr) {
+    if (p_control_block_ == nullptr && control_block_operation_ == "Format") {
       throw DataLengthError();
     }
     if (control_block_name == "psa") {
