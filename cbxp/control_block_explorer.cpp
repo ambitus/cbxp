@@ -67,7 +67,7 @@ void ControlBlockExplorer::extractControlBlock(
 void ControlBlockExplorer::formatControlBlock(
     const std::string& control_block_name, const void* p_data,
     const size_t data_length) {
-  p_control_block_           = data;
+  p_control_block_           = p_data;
   control_block_data_length_ = data_length;
 
   control_block_operation_   = "Format";
