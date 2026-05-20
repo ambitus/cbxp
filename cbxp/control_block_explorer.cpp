@@ -86,7 +86,7 @@ void ControlBlockExplorer::processControlBlock(
 
   try {
     if (p_control_block_ == nullptr && control_block_operation_ == "Format") {
-      throw DataLengthError();
+      throw NullDataPtrError();
     }
     if (control_block_name == "psa") {
       control_block_json =
