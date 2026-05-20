@@ -7,9 +7,19 @@ from cbxp import CBXPError, CBXPFilter, CBXPFilterOperation, cbxp
 class TestCBXP(unittest.TestCase):
     SAMPLE_DIR = Path(__file__).resolve().parent / "samples"
 
+    # ============================================================================
+    # Utility Functions
+    # ============================================================================
+
     @staticmethod
     def read_sample(filename: str) -> bytes:
         return (TestCBXP.SAMPLE_DIR / filename).read_bytes()
+
+    @staticmethod
+    def get_cvtasmvt_values() -> tuple[int, str]:
+        cbdata = cbxp.extract("cvt")
+        cvtasmvt_hex = cbdata["cvtasmvt"]
+        return int(cvtasmvt_hex, 16), cvtasmvt_hex
 
     # ============================================================================
     # Extract -- Basic Usage
@@ -17,12 +27,6 @@ class TestCBXP(unittest.TestCase):
     def test_cbxp_extract_psa(self):
         cbdata = cbxp.extract("psa")
         self.assertIs(type(cbdata), dict)
-
-    @staticmethod
-    def get_cvtasmvt_values() -> tuple[int, str]:
-        cbdata = cbxp.extract("cvt")
-        cvtasmvt_hex = cbdata["cvtasmvt"]
-        return int(cvtasmvt_hex, 16), cvtasmvt_hex
 
     def test_cbxp_extract_cvt(self):
         cbdata = cbxp.extract("cvt")
@@ -678,6 +682,17 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
+    # ============================================================================
+    # Format -- Debug Mode
+    # ============================================================================
+    def test_cbxp_format_runs_in_debug_mode(self):
+        cbdata = cbxp.format("ascb", data=self.read_sample("ascb.bin"), debug=True)
+        self.assertIs(type(cbdata), dict)
+
+    # ============================================================================
+    # Format -- Offset
+    # ============================================================================
+
     def test_cbxp_format_ascb_with_hex_offset(self):
         cbdata = cbxp.format(
             "ascb",
@@ -708,13 +723,6 @@ class TestCBXP(unittest.TestCase):
             data=self.read_sample("oucboffset3A8.bin"),
             offset=936,
         )
-        self.assertIs(type(cbdata), dict)
-
-    # ============================================================================
-    # Format -- Debug Mode
-    # ============================================================================
-    def test_cbxp_format_runs_in_debug_mode(self):
-        cbdata = cbxp.format("ascb", data=self.read_sample("ascb.bin"), debug=True)
         self.assertIs(type(cbdata), dict)
 
     # ============================================================================

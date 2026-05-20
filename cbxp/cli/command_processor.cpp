@@ -336,7 +336,7 @@ void CommandProcessor::readFormatDataFromFile(const std::string& file_path) {
   format_options_.file = file_path;
   std::ifstream file(format_options_.file, std::ios::binary | std::ios::ate);
   if (!file.is_open()) {
-    std::cerr << "Error opening file: " << format_options_.file << std::endl;
+    std::cerr << ERROR_OPENING_FILE_ << format_options_.file << std::endl;
     throw CLIExitFailure();
   }
   std::streamsize size = file.tellg();

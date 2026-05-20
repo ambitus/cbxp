@@ -49,16 +49,16 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
   PyObject* result_dictionary;
   PyObject* debug_pyobj;
   const char* p_control_block_name;
-  const char* p_data_buffer;
-  Py_ssize_t buffer_length, control_block_name_length, offset = 0;
+  const char* p_data;
+  Py_ssize_t data_length, control_block_name_length, offset = 0;
   bool debug            = false;
 
   static char* kwlist[] = {"control_block", "data", "offset", "debug", NULL};
 
   if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s#s#|nO", kwlist,
                                    &p_control_block_name,
-                                   &control_block_name_length, &p_data_buffer,
-                                   &buffer_length, &offset, &debug_pyobj)) {
+                                   &control_block_name_length, &p_data,
+                                   &data_length, &offset, &debug_pyobj)) {
     return NULL;
   }
 
@@ -69,17 +69,17 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
     return NULL;
   }
 
-  if (offset > buffer_length) {
+  if (offset > data_length) {
     PyErr_SetString(PyExc_ArithmeticError, "Offset exceeds buffer length");
     return NULL;
   }
 
-  p_data_buffer += offset;
-  buffer_length -= offset;
+  p_data += offset;
+  data_length -= offset;
 
   cbxp_result_t* p_cbxp_result =
-      cbxp_format(p_control_block_name, control_block_name_length,
-                  p_data_buffer, buffer_length, debug);
+      cbxp_format(p_control_block_name, control_block_name_length, p_data,
+                  data_length, debug);
 
   result_dictionary =
       Py_BuildValue("{s:s#, s:I}", "result_json", p_cbxp_result->result_json,

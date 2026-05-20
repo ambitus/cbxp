@@ -65,16 +65,12 @@ void ControlBlockExplorer::extractControlBlock(
 }
 
 void ControlBlockExplorer::formatControlBlock(
-    const std::string& control_block_name, const void* data,
+    const std::string& control_block_name, const void* p_data,
     const size_t data_length) {
-  p_control_block_ = data;
-  if (p_control_block_ == nullptr) {
-    control_block_data_length_ = 0;
-  } else {
-    control_block_data_length_ = data_length;
-  }
+  p_control_block_           = data;
+  control_block_data_length_ = data_length;
 
-  control_block_operation_ = "Format";
+  control_block_operation_   = "Format";
 
   ControlBlockExplorer::processControlBlock(control_block_name);
 
@@ -86,9 +82,12 @@ void ControlBlockExplorer::processControlBlock(
   Logger::getInstance().debug(control_block_operation_ + "ing '" +
                               control_block_name + "' control block data...");
 
-  nlohmann::json control_block_json;
+  nlohmann::json control_block_json = {};
 
   try {
+    if (p_control_block_ == nullptr) {
+      throw DataLengthError();
+    }
     if (control_block_name == "psa") {
       control_block_json =
           PSA(cbxp_options_).get(p_control_block_, control_block_data_length_);

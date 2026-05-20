@@ -42,6 +42,7 @@ class CommandProcessor {
       "Offset must be a positive integer";
   const std::string ERROR_OFFSET_TOO_LARGE_ =
       "Offset is too large for data provided";
+  const std::string ERROR_OPENING_FILE_ = "Error opening file: ";
   const std::string ERROR_FILE_OR_PIPE_EXPECTED_ =
       "File or pipe expected for \"format\" command";
   const std::string ERROR_FILE_AND_PIPE_CANT_BE_USED_TOGETHER_ =

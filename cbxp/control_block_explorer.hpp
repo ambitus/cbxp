@@ -25,7 +25,7 @@ class ControlBlockExplorer {
                            const std::string& includes_string,
                            const std::string& filters_string);
   void formatControlBlock(const std::string& control_block_name,
-                          const void* data, const size_t data_length);
+                          const void* p_data, const size_t data_length);
   void processControlBlock(const std::string& control_block_name);
 };
 }  // namespace CBXP
