@@ -129,7 +129,7 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
 
-    def test_cbxp_include_extract_cvt_and_include_ecvt_and_asvt(self):
+    def test_cbxp_extract_cvt_and_include_ecvt_and_asvt(self):
         cbdata = cbxp.extract("cvt", includes=["ecvt", "asvt"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtecvt"]), dict)
@@ -138,7 +138,7 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), str)
 
-    def test_cbxp_include_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb(
+    def test_cbxp_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb(
         self,
     ):
         cbdata = cbxp.extract("psa", includes=["cvt.ecvt", "cvt.asvt.ascb"])
@@ -150,7 +150,7 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
 
-    def test_cbxp_include_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb_assb(
+    def test_cbxp_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb_assb(
         self,
     ):
         cbdata = cbxp.extract("psa", includes=["cvt.ecvt", "cvt.asvt.ascb.assb"])
@@ -163,7 +163,7 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
 
-    def test_cbxp_include_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb_oucb(
+    def test_cbxp_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb_oucb(
         self,
     ):
         cbdata = cbxp.extract("psa", includes=["cvt.ecvt", "cvt.asvt.ascb.oucb"])
