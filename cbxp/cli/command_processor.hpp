@@ -37,6 +37,7 @@ class CommandProcessor {
   const std::string ERROR_UNKNOWN_FLAG_           = "Unknown flag: ";
   const std::string ERROR_CONTROL_BLOCK_EXPECTED_ =
       "Positional argument <control block> expected";
+  const std::string ERROR_UNKNOWN_ERROR_ = "An unknown error occurred";
   // Format
   const std::string ERROR_OFFSET_MUST_BE_A_POSITIVE_INTEGER_ =
       "Offset must be a positive integer";

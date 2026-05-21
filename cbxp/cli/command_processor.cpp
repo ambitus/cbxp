@@ -323,9 +323,11 @@ void CommandProcessor::readFormatDataFromPipe() {
   format_options_.data_buffer.assign((std::istreambuf_iterator<char>(std::cin)),
                                      (std::istreambuf_iterator<char>()));
   if (!format_options_.data_buffer.empty()) {
-    // For environments where unix automatically converts ascii to ebcdic in
-    // pipes we need to convert back to raw binary ebcdic data to parse as
-    // expected
+    // When auto conversion is enabled, binary data being piped into the CBXP
+    // CLI will be auto converted to ASCII, so we need to undo the auto
+    // conversion. This may not work correctly if auto conversion is not
+    // enabled. It is recommended to have '_BPXK_AUTOCVT=ON' set when using the
+    // CBXP CLI.
     std::string env_p(std::getenv("_BPXK_AUTOCVT"));
     if (!env_p.empty() && (env_p == "ON" || env_p == "ALL")) {
       __a2e_l(format_options_.data_buffer.data(),
@@ -381,7 +383,17 @@ void CommandProcessor::run() {
                     global_options_.debug);
   }
 
-  switch (cbxp_result->return_code) {
+  unsigned int return_code = cbxp_result->return_code;
+
+  if (return_code == 0) {
+    std::cout << cbxp_result->result_json << std::endl;
+  }
+
+  cbxp_free(cbxp_result, global_options_.debug);
+
+  switch (return_code) {
+    case 0:
+      break;
     case CBXP::Error::BadControlBlock:
       std::cerr << ERROR_UNKNOWN_CONTROL_BLOCK_ << control_block_name_
                 << std::endl;
@@ -400,10 +412,10 @@ void CommandProcessor::run() {
       throw CLIExitFailure();
       break;
     default:
-      std::cout << cbxp_result->result_json << std::endl;
+      std::cerr << ERROR_UNKNOWN_ERROR_ << control_block_name_ << std::endl;
+      throw CLIExitFailure();
   }
-
-  cbxp_free(cbxp_result, global_options_.debug);
+  throw CLIExitSuccess();
 }
 
 }  // namespace CBXP

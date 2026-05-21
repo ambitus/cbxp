@@ -72,7 +72,7 @@ class CBXPError(Exception):
                     f"control block: {control_block_name}"
                 )
             case _:
-                message = "an unknown error occurred"
+                message = "An unknown error occurred"
         super().__init__(message)
 
 

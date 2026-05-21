@@ -55,7 +55,7 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
 
   static char* kwlist[] = {"control_block", "data", "offset", "debug", NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s#s#|nO", kwlist,
+  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s#y#|nO", kwlist,
                                    &p_control_block_name,
                                    &control_block_name_length, &p_data,
                                    &data_length, &offset, &debug_pyobj)) {
