@@ -39,11 +39,6 @@ class DataLengthError : public CBXPError {
   DataLengthError() : CBXPError(Error::DataTooSmall) {}
 };
 
-class NullDataPtrError : public CBXPError {
- public:
-  NullDataPtrError() : CBXPError(Error::NullDataPtr) {}
-};
-
 }  // namespace CBXP
 
 #endif

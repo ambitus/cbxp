@@ -757,7 +757,7 @@ class TestCBXP(unittest.TestCase):
                 offset=-1,
             )
         self.assertEqual(
-            "Offset must be positive integer",
+            "Offset must be a positive integer",
             str(e.exception),
         )
 
@@ -769,7 +769,7 @@ class TestCBXP(unittest.TestCase):
                 offset="JUNK",
             )
         self.assertEqual(
-            "Offset must be positive integer",
+            "Offset must be a positive integer",
             str(e.exception),
         )
 
@@ -781,7 +781,7 @@ class TestCBXP(unittest.TestCase):
                 offset=5.5,
             )
         self.assertEqual(
-            "Offset must be positive integer",
+            "Offset must be a positive integer",
             str(e.exception),
         )
 

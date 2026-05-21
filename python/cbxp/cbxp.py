@@ -59,7 +59,7 @@ class CBXPError(Exception):
             case CBXPErrorCode.OFFSET_TOO_LARGE.value:
                 message = "Offset is too large for data provided"
             case CBXPErrorCode.OFFSET_NOT_POSITIVE_INT.value:
-                message = "Offset must be positive integer"
+                message = "Offset must be a positive integer"
             case CBXPErrorCode.UNKNOWN_CONTROL_BLOCK.value:
                 message = f"Unknown control block: {control_block_name}"
             case CBXPErrorCode.BAD_INCLUDE.value:

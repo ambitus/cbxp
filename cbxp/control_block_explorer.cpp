@@ -67,6 +67,12 @@ void ControlBlockExplorer::extractControlBlock(
 void ControlBlockExplorer::formatControlBlock(
     const std::string& control_block_name, const void* p_data,
     const size_t data_length) {
+  if (p_data == nullptr) {
+    // C/C++ callers who invoke this directly could pass null pointer(s) in
+    // which should halt processing
+    p_result_->return_code = Error::NullDataPtr;
+    return;
+  }
   p_control_block_           = p_data;
   control_block_data_length_ = data_length;
 
@@ -85,9 +91,6 @@ void ControlBlockExplorer::processControlBlock(
   nlohmann::json control_block_json = {};
 
   try {
-    if (p_control_block_ == nullptr && control_block_operation_ == "Format") {
-      throw NullDataPtrError();
-    }
     if (control_block_name == "psa") {
       control_block_json =
           PSA(cbxp_options_).get(p_control_block_, control_block_data_length_);
