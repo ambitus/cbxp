@@ -398,19 +398,15 @@ void CommandProcessor::run() {
       std::cerr << ERROR_UNKNOWN_CONTROL_BLOCK_ << control_block_name_
                 << std::endl;
       throw CLIExitFailure();
-      break;
     case CBXP::Error::BadInclude:
       std::cerr << ERROR_BAD_INCLUDE_ << std::endl;
       throw CLIExitFailure();
-      break;
     case CBXP::Error::BadFilter:
       std::cerr << ERROR_BAD_FILTER_ << std::endl;
       throw CLIExitFailure();
-      break;
     case CBXP::Error::DataTooSmall:
       std::cerr << ERROR_DATA_TOO_SMALL_ << control_block_name_ << std::endl;
       throw CLIExitFailure();
-      break;
     default:
       std::cerr << ERROR_UNKNOWN_ERROR_ << control_block_name_ << std::endl;
       throw CLIExitFailure();
