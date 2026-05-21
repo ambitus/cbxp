@@ -18,8 +18,12 @@ def main():
             Extension(
                 "cbxp._C",
                 sources=(
-                    glob("cbxp/**/*.cpp")
-                    + [file for file in glob("cbxp/*.cpp") if file != "cbxp/main.cpp"]
+                    [
+                        file
+                        for file in glob("cbxp/**/*.cpp")
+                        if file not in glob("cbxp/cli/*.cpp")
+                    ]
+                    + glob("cbxp/*.cpp")
                     + ["cbxp/python/_cbxp.c"]
                 ),
                 include_dirs=(

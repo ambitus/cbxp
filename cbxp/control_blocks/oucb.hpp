@@ -109,9 +109,10 @@ namespace CBXP {
 
 class OUCB : public ControlBlock {
  public:
-  nlohmann::json get(void* __ptr32 p_control_block = nullptr) override;
+  nlohmann::json get(const void* p_control_block = nullptr,
+                     const size_t buffer_length  = 0) override;
   explicit OUCB(const cbxp_options_t& cbxp_options)
-      : ControlBlock("oucb", {}, cbxp_options) {}
+      : ControlBlock("oucb", {}, cbxp_options, sizeof(oucb_t)) {}
 };
 
 }  // namespace CBXP

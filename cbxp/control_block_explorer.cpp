@@ -50,32 +50,68 @@ std::vector<std::string> ControlBlockExplorer::createOptionsList(
   return options_list;
 }
 
-void ControlBlockExplorer::exploreControlBlock(
+void ControlBlockExplorer::extractControlBlock(
     const std::string& control_block_name, const std::string& includes_string,
     const std::string& filters_string) {
-  cbxp_options_t cbxp_options = {
-      ControlBlockExplorer::createOptionsList(includes_string),
-      ControlBlockExplorer::createOptionsList(filters_string)};
+  cbxp_options_ = {ControlBlockExplorer::createOptionsList(includes_string),
+                   ControlBlockExplorer::createOptionsList(filters_string),
+                   true};
 
-  Logger::getInstance().debug("Extracting '" + control_block_name +
-                              "' control block data...");
+  control_block_operation_ = "Extract";
 
-  nlohmann::json control_block_json;
+  ControlBlockExplorer::processControlBlock(control_block_name);
+
+  return;
+}
+
+void ControlBlockExplorer::formatControlBlock(
+    const std::string& control_block_name, const void* p_data,
+    const size_t data_length) {
+  if (p_data == nullptr) {
+    // C/C++ callers who invoke this directly could pass null pointer(s) in
+    // which should halt processing
+    p_result_->return_code = Error::NullDataPtr;
+    return;
+  }
+  p_control_block_           = p_data;
+  control_block_data_length_ = data_length;
+
+  control_block_operation_   = "Format";
+
+  ControlBlockExplorer::processControlBlock(control_block_name);
+
+  return;
+}
+
+void ControlBlockExplorer::processControlBlock(
+    const std::string& control_block_name) {
+  Logger::getInstance().debug(control_block_operation_ + "ing '" +
+                              control_block_name + "' control block data...");
+
+  nlohmann::json control_block_json = {};
+
   try {
     if (control_block_name == "psa") {
-      control_block_json = PSA(cbxp_options).get();
+      control_block_json =
+          PSA(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "cvt") {
-      control_block_json = CVT(cbxp_options).get();
+      control_block_json =
+          CVT(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "ecvt") {
-      control_block_json = ECVT(cbxp_options).get();
+      control_block_json =
+          ECVT(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "ascb") {
-      control_block_json = ASCB(cbxp_options).get();
+      control_block_json =
+          ASCB(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "asvt") {
-      control_block_json = ASVT(cbxp_options).get();
+      control_block_json =
+          ASVT(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "assb") {
-      control_block_json = ASSB(cbxp_options).get();
+      control_block_json =
+          ASSB(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else if (control_block_name == "oucb") {
-      control_block_json = OUCB(cbxp_options).get();
+      control_block_json =
+          OUCB(cbxp_options_).get(p_control_block_, control_block_data_length_);
     } else {
       throw ControlBlockError();
     }
@@ -84,10 +120,11 @@ void ControlBlockExplorer::exploreControlBlock(
     return;
   }
 
-  std::string control_block_json_string = control_block_json.dump();
+  std::string control_block_json_string = control_block_json.dump(
+      -1, ' ', false, nlohmann::json::error_handler_t::replace);
 
-  Logger::getInstance().debug("'" + control_block_name +
-                              "' control block data extracted");
+  Logger::getInstance().debug(control_block_operation_ + "ed '" +
+                              control_block_name + "' control block data");
 
   Logger::getInstance().debug("Control Block JSON: " +
                               control_block_json_string);

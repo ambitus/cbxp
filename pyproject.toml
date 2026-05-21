@@ -4,7 +4,7 @@
 
 [project]
     name="cbxp"
-    version="0.0.3"
+    version="0.0.4"
     requires-python = ">= 3.13"
     authors = [
         { name = "Leonard J. Carcaramo Jr", email = "lcarcaramo@ibm.com" },
@@ -16,7 +16,7 @@
         { name = "Elijah Swift", email = "elijah.swift@ibm.com" },
         { name = "Varun Chennamadhava", email = "varunchennamadhava@gmail.com" },
     ]
-    description="A unified and standardized interface for extracting z/OS control block data."
+    description="A unified and standardized interface for extracting and formatting z/OS control block data."
     readme = "README.md"
     license = "Apache-2.0"
     classifiers=[
