@@ -10,7 +10,6 @@ class TestCBXP(unittest.TestCase):
     # ============================================================================
     # Utility Functions
     # ============================================================================
-
     @staticmethod
     def read_sample(filename: str) -> bytes:
         return (TestCBXP.SAMPLE_DIR / filename).read_bytes()
@@ -692,7 +691,6 @@ class TestCBXP(unittest.TestCase):
     # ============================================================================
     # Format -- Offset
     # ============================================================================
-
     def test_cbxp_format_ascb_with_hex_offset(self):
         cbdata = cbxp.format(
             "ascb",
@@ -739,7 +737,6 @@ class TestCBXP(unittest.TestCase):
     # ============================================================================
     # Format -- Testing Errors: Bad Offset
     # ============================================================================
-
     def test_cbxp_format_raises_cbxp_error_if_offset_is_too_large(self):
         with self.assertRaises(CBXPError) as e:
             cbxp.format(
@@ -791,7 +788,6 @@ class TestCBXP(unittest.TestCase):
     # ============================================================================
     # Format -- Testing Errors: Bad Data
     # ============================================================================
-
     def test_cbxp_format_raises_cbxp_error_if_data_is_too_small(self):
         with self.assertRaises(CBXPError) as e:
             cbxp.format(

@@ -14,6 +14,10 @@ void ControlBlock::createOptionsMap(const std::vector<std::string>& includes,
   // of the options_map_ structure and must be called after createIncludeLists
   ControlBlock::createIncludeLists(includes);
   ControlBlock::createFilterLists(filters);
+  for (auto it = options_map_.begin(); it != options_map_.end(); ++it) {
+    options_map_[it->first].skip_buffer_length_check =
+        skip_buffer_length_check_;
+  }
 }
 
 void ControlBlock::createIncludeLists(
@@ -48,8 +52,6 @@ void ControlBlock::processDoubleAsteriskInclude() {
         "Initializing and adding '**' to the include list for the '" +
         includable + "' control block...");
     options_map_[includable].include_patterns = {"**"};
-    options_map_[includable].skip_buffer_length_check =
-        skip_buffer_length_check_;
   }
 }
 
@@ -60,8 +62,6 @@ void ControlBlock::processAsteriskInclude() {
       Logger::getInstance().debug("Initializing include list for the '" +
                                   includable + "' control block...");
       options_map_[includable].include_patterns = {};
-      options_map_[includable].skip_buffer_length_check =
-          skip_buffer_length_check_;
     }
   }
   for (const std::string& includable : includables_) {
@@ -74,8 +74,6 @@ void ControlBlock::processAsteriskInclude() {
     Logger::getInstance().debug("Initializing include list for the '" +
                                 includable + "' control block...");
     options_map_[includable].include_patterns = {};
-    options_map_[includable].skip_buffer_length_check =
-        skip_buffer_length_check_;
   }
 }
 
@@ -105,15 +103,11 @@ void ControlBlock::processExplicitInclude(std::string& include) {
       Logger::getInstance().debug("Initializing include list for the '" +
                                   include + "' control block...");
       options_map_[include].include_patterns = {};
-      options_map_[include].skip_buffer_length_check =
-          skip_buffer_length_check_;
     } else {
       Logger::getInstance().debug("Adding '" + include_includes +
                                   "' to the include list for the '" + include +
                                   "' control block...");
       options_map_[include].include_patterns = {include_includes};
-      options_map_[include].skip_buffer_length_check =
-          skip_buffer_length_check_;
     }
   } else {
     // If we DO already have this in our map, then we should add its

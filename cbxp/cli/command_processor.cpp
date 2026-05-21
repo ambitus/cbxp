@@ -133,7 +133,7 @@ void CommandProcessor::showFormatUsage() const {
                "from a specified file or dataset"
             << std::endl
             << "  -o, --offset <value>             Specify an offset into "
-               "the provided data to start formatting"
+               "the provided data to start formatting at"
             << std::endl
             << std::endl;
 
@@ -163,8 +163,7 @@ void CommandProcessor::process() {
     }
   }
 
-  if ((control_block_name_ == "" || control_block_name_[0] == '-') &&
-      !global_options_.help) {
+  if (control_block_name_ == "" || control_block_name_[0] == '-') {
     std::cerr << ERROR_CONTROL_BLOCK_EXPECTED_ << std::endl;
     throw CLIExitFailure();
   }
@@ -324,6 +323,9 @@ void CommandProcessor::readFormatDataFromPipe() {
   format_options_.data_buffer.assign((std::istreambuf_iterator<char>(std::cin)),
                                      (std::istreambuf_iterator<char>()));
   if (!format_options_.data_buffer.empty()) {
+    // For environments where unix automatically converts ascii to ebcdic in
+    // pipes we need to convert back to raw binary ebcdic data to parse as
+    // expected
     std::string env_p(std::getenv("_BPXK_AUTOCVT"));
     if (!env_p.empty() && (env_p == "ON" || env_p == "ALL")) {
       __a2e_l(format_options_.data_buffer.data(),
