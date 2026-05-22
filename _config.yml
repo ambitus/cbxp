@@ -15,9 +15,9 @@
 
 
 title: CBXP
-cbxp_version: 0.0.3
+cbxp_version: 0.0.4
 description: >- # this means to ignore newlines until "baseurl:"
-  A unified and standardized interface for extracting z/OS control block data.
+  A unified and standardized interface for extracting and formatting z/OS control block data.
 permalink: /:title/ 
 logo: "/assets/images/logo.svg"
 
@@ -72,7 +72,7 @@ callouts:
 mermaid:
   # Version of mermaid library
   # Pick an available version from https://cdn.jsdelivr.net/npm/mermaid/
-  version: "11.13.0"
+  version: "11.15.0"
 
 # Exclude from processing.
 # The following items will not be processed, by default.

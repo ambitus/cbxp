@@ -11,16 +11,16 @@ Control blocks that are natively supported by CBXP.
 &nbsp;
 
 {: .warning }
-> _CBXP only supports extracting fields from **System-Level Control Blocks** that are **Documented Programming Interfaces** in the [z/OS MVS Data Areas](https://www.ibm.com/docs/en/zos/latest?topic=zos-mvs) documentation._
+> _CBXP only supports extracting and formatting fields from **System-Level Control Blocks** that are **Documented Programming Interfaces** in the [z/OS MVS Data Areas](https://www.ibm.com/docs/en/zos/latest?topic=zos-mvs) documentation._
 
 &nbsp;
 
 {: .warning }
-> _Since CBXP runs in **Problem State**, only **Non-Fetch Protected** control block data can be extracted from **Live Memory** (storage). Also, access to control block data is **NOT Serialized**, meaning that CBXP may occasionally extract control block data that is **Malformed** or otherwise **NOT Valid**._
+> _Since CBXP runs in **Problem State**, only **Non-Fetch Protected** control block data can be extracted from **Live Memory**. Also, access to control block data is **NOT Serialized**, meaning that CBXP may occasionally extract control block data that is **Malformed** or otherwise **NOT Valid**._
 
 &nbsp;
 
-CBXP currently supports extracting the following **System-Level Control Blocks** from **Live Memory** *(storage)*.
+CBXP currently supports extracting and formatting the following **System-Level Control Blocks** from **Live Memory**.
 
 &nbsp;
 
