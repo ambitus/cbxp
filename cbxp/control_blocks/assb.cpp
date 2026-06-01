@@ -10,6 +10,7 @@
 
 #include "ascb.hpp"
 #include "asvt.hpp"
+#include "ldax.hpp"
 #include "logger.hpp"
 
 namespace CBXP {
@@ -63,6 +64,21 @@ nlohmann::json ASSB::get(const void* p_control_block,
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_assb),
                                 sizeof(struct assb));
 
+  assb_json["assbldax"] = formatter_.getHex<uint64_t>(&(p_assb->assbldax));
+
+  for (const auto& [include, cbxp_options] : options_map_) {
+    if (include == "ldax") {
+      const struct ldax* p_ldax = reinterpret_cast<const struct ldax*>(
+          formatter_.uint<uint64_t>(p_assb->assbldax));
+      assb_json["assbldax"] =
+          CBXP::LDAX(cbxp_options)
+              .get(const_cast<void*>(reinterpret_cast<const void*>(p_ldax)));
+      if (assb_json["assbldax"].is_null()) {
+        return {};
+      }
+    }
+  }
+
   assb_json["assb_cms_lockinst_addr"] =
       formatter_.getHex<uint32_t>(&(p_assb->assb_cms_lockinst_addr));
   assb_json["assb_enqdeq_cms_lockinst_addr"] =
@@ -78,7 +94,7 @@ nlohmann::json ASSB::get(const void* p_control_block,
   assb_json["assboasb"] = formatter_.getHex<uint32_t>(&(p_assb->assboasb));
   assb_json["assbtasb"] = formatter_.getHex<uint32_t>(&(p_assb->assbtasb));
   assb_json["assbvab"]  = formatter_.getHex<uint32_t>(&(p_assb->assbvab));
-  assb_json["assbldax"] = formatter_.getHex<uint32_t>(&(p_assb->assbldax));
+  // assb_json["assbldax"] = formatter_.getHex<uint64_t>(&(p_assb->assbldax));
   assb_json["assbisqn"] = p_assb->assbisqn;
   assb_json["assbjbni"] = formatter_.getString(p_assb->assbjbni, 8);
   assb_json["assbjbns"] = formatter_.getString(p_assb->assbjbns, 8);
