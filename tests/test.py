@@ -112,8 +112,6 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascboucb"]), dict)
 
-<<<<<<< HEAD
-=======
     def test_cbxp_can_extract_asvt_and_include_ascb_assb_ldax(self):
         cbdata = cbxp.extract("asvt", includes=["ascb.assb.ldax"])
         self.assertIs(type(cbdata), dict)
@@ -145,7 +143,6 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry["ascbassb"]), dict)
             self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
 
->>>>>>> 0724056 (Squashed last 28 commits with signoff)
     def test_cbxp_extract_psa_and_include_cvt_ecvt(self):
         cbdata = cbxp.extract("psa", includes=["cvt.ecvt"])
         self.assertIs(type(cbdata), dict)
@@ -547,12 +544,6 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry["ascboucb"]), dict)
             self.assertEqual(entry["ascboucb"]["oucbtrxn"], "OMVS")
 
-<<<<<<< HEAD
-    def test_cbxp_extract_null_filter_string(
-        self,
-    ):
-        cbdata = cbxp.extract(
-=======
     def test_cbxp_can_use_filter_on_ldax_tcthwm_equal(self):
         cbdata = cbxp.extract(
             "ldax",
@@ -654,7 +645,6 @@ class TestCBXP(unittest.TestCase):
         self,
     ):
         cbdata = cbxp.extract(
->>>>>>> 0724056 (Squashed last 28 commits with signoff)
             "assb",
             filters=[
                 CBXPFilter(
@@ -819,8 +809,6 @@ class TestCBXP(unittest.TestCase):
             )
         self.assertEqual("Filters cannot contain commas", str(e.exception))
 
-<<<<<<< HEAD
-=======
     def test_cbxp_raises_cbxp_error_if_ldax_included_with_psa(self):
         with self.assertRaises(CBXPError) as e:
             cbxp.extract("psa", includes=["ldax"])
@@ -835,7 +823,6 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp.extract("ascb", includes=["ldax"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
->>>>>>> 0724056 (Squashed last 28 commits with signoff)
     # ============================================================================
     # Format -- Basic Usage
     # ============================================================================
