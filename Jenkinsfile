@@ -89,13 +89,13 @@ pipeline {
     stage('Lint') {
       steps {
         echo "Linting with clang-format ..."
-        sh "gmake lint"
+        sh "cmake --build . --target lint --paralell"
       }
     }
     stage('Cppcheck') {
       steps {
         echo "Running cppcheck ..."
-        sh "gmake check"
+        sh "cmake --build . --target check --paralell"
       }
     }
     stage('Create Python Distribution Metadata') {
@@ -118,7 +118,7 @@ pipeline {
 
             echo "Building '${wheel}' and '${tar}' ..."
             sh """
-                ${python} -m pip install build>=1.3.0
+                ${python} -m pip install build>=1.5.0
                 ${python} -m build
             """
 
@@ -139,25 +139,17 @@ pipeline {
             clean_python_environment()
             clean_git_repo()
           }
-          // Shell/C/C++ pax distribution
+          // Shell/C/C++ distribution
           def cbxp_version = get_cbxp_version()
-          def pax = "cbxp-${cbxp_version}.pax.Z"
-          echo "Building '${pax}' ..."
+          echo "Installing testing CBXP '${cbxp_version}' ..."
           sh """
-              cmake .
-              gmake package
-          """
-
-          echo "Install testing '${pax}' ..."
-          sh """
-              mkdir install-test
-              cd install-test
-              pax -rf ../dist/${pax}
-              ls -alT cbxp-${cbxp_version}/*
+              cmake . --install-prefix ${env.WORKSPACE}/install-test
+              cmake --build . --paralell
+              cmake --install .
           """
 
           echo "'Function testing './dist/cbxp' ..."
-          sh "gmake test"
+          sh "cmake --build . --target test --paralell"
 
           clean_git_repo()
         }
@@ -213,7 +205,9 @@ def create_python_executables_and_wheels_map(python_versions) {
           "cbxp-${cbxp_version}-cp3${python_version}-cp3${python_version}-zos.whl"
         ),
         "wheelPublish": (
-          "cbxp-${cbxp_version}-cp3${python_version}-cp3${python_version}-zos.whl"
+          // New wheel naming convention does not work with PyPi so we
+          // do still need to rename the wheel file.
+          "cbxp-${cbxp_version}-cp3${python_version}-none-any.whl"
         ),
         "tarPublish": "cbxp-${cbxp_version}.tar.gz"
       ]
@@ -334,14 +328,11 @@ def publish(
       echo "Building '${wheel_default}' ..."
 
       sh """
-        ${python} -m pip install build>=1.2.2
+        ${python} -m pip install build>=1.5.0
         ${python} -m build -w
       """
 
-      // Rename wheel file if the old naming convention is being used
-      if (wheel_default != wheel_publish) {
-        sh "mv ./dist/${wheel_default} ./dist/${wheel_publish}"
-      }
+      sh "mv ./dist/${wheel_default} ./dist/${wheel_publish}"
 
       if (tar_built == false) {
         tar_publish = python_executables_and_wheels_map[python]["tarPublish"]
@@ -369,7 +360,7 @@ def publish(
     echo "Building '${pax}' ..."
     sh """
         cmake .
-        gmake package
+        cmake --build . --target package --paralell
     """
 
     echo "Uploading '${pax}' to '${release_title}' GitHub release ..."

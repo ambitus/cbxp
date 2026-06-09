@@ -689,41 +689,6 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), dict)
 
     # ============================================================================
-    # Format -- Offset
-    # ============================================================================
-    def test_cbxp_format_ascb_with_hex_offset(self):
-        cbdata = cbxp.format(
-            "ascb",
-            data=self.read_sample("ascboffset40.bin"),
-            offset=0x40,
-        )
-        self.assertIs(type(cbdata), dict)
-
-    def test_cbxp_format_ascb_with_decimal_offset(self):
-        cbdata = cbxp.format(
-            "ascb",
-            data=self.read_sample("ascboffset40.bin"),
-            offset=64,
-        )
-        self.assertIs(type(cbdata), dict)
-
-    def test_cbxp_format_oucb_with_hex_offset(self):
-        cbdata = cbxp.format(
-            "oucb",
-            data=self.read_sample("oucboffset3A8.bin"),
-            offset=0x3A8,
-        )
-        self.assertIs(type(cbdata), dict)
-
-    def test_cbxp_format_oucb_with_decimal_offset(self):
-        cbdata = cbxp.format(
-            "oucb",
-            data=self.read_sample("oucboffset3A8.bin"),
-            offset=936,
-        )
-        self.assertIs(type(cbdata), dict)
-
-    # ============================================================================
     # Format -- Testing Errors: Unknown Control Block
     # ============================================================================
     def test_cbxp_format_raises_cbxp_error_if_unknown_control_block_is_provided(self):
@@ -731,57 +696,6 @@ class TestCBXP(unittest.TestCase):
             cbxp.format("unknown", data=self.read_sample("ascb.bin"))
         self.assertEqual(
             "Unknown control block: unknown",
-            str(e.exception),
-        )
-
-    # ============================================================================
-    # Format -- Testing Errors: Bad Offset
-    # ============================================================================
-    def test_cbxp_format_raises_cbxp_error_if_offset_is_too_large(self):
-        with self.assertRaises(CBXPError) as e:
-            cbxp.format(
-                "ascb",
-                data=self.read_sample("ascb.bin"),
-                offset=999999,
-            )
-        self.assertEqual(
-            "Offset is too large for data provided",
-            str(e.exception),
-        )
-
-    def test_cbxp_format_raises_cbxp_error_if_offset_is_negative(self):
-        with self.assertRaises(CBXPError) as e:
-            cbxp.format(
-                "ascb",
-                data=self.read_sample("ascb.bin"),
-                offset=-1,
-            )
-        self.assertEqual(
-            "Offset must be a positive integer",
-            str(e.exception),
-        )
-
-    def test_cbxp_format_raises_cbxp_error_if_offset_is_alpha(self):
-        with self.assertRaises(CBXPError) as e:
-            cbxp.format(
-                "ascb",
-                data=self.read_sample("ascb.bin"),
-                offset="JUNK",
-            )
-        self.assertEqual(
-            "Offset must be a positive integer",
-            str(e.exception),
-        )
-
-    def test_cbxp_format_raises_cbxp_error_if_offset_is_float(self):
-        with self.assertRaises(CBXPError) as e:
-            cbxp.format(
-                "ascb",
-                data=self.read_sample("ascb.bin"),
-                offset=5.5,
-            )
-        self.assertEqual(
-            "Offset must be a positive integer",
             str(e.exception),
         )
 

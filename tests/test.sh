@@ -143,10 +143,10 @@ run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/oucb.bin oucb
 run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascb.bin -d ascb
 run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascb.bin --debug ascb
 # Format - Offset
-run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascboffset40.bin -o 0x40 ascb
-run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascboffset40.bin -o 64 ascb
-run_with_expected_exit_code 0 cat tests/samples/oucboffset3A8.bin | ./dist/cbxp format -o 0x3A8 oucb
-run_with_expected_exit_code 0 cat tests/samples/oucboffset3A8.bin | ./dist/cbxp format -o 936 oucb
+run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascb_offset_0x40.bin -o 0x40 ascb
+run_with_expected_exit_code 0 ./dist/cbxp format -F tests/samples/ascb_offset_0x40.bin -o 64 ascb
+run_with_expected_exit_code 0 cat tests/samples/oucb_offset_0x03a8.bin | ./dist/cbxp format -o 0x03a8 oucb
+run_with_expected_exit_code 0 cat tests/samples/oucb_offset_0x03a8.bin | ./dist/cbxp format -o 936 oucb
 # Format - Errors: Bad Usage
 run_with_expected_exit_code 255 ./dist/cbxp format
 run_with_expected_exit_code 255 ./dist/cbxp format --junk

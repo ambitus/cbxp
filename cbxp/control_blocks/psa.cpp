@@ -48,7 +48,7 @@ nlohmann::json PSA::get(const void* p_control_block,
       reinterpret_cast<const char*>(&p_psa->flcarch));
   psa_json["flccvt64"] = formatter_.getHex<uint64_t>(p_psa->flccvt64);
   psa_json["flcfacl"]  = formatter_.getBitmap<uint64_t>(p_psa->flcfacl) +
-                        formatter_.getBitmap<uint64_t>(p_psa->flcfacl + 8);
+                         formatter_.getBitmap<uint64_t>(p_psa->flcfacl + 8);
   psa_json["flcfacle"] = formatter_.getBitmap<uint64_t>(p_psa->flcfacle) +
                          formatter_.getBitmap<uint64_t>(p_psa->flcfacle + 8);
   psa_json["psaaold"]  = formatter_.getHex<uint32_t>(p_psa->psaaold);

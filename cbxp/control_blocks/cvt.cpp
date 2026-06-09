@@ -124,7 +124,7 @@ nlohmann::json CVT::get(const void* p_control_block,
   cvt_json["cvtpcnvt"] = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtpcnvt));
   cvt_json["cvtprltv"] = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtprltv));
   cvt_json["cvtprod"]  = formatter_.getHex<uint64_t>(p_cvtfix->cvtprod) +
-                        formatter_.getHex<uint64_t>(p_cvtfix->cvtprod + 8);
+                         formatter_.getHex<uint64_t>(p_cvtfix->cvtprod + 8);
   cvt_json["cvtpsxm"]  = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtpsxm));
   cvt_json["cvtpvtp"]  = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtpvtp));
   cvt_json["cvtqtd00"] = formatter_.getHex<uint32_t>(&(p_cvtmap->cvtqtd00));

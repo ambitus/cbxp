@@ -165,14 +165,14 @@ void ControlBlock::createFilterLists(const std::vector<std::string>& filters) {
 }
 
 void ControlBlock::addCurrentFilter(const std::string& filter) {
-  std::string filter_key, filter_value;
   std::vector<std::string> operations = {"<=", ">=", "<", ">", "="};
   for (std::string operation : operations) {
     size_t operation_pos = filter.find(operation);
     if (operation_pos != std::string::npos) {
       // If there's a delimeter then separate include into the key and its value
-      filter_value = filter.substr(operation_pos + operation.length());
-      filter_key   = filter.substr(0, operation_pos);
+      std::string filter_value =
+          filter.substr(operation_pos + operation.length());
+      std::string filter_key    = filter.substr(0, operation_pos);
       cbxp_filter_t filter_data = {operation, filter_value};
       Logger::getInstance().debug("Adding '" + filter_key + operation +
                                   filter_value +

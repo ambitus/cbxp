@@ -37,8 +37,6 @@ class CBXPErrorCode(Enum):
     # Negative Error Codes are from the Python interface
     COMMA_IN_INCLUDE = -1
     COMMA_IN_FILTER = -2
-    OFFSET_TOO_LARGE = -3
-    OFFSET_NOT_POSITIVE_INT = -4
     # Positive Error Codes are return codes from CBXP
     UNKNOWN_CONTROL_BLOCK = 1
     BAD_INCLUDE = 2
@@ -56,10 +54,6 @@ class CBXPError(Exception):
                 message = "Include patterns cannot contain commas"
             case CBXPErrorCode.COMMA_IN_FILTER.value:
                 message = "Filters cannot contain commas"
-            case CBXPErrorCode.OFFSET_TOO_LARGE.value:
-                message = "Offset is too large for data provided"
-            case CBXPErrorCode.OFFSET_NOT_POSITIVE_INT.value:
-                message = "Offset must be a positive integer"
             case CBXPErrorCode.UNKNOWN_CONTROL_BLOCK.value:
                 message = f"Unknown control block: {control_block_name}"
             case CBXPErrorCode.BAD_INCLUDE.value:
@@ -116,27 +110,13 @@ def extract(
 def format(  # noqa: A001
     control_block: str,
     data: bytes,
-    offset: int = None,
     debug: bool = False,
 ) -> dict:
-    if offset is None:
-        offset = 0
-    if not isinstance(offset, int):
-        raise CBXPError(CBXPErrorCode.OFFSET_NOT_POSITIVE_INT.value, control_block)
-    try:
-        response = call_cbxp_format(
-            control_block.lower(),
-            data,
-            offset=offset,
-            debug=debug,
-        )
-    except ValueError as error:
-        raise CBXPError(
-            CBXPErrorCode.OFFSET_NOT_POSITIVE_INT.value,
-            control_block,
-        ) from error
-    except ArithmeticError as error:
-        raise CBXPError(CBXPErrorCode.OFFSET_TOO_LARGE.value, control_block) from error
+    response = call_cbxp_format(
+        control_block.lower(),
+        data,
+        debug=debug,
+    )
 
     if response["return_code"]:
         raise CBXPError(response["return_code"], control_block)
