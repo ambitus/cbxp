@@ -108,7 +108,6 @@ cbjson = json(cbdata, indent=2)
 def format(
     control_block: str,
     data: bytes,
-    offset: int = None,
     debug: bool = False,
 ) -> dict:
 ```
@@ -123,9 +122,6 @@ Format **Caller-Provided Control Block Data** from **Live Memory**.
 
 * `data` <br>
   A **Bytes Object** containing the **Raw Control Block Data** to format.
-
-* `offset` <br>
-  An **Optional** offset into the provided **Raw Control Block Data** to start formatting at.
 
 * `debug` <br>
   A **Boolean** that if set to `True` indicates that **Debug Messages** should be printed. If set to `False`, no **Debug Messages** will be printed.
@@ -150,18 +146,4 @@ with open("ascb.bin", "rb") as f:
     data = f.read()
 
 cbdata = cbxp.format("ascb", data)
-```
-
-&nbsp;
-
-The following example formats **Caller-Provided** [ASCB](https://www.ibm.com/docs/en/zos/latest?topic=iar-ascb-information) control block data at an offset of `0x40` bytes.
-
-###### Python Script
-```python
-from cbxp import cbxp
-
-with open("ascboffset.bin", "rb") as f:
-    data = f.read()
-
-cbdata = cbxp.format("ascb", data, offset=0x40)
 ```

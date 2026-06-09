@@ -62,7 +62,7 @@ Extract and format **Control Block Data** from **Live Memory**.
   The length of `control_block_name`.
 
 * `includes` <br>
-  A pointer to a **NULL-Terminated ISO8859-1 Encoded String** that contains a **Comma Delimited List** of [Include Patterns](../../include_patterns) that describe **Additional Control Blocks** to include that are accessible from the **Root Control Block** being extracted.
+  A pointer to a **NULL-Terminated ISO8859-1 Encoded String** that contains a **Comma Delimited List** of [Include Patterns](../../include_patterns) describing **Additional Control Blocks** to include that are accessible from the **Root Control Block** being extracted.
 
 * `includes_length` <br>
   The length of `includes`.
@@ -85,7 +85,7 @@ Extract and format **Control Block Data** from **Live Memory**.
 ```c
 cbxp_result_t* cbxp_format(const char* control_block_name,
                            const size_t control_block_name_length,
-                           const void* p_data, const size_t data_length,
+                           const void* data, const size_t data_length,
                            bool debug);
 ```
 
@@ -126,6 +126,11 @@ void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
 
 {: .warning}
 > _The [`cbxp_result_t`](#cbxp_result_t) pointer and the `result_json` pointer within the [`cbxp_result_t`](#cbxp_result_t) **C Struct** it points to are no longer valid after calling `cbxp_free()`. Using these pointers after calling `cbxp_free()` will result in **Undefined Behavior** since `cbxp_free()` frees the memory that both of these pointer point to._
+
+&nbsp;
+
+{: .warning}
+> _`cbxp_free()` is guaranteed to cleanup all **Dynamically Allocated Memory** associated with a [`cbxp_result_t`](#cbxp_result_t) pointer returned by `cbxp_extract()` / `cbxp_format()` correctly. You should not attempt to use `free()` or `delete` to do this yourself. Doing so may result in **Undefined Behavior**._
 
 &nbsp;
 

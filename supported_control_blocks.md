@@ -31,6 +31,7 @@ CBXP currently supports extracting and formatting the following **System-Level C
 * [ASCB](https://www.ibm.com/docs/en/zos/latest?topic=iar-ascb-information)
 * [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information)
 * [OUCB](https://www.ibm.com/docs/en/zos/latest?topic=rqe-oucb-information)
+* [LDAX](https://www.ibm.com/docs/en/zos/latest?topic=isg-ihaldax-information)
 
 &nbsp;
 
@@ -44,12 +45,15 @@ CBXP currently supports extracting and formatting the following **System-Level C
     subgraph ASCBs["ASCB Array"]
         ASCB1["ASCB"]
         ASCB1--> ASSB1["ASSB"]
+        ASCB1--> LDAX1["LDAX"]
         ASCB1--> OUCB1["OUCB"]
         ASCB2["ASCB"]
         ASCB2--> ASSB2["ASSB"]
+        ASCB2--> LDAX2["LDAX"]
         ASCB2--> OUCB2["OUCB"]
         ASCB3["ASCB"]
         ASCB3--> ASSB3["ASSB"]
+        ASCB3--> LDAX3["LDAX"]
         ASCB3--> OUCB3["OUCB"]
     end
 </pre>
