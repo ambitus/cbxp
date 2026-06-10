@@ -1,5 +1,8 @@
+#define _XOPEN_SOURCE_EXTENDED 1
+
 #include "command_processor.hpp"
 
+#include <poll.h>
 #include <unistd.h>
 
 #include <cstdio>
@@ -13,8 +16,9 @@
 namespace CBXP {
 
 void CommandProcessor::showASCIIArt() {
-  std::string ansi_blue  = "\033[34m";
-  std::string ansi_reset = "\033[0m";
+  std::string ansi_bold      = "\e[1m";
+  std::string ansi_blue_bold = "\e[1;34m";
+  std::string ansi_reset     = "\e[0m";
 
   // clang-format off
   const std::vector<std::string> logo_ascii_art = {
@@ -36,12 +40,10 @@ void CommandProcessor::showASCIIArt() {
   };
   // clang-format on
 
-  std::cout << std::endl;
-
   for (auto i = 0; i < logo_ascii_art.size(); i++) {
     if (isatty(fileno(stdout))) {
-      std::cout << logo_ascii_art[i] << ansi_blue << cbxp_ascii_art[i]
-                << ansi_reset << std::endl;
+      std::cout << ansi_bold << logo_ascii_art[i] << ansi_blue_bold
+                << cbxp_ascii_art[i] << ansi_reset << std::endl;
     } else {
       std::cout << logo_ascii_art[i] << cbxp_ascii_art[i] << std::endl;
     }
@@ -340,7 +342,8 @@ void CommandProcessor::processFormatFlags() {
       throw CLIExitFailure();
     }
   }
-  if (isatty(STDIN_FILENO) == 0) {
+  struct pollfd pfd = {STDIN_FILENO, POLLIN, 0};
+  if (poll(&pfd, 1, 0) > 0 && (pfd.revents & POLLIN)) {
     CommandProcessor::readFormatDataFromPipe();
   }
   if (format_options_.data_buffer.empty()) {
