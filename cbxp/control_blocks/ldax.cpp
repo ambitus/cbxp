@@ -57,13 +57,6 @@ nlohmann::json LDAX::get(const void* p_control_block,
       const struct assb* __ptr32 p_assb =
           reinterpret_cast<const struct assb* __ptr32>(p_ascb->ascbassb);
 
-      // Get LDAX from ASSB
-      // Get LDAX from ASSB - assbldax is a 64-bit pointer
-      const struct ldax* p_next_ldax =
-          // reinterpret_cast<const struct ldax*>(p_assb->assbldax);
-          reinterpret_cast<const struct ldax*>(
-              formatter_.uint<uint64_t>(p_assb->assbldax));
-
       nlohmann::json next_ldax =
           LDAX::get(*reinterpret_cast<const void* const*>(p_assb->assbldax));
       if (!next_ldax.is_null()) {
