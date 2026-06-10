@@ -12,7 +12,43 @@
 
 namespace CBXP {
 
+void CommandProcessor::showASCIIArt() {
+  std::string ansi_blue  = "\033[34m";
+  std::string ansi_reset = "\033[0m";
+
+  // clang-format off
+  const std::vector<std::string> logo_ascii_art = {
+    " ____________ ",
+    "|            |",
+    "|    1010    |",
+    "|            |",
+    "|     {}     |",
+    "|____________|"
+  };
+
+  const std::vector<std::string> cbxp_ascii_art = {
+    "    _____ ______   _______",
+    "   / ____|  _ \\ \\ / /  __ \\",
+    "  | |    | |_) \\ V /| |__) |",
+    "  | |    |  _ < > < |  ___/",
+    "  | |____| |_) / . \\| |",
+    "  \\_____|____/_/ \\_\\_|"
+  };
+  // clang-format on
+
+  for (auto i = 0; i < logo_ascii_art.size(); i++) {
+    if (isatty(fileno(stdout))) {
+      std::cout << logo_ascii_art[i] << ansi_blue << cbxp_ascii_art[i]
+                << ansi_reset << std::endl;
+    } else {
+      std::cout << logo_ascii_art[i] << cbxp_ascii_art[i] << std::endl;
+    }
+  }
+  std::cout << std::endl;
+}
+
 void CommandProcessor::showGeneralUsage() const {
+  CommandProcessor::showASCIIArt();
   std::cout << "Full CLI documentation is available at: "
                "https://ambitus.github.io/cbxp/interfaces/shell/"
             << std::endl

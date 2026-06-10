@@ -356,11 +356,14 @@ def publish(
 
     // Build and publish Shell/C/C++ interface pax
     def cbxp_version = get_cbxp_version()
+    def package_source_dir = "${env.WORKSPACE}/cbxp-${cbxp_version}"
     def pax = "cbxp-${cbxp_version}.pax.Z"
     echo "Building '${pax}' ..."
     sh """
-        cmake .
-        cmake --build . --target package --paralell
+        cmake . --install-prefix ${package_source_dir}
+        cmake --build . --paralell
+        cmake --install .
+        pax -x pax -wzvf ./dist/${pax} ${package_source_dir}/*
     """
 
     echo "Uploading '${pax}' to '${release_title}' GitHub release ..."

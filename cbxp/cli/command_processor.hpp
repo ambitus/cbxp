@@ -67,6 +67,7 @@ class CommandProcessor {
   cbxp_global_options_t global_options_;
   cbxp_extract_options_t extract_options_;
   cbxp_format_options_t format_options_;
+  static void showASCIIArt();
   void showGeneralUsage() const;
   void showExtractUsage() const;
   void showFormatUsage() const;

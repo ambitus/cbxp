@@ -95,39 +95,6 @@ target_compile_options(cbxp PUBLIC ${COMPILE_OPTIONS})
 target_link_options(cbxp PUBLIC ${LINK_OPTIONS})
 
 # ============================================================================
-# Package
-# ============================================================================
-add_custom_target(
-    package
-    COMMAND "mkdir"
-                "-p"
-                "cbxp-${CMAKE_PROJECT_VERSION}/bin"
-                "cbxp-${CMAKE_PROJECT_VERSION}/lib"
-                "cbxp-${CMAKE_PROJECT_VERSION}/include"
-    COMMAND "cp"
-                "LICENSE"
-                "cbxp-${CMAKE_PROJECT_VERSION}/"
-    COMMAND "cp"
-                "NOTICES"
-                "cbxp-${CMAKE_PROJECT_VERSION}/"
-    COMMAND "cp"
-                "./dist/cbxp"
-                "cbxp-${CMAKE_PROJECT_VERSION}/bin/"
-    COMMAND "cp"
-                "./dist/libcbxp.a"
-                "cbxp-${CMAKE_PROJECT_VERSION}/lib/"
-    COMMAND "cp"
-                "./cbxp/cbxp.h"
-                "cbxp-${CMAKE_PROJECT_VERSION}/include/"
-    COMMAND "pax"
-                "-x" "pax"
-                "-wzvf"
-                "./dist/cbxp-${CMAKE_PROJECT_VERSION}.pax.Z"
-                "cbxp-${CMAKE_PROJECT_VERSION}/*"
-    DEPENDS libcbxp cbxp
-)
-
-# ============================================================================
 # Install
 # ============================================================================
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
