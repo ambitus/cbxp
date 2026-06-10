@@ -13,6 +13,7 @@
 #include "control_blocks/control_block.hpp"
 #include "control_blocks/cvt.hpp"
 #include "control_blocks/ecvt.hpp"
+#include "control_blocks/ldax.hpp"
 #include "control_blocks/oucb.hpp"
 #include "control_blocks/psa.hpp"
 #include "logger.hpp"
@@ -112,6 +113,10 @@ void ControlBlockExplorer::processControlBlock(
     } else if (control_block_name == "oucb") {
       control_block_json =
           OUCB(cbxp_options_).get(p_control_block_, control_block_data_length_);
+    } else if (control_block_name == "ldax") {
+      control_block_json =
+          LDAX(cbxp_options_).get(p_control_block_, control_block_data_length_);
+
     } else {
       throw ControlBlockError();
     }

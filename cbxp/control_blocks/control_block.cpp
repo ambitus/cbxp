@@ -195,7 +195,7 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
   uint64_t value_uint;
 
   if (json_value.is_number()) {
-    value_uint = json_value.get<int>();
+    value_uint = json_value.get<uint64_t>();
   } else {
     value_str       = json_value.get<std::string>();
     value_is_string = true;

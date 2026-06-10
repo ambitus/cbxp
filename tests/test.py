@@ -57,6 +57,12 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata:
             self.assertIs(type(entry), dict)
 
+    def test_cbxp_extract_ldax(self):
+        cbdata = cbxp.extract("ldax")
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+
     # ============================================================================
     # Extract -- Debug Mode
     # ============================================================================
@@ -105,6 +111,41 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascboucb"]), dict)
+
+    def test_cbxp_extract_asvt_and_include_ascb_assb_ldax(self):
+        cbdata = cbxp.extract("asvt", includes=["ascb.assb.ldax"])
+        self.assertIs(type(cbdata), dict)
+        self.assertIs(type(cbdata["asvtenty"]), list)
+        for entry in cbdata["asvtenty"]:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
+
+    def test_cbxp_extract_psa_and_include_cvt_asvt_ascb_assb_ldax(self):
+        cbdata = cbxp.extract("psa", includes=["cvt.asvt.ascb.assb.ldax"])
+        self.assertIs(type(cbdata), dict)
+        self.assertIs(type(cbdata["flccvt"]), dict)
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
+
+    def test_cbxp_extract_assb_and_include_ldax(self):
+        cbdata = cbxp.extract("assb", includes=["ldax"])
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["assbldax"]), dict)
+
+    def test_cbxp_extract_ascb_and_include_assb_ldax(self):
+        cbdata = cbxp.extract("ascb", includes=["assb.ldax"])
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
 
     def test_cbxp_extract_psa_and_include_cvt_ecvt(self):
         cbdata = cbxp.extract("psa", includes=["cvt.ecvt"])
@@ -186,6 +227,7 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
             self.assertIs(type(entry["ascboucb"]), dict)
 
     def test_cbxp_extract_psa_and_include_cvt_wildcard(self):
@@ -218,6 +260,23 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascboucb"]), dict)
+
+    def test_cbxp_extract_ascb_and_include_assb_recursive_wildcard(self):
+        cbdata = cbxp.extract("ascb", includes=["assb.**"])
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
+
+    def test_cbxp_extract_ascb_and_include_oucb_and_assb_recursive_wildcard(self):
+        cbdata = cbxp.extract("ascb", includes=["oucb", "assb.**"])
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
             self.assertIs(type(entry["ascboucb"]), dict)
 
     # ============================================================================
@@ -489,6 +548,55 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry["ascboucb"]), dict)
             self.assertEqual(entry["ascboucb"]["oucbtrxn"], "OMVS")
 
+    def test_cbxp_extract_filter_on_ldax_tcthwm_equal(self):
+        cbdata = cbxp.extract(
+            "ldax",
+            filters=[
+                CBXPFilter(
+                    "ldax_tcthwm",
+                    CBXPFilterOperation.EQUAL,
+                    0,
+                ),
+            ],
+        )
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertEqual(entry["ldax_tcthwm"], 0)
+
+    def test_cbxp_extract_filter_on_psa_cvt_asvt_ascb_assb_ldax_tcthwm_with_include(
+        self,
+    ):
+        cbdata = cbxp.extract(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.assb.ldax.ldax_tcthwm",
+                    CBXPFilterOperation.EQUAL,
+                    0,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb.ldax"],
+        )
+        self.assertIs(type(cbdata), dict)
+        self.assertIn("flccvt", cbdata)
+        self.assertIs(type(cbdata["flccvt"]), dict)
+        self.assertIn("cvtasvt", cbdata["flccvt"])
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
+        self.assertIn("asvtenty", cbdata["flccvt"]["cvtasvt"])
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
+        # Verify at least one entry matches the filter
+        self.assertGreater(len(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), 0)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+            self.assertIs(type(entry), dict)
+            self.assertIn("ascbassb", entry)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIn("assbldax", entry["ascbassb"])
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
+            self.assertEqual(
+                entry["ascbassb"]["assbldax"]["ldax_tcthwm"], 0,
+            )
+
     def test_cbxp_extract_null_filter_string(
         self,
     ):
@@ -657,6 +765,20 @@ class TestCBXP(unittest.TestCase):
             )
         self.assertEqual("Filters cannot contain commas", str(e.exception))
 
+    def test_cbxp_extract_raises_cbxp_error_if_ldax_included_with_psa(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.extract("psa", includes=["ldax"])
+        self.assertEqual("A bad include pattern was provided", str(e.exception))
+
+    def test_cbxp_extract_raises_cbxp_error_if_ldax_included_with_cvt(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.extract("cvt", includes=["ldax"])
+        self.assertEqual("A bad include pattern was provided", str(e.exception))
+
+    def test_cbxp_extract_raises_cbxp_error_if_ldax_included_with_ascb(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.extract("ascb", includes=["ldax"])
+        self.assertEqual("A bad include pattern was provided", str(e.exception))
     # ============================================================================
     # Format -- Basic Usage
     # ============================================================================
