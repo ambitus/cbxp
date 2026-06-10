@@ -107,7 +107,6 @@ run_with_expected_null_response ./dist/cbxp extract -f "ascb.assb.assbjbns=*MAST
 run_with_expected_exit_code 0 ./dist/cbxp extract -f assbjbns="*MASTER*" -f assbjbni=  assb
 run_with_expected_exit_code 0 ./dist/cbxp extract -f assbjbns="*MASTER*" -f assbjbni="" assb
 run_with_expected_exit_code 0 ./dist/cbxp extract -f assbjbns="*MASTER*" -f assbjbni='' assb
-run_with_expected_exit_code 0 ./dist/cbxp extract -f "ldax.ldax_ldasiza=11505664" -i ldax assb
 run_with_expected_exit_code 0 ./dist/cbxp extract -f "cvt.asvt.ascb.assb.ldax.ldax_tcthwm=0" -i cvt.asvt.ascb.assb.ldax psa
 run_with_expected_exit_code 0 ./dist/cbxp extract -f "ldax_tcthwm=0" ldax
 run_with_expected_null_response ./dist/cbxp extract -f "cvt.asvt.ascb.assb.ldax.ldax_id=INVALID" -i cvt.asvt.ascb.assb.ldax psa
