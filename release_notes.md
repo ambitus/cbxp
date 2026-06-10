@@ -5,7 +5,7 @@ nav_order: 4
 
 # Release Notes
 
-## v0.0.4 - June ??, 2026
+## v0.0.4 - June 12, 2026
 * Add support for formatting **Caller-Provided** control block data ([#37](https://github.com/ambitus/cbxp/pull/37))
 * Add support for extracting [LDAX](https://www.ibm.com/docs/en/zos/latest?topic=isg-ihaldax-information) control block data ([#38](https://github.com/ambitus/cbxp/pull/38))
 
