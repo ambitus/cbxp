@@ -84,7 +84,7 @@ nlohmann::json LDAX::get(const void* p_control_block,
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_ldax),
                                 sizeof(struct ldax));
 
-  ldax_json["ldax_id"]     = formatter_.getString(p_ldax->ldax_id, 4);
+  ldax_json["ldax_id"] = formatter_.getString(p_ldax->ldax_id, 4);
   ldax_json["ldax_version"] =
       formatter_.getBitmap<uint8_t>(p_ldax->ldax_version);
   ldax_json["ldax_ldaascb"] =
@@ -128,7 +128,6 @@ nlohmann::json LDAX::get(const void* p_control_block,
   ldax_json["ldax_ldasmsz"] =
       formatter_.getHex<uint32_t>(&(p_ldax->ldax_ldasmsz));
   ldax_json["ldax_obtainshomespace"] = p_ldax->ldax_obtainshomespace;
- 
 
   if (LDAX::matchFilter(ldax_json)) {
     return ldax_json;

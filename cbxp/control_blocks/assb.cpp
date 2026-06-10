@@ -67,9 +67,10 @@ nlohmann::json ASSB::get(const void* p_control_block,
   assb_json["assbldax"] = formatter_.getHex<uint64_t>(&(p_assb->assbldax));
 
   for (const auto& [include, cbxp_options] : options_map_) {
-    if (include == "ldax") {    
-      //assb_json["assbldax"] = CBXP::LDAX(cbxp_options).get(reinterpret_cast<void *>(*p_assb->assbldax));
-      assb_json["assbldax"] = CBXP::LDAX(cbxp_options).get(*reinterpret_cast<void**>(p_assb->assbldax));
+    if (include == "ldax") {
+      assb_json["assbldax"] =
+          CBXP::LDAX(cbxp_options)
+              .get(*reinterpret_cast<const void* const*>(p_assb->assbldax));
       if (assb_json["assbldax"].is_null()) {
         return {};
       }
