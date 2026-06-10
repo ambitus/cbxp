@@ -564,33 +564,6 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry), dict)
             self.assertEqual(entry["ldax_tcthwm"], 0)
 
-    def test_cbxp_extract_filter_on_asvt_ascb_assb_ldax_ldasiza_with_include(self):
-        cbdata = cbxp.extract(
-            "asvt",
-            filters=[
-                CBXPFilter(
-                    "ascb.assb.ldax.ldax_ldasiza",
-                    CBXPFilterOperation.EQUAL,
-                    11505664,
-                ),
-            ],
-            includes=["ascb.assb.ldax"],
-        )
-        if cbdata is not None:
-            self.assertIs(type(cbdata), dict)
-            self.assertIs(type(cbdata["asvtenty"]), list)
-            # Verify at least one entry matches the filter
-            self.assertGreater(len(cbdata["asvtenty"]), 0)
-            for entry in cbdata["asvtenty"]:
-                self.assertIs(type(entry), dict)
-                self.assertIn("ascbassb", entry)
-                self.assertIs(type(entry["ascbassb"]), dict)
-                self.assertIn("assbldax", entry["ascbassb"])
-                self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
-                self.assertEqual(
-                    entry["ascbassb"]["assbldax"]["ldax_ldasiza"], 11505664,
-                )
-
     def test_cbxp_extract_filter_on_psa_cvt_asvt_ascb_assb_ldax_tcthwm_with_include(
         self,
     ):

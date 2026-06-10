@@ -65,9 +65,7 @@ nlohmann::json LDAX::get(const void* p_control_block,
               formatter_.uint<uint64_t>(p_assb->assbldax));
 
       nlohmann::json next_ldax =
-          // LDAX::get(reinterpret_cast<void*>(p_next_ldax));
-          LDAX::get(
-              const_cast<void*>(reinterpret_cast<const void*>(p_next_ldax)));
+          LDAX::get(*reinterpret_cast<const void* const*>(p_assb->assbldax));
       if (!next_ldax.is_null()) {
         ldaxs.push_back(next_ldax);
       }
