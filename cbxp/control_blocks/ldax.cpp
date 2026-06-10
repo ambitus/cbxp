@@ -84,7 +84,6 @@ nlohmann::json LDAX::get(const void* p_control_block,
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_ldax),
                                 sizeof(struct ldax));
 
-  ldax_json["ldax_header"] = formatter_.getString(p_ldax->ldax_header, 8);
   ldax_json["ldax_id"]     = formatter_.getString(p_ldax->ldax_id, 4);
   ldax_json["ldax_version"] =
       formatter_.getBitmap<uint8_t>(p_ldax->ldax_version);
@@ -116,8 +115,6 @@ nlohmann::json LDAX::get(const void* p_control_block,
       formatter_.getBitmap<uint32_t>(p_ldax->ldax_ldaeloal);
   ldax_json["ldax_ldaehial"] =
       formatter_.getBitmap<uint32_t>(p_ldax->ldax_ldaehial);
-  // ldax_json["ldax_tctvalus"] = formatter_.getString(p_ldax->ldax_tctvalus,
-  // 16);
   ldax_json["ldax_tcthwm"]  = p_ldax->ldax_tcthwm;
   ldax_json["ldax_tctlwm"]  = p_ldax->ldax_tctlwm;
   ldax_json["ldax_tctehwm"] = p_ldax->ldax_tctehwm;
@@ -130,10 +127,8 @@ nlohmann::json LDAX::get(const void* p_control_block,
       formatter_.getHex<uint32_t>(&(p_ldax->ldax_ldasmad));
   ldax_json["ldax_ldasmsz"] =
       formatter_.getHex<uint32_t>(&(p_ldax->ldax_ldasmsz));
-  // ldax_json["ldax_obtainshomespace"] =
-  // formatter_.getString(p_ldax->ldax_obtainshomespace, 8);
-  // ldax_json["ldax_obtainshomespacechar"] =
-  // formatter_.getString(p_ldax->ldax_obtainshomespacechar, 8);
+  ldax_json["ldax_obtainshomespace"] = p_ldax->ldax_obtainshomespace;
+ 
 
   if (LDAX::matchFilter(ldax_json)) {
     return ldax_json;
