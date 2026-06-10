@@ -68,11 +68,7 @@ nlohmann::json ASSB::get(const void* p_control_block,
 
   for (const auto& [include, cbxp_options] : options_map_) {
     if (include == "ldax") {
-      const struct ldax* p_ldax = reinterpret_cast<const struct ldax*>(
-          formatter_.uint<uint64_t>(p_assb->assbldax));
-      assb_json["assbldax"] =
-          CBXP::LDAX(cbxp_options)
-              .get(const_cast<void*>(reinterpret_cast<const void*>(p_ldax)));
+      assb_json["assbldax"] = CBXP::LDAX(cbxp_options).get(reinterpret_cast<void*>(formatter_.uint<uint64_t>(p_assb->assbldax)));
       if (assb_json["assbldax"].is_null()) {
         return {};
       }
@@ -94,7 +90,6 @@ nlohmann::json ASSB::get(const void* p_control_block,
   assb_json["assboasb"] = formatter_.getHex<uint32_t>(&(p_assb->assboasb));
   assb_json["assbtasb"] = formatter_.getHex<uint32_t>(&(p_assb->assbtasb));
   assb_json["assbvab"]  = formatter_.getHex<uint32_t>(&(p_assb->assbvab));
-  // assb_json["assbldax"] = formatter_.getHex<uint64_t>(&(p_assb->assbldax));
   assb_json["assbisqn"] = p_assb->assbisqn;
   assb_json["assbjbni"] = formatter_.getString(p_assb->assbjbni, 8);
   assb_json["assbjbns"] = formatter_.getString(p_assb->assbjbns, 8);
