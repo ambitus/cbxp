@@ -36,6 +36,8 @@ void CommandProcessor::showASCIIArt() {
   };
   // clang-format on
 
+  std::cout << std::endl;
+
   for (auto i = 0; i < logo_ascii_art.size(); i++) {
     if (isatty(fileno(stdout))) {
       std::cout << logo_ascii_art[i] << ansi_blue << cbxp_ascii_art[i]
@@ -44,13 +46,14 @@ void CommandProcessor::showASCIIArt() {
       std::cout << logo_ascii_art[i] << cbxp_ascii_art[i] << std::endl;
     }
   }
+
   std::cout << std::endl;
 }
 
 void CommandProcessor::showGeneralUsage() const {
   CommandProcessor::showASCIIArt();
   std::cout << "Full CLI documentation is available at: "
-               "https://ambitus.github.io/cbxp/interfaces/shell/"
+               "https://ambitus.github.io/cbxp/interfaces/cli/"
             << std::endl
             << std::endl;
 
