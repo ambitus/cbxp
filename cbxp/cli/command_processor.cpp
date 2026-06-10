@@ -18,12 +18,12 @@ void CommandProcessor::showASCIIArt() {
 
   // clang-format off
   const std::vector<std::string> logo_ascii_art = {
-    " ____________ ",
-    "|            |",
-    "|    1010    |",
-    "|            |",
-    "|     {}     |",
-    "|____________|"
+    "  ____________ ",
+    " |            |",
+    " |    1010    |",
+    " |            |",
+    " |     {}     |",
+    " |____________|"
   };
 
   const std::vector<std::string> cbxp_ascii_art = {
@@ -32,7 +32,7 @@ void CommandProcessor::showASCIIArt() {
     "  | |    | |_) \\ V /| |__) |",
     "  | |    |  _ < > < |  ___/",
     "  | |____| |_) / . \\| |",
-    "  \\_____|____/_/ \\_\\_|"
+    "   \\_____|____/_/ \\_\\_|"
   };
   // clang-format on
 

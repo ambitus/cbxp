@@ -89,13 +89,13 @@ pipeline {
     stage('Lint') {
       steps {
         echo "Linting with clang-format ..."
-        sh "cmake --build . --target lint --paralell"
+        sh "cmake --build . --target lint --parallel"
       }
     }
     stage('Cppcheck') {
       steps {
         echo "Running cppcheck ..."
-        sh "cmake --build . --target check --paralell"
+        sh "cmake --build . --target check --parallel"
       }
     }
     stage('Create Python Distribution Metadata') {
@@ -144,12 +144,12 @@ pipeline {
           echo "Installing testing CBXP '${cbxp_version}' ..."
           sh """
               cmake . --install-prefix ${env.WORKSPACE}/install-test
-              cmake --build . --paralell
+              cmake --build . --parallel
               cmake --install .
           """
 
           echo "'Function testing './dist/cbxp' ..."
-          sh "cmake --build . --target test --paralell"
+          sh "cmake --build . --target test --parallel"
 
           clean_git_repo()
         }
@@ -361,7 +361,7 @@ def publish(
     echo "Building '${pax}' ..."
     sh """
         cmake . --install-prefix ${package_source_dir}
-        cmake --build . --paralell
+        cmake --build . --parallel
         cmake --install .
         pax -x pax -wzvf ./dist/${pax} ${package_source_dir}/*
     """
