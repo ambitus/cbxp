@@ -139,7 +139,7 @@ pipeline {
             clean_python_environment()
             clean_git_repo()
           }
-          // Shell/C/C++ distribution
+          // CLI/C/C++ distribution
           def cbxp_version = get_cbxp_version()
           echo "Installing testing CBXP '${cbxp_version}' ..."
           sh """
@@ -354,16 +354,15 @@ def publish(
     echo "Adding sha256 checksum for '${tar_publish}' to ${checksums_file}..."
     sh "cd dist && sha256sum -t ${tar_publish} >> ${checksums_file}"
 
-    // Build and publish Shell/C/C++ interface pax
+    // Build and publish CLI/C/C++ interface pax
     def cbxp_version = get_cbxp_version()
-    def package_source_dir = "${env.WORKSPACE}/cbxp-${cbxp_version}"
     def pax = "cbxp-${cbxp_version}.pax.Z"
     echo "Building '${pax}' ..."
     sh """
-        cmake . --install-prefix ${package_source_dir}
+        cmake . --install-prefix ${env.WORKSPACE}/cbxp-${cbxp_version}
         cmake --build . --parallel
         cmake --install .
-        pax -x pax -wzvf ./dist/${pax} ${package_source_dir}/*
+        pax -x pax -wzvf ./dist/${pax} cbxp-${cbxp_version}/*
     """
 
     echo "Uploading '${pax}' to '${release_title}' GitHub release ..."
@@ -416,7 +415,7 @@ def build_description(python_executables_and_wheels_map, release_tag, release_no
     + "> :warning: _Requires z/OS Open XL C/C++ 2.2 compiler._\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${tar} "
     + "&& python3 -m pip install ${tar}\\n```\\n"
-    + "## Shell/C/C++ Interface Installation\\n"
+    + "## CLI/C/C++ Interface Installation\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${pax} "
     + "&& pax -rf ${pax}\\n```\\n"
   )
