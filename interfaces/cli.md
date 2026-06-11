@@ -69,7 +69,7 @@ cbxp extract -i ecvt -i 'asvt.*' cvt
 
 &nbsp;
 
-The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks from **Live Memory** where both the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `IBMUSER` and the **Control Block Field** `ASSBJBNS` matches the **Filter Value** `BPXAS`. The output is then piped into `jq` to **Format** it.
+The following example extracts all [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information) control blocks from **Live Memory** where both the **Control Block Field** `ASSBJBNI` matches the **Filter Value** `IBMUSER` and the **Control Block Field** `ASSBJBNS` matches the **Filter Value** `BPXAS`. The **JSON** output is then piped into `jq` to **Format** it.
 
 ###### Shell Script
 ```shell
