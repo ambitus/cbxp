@@ -1,3 +1,4 @@
+#define _POSIX_SOURCE
 #define _XOPEN_SOURCE_EXTENDED 1
 
 #include "command_processor.hpp"
@@ -31,12 +32,12 @@ void CommandProcessor::showASCIIArt() {
   };
 
   const std::vector<std::string> cbxp_ascii_art = {
-    "    _____ ______   _______",
-    "   / ____|  _ \\ \\ / /  __ \\",
-    "  | |    | |_) \\ V /| |__) |",
-    "  | |    |  _ < > < |  ___/",
-    "  | |____| |_) / . \\| |",
-    "   \\_____|____/_/ \\_\\_|"
+    "    _____  ____ __   __ _____ ",
+    "   / ____||  _ \\\\ \\ / /|  __ \\",
+    "  | |     | |_) |\\ V / | |__) |",
+    "  | |     |  _ <  > <  |  ___/",
+    "  | |____ | |_) |/ . \\ | |",
+    "   \\_____||____//_/ \\_\\|_|"
   };
   // clang-format on
 
