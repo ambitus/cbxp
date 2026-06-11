@@ -11,16 +11,16 @@ Control blocks that are natively supported by CBXP.
 &nbsp;
 
 {: .warning }
-> _CBXP only supports extracting fields from **System-Level Control Blocks** that are **Documented Programming Interfaces** in the [z/OS MVS Data Areas](https://www.ibm.com/docs/en/zos/latest?topic=zos-mvs) documentation._
+> _CBXP only supports extracting and formatting fields from **System-Level Control Blocks** that are **Documented Programming Interfaces** in the [z/OS MVS Data Areas](https://www.ibm.com/docs/en/zos/latest?topic=zos-mvs) documentation._
 
 &nbsp;
 
 {: .warning }
-> _Since CBXP runs in **Problem State**, only **Non-Fetch Protected** control block data can be extracted from **Live Memory** (storage). Also, access to control block data is **NOT Serialized**, meaning that CBXP may occasionally extract control block data that is **Malformed** or otherwise **NOT Valid**._
+> _Since CBXP runs in **Problem State**, only **Non-Fetch Protected** control block data can be extracted from **Live Memory**. Also, access to control block data is **NOT Serialized**, meaning that CBXP may occasionally extract control block data that is **Malformed** or otherwise **NOT Valid**._
 
 &nbsp;
 
-CBXP currently supports extracting the following **System-Level Control Blocks** from **Live Memory** *(storage)*.
+CBXP currently supports extracting and formatting the following **System-Level Control Blocks** from **Live Memory**.
 
 &nbsp;
 
@@ -31,6 +31,7 @@ CBXP currently supports extracting the following **System-Level Control Blocks**
 * [ASCB](https://www.ibm.com/docs/en/zos/latest?topic=iar-ascb-information)
 * [ASSB](https://www.ibm.com/docs/en/zos/latest?topic=iar-assb-information)
 * [OUCB](https://www.ibm.com/docs/en/zos/latest?topic=rqe-oucb-information)
+* [LDAX](https://www.ibm.com/docs/en/zos/latest?topic=isg-ihaldax-information)
 
 &nbsp;
 
@@ -44,12 +45,15 @@ CBXP currently supports extracting the following **System-Level Control Blocks**
     subgraph ASCBs["ASCB Array"]
         ASCB1["ASCB"]
         ASCB1--> ASSB1["ASSB"]
+        ASSB1--> LDAX1["LDAX"]
         ASCB1--> OUCB1["OUCB"]
         ASCB2["ASCB"]
         ASCB2--> ASSB2["ASSB"]
+        ASSB2--> LDAX2["LDAX"]
         ASCB2--> OUCB2["OUCB"]
         ASCB3["ASCB"]
         ASCB3--> ASSB3["ASSB"]
+        ASSB3--> LDAX3["LDAX"]
         ASCB3--> OUCB3["OUCB"]
     end
 </pre>

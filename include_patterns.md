@@ -25,25 +25,25 @@ How to use include patterns to include additional control blocks.
 &nbsp;
 
 {: .warning }
-> _When using the [Shell Interface](../interfaces/shell) for CBXP, ensure that **Include Patterns** that contain **Wildcards** are surrounded with quotes._
+> _When using the [CLI Interface](../interfaces/cli) for CBXP, ensure that **Include Patterns** that contain **Wildcards** are surrounded with quotes._
 >
 > &nbsp;
 >
 > ❌
 > ```shell
-> cbxp -i cvt.* psa
+> cbxp extract -i cvt.* psa
 > ```
 >
 > &nbsp;
 >
 > ✅
 > ```shell
-> cbxp -i "cvt.*" psa
+> cbxp extract -i "cvt.*" psa
 > ```
 
 &nbsp;
 
-**Include Patterns** provide a method for including **Additional Control Blocks** that can be found from the **Root Control Block** being extracted.
+**Include Patterns** provide a method for including **Additional Control Blocks** that can be found from the **Root Control Block** being extracted when extracting control block data from **Live Memory**.
 
 ## Include Pattern Basics
 
@@ -57,18 +57,18 @@ In the following example, `psa` is the **Root Control Block** and `cvt.ecvt` is 
 
 &nbsp;
 
-The following example extracts the [PSA](https://www.ibm.com/docs/en/zos/latest?topic=rqe-psa-information), includes the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information), and includes the [ECVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-ecvt-information) with the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information).
+The following example extracts the [PSA](https://www.ibm.com/docs/en/zos/latest?topic=rqe-psa-information) control block from **Live Memory**, includes the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information) control block, and includes the [ECVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-ecvt-information) control block with the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information) control block.
 
 ###### Python Script
 ```python
 from cbxp import cbxp
 
-cbdata = cbxp("psa", includes=["cvt.ecvt"])
+cbdata = cbxp.extract("psa", includes=["cvt.ecvt"])
 ```
 
 ###### Shell Script
-```python
-cbxp -i cvt.ecvt psa
+```shell
+cbxp extract -i cvt.ecvt psa
 ```
 
 &nbsp;
@@ -88,7 +88,7 @@ cbxp -i cvt.ecvt psa
 
 &nbsp;
 
-The following example extracts the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information), and includes the [ECVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-ecvt-information) and the [ASVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-asvt-information).
+The following example extracts the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information) control block from **Live Memory**, and includes the [ECVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-ecvt-information) control block and the [ASVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-asvt-information) control block.
 
 ###### Python Script
 ```python
@@ -98,7 +98,7 @@ cbdata = cbxp("cvt", includes=["ecvt", "asvt"])
 ```
 
 ###### Shell Script
-```python
+```shell
 cbxp -i ecvt -i asvt cvt
 ```
 
@@ -119,18 +119,18 @@ CBXP also supports **Wildcarding**. Coding `*` at the very end of your include p
 
 &nbsp;
 
-The following example extracts the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information) and includes all **Known Control Blocks** that are pointed to directly by it. Additionally, `asvt.*` causes the [ASVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-asvt-information) and all **Known Control Blocks** that are pointed to directly by the [ASVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-asvt-information) to also be included.
+The following example extracts the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information) control block from **Live Memory** and includes all **Known Control Blocks** that are pointed to directly by it. Additionally, `asvt.*` causes the [ASVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-asvt-information) control block and all **Known Control Blocks** that are pointed to directly by the [ASVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-asvt-information) to also be included.
 
 ###### Python Script
 ```python
 from cbxp import cbxp
 
-cbdata = cbxp("cvt", includes=["*", "asvt.*"])
+cbdata = cbxp.extract("cvt", includes=["*", "asvt.*"])
 ```
 
 ###### Shell Script
-```python
-cbxp -i "*" -i "asvt.*" cvt
+```shell
+cbxp extract -i "*" -i "asvt.*" cvt
 ```
 
 &nbsp;
@@ -156,18 +156,18 @@ cbxp -i "*" -i "asvt.*" cvt
 
 &nbsp;
 
-The following example extracts the [PSA](https://www.ibm.com/docs/en/zos/latest?topic=rqe-psa-information), includes the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information), and includes **All Known Control Blocks** that can be found starting from the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information).
+The following example extracts the [PSA](https://www.ibm.com/docs/en/zos/latest?topic=rqe-psa-information) control block from **Live Memory**, includes the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information) control block, and includes **All Known Control Blocks** that can be found starting from the [CVT](https://www.ibm.com/docs/en/zos/latest?topic=iar-cvt-information) control block.
 
 ###### Python Script
 ```python
 from cbxp import cbxp
 
-cbdata = cbxp("psa", includes=["cvt.**"])
+cbdata = cbxp.extract("psa", includes=["cvt.**"])
 ```
 
 ###### Shell Script
 ```python
-cbxp -i "cvt.**" psa
+cbxp extract -i "cvt.**" psa
 ```
 
 &nbsp;
@@ -182,12 +182,15 @@ cbxp -i "cvt.**" psa
     subgraph ASCBs["ASCB Array"]
         ASCB1["ASCB"]
         ASCB1--> ASSB1["ASSB"]
+        ASSB1--> LDAX1["LDAX"]
         ASCB1--> OUCB1["OUCB"]
         ASCB2["ASCB"]
         ASCB2--> ASSB2["ASSB"]
+        ASSB2--> LDAX2["LDAX"]
         ASCB2--> OUCB2["OUCB"]
         ASCB3["ASCB"]
         ASCB3--> ASSB3["ASSB"]
+        ASSB3--> LDAX3["LDAX"]
         ASCB3--> OUCB3["OUCB"]
     end
 </pre>
