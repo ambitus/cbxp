@@ -55,21 +55,28 @@ Currently, CBXP only has support for extracting and formatting a handful of **Sy
 
 <pre class="mermaid">
   flowchart LR
-    python(Python Interface) ---CBXP
+    python(Python Interface) <-->CBXP
     style python fill:#ffcb3c,color:#000,stroke:#ffcb3c
-    cli(CLI Interface) ---CBXP
+    cli(CLI Interface) <-->CBXP
     style cli fill:#33cc22,color:#000,stroke:#33cc22
-    C(C/C++ Interface) ---CBXP
+    C(C/C++ Interface) <-->CBXP
     style C fill:#01559e,color:#fff,stroke:#01559e
     subgraph C/C+
         CBXP(["CBXP (64-bit XPLINK ASCII)"])
         style CBXP fill:#0096ff,color:#fff,stroke:#0096ff
+        Extract
+        style Extract color:#fff,stroke:#fff
+        Format
+        style Format color:#fff,stroke:#fff
     end
-    CBXP--- Extract
-    CBXP--- Format
-    Extract ---control_blocks_memory
+    control_blocks_memory-->Extract
     subgraph "Live Memory"
-        control_blocks_memory@{ shape: procs, label: "Control Blocks"}
+        control_blocks_memory@{shape: procs, direction: RL, label: "Control Block Data"}
         style control_blocks_memory color:#fff,stroke:#fff
     end
+    CBXP<-->Extract
+    CBXP<-->Format
+    control_blocks_caller_provided-->Format
+    control_blocks_caller_provided@{shape: procs, label: "Caller-Provided Control Block Data"}
+    style control_blocks_caller_provided color:#fff,stroke:#fff
 </pre>

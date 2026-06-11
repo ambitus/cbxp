@@ -165,7 +165,7 @@ The **C Struct** that is used to store all **Result Information** returned by [`
 ### 📋 Fields
 
 * `result_json` <br>
-  When the call to `cbxp_extract()` / `cbxp_format()` is **Successful**, this field contains pointer to a **NULL-Terminated ISO8859-1 Encoded JSON String**. When the call to `cbxp_extract()` / `cbxp_format()` is **Unsucessful**, this field contains a **NULL Pointer**.
+  When the call to `cbxp_extract()` / `cbxp_format()` is **Successful**, this field contains a pointer to a **NULL-Terminated ISO8859-1 Encoded JSON String**. When the call to `cbxp_extract()` / `cbxp_format()` is **Unsucessful**, this field contains a **NULL Pointer**.
 
 * `result_json_length` <br>
   When the call to `cbxp_extract()` / `cbxp_format()` is **Successful**, this field contains the length of the **NULL-Terminated ISO8859-1 Encoded JSON String** stored in the `result_json` field. When the call to `cbxp_extract()` / `cbxp_format()` is **Unsuccessful**, this field contains `0`.
