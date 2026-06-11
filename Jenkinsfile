@@ -345,14 +345,14 @@ def publish(
       upload_asset(release_id, wheel_publish)
 
       echo "Adding sha256 checksum for '${wheel_publish}' to ${checksums_file}..."
-      sh "cd dist && sha256sum -t ${wheel_publish} >> ${checksums_file}"
+      sh "cd dist && sha256sum ${wheel_publish} >> ${checksums_file}"
     }
 
     echo "Uploading '${tar_publish}' to '${release_title}' GitHub release ..."
     upload_asset(release_id, tar_publish)
 
     echo "Adding sha256 checksum for '${tar_publish}' to ${checksums_file}..."
-    sh "cd dist && sha256sum -t ${tar_publish} >> ${checksums_file}"
+    sh "cd dist && sha256sum ${tar_publish} >> ${checksums_file}"
 
     // Build and publish CLI/C/C++ interface pax
     def cbxp_version = get_cbxp_version()
@@ -369,7 +369,7 @@ def publish(
     upload_asset(release_id, pax)
 
     echo "Adding sha256 checksum for '${pax}' to ${checksums_file}..."
-    sh "cd dist && sha256sum -t ${pax} >> ${checksums_file}"
+    sh "cd dist && sha256sum ${pax} >> ${checksums_file}"
 
     echo "Uploading '${checksums_file}' to '${release_title}' GitHub release ..."
     upload_asset(release_id, checksums_file)
