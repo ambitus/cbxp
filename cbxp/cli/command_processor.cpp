@@ -1,5 +1,9 @@
+#define _POSIX_SOURCE
+#define _XOPEN_SOURCE_EXTENDED 1
+
 #include "command_processor.hpp"
 
+#include <poll.h>
 #include <unistd.h>
 
 #include <cstdio>
@@ -12,9 +16,47 @@
 
 namespace CBXP {
 
+void CommandProcessor::showASCIIArt() {
+  std::string ansi_bold      = "\e[1m";
+  std::string ansi_blue_bold = "\e[1;34m";
+  std::string ansi_reset     = "\e[0m";
+
+  // clang-format off
+  const std::vector<std::string> logo_ascii_art = {
+    "  ____________ ",
+    " |            |",
+    " |    1010    |",
+    " |            |",
+    " |     {}     |",
+    " |____________|"
+  };
+
+  const std::vector<std::string> cbxp_ascii_art = {
+    "    _____  ____ __   __ _____ ",
+    "   / ____||  _ \\\\ \\ / /|  __ \\",
+    "  | |     | |_) |\\ V / | |__) |",
+    "  | |     |  _ <  > <  |  ___/",
+    "  | |____ | |_) |/ . \\ | |",
+    "   \\_____||____//_/ \\_\\|_|"
+  };
+  // clang-format on
+
+  for (auto i = 0; i < logo_ascii_art.size(); i++) {
+    if (isatty(fileno(stdout))) {
+      std::cout << ansi_bold << logo_ascii_art[i] << ansi_blue_bold
+                << cbxp_ascii_art[i] << ansi_reset << std::endl;
+    } else {
+      std::cout << logo_ascii_art[i] << cbxp_ascii_art[i] << std::endl;
+    }
+  }
+
+  std::cout << std::endl;
+}
+
 void CommandProcessor::showGeneralUsage() const {
+  CommandProcessor::showASCIIArt();
   std::cout << "Full CLI documentation is available at: "
-               "https://ambitus.github.io/cbxp/interfaces/shell/"
+               "https://ambitus.github.io/cbxp/interfaces/cli/"
             << std::endl
             << std::endl;
 
@@ -301,7 +343,8 @@ void CommandProcessor::processFormatFlags() {
       throw CLIExitFailure();
     }
   }
-  if (isatty(STDIN_FILENO) == 0) {
+  struct pollfd pfd = {STDIN_FILENO, POLLIN, 0};
+  if (poll(&pfd, 1, 0) > 0 && (pfd.revents & POLLIN)) {
     CommandProcessor::readFormatDataFromPipe();
   }
   if (format_options_.data_buffer.empty()) {

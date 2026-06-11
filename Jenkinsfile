@@ -89,13 +89,13 @@ pipeline {
     stage('Lint') {
       steps {
         echo "Linting with clang-format ..."
-        sh "gmake lint"
+        sh "cmake --build . --target lint --parallel"
       }
     }
     stage('Cppcheck') {
       steps {
         echo "Running cppcheck ..."
-        sh "gmake check"
+        sh "cmake --build . --target check --parallel"
       }
     }
     stage('Create Python Distribution Metadata') {
@@ -118,7 +118,7 @@ pipeline {
 
             echo "Building '${wheel}' and '${tar}' ..."
             sh """
-                ${python} -m pip install build>=1.3.0
+                ${python} -m pip install build>=1.5.0
                 ${python} -m build
             """
 
@@ -139,25 +139,17 @@ pipeline {
             clean_python_environment()
             clean_git_repo()
           }
-          // Shell/C/C++ pax distribution
+          // CLI/C/C++ distribution
           def cbxp_version = get_cbxp_version()
-          def pax = "cbxp-${cbxp_version}.pax.Z"
-          echo "Building '${pax}' ..."
+          echo "Installing testing CBXP '${cbxp_version}' ..."
           sh """
-              cmake .
-              gmake package
-          """
-
-          echo "Install testing '${pax}' ..."
-          sh """
-              mkdir install-test
-              cd install-test
-              pax -rf ../dist/${pax}
-              ls -alT cbxp-${cbxp_version}/*
+              cmake . --install-prefix ${env.WORKSPACE}/install-test
+              cmake --build . --parallel
+              cmake --install .
           """
 
           echo "'Function testing './dist/cbxp' ..."
-          sh "gmake test"
+          sh "cmake --build . --target test --parallel"
 
           clean_git_repo()
         }
@@ -213,7 +205,9 @@ def create_python_executables_and_wheels_map(python_versions) {
           "cbxp-${cbxp_version}-cp3${python_version}-cp3${python_version}-zos.whl"
         ),
         "wheelPublish": (
-          "cbxp-${cbxp_version}-cp3${python_version}-cp3${python_version}-zos.whl"
+          // New wheel naming convention does not work with PyPi so we
+          // do still need to rename the wheel file.
+          "cbxp-${cbxp_version}-cp3${python_version}-none-any.whl"
         ),
         "tarPublish": "cbxp-${cbxp_version}.tar.gz"
       ]
@@ -334,14 +328,11 @@ def publish(
       echo "Building '${wheel_default}' ..."
 
       sh """
-        ${python} -m pip install build>=1.2.2
+        ${python} -m pip install build>=1.5.0
         ${python} -m build -w
       """
 
-      // Rename wheel file if the old naming convention is being used
-      if (wheel_default != wheel_publish) {
-        sh "mv ./dist/${wheel_default} ./dist/${wheel_publish}"
-      }
+      sh "mv ./dist/${wheel_default} ./dist/${wheel_publish}"
 
       if (tar_built == false) {
         tar_publish = python_executables_and_wheels_map[python]["tarPublish"]
@@ -354,29 +345,31 @@ def publish(
       upload_asset(release_id, wheel_publish)
 
       echo "Adding sha256 checksum for '${wheel_publish}' to ${checksums_file}..."
-      sh "cd dist && sha256sum -t ${wheel_publish} >> ${checksums_file}"
+      sh "cd dist && sha256sum ${wheel_publish} >> ${checksums_file}"
     }
 
     echo "Uploading '${tar_publish}' to '${release_title}' GitHub release ..."
     upload_asset(release_id, tar_publish)
 
     echo "Adding sha256 checksum for '${tar_publish}' to ${checksums_file}..."
-    sh "cd dist && sha256sum -t ${tar_publish} >> ${checksums_file}"
+    sh "cd dist && sha256sum ${tar_publish} >> ${checksums_file}"
 
-    // Build and publish Shell/C/C++ interface pax
+    // Build and publish CLI/C/C++ interface pax
     def cbxp_version = get_cbxp_version()
     def pax = "cbxp-${cbxp_version}.pax.Z"
     echo "Building '${pax}' ..."
     sh """
-        cmake .
-        gmake package
+        cmake . --install-prefix ${env.WORKSPACE}/cbxp-${cbxp_version}
+        cmake --build . --parallel
+        cmake --install .
+        pax -x pax -wzvf ./dist/${pax} cbxp-${cbxp_version}/*
     """
 
     echo "Uploading '${pax}' to '${release_title}' GitHub release ..."
     upload_asset(release_id, pax)
 
     echo "Adding sha256 checksum for '${pax}' to ${checksums_file}..."
-    sh "cd dist && sha256sum -t ${pax} >> ${checksums_file}"
+    sh "cd dist && sha256sum ${pax} >> ${checksums_file}"
 
     echo "Uploading '${checksums_file}' to '${release_title}' GitHub release ..."
     upload_asset(release_id, checksums_file)
@@ -422,7 +415,7 @@ def build_description(python_executables_and_wheels_map, release_tag, release_no
     + "> :warning: _Requires z/OS Open XL C/C++ 2.2 compiler._\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${tar} "
     + "&& python3 -m pip install ${tar}\\n```\\n"
-    + "## Shell/C/C++ Interface Installation\\n"
+    + "## CLI/C/C++ Interface Installation\\n"
     + "```\\ncurl -O -L https://github.com/ambitus/cbxp/releases/download/${release_tag}/${pax} "
     + "&& pax -rf ${pax}\\n```\\n"
   )

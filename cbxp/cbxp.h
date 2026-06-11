@@ -23,7 +23,7 @@ cbxp_result_t* cbxp_extract(const char* control_block_name,
 
 cbxp_result_t* cbxp_format(const char* control_block_name,
                            const size_t control_block_name_length,
-                           const void* p_data, const size_t data_length,
+                           const void* data, const size_t data_length,
                            bool debug);
 
 void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
