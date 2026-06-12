@@ -1,3 +1,5 @@
+#define _POSIX_SOURCE
+
 #include "logger.hpp"
 
 #include <unistd.h>

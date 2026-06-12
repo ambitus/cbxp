@@ -1,7 +1,7 @@
 import json
 from enum import Enum
 
-from cbxp._C import call_cbxp
+from cbxp._C import call_cbxp_extract, call_cbxp_format
 
 
 class CBXPFilterOperation(Enum):
@@ -34,11 +34,14 @@ class CBXPFilter:
 class CBXPErrorCode(Enum):
     """An enum of error and return codes from the cbxp interface"""
 
+    # Negative Error Codes are from the Python interface
     COMMA_IN_INCLUDE = -1
     COMMA_IN_FILTER = -2
-    BAD_CONTROL_BLOCK = 1
+    # Positive Error Codes are return codes from CBXP
+    UNKNOWN_CONTROL_BLOCK = 1
     BAD_INCLUDE = 2
-    BAD_CONTROL_BLOCK_FILTER = 3
+    BAD_FILTER = 3
+    DATA_TOO_SMALL = 4
 
 
 class CBXPError(Exception):
@@ -51,18 +54,23 @@ class CBXPError(Exception):
                 message = "Include patterns cannot contain commas"
             case CBXPErrorCode.COMMA_IN_FILTER.value:
                 message = "Filters cannot contain commas"
-            case CBXPErrorCode.BAD_CONTROL_BLOCK.value:
-                message = f"Unknown control block '{control_block_name}' was specified."
+            case CBXPErrorCode.UNKNOWN_CONTROL_BLOCK.value:
+                message = f"Unknown control block: {control_block_name}"
             case CBXPErrorCode.BAD_INCLUDE.value:
                 message = "A bad include pattern was provided"
-            case CBXPErrorCode.BAD_CONTROL_BLOCK_FILTER.value:
+            case CBXPErrorCode.BAD_FILTER.value:
                 message = "A bad filter was provided"
+            case CBXPErrorCode.DATA_TOO_SMALL.value:
+                message = (
+                    "Data provided is not large enough for specified "
+                    f"control block: {control_block_name}"
+                )
             case _:
-                message = "an unknown error occurred"
+                message = "An unknown error occurred"
         super().__init__(message)
 
 
-def cbxp(
+def extract(
     control_block: str,
     includes: list[str] = None,
     filters: list[CBXPFilter] = None,
@@ -86,12 +94,30 @@ def cbxp(
             raise CBXPError(CBXPErrorCode.COMMA_IN_FILTER.value, control_block)
         filters_string += str(filter_obj)
 
-    response = call_cbxp(
+    response = call_cbxp_extract(
         control_block.lower(),
         ",".join(includes),
         filters_string,
         debug=debug,
     )
+    if response["return_code"]:
+        raise CBXPError(response["return_code"], control_block)
+    if response["result_json"] == "null" or response["result_json"] == "[]":
+        return None
+    return json.loads(response["result_json"])
+
+
+def format(  # noqa: A001
+    control_block: str,
+    data: bytes,
+    debug: bool = False,
+) -> dict:
+    response = call_cbxp_format(
+        control_block.lower(),
+        data,
+        debug=debug,
+    )
+
     if response["return_code"]:
         raise CBXPError(response["return_code"], control_block)
     if response["result_json"] == "null" or response["result_json"] == "[]":

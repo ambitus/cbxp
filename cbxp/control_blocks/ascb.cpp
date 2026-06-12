@@ -1,7 +1,6 @@
 #include "ascb.hpp"
 
 #include <cvt.h>
-#include <ihaascb.h>
 #include <ihapsa.h>
 
 #include <cstdint>
@@ -15,9 +14,11 @@
 #include "oucb.hpp"
 
 namespace CBXP {
-nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
+nlohmann::json ASCB::get(const void* p_control_block,
+                         const size_t buffer_length) {
+  ASCB::checkDataLength(buffer_length);
   nlohmann::json ascb_json = {};
-  const ascb* __ptr32 p_ascb;
+  const ascb* p_ascb;
 
   if (p_control_block == nullptr) {
     // PSA starts at address 0
@@ -26,7 +27,7 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
     const struct cvtmap* __ptr32 p_cvtmap =
         // 'nullPointer' is a false positive because the PSA starts at address 0
         // cppcheck-suppress nullPointer
-        static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
+        static_cast<struct cvtmap const* __ptr32>(p_psa->flccvt);
     asvt_t* __ptr32 p_asvt = static_cast<asvt_t* __ptr32>(p_cvtmap->cvtasvt);
 
     ascb_json["ascbs"]     = std::vector<nlohmann::json>();
@@ -52,7 +53,7 @@ nlohmann::json ASCB::get(void* __ptr32 p_control_block) {
     }
     return ascbs;
   } else {
-    p_ascb = static_cast<ascb* __ptr32>(p_control_block);
+    p_ascb = static_cast<ascb const*>(p_control_block);
   }
 
   ascb_json["ascbassb"] = formatter_.getHex<uint32_t>(&(p_ascb->ascbassb));

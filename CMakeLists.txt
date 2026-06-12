@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(CBXP VERSION 0.0.3
-             DESCRIPTION "A unified and standardized interface for extracting z/OS control block data."
+project(CBXP VERSION 0.0.4
+             DESCRIPTION "A unified and standardized interface for extracting and formatting z/OS control block data."
              LANGUAGES C CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "./dist")
@@ -39,10 +39,13 @@ endif()
 # ============================================================================
 file(
     GLOB CBXP_SRC_LIB
-    "cbxp/cbxp.cpp"
-    "cbxp/control_block_explorer.cpp"
-    "cbxp/logger.cpp"
+    "cbxp/*.cpp"
     "cbxp/control_blocks/*.cpp"
+)
+
+file(
+    GLOB CBXP_SRC_CLI
+    "cbxp/cli/*.cpp"
 )
 
 file(
@@ -77,7 +80,7 @@ target_link_options(libcbxp PUBLIC ${LINK_OPTIONS})
 # ============================================================================
 # Build '/bin/cbxp'
 # ============================================================================
-add_executable(cbxp "cbxp/main.cpp")
+add_executable(cbxp ${CBXP_SRC_CLI})
 
 target_link_libraries(cbxp libcbxp)
 
@@ -92,36 +95,32 @@ target_compile_options(cbxp PUBLIC ${COMPILE_OPTIONS})
 target_link_options(cbxp PUBLIC ${LINK_OPTIONS})
 
 # ============================================================================
-# Packaging
+# Install
 # ============================================================================
-add_custom_target(
-    package
-    COMMAND "mkdir"
-                "-p"
-                "cbxp-${CMAKE_PROJECT_VERSION}/bin"
-                "cbxp-${CMAKE_PROJECT_VERSION}/lib"
-                "cbxp-${CMAKE_PROJECT_VERSION}/include"
-    COMMAND "cp"
-                "LICENSE"
-                "cbxp-${CMAKE_PROJECT_VERSION}/"
-    COMMAND "cp"
-                "NOTICES"
-                "cbxp-${CMAKE_PROJECT_VERSION}/"
-    COMMAND "cp"
-                "./dist/cbxp"
-                "cbxp-${CMAKE_PROJECT_VERSION}/bin/"
-    COMMAND "cp"
-                "./dist/libcbxp.a"
-                "cbxp-${CMAKE_PROJECT_VERSION}/lib/"
-    COMMAND "cp"
-                "./cbxp/cbxp.h"
-                "cbxp-${CMAKE_PROJECT_VERSION}/include/"
-    COMMAND "pax"
-                "-x" "pax"
-                "-wzvf"
-                "./dist/cbxp-${CMAKE_PROJECT_VERSION}.pax.Z"
-                "cbxp-${CMAKE_PROJECT_VERSION}/*"
-    DEPENDS libcbxp cbxp
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    SET(CMAKE_INSTALL_PREFIX "~/cbxp-${CMAKE_PROJECT_VERSION}" CACHE PATH "install path" FORCE)
+endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+
+include(GNUInstallDirs)
+
+install(
+    FILES "LICENSE" "NOTICES"
+    DESTINATION ${CMAKE_INSTALL_PREFIX}
+)
+
+install(
+    TARGETS cbxp
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+install(
+    TARGETS libcbxp
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(
+    FILES "./cbxp/cbxp.h"
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
 # ============================================================================

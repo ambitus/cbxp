@@ -1,7 +1,6 @@
 #include "ecvt.hpp"
 
 #include <cvt.h>
-#include <ihaecvt.h>
 #include <ihapsa.h>
 #include <unistd.h>
 
@@ -12,8 +11,10 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json ECVT::get(void* __ptr32 p_control_block) {
-  const struct ecvt* __ptr32 p_ecvt;
+nlohmann::json ECVT::get(const void* p_control_block,
+                         const size_t buffer_length) {
+  ECVT::checkDataLength(buffer_length);
+  const struct ecvt* p_ecvt;
   nlohmann::json ecvt_json = {};
 
   if (p_control_block == nullptr) {
@@ -23,11 +24,11 @@ nlohmann::json ECVT::get(void* __ptr32 p_control_block) {
     const struct cvtmap* __ptr32 p_cvt =
         // 'nullPointer' is a false positive because the PSA starts at address 0
         // cppcheck-suppress nullPointer
-        static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
+        static_cast<struct cvtmap const* __ptr32>(p_psa->flccvt);
     // Get the address of the EVCT from the CVT
-    p_ecvt = static_cast<struct ecvt* __ptr32>(p_cvt->cvtecvt);
+    p_ecvt = static_cast<struct ecvt const* __ptr32>(p_cvt->cvtecvt);
   } else {
-    p_ecvt = static_cast<struct ecvt* __ptr32>(p_control_block);
+    p_ecvt = static_cast<struct ecvt const*>(p_control_block);
   }
 
   Logger::getInstance().debug("ECVT hex dump:");

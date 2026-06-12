@@ -14,6 +14,10 @@ void ControlBlock::createOptionsMap(const std::vector<std::string>& includes,
   // of the options_map_ structure and must be called after createIncludeLists
   ControlBlock::createIncludeLists(includes);
   ControlBlock::createFilterLists(filters);
+  for (auto it = options_map_.begin(); it != options_map_.end(); ++it) {
+    options_map_[it->first].skip_buffer_length_check =
+        skip_buffer_length_check_;
+  }
 }
 
 void ControlBlock::createIncludeLists(
@@ -161,14 +165,14 @@ void ControlBlock::createFilterLists(const std::vector<std::string>& filters) {
 }
 
 void ControlBlock::addCurrentFilter(const std::string& filter) {
-  std::string filter_key, filter_value;
   std::vector<std::string> operations = {"<=", ">=", "<", ">", "="};
   for (std::string operation : operations) {
     size_t operation_pos = filter.find(operation);
     if (operation_pos != std::string::npos) {
       // If there's a delimeter then separate include into the key and its value
-      filter_value = filter.substr(operation_pos + operation.length());
-      filter_key   = filter.substr(0, operation_pos);
+      std::string filter_value =
+          filter.substr(operation_pos + operation.length());
+      std::string filter_key    = filter.substr(0, operation_pos);
       cbxp_filter_t filter_data = {operation, filter_value};
       Logger::getInstance().debug("Adding '" + filter_key + operation +
                                   filter_value +
@@ -191,7 +195,7 @@ bool ControlBlock::compare(const nlohmann::json& json_value,
   uint64_t value_uint;
 
   if (json_value.is_number()) {
-    value_uint = json_value.get<int>();
+    value_uint = json_value.get<uint64_t>();
   } else {
     value_str       = json_value.get<std::string>();
     value_is_string = true;
@@ -276,6 +280,24 @@ bool ControlBlock::matchFilter(nlohmann::json& control_block_json) {
   Logger::getInstance().debug("All filters for the '" + control_block_name_ +
                               "' control block matched");
   return true;
+}
+
+void ControlBlock::checkDataLength(const size_t buffer_length) const {
+  if (skip_buffer_length_check_) {
+    // Data length check is only done when formatting
+    // user provided control block data.
+    // This check is skipped when extracting and formatting
+    // control block data from live memory.
+    return;
+  }
+  Logger::getInstance().debug(
+      "Checking if specified buffer (" + std::to_string(buffer_length) +
+      " bytes) too small to contain the '" + control_block_name_ +
+      "' control block (requires " + std::to_string(control_block_length_) +
+      " bytes)...");
+  if (buffer_length < control_block_length_) {
+    throw DataLengthError();
+  }
 }
 }  // namespace CBXP
 

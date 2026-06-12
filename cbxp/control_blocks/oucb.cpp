@@ -13,8 +13,10 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json OUCB::get(void* __ptr32 p_control_block) {
-  const oucb_t* __ptr32 p_oucb;
+nlohmann::json OUCB::get(const void* p_control_block,
+                         const size_t buffer_length) {
+  OUCB::checkDataLength(buffer_length);
+  const oucb_t* p_oucb;
   nlohmann::json oucb_json = {};
   if (p_control_block == nullptr) {
     // PSA starts at address 0
@@ -23,7 +25,7 @@ nlohmann::json OUCB::get(void* __ptr32 p_control_block) {
     const struct cvtmap* __ptr32 p_cvtmap =
         // 'nullPointer' is a false  positive because the PSA starts at address
         // cppcheck-suppress nullPointer
-        static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
+        static_cast<struct cvtmap const* __ptr32>(p_psa->flccvt);
     const asvt_t* __ptr32 p_asvt =
         static_cast<asvt_t* __ptr32>(p_cvtmap->cvtasvt);
 
@@ -54,7 +56,7 @@ nlohmann::json OUCB::get(void* __ptr32 p_control_block) {
     }
     return oucbs;
   } else {
-    p_oucb = static_cast<oucb_t* __ptr32>(p_control_block);
+    p_oucb = static_cast<oucb_t const*>(p_control_block);
   }
 
   Logger::getInstance().debug("oucb hex dump:");

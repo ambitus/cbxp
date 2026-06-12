@@ -1,5 +1,4 @@
 #include <cvt.h>
-#include <ihaascb.h>
 #include <ihaassb.h>
 #include <ihapsa.h>
 
@@ -11,11 +10,14 @@
 
 #include "ascb.hpp"
 #include "asvt.hpp"
+#include "ldax.hpp"
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json ASSB::get(void* __ptr32 p_control_block) {
-  const assb* __ptr32 p_assb;
+nlohmann::json ASSB::get(const void* p_control_block,
+                         const size_t buffer_length) {
+  ASSB::checkDataLength(buffer_length);
+  const assb* p_assb;
   nlohmann::json assb_json = {};
   if (p_control_block == nullptr) {
     // PSA starts at address 0
@@ -24,7 +26,7 @@ nlohmann::json ASSB::get(void* __ptr32 p_control_block) {
     const struct cvtmap* __ptr32 p_cvtmap =
         // 'nullPointer' is a false positive because the PSA starts at address 0
         // cppcheck-suppress nullPointer
-        static_cast<struct cvtmap* __ptr32>(p_psa->flccvt);
+        static_cast<struct cvtmap const* __ptr32>(p_psa->flccvt);
     const asvt_t* __ptr32 p_asvt =
         static_cast<asvt_t* __ptr32>(p_cvtmap->cvtasvt);
 
@@ -55,12 +57,25 @@ nlohmann::json ASSB::get(void* __ptr32 p_control_block) {
     }
     return assbs;
   } else {
-    p_assb = static_cast<assb* __ptr32>(p_control_block);
+    p_assb = static_cast<assb const*>(p_control_block);
   }
 
   Logger::getInstance().debug("assb hex dump:");
   Logger::getInstance().hexDump(reinterpret_cast<const char*>(p_assb),
                                 sizeof(struct assb));
+
+  assb_json["assbldax"] = formatter_.getHex<uint64_t>(&(p_assb->assbldax));
+
+  for (const auto& [include, cbxp_options] : options_map_) {
+    if (include == "ldax") {
+      assb_json["assbldax"] =
+          CBXP::LDAX(cbxp_options)
+              .get(*reinterpret_cast<const void* const*>(p_assb->assbldax));
+      if (assb_json["assbldax"].is_null()) {
+        return {};
+      }
+    }
+  }
 
   assb_json["assb_cms_lockinst_addr"] =
       formatter_.getHex<uint32_t>(&(p_assb->assb_cms_lockinst_addr));
@@ -77,7 +92,6 @@ nlohmann::json ASSB::get(void* __ptr32 p_control_block) {
   assb_json["assboasb"] = formatter_.getHex<uint32_t>(&(p_assb->assboasb));
   assb_json["assbtasb"] = formatter_.getHex<uint32_t>(&(p_assb->assbtasb));
   assb_json["assbvab"]  = formatter_.getHex<uint32_t>(&(p_assb->assbvab));
-  assb_json["assbldax"] = formatter_.getHex<uint32_t>(&(p_assb->assbldax));
   assb_json["assbisqn"] = p_assb->assbisqn;
   assb_json["assbjbni"] = formatter_.getString(p_assb->assbjbni, 8);
   assb_json["assbjbns"] = formatter_.getString(p_assb->assbjbns, 8);

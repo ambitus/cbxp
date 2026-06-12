@@ -6,32 +6,69 @@
 
 #include "cbxp.h"
 
-// Entry point to the call_cbxp() function
-static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
+// Entry point to the call_cbxp_extract() function
+static PyObject* call_cbxp_extract(PyObject* self, PyObject* args,
+                                   PyObject* kwargs) {
   PyObject* result_dictionary;
   PyObject* debug_pyobj;
-  const char* p_control_block;
+  const char* p_control_block_name;
   const char* p_includes_string;
   const char* p_filters_string;
-  Py_ssize_t request_length;
+  Py_ssize_t control_block_name_length, includes_length, filters_length;
   bool debug            = false;
 
   static char* kwlist[] = {"control_block", "includes_string", "filters_string",
                            "debug", NULL};
 
-  if (!PyArg_ParseTupleAndKeywords(args, kwargs, "sss|O", kwlist,
-                                   &p_control_block, &p_includes_string,
-                                   &p_filters_string, &debug_pyobj)) {
+  if (!PyArg_ParseTupleAndKeywords(
+          args, kwargs, "s#s#s#|O", kwlist, &p_control_block_name,
+          &control_block_name_length, &p_includes_string, &includes_length,
+          &p_filters_string, &filters_length, &debug_pyobj)) {
+    return NULL;
+  }
+
+  debug                        = PyObject_IsTrue(debug_pyobj);
+
+  cbxp_result_t* p_cbxp_result = cbxp_extract(
+      p_control_block_name, control_block_name_length, p_includes_string,
+      includes_length, p_filters_string, filters_length, debug);
+
+  result_dictionary =
+      Py_BuildValue("{s:s#, s:I}", "result_json", p_cbxp_result->result_json,
+                    p_cbxp_result->result_json_length, "return_code",
+                    p_cbxp_result->return_code);
+
+  cbxp_free(p_cbxp_result, debug);
+
+  return result_dictionary;
+}
+
+// Entry point to the call_cbxp_format() function
+static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
+                                  PyObject* kwargs) {
+  PyObject* result_dictionary;
+  PyObject* debug_pyobj;
+  const char* p_control_block_name;
+  const char* p_data;
+  Py_ssize_t data_length, control_block_name_length;
+  bool debug            = false;
+
+  static char* kwlist[] = {"control_block", "data", "debug", NULL};
+
+  if (!PyArg_ParseTupleAndKeywords(
+          args, kwargs, "s#y#|O", kwlist, &p_control_block_name,
+          &control_block_name_length, &p_data, &data_length, &debug_pyobj)) {
     return NULL;
   }
 
   debug = PyObject_IsTrue(debug_pyobj);
 
   cbxp_result_t* p_cbxp_result =
-      cbxp(p_control_block, p_includes_string, p_filters_string, debug);
+      cbxp_format(p_control_block_name, control_block_name_length, p_data,
+                  data_length, debug);
 
   result_dictionary =
-      Py_BuildValue("{s:s#, s:i}", "result_json", p_cbxp_result->result_json,
+      Py_BuildValue("{s:s#, s:I}", "result_json", p_cbxp_result->result_json,
                     p_cbxp_result->result_json_length, "return_code",
                     p_cbxp_result->return_code);
 
@@ -42,17 +79,19 @@ static PyObject* call_cbxp(PyObject* self, PyObject* args, PyObject* kwargs) {
 
 // Method definition
 static PyMethodDef _C_methods[] = {
-    {"call_cbxp", (PyCFunction)call_cbxp, METH_VARARGS | METH_KEYWORDS,
-     "A unified and standardized interface for extracting z/OS control block "
-     "data."},
+    {"call_cbxp_extract", (PyCFunction)call_cbxp_extract,
+     METH_VARARGS | METH_KEYWORDS,
+     "Extract z/OS control block data from live memory."},
+    {"call_cbxp_format", (PyCFunction)call_cbxp_format,
+     METH_VARARGS | METH_KEYWORDS, "Format user provided control block data."},
     {NULL}
 };
 
 // Module definition
 static struct PyModuleDef _C_module_def = {
     PyModuleDef_HEAD_INIT, "_C",
-    "A unified and standardized interface for extracting z/OS control block "
-    "data.",
+    "A unified and standardized interface for extracting and formatting "
+    "z/OS control block data.",
     -1, _C_methods};
 
 // Module initialization function

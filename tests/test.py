@@ -1,96 +1,160 @@
 import unittest
+from pathlib import Path
 
 from cbxp import CBXPError, CBXPFilter, CBXPFilterOperation, cbxp
 
 
 class TestCBXP(unittest.TestCase):
+    SAMPLE_DIR = Path(__file__).resolve().parent / "samples"
+
     # ============================================================================
-    # Basic Usage
+    # Utility Functions
     # ============================================================================
-    def test_cbxp_can_extract_psa(self):
-        cbdata = cbxp("psa")
+    @staticmethod
+    def read_sample(filename: str) -> bytes:
+        return (TestCBXP.SAMPLE_DIR / filename).read_bytes()
+
+    @staticmethod
+    def get_cvtasmvt_values() -> tuple[int, str]:
+        cbdata = cbxp.extract("cvt")
+        cvtasmvt_hex = cbdata["cvtasmvt"]
+        return int(cvtasmvt_hex, 16), cvtasmvt_hex
+
+    # ============================================================================
+    # Extract -- Basic Usage
+    # ============================================================================
+    def test_cbxp_extract_psa(self):
+        cbdata = cbxp.extract("psa")
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_extract_cvt(self):
-        cbdata = cbxp("cvt")
+    def test_cbxp_extract_cvt(self):
+        cbdata = cbxp.extract("cvt")
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_extract_ecvt(self):
-        cbdata = cbxp("ecvt")
+    def test_cbxp_extract_ecvt(self):
+        cbdata = cbxp.extract("ecvt")
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_extract_asvt(self):
-        cbdata = cbxp("asvt")
+    def test_cbxp_extract_asvt(self):
+        cbdata = cbxp.extract("asvt")
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_extract_ascb(self):
-        cbdata = cbxp("ascb")
+    def test_cbxp_extract_ascb(self):
+        cbdata = cbxp.extract("ascb")
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
             self.assertIs(type(entry), dict)
 
-    def test_cbxp_can_extract_assb(self):
-        cbdata = cbxp("assb")
+    def test_cbxp_extract_assb(self):
+        cbdata = cbxp.extract("assb")
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
             self.assertIs(type(entry), dict)
 
-    def test_cbxp_can_extract_oucb(self):
-        cbdata = cbxp("oucb")
+    def test_cbxp_extract_oucb(self):
+        cbdata = cbxp.extract("oucb")
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+
+    def test_cbxp_extract_ldax(self):
+        cbdata = cbxp.extract("ldax")
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
             self.assertIs(type(entry), dict)
 
     # ============================================================================
-    # Include Patterns
+    # Extract -- Debug Mode
     # ============================================================================
-    def test_cbxp_can_extract_the_psa_and_include_the_cvt(self):
-        cbdata = cbxp("psa", includes=["cvt"])
+    def test_cbxp_extract_runs_in_debug_mode(self):
+        cbdata = cbxp.extract("psa", debug=True)
+        self.assertIs(type(cbdata), dict)
+
+    # ============================================================================
+    # Extract -- Include Patterns
+    # ============================================================================
+    def test_cbxp_extract_psa_and_include_cvt(self):
+        cbdata = cbxp.extract("psa", includes=["cvt"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["flccvt"]), dict)
 
-    def test_cbxp_can_extract_the_cvt_and_include_the_ecvt(self):
-        cbdata = cbxp("cvt", includes=["ecvt"])
+    def test_cbxp_extract_cvt_and_include_ecvt(self):
+        cbdata = cbxp.extract("cvt", includes=["ecvt"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtecvt"]), dict)
 
-    def test_cbxp_can_extract_the_cvt_and_include_the_asvt(self):
-        cbdata = cbxp("cvt", includes=["asvt"])
+    def test_cbxp_extract_cvt_and_include_asvt(self):
+        cbdata = cbxp.extract("cvt", includes=["asvt"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtasvt"]), dict)
         self.assertIs(type(cbdata["cvtasvt"]["asvtenty"]), list)
         for entry in cbdata["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), str)
 
-    def test_cbxp_can_extract_the_asvt_and_include_the_ascb(self):
-        cbdata = cbxp("asvt", includes=["ascb"])
+    def test_cbxp_extract_asvt_and_include_ascb(self):
+        cbdata = cbxp.extract("asvt", includes=["ascb"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["asvtenty"]), list)
         for entry in cbdata["asvtenty"]:
             self.assertIs(type(entry), dict)
 
-    def test_cbxp_can_extract_the_ascb_and_include_the_assb(self):
-        cbdata = cbxp("ascb", includes=["assb"])
+    def test_cbxp_extract_ascb_and_include_assb(self):
+        cbdata = cbxp.extract("ascb", includes=["assb"])
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
 
-    def test_cbxp_can_extract_the_ascb_and_include_the_oucb(self):
-        cbdata = cbxp("ascb", includes=["oucb"])
+    def test_cbxp_extract_ascb_and_include_oucb(self):
+        cbdata = cbxp.extract("ascb", includes=["oucb"])
         self.assertIs(type(cbdata), list)
         for entry in cbdata:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascboucb"]), dict)
 
-    def test_cbxp_can_extract_the_psa_and_include_the_cvt_ecvt(self):
-        cbdata = cbxp("psa", includes=["cvt.ecvt"])
+    def test_cbxp_extract_asvt_and_include_ascb_assb_ldax(self):
+        cbdata = cbxp.extract("asvt", includes=["ascb.assb.ldax"])
+        self.assertIs(type(cbdata), dict)
+        self.assertIs(type(cbdata["asvtenty"]), list)
+        for entry in cbdata["asvtenty"]:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
+
+    def test_cbxp_extract_psa_and_include_cvt_asvt_ascb_assb_ldax(self):
+        cbdata = cbxp.extract("psa", includes=["cvt.asvt.ascb.assb.ldax"])
+        self.assertIs(type(cbdata), dict)
+        self.assertIs(type(cbdata["flccvt"]), dict)
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
+
+    def test_cbxp_extract_assb_and_include_ldax(self):
+        cbdata = cbxp.extract("assb", includes=["ldax"])
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["assbldax"]), dict)
+
+    def test_cbxp_extract_ascb_and_include_assb_ldax(self):
+        cbdata = cbxp.extract("ascb", includes=["assb.ldax"])
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
+
+    def test_cbxp_extract_psa_and_include_cvt_ecvt(self):
+        cbdata = cbxp.extract("psa", includes=["cvt.ecvt"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
 
-    def test_cbxp_can_extract_the_psa_and_include_the_cvt_ecvt_ascb(self):
-        cbdata = cbxp("psa", includes=["cvt.asvt.ascb"])
+    def test_cbxp_extract_psa_and_include_cvt_ecvt_ascb(self):
+        cbdata = cbxp.extract("psa", includes=["cvt.asvt.ascb"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
@@ -98,16 +162,16 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
 
-    def test_cbxp_can_extract_the_cvt_and_include_the_asvt_ascb(self):
-        cbdata = cbxp("cvt", includes=["asvt.ascb"])
+    def test_cbxp_extract_cvt_and_include_asvt_ascb(self):
+        cbdata = cbxp.extract("cvt", includes=["asvt.ascb"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtasvt"]), dict)
         self.assertIs(type(cbdata["cvtasvt"]["asvtenty"]), list)
         for entry in cbdata["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
 
-    def test_cbxp_include_can_extract_cvt_and_include_ecvt_and_asvt(self):
-        cbdata = cbxp("cvt", includes=["ecvt", "asvt"])
+    def test_cbxp_extract_cvt_and_include_ecvt_and_asvt(self):
+        cbdata = cbxp.extract("cvt", includes=["ecvt", "asvt"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtecvt"]), dict)
         self.assertIs(type(cbdata["cvtasvt"]), dict)
@@ -115,10 +179,10 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), str)
 
-    def test_cbxp_include_can_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb(
+    def test_cbxp_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb(
         self,
     ):
-        cbdata = cbxp("psa", includes=["cvt.ecvt", "cvt.asvt.ascb"])
+        cbdata = cbxp.extract("psa", includes=["cvt.ecvt", "cvt.asvt.ascb"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
@@ -127,10 +191,10 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
 
-    def test_cbxp_include_can_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb_assb(
+    def test_cbxp_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb_assb(
         self,
     ):
-        cbdata = cbxp("psa", includes=["cvt.ecvt", "cvt.asvt.ascb.assb"])
+        cbdata = cbxp.extract("psa", includes=["cvt.ecvt", "cvt.asvt.ascb.assb"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
@@ -140,10 +204,10 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
 
-    def test_cbxp_include_can_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb_oucb(
+    def test_cbxp_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb_oucb(
         self,
     ):
-        cbdata = cbxp("psa", includes=["cvt.ecvt", "cvt.asvt.ascb.oucb"])
+        cbdata = cbxp.extract("psa", includes=["cvt.ecvt", "cvt.asvt.ascb.oucb"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
@@ -153,8 +217,8 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascboucb"]), dict)
 
-    def test_cbxp_can_extract_psa_and_include_cvt_recursive_wildcard(self):
-        cbdata = cbxp("psa", includes=["cvt.**"])
+    def test_cbxp_extract_psa_and_include_cvt_recursive_wildcard(self):
+        cbdata = cbxp.extract("psa", includes=["cvt.**"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
@@ -163,10 +227,11 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
             self.assertIs(type(entry["ascboucb"]), dict)
 
-    def test_cbxp_can_extract_psa_and_include_cvt_wildcard(self):
-        cbdata = cbxp("psa", includes=["cvt.*"])
+    def test_cbxp_extract_psa_and_include_cvt_wildcard(self):
+        cbdata = cbxp.extract("psa", includes=["cvt.*"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
@@ -175,8 +240,8 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), str)
 
-    def test_cbxp_can_extract_cvt_and_include_wildcard_and_asvt_wildcard(self):
-        cbdata = cbxp("cvt", includes=["*", "asvt.*"])
+    def test_cbxp_extract_cvt_and_include_wildcard_and_asvt_wildcard(self):
+        cbdata = cbxp.extract("cvt", includes=["*", "asvt.*"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtecvt"]), dict)
         self.assertIs(type(cbdata["cvtasvt"]), dict)
@@ -184,10 +249,10 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["cvtasvt"]["asvtenty"]:
             self.assertIs(type(entry), dict)
 
-    def test_cbxp_can_extract_cvt_and_include_wildcard_and_asvt_recursive_wildcard(
+    def test_cbxp_extract_cvt_and_include_wildcard_and_asvt_recursive_wildcard(
         self,
     ):
-        cbdata = cbxp("cvt", includes=["*", "asvt.**"])
+        cbdata = cbxp.extract("cvt", includes=["*", "asvt.**"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtecvt"]), dict)
         self.assertIs(type(cbdata["cvtasvt"]), dict)
@@ -197,18 +262,35 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry["ascbassb"]), dict)
             self.assertIs(type(entry["ascboucb"]), dict)
 
+    def test_cbxp_extract_ascb_and_include_assb_recursive_wildcard(self):
+        cbdata = cbxp.extract("ascb", includes=["assb.**"])
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
+
+    def test_cbxp_extract_ascb_and_include_oucb_and_assb_recursive_wildcard(self):
+        cbdata = cbxp.extract("ascb", includes=["oucb", "assb.**"])
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
+            self.assertIs(type(entry["ascboucb"]), dict)
+
     # ============================================================================
-    # Filters
+    # Extract -- Filters
     # ============================================================================
-    def test_cbxp_can_use_filter(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_psa_filter_eyecatcher(self):
+        cbdata = cbxp.extract(
             "psa",
             filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSA")],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_filter_with_wildcard_include(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_psa_filter_wildcard_include(self):
+        cbdata = cbxp.extract(
             "psa",
             filters=[
                 CBXPFilter(
@@ -221,8 +303,8 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_filter_with_explicit_include(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_filter_with_explicit_include(self):
+        cbdata = cbxp.extract(
             "psa",
             filters=[
                 CBXPFilter(
@@ -235,8 +317,8 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_multiple_filters(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_multiple_filters(self):
+        cbdata = cbxp.extract(
             "psa",
             filters=[
                 CBXPFilter(
@@ -254,8 +336,8 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_wildcard_filter_with_string(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_wildcard_filter_with_string(self):
+        cbdata = cbxp.extract(
             "psa",
             filters=[
                 CBXPFilter(
@@ -268,8 +350,8 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_int_filter_equal(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_int_filter_equal(self):
+        cbdata = cbxp.extract(
             "psa",
             filters=[
                 CBXPFilter("cvt.asvt.ascb.ascbasid", CBXPFilterOperation.EQUAL, 1),
@@ -278,8 +360,8 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_int_filter_greater_than(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_int_filter_greater_than(self):
+        cbdata = cbxp.extract(
             "psa",
             filters=[
                 CBXPFilter(
@@ -292,8 +374,8 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_int_filter_less_than(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_int_filter_less_than(self):
+        cbdata = cbxp.extract(
             "psa",
             filters=[
                 CBXPFilter(
@@ -306,8 +388,8 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_int_filter_greater_than_or_equal(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_int_filter_greater_than_or_equal(self):
+        cbdata = cbxp.extract(
             "psa",
             filters=[
                 CBXPFilter(
@@ -320,8 +402,8 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_int_filter_less_than_or_equal(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_int_filter_less_than_or_equal(self):
+        cbdata = cbxp.extract(
             "psa",
             filters=[
                 CBXPFilter(
@@ -334,79 +416,93 @@ class TestCBXP(unittest.TestCase):
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_int_filter_with_hex_field_equal(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_int_filter_with_hex_field_equal(self):
+        cvtasmvt_int, _ = self.get_cvtasmvt_values()
+        cbdata = cbxp.extract(
             "cvt",
-            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, 2281701376)],
+            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, cvtasmvt_int)],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_hex_filter_with_equal(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_hex_filter_with_equal(self):
+        _, cvtasmvt_hex = self.get_cvtasmvt_values()
+        cbdata = cbxp.extract(
             "cvt",
-            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, "0x88000000")],
+            filters=[CBXPFilter("cvtasmvt", CBXPFilterOperation.EQUAL, cvtasmvt_hex)],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_hex_filter_with_greater_than(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_hex_filter_with_greater_than(self):
+        cvtasmvt_int, _ = self.get_cvtasmvt_values()
+        cbdata = cbxp.extract(
             "cvt",
             filters=[
-                CBXPFilter("cvtasmvt", CBXPFilterOperation.GREATER_THAN, "0x87FFFFFF"),
+                CBXPFilter(
+                    "cvtasmvt",
+                    CBXPFilterOperation.GREATER_THAN,
+                    hex(cvtasmvt_int - 1),
+                ),
             ],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_hex_filter_with_less_than(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_hex_filter_with_less_than(self):
+        cvtasmvt_int, _ = self.get_cvtasmvt_values()
+        cbdata = cbxp.extract(
             "cvt",
             filters=[
-                CBXPFilter("cvtasmvt", CBXPFilterOperation.LESS_THAN, "0x88000001"),
+                CBXPFilter(
+                    "cvtasmvt",
+                    CBXPFilterOperation.LESS_THAN,
+                    hex(cvtasmvt_int + 1),
+                ),
             ],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_hex_filter_with_greater_than_or_equal(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_hex_filter_with_greater_than_or_equal(self):
+        cvtasmvt_int, _ = self.get_cvtasmvt_values()
+        cbdata = cbxp.extract(
             "cvt",
             filters=[
                 CBXPFilter(
                     "cvtasmvt",
                     CBXPFilterOperation.GREATER_THAN_OR_EQUAL,
-                    "0x87FFFFFF",
+                    hex(cvtasmvt_int),
                 ),
             ],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_can_use_hex_filter_with_less_than_or_equal(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_hex_filter_with_less_than_or_equal(self):
+        cvtasmvt_int, _ = self.get_cvtasmvt_values()
+        cbdata = cbxp.extract(
             "cvt",
             filters=[
                 CBXPFilter(
                     "cvtasmvt",
                     CBXPFilterOperation.LESS_THAN_OR_EQUAL,
-                    "0x88000000",
+                    hex(cvtasmvt_int),
                 ),
             ],
         )
         self.assertIs(type(cbdata), dict)
 
-    def test_cbxp_returns_none_if_no_filter_match(
+    def test_cbxp_extract_returns_none_if_no_filter_match(
         self,
     ):
         self.assertIsNone(
-            cbxp(
+            cbxp.extract(
                 "psa",
                 filters=[CBXPFilter("psapsa", CBXPFilterOperation.EQUAL, "PSB")],
             ),
         )
 
-    def test_cbxp_returns_none_if_one_of_two_filters_fails(
+    def test_cbxp_extract_returns_none_if_one_of_two_filters_fails(
         self,
     ):
         self.assertIsNone(
-            cbxp(
+            cbxp.extract(
                 "ascb",
                 includes=["assb"],
                 filters=[
@@ -424,8 +520,8 @@ class TestCBXP(unittest.TestCase):
             ),
         )
 
-    def test_cbxp_can_use_filter_oucbtrxn_from_oucb(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_filter_oucbtrxn_from_oucb(self):
+        cbdata = cbxp.extract(
             "oucb",
             filters=[CBXPFilter("oucbtrxn", CBXPFilterOperation.EQUAL, "OMVS")],
         )
@@ -434,8 +530,8 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry), dict)
             self.assertEqual(entry["oucbtrxn"], "OMVS")
 
-    def test_cbxp_can_use_filter_on_ascb_oucb_oucbtrxn_with_explicit_include_oucb(self):
-        cbdata = cbxp(
+    def test_cbxp_extract_filter_on_ascb_oucb_oucbtrxn_with_explicit_include_oucb(self):
+        cbdata = cbxp.extract(
             "ascb",
             filters=[
                 CBXPFilter(
@@ -452,10 +548,59 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry["ascboucb"]), dict)
             self.assertEqual(entry["ascboucb"]["oucbtrxn"], "OMVS")
 
-    def test_cbxp_can_use_null_filter_string(
+    def test_cbxp_extract_filter_on_ldax_tcthwm_equal(self):
+        cbdata = cbxp.extract(
+            "ldax",
+            filters=[
+                CBXPFilter(
+                    "ldax_tcthwm",
+                    CBXPFilterOperation.EQUAL,
+                    0,
+                ),
+            ],
+        )
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+            self.assertEqual(entry["ldax_tcthwm"], 0)
+
+    def test_cbxp_extract_filter_on_psa_cvt_asvt_ascb_assb_ldax_tcthwm_with_include(
         self,
     ):
-        cbdata = cbxp(
+        cbdata = cbxp.extract(
+            "psa",
+            filters=[
+                CBXPFilter(
+                    "cvt.asvt.ascb.assb.ldax.ldax_tcthwm",
+                    CBXPFilterOperation.EQUAL,
+                    0,
+                ),
+            ],
+            includes=["cvt.asvt.ascb.assb.ldax"],
+        )
+        self.assertIs(type(cbdata), dict)
+        self.assertIn("flccvt", cbdata)
+        self.assertIs(type(cbdata["flccvt"]), dict)
+        self.assertIn("cvtasvt", cbdata["flccvt"])
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
+        self.assertIn("asvtenty", cbdata["flccvt"]["cvtasvt"])
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
+        # Verify at least one entry matches the filter
+        self.assertGreater(len(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), 0)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+            self.assertIs(type(entry), dict)
+            self.assertIn("ascbassb", entry)
+            self.assertIs(type(entry["ascbassb"]), dict)
+            self.assertIn("assbldax", entry["ascbassb"])
+            self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
+            self.assertEqual(
+                entry["ascbassb"]["assbldax"]["ldax_tcthwm"], 0,
+            )
+
+    def test_cbxp_extract_null_filter_string(
+        self,
+    ):
+        cbdata = cbxp.extract(
             "assb",
             filters=[
                 CBXPFilter(
@@ -473,80 +618,75 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), list)
 
     # ============================================================================
-    # Debug Mode
+    # Extract -- Testing Errors: Unknown Control Block
     # ============================================================================
-    def test_cbxp_can_run_in_debug_mode(self):
-        cbdata = cbxp("psa", debug=True)
-        self.assertIs(type(cbdata), dict)
-
-    # ============================================================================
-    # Errors: Unknown Control Block
-    # ============================================================================
-    def test_cbxp_raises_cbxp_error_when_unknown_control_block_is_provided(self):
+    def test_cbxp_extract_raises_cbxp_error_if_unknown_control_block_is_provided(self):
         with self.assertRaises(CBXPError) as e:
-            cbxp("unknown")
+            cbxp.extract("unknown")
         self.assertEqual(
-            "Unknown control block 'unknown' was specified.",
+            "Unknown control block: unknown",
             str(e.exception),
         )
 
     # ============================================================================
-    # Errors: Bad Include Patterns
+    # Extract -- Testing Errors: Bad Include Patterns
     # ============================================================================
-    def test_cbxp_raises_cbxp_error_if_asvt_ascb_is_included_with_the_psa(
+    def test_cbxp_extract_raises_cbxp_error_if_asvt_ascb_is_included_with_the_psa(
         self,
     ):
         with self.assertRaises(CBXPError) as e:
-            cbxp("psa", includes=["asvt.ascb"])
+            cbxp.extract("psa", includes=["asvt.ascb"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_ascb_is_included_with_the_psa(self):
+    def test_cbxp_extract_raises_cbxp_error_if_ascb_is_included_with_the_psa(self):
         with self.assertRaises(CBXPError) as e:
-            cbxp("psa", includes=["ascb"])
+            cbxp.extract("psa", includes=["ascb"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_ecvt_is_included_with_ascb(self):
+    def test_cbxp_extract_raises_cbxp_error_if_ecvt_is_included_with_ascb(self):
         with self.assertRaises(CBXPError) as e:
-            cbxp("ascb", includes=["ecvt"])
+            cbxp.extract("ascb", includes=["ecvt"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_ect_ecvt_and_cvt_ascb_is_included_with_the_psa(
+    def test_cbxp_extract_raises_cbxp_error_if_cvt_ascb_is_included_with_the_psa(
         self,
     ):
+        # cvt.ecvt is also included but is not error source
         with self.assertRaises(CBXPError) as e:
-            cbxp("psa", includes=["cvt.ecvt", "cvt.ascb"])
+            cbxp.extract("psa", includes=["cvt.ecvt", "cvt.ascb"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_ecvt_and_cvt_asvt_ascb_is_included_with_the_psa(
+    def test_cbxp_extract_raises_cbxp_error_if_ecvt_is_included_with_the_psa(
         self,
     ):
+        # cvt.asvt.ascb is also included but is not error source
         with self.assertRaises(CBXPError) as e:
-            cbxp("psa", includes=["ecvt", "cvt.asvt.ascb"])
+            cbxp.extract("psa", includes=["ecvt", "cvt.asvt.ascb"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_cvt_is_included_with_the_cvt(self):
+    def test_cbxp_extract_raises_cbxp_error_if_cvt_is_included_with_the_cvt(self):
         with self.assertRaises(CBXPError) as e:
-            cbxp("cvt", includes=["cvt"])
+            cbxp.extract("cvt", includes=["cvt"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_when_pattern_cannot_contain_comma_1(self):
+    def test_cbxp_extract_raises_cbxp_error_when_pattern_cannot_contain_comma_1(self):
         with self.assertRaises(CBXPError) as e:
-            cbxp("cvt", includes=["asvt,ascb"])
+            cbxp.extract("cvt", includes=["asvt,ascb"])
         self.assertEqual("Include patterns cannot contain commas", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_when_pattern_cannot_contain_comma_2(self):
+    def test_cbxp_extract_raises_cbxp_error_when_pattern_cannot_contain_comma_2(self):
         with self.assertRaises(CBXPError) as e:
-            cbxp("cvt", includes=["asvt,as"])
+            cbxp.extract("cvt", includes=["asvt,as"])
         self.assertEqual("Include patterns cannot contain commas", str(e.exception))
 
     # ============================================================================
-    # Errors: Bad Filters
+    # Extract -- Testing Errors: Bad Filters
     # ============================================================================
-    def test_cbxp_raises_cbxp_error_if_filter_uses_non_included_control_block(
+    def test_cbxp_extract_raises_cbxp_error_if_filter_uses_non_included_control_block(
         self,
     ):
         with self.assertRaises(CBXPError) as e:
-            cbxp(
+            cbxp.extract(
                 "psa",
                 filters=[
                     CBXPFilter(
@@ -558,11 +698,11 @@ class TestCBXP(unittest.TestCase):
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_non_equality_filter_used_with_string(
+    def test_cbxp_extract_raises_cbxp_error_if_non_equality_filter_used_with_string(
         self,
     ):
         with self.assertRaises(CBXPError) as e:
-            cbxp(
+            cbxp.extract(
                 "psa",
                 includes=["**"],
                 filters=[
@@ -575,55 +715,125 @@ class TestCBXP(unittest.TestCase):
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_filter_uses_unknown_key(
+    def test_cbxp_extract_raises_cbxp_error_if_filter_uses_unknown_key(
         self,
     ):
         with self.assertRaises(CBXPError) as e:
-            cbxp(
+            cbxp.extract(
                 "psa",
                 filters=["psapsb", CBXPFilterOperation.EQUAL, "PSA"],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_filter_passes_null_value_for_non_string(
+    def test_cbxp_extract_raises_cbxp_error_if_filter_passes_null_value_for_non_string(
         self,
     ):
         with self.assertRaises(CBXPError) as e:
-            cbxp(
+            cbxp.extract(
                 "assb",
                 filters=["assbasid", CBXPFilterOperation.EQUAL, ""],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_filter_uses_string_for_numeric_field(
+    def test_cbxp_extract_raises_cbxp_error_if_filter_uses_string_for_numeric_field(
         self,
     ):
         with self.assertRaises(CBXPError) as e:
-            cbxp(
+            cbxp.extract(
                 "ascb",
                 filters=["ascbasid", CBXPFilterOperation.LESS_THAN, "junk"],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_no_operation_provided(
+    def test_cbxp_extract_raises_cbxp_error_if_no_operation_provided(
         self,
     ):
         with self.assertRaises(CBXPError) as e:
-            cbxp(
+            cbxp.extract(
                 "psa",
                 filters=["junk", None, ""],
             )
         self.assertEqual("A bad filter was provided", str(e.exception))
 
-    def test_cbxp_raises_cbxp_error_if_filter_has_comma(
+    def test_cbxp_extract_raises_cbxp_error_if_filter_has_comma(
         self,
     ):
         with self.assertRaises(CBXPError) as e:
-            cbxp(
+            cbxp.extract(
                 "psa",
                 filters=["psapsa", CBXPFilterOperation.EQUAL, "PSA,PSB"],
             )
         self.assertEqual("Filters cannot contain commas", str(e.exception))
+
+    def test_cbxp_extract_raises_cbxp_error_if_ldax_included_with_psa(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.extract("psa", includes=["ldax"])
+        self.assertEqual("A bad include pattern was provided", str(e.exception))
+
+    def test_cbxp_extract_raises_cbxp_error_if_ldax_included_with_cvt(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.extract("cvt", includes=["ldax"])
+        self.assertEqual("A bad include pattern was provided", str(e.exception))
+
+    def test_cbxp_extract_raises_cbxp_error_if_ldax_included_with_ascb(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.extract("ascb", includes=["ldax"])
+        self.assertEqual("A bad include pattern was provided", str(e.exception))
+    # ============================================================================
+    # Format -- Basic Usage
+    # ============================================================================
+    def test_cbxp_format_ascb(self):
+        cbdata = cbxp.format(
+            "ascb",
+            data=self.read_sample("ascb.bin"),
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_format_cvt(self):
+        cbdata = cbxp.format(
+            "cvt",
+            data=self.read_sample("cvt.bin"),
+        )
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_format_oucb(self):
+        cbdata = cbxp.format(
+            "oucb",
+            data=self.read_sample("oucb.bin"),
+        )
+        self.assertIs(type(cbdata), dict)
+
+    # ============================================================================
+    # Format -- Debug Mode
+    # ============================================================================
+    def test_cbxp_format_runs_in_debug_mode(self):
+        cbdata = cbxp.format("ascb", data=self.read_sample("ascb.bin"), debug=True)
+        self.assertIs(type(cbdata), dict)
+
+    # ============================================================================
+    # Format -- Testing Errors: Unknown Control Block
+    # ============================================================================
+    def test_cbxp_format_raises_cbxp_error_if_unknown_control_block_is_provided(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.format("unknown", data=self.read_sample("ascb.bin"))
+        self.assertEqual(
+            "Unknown control block: unknown",
+            str(e.exception),
+        )
+
+    # ============================================================================
+    # Format -- Testing Errors: Bad Data
+    # ============================================================================
+    def test_cbxp_format_raises_cbxp_error_if_data_is_too_small(self):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.format(
+                "psa",
+                data=self.read_sample("ascb.bin"),
+            )
+        self.assertEqual(
+            "Data provided is not large enough for specified control block: psa",
+            str(e.exception),
+        )
 
 
 if __name__ == "__main__":

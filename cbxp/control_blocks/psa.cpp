@@ -1,7 +1,5 @@
 #include "psa.hpp"
 
-#include <ihapsa.h>
-
 #include <cstdint>
 #include <nlohmann/json.hpp>
 #include <string>
@@ -10,15 +8,17 @@
 #include "logger.hpp"
 
 namespace CBXP {
-nlohmann::json PSA::get(void* __ptr32 p_control_block) {
-  const struct psa* __ptr32 p_psa;
+nlohmann::json PSA::get(const void* p_control_block,
+                        const size_t buffer_length) {
+  PSA::checkDataLength(buffer_length);
+  const struct psa* p_psa;
   nlohmann::json psa_json = {};
 
   if (p_control_block == nullptr) {
     // PSA starts at address 0
     p_psa = 0;
   } else {
-    p_psa = static_cast<struct psa* __ptr32>(p_control_block);
+    p_psa = static_cast<struct psa const*>(p_control_block);
   }
 
   Logger::getInstance().debug("PSA hex dump:");
