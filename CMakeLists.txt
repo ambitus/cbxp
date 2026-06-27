@@ -169,8 +169,8 @@ add_custom_target(
 # ============================================================================
 # Test
 # ============================================================================
-add_custom_target(
-    test
-    COMMAND "./tests/test.sh"
-    DEPENDS libcbxp cbxp
-)
+include(CTest)
+
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
