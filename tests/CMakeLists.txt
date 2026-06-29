@@ -1,10 +1,10 @@
 # =============================================================================
-# CTest suite — translated from tests/test.sh
+# CTest suite - translated from tests/test.sh
 #
 # Conventions used:
-#   • Tests that expect exit code 0      → plain add_test (CTest default pass)
-#   • Tests that expect exit code 255    → add_test + WILL_FAIL TRUE
-#   • Tests that expect "null" on stdout → add_test + PASS_REGULAR_EXPRESSION "null"
+#   * Tests that expect exit code 0      -> plain add_test (CTest default pass)
+#   * Tests that expect exit code 255    -> add_test + WILL_FAIL TRUE
+#   * Tests that expect "null" on stdout -> add_test + PASS_REGULAR_EXPRESSION "null"
 #
 # The cbxp executable is referenced via the generator expression
 # $<TARGET_FILE:cbxp> so the path is always correct regardless of the
@@ -15,19 +15,19 @@ set(EXE $<TARGET_FILE:cbxp>)
 set(SAMPLES ${CMAKE_SOURCE_DIR}/tests/samples)
 
 # ---------------------------------------------------------------------------
-# Helper macro – tests that MUST exit 0
+# Helper macro - tests that MUST exit 0
 # ---------------------------------------------------------------------------
 macro(cbxp_test name)
     add_test(NAME ${name} COMMAND ${ARGN})
 endmacro()
 
-# Helper macro – tests that MUST exit non-zero (255)
+# Helper macro - tests that MUST exit non-zero (255)
 macro(cbxp_test_fail name)
     add_test(NAME ${name} COMMAND ${ARGN})
     set_property(TEST ${name} PROPERTY WILL_FAIL TRUE)
 endmacro()
 
-# Helper macro – tests whose stdout must contain exactly "null"
+# Helper macro - tests whose stdout must contain exactly "null"
 macro(cbxp_test_null name)
     add_test(NAME ${name} COMMAND ${ARGN})
     set_property(TEST ${name} PROPERTY PASS_REGULAR_EXPRESSION "null")
@@ -46,14 +46,14 @@ cbxp_test_fail(general.error.bad_arg_junk      ${EXE} junk)
 cbxp_test_fail(general.error.bad_flag_junk     ${EXE} --junk)
 
 # =============================================================================
-# Extract – Show Usage
+# Extract - Show Usage
 # =============================================================================
 
 cbxp_test(extract.help_long           ${EXE} extract --help)
 cbxp_test(extract.help_short          ${EXE} extract -h)
 
 # =============================================================================
-# Extract – Basic Usage
+# Extract - Basic Usage
 # =============================================================================
 
 cbxp_test(extract.psa                 ${EXE} extract psa)
@@ -66,14 +66,14 @@ cbxp_test(extract.oucb                ${EXE} extract oucb)
 cbxp_test(extract.ldax                ${EXE} extract ldax)
 
 # =============================================================================
-# Extract – Debug Mode
+# Extract - Debug Mode
 # =============================================================================
 
 cbxp_test(extract.debug_short         ${EXE} extract -d psa)
 cbxp_test(extract.debug_long          ${EXE} extract --debug psa)
 
 # =============================================================================
-# Extract – Include Patterns
+# Extract - Include Patterns
 # =============================================================================
 
 cbxp_test(extract.include.cvt_psa                          ${EXE} extract -i cvt psa)
@@ -102,7 +102,7 @@ cbxp_test(extract.include.ascb.assb.ldax_asvt              ${EXE} extract -i asc
 cbxp_test(extract.include.cvt.asvt.ascb.assb.ldax_psa      ${EXE} extract -i cvt.asvt.ascb.assb.ldax psa)
 
 # =============================================================================
-# Extract – Filters
+# Extract - Filters
 # =============================================================================
 
 cbxp_test(extract.filter.psapsa_eq_PSA                           ${EXE} extract -f psapsa=PSA psa)
@@ -136,7 +136,7 @@ cbxp_test(extract.filter.ldax_tcthwm_eq_0_ldax                   ${EXE} extract 
 cbxp_test_null(extract.filter.null.ldax_id_INVALID                         ${EXE} extract -f "cvt.asvt.ascb.assb.ldax.ldax_id=INVALID" -i cvt.asvt.ascb.assb.ldax psa)
 
 # =============================================================================
-# Extract – Errors: Bad Usage
+# Extract - Errors: Bad Usage
 # =============================================================================
 
 cbxp_test_fail(extract.error.no_args                ${EXE} extract)
@@ -151,13 +151,13 @@ cbxp_test_fail(extract.error.bad_flag_F             ${EXE} extract -F ${SAMPLES}
 cbxp_test_fail(extract.error.bad_flag_o             ${EXE} extract -o 1 psa)
 
 # =============================================================================
-# Extract – Errors: Unknown Control Block
+# Extract - Errors: Unknown Control Block
 # =============================================================================
 
 cbxp_test_fail(extract.error.unknown_block          ${EXE} extract unknown)
 
 # =============================================================================
-# Extract – Errors: Bad Include Patterns
+# Extract - Errors: Bad Include Patterns
 # =============================================================================
 
 cbxp_test_fail(extract.error.include.comma_asvt_ascb_cvt   ${EXE} extract -i asvt,ascb cvt)
@@ -173,7 +173,7 @@ cbxp_test_fail(extract.error.include.ldax_cvt              ${EXE} extract -i lda
 cbxp_test_fail(extract.error.include.ldax_ascb             ${EXE} extract -i ldax ascb)
 
 # =============================================================================
-# Extract – Errors: Bad Filters
+# Extract - Errors: Bad Filters
 # =============================================================================
 
 cbxp_test_fail(extract.error.filter.assbjbns_lowercase_psa      ${EXE} extract -f "cvt.asvt.ascb.assb.assbjbns=*master*" psa)
@@ -185,33 +185,33 @@ cbxp_test_fail(extract.error.filter.comma_multi_filter          ${EXE} extract -
 cbxp_test_fail(extract.error.filter.junk_psa                    ${EXE} extract -f junk psa)
 
 # =============================================================================
-# Format – Show Usage
+# Format - Show Usage
 # =============================================================================
 
 cbxp_test(format.help_short           ${EXE} format -h)
 cbxp_test(format.help_long            ${EXE} format --help)
 
 # =============================================================================
-# Format – Basic Usage
+# Format - Basic Usage
 # =============================================================================
 
 cbxp_test(format.ascb_file            ${EXE} format -F ${SAMPLES}/ascb.bin ascb)
 cbxp_test(format.oucb_file            ${EXE} format -F ${SAMPLES}/oucb.bin oucb)
 
-# format.cvt_pipe: pipe via shell — CTest runs commands directly, so we use
+# format.cvt_pipe: pipe via shell - CTest runs commands directly, so we use
 # cmake -E env + sh to emulate "cat file | cmd"
 cbxp_test(format.cvt_pipe
     ${CMAKE_COMMAND} -E env sh -c "cat ${SAMPLES}/cvt.bin | ${EXE} format cvt")
 
 # =============================================================================
-# Format – Debug Mode
+# Format - Debug Mode
 # =============================================================================
 
 cbxp_test(format.debug_short          ${EXE} format -F ${SAMPLES}/ascb.bin -d ascb)
 cbxp_test(format.debug_long           ${EXE} format -F ${SAMPLES}/ascb.bin --debug ascb)
 
 # =============================================================================
-# Format – Offset
+# Format - Offset
 # =============================================================================
 
 cbxp_test(format.offset_hex           ${EXE} format -F ${SAMPLES}/ascb_offset_0x40.bin -o 0x40 ascb)
@@ -222,7 +222,7 @@ cbxp_test(format.offset_oucb_pipe_decimal
     ${CMAKE_COMMAND} -E env sh -c "cat ${SAMPLES}/oucb_offset_0x03a8.bin | ${EXE} format -o 936 oucb")
 
 # =============================================================================
-# Format – Errors: Bad Usage
+# Format - Errors: Bad Usage
 # =============================================================================
 
 cbxp_test_fail(format.error.no_args               ${EXE} format)
@@ -233,13 +233,13 @@ cbxp_test_fail(format.error.flag_i_not_supported  ${EXE} format -i cvt psa)
 cbxp_test_fail(format.error.flag_f_not_supported  ${EXE} format -f psapsa=PSA psa)
 
 # =============================================================================
-# Format – Errors: Unknown Control Block
+# Format - Errors: Unknown Control Block
 # =============================================================================
 
 cbxp_test_fail(format.error.unknown_block         ${EXE} format -F ${SAMPLES}/ascb.bin -d unknown)
 
 # =============================================================================
-# Format – Errors: Bad Offset
+# Format - Errors: Bad Offset
 # =============================================================================
 
 cbxp_test_fail(format.error.offset_too_large      ${EXE} format -F ${SAMPLES}/ascb.bin -o 999999 ascb)
@@ -248,26 +248,26 @@ cbxp_test_fail(format.error.offset_junk           ${EXE} format -F ${SAMPLES}/as
 cbxp_test_fail(format.error.offset_float          ${EXE} format -F ${SAMPLES}/ascb.bin -o 5.5 ascb)
 
 # =============================================================================
-# Format – Errors: Error Opening File
+# Format - Errors: Error Opening File
 # =============================================================================
 
 cbxp_test_fail(format.error.file_not_found        ${EXE} format -F ${SAMPLES}/notreal.bin psa)
 
 # =============================================================================
-# Format – Errors: No File/Pipe provided
+# Format - Errors: No File/Pipe provided
 # =============================================================================
 
 cbxp_test_fail(format.error.no_file_or_pipe       ${EXE} format psa)
 
 # =============================================================================
-# Format – Errors: File and Pipe
+# Format - Errors: File and Pipe
 # =============================================================================
 
 cbxp_test_fail(format.error.file_and_pipe
     ${CMAKE_COMMAND} -E env sh -c "cat ${SAMPLES}/cvt.bin | ${EXE} format -F ${SAMPLES}/cvt.bin cvt")
 
 # =============================================================================
-# Format – Errors: Data Too Small
+# Format - Errors: Data Too Small
 # =============================================================================
 
 cbxp_test_fail(format.error.data_too_small        ${EXE} format -F ${SAMPLES}/ascb.bin psa)
