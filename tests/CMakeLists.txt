@@ -15,7 +15,7 @@ set(EXE $<TARGET_FILE:cbxp>)
 set(SAMPLES ${CMAKE_SOURCE_DIR}/tests/samples)
 
 # ---------------------------------------------------------------------------
-# Build fixture — ensures cbxp (and its libcbxp dependency) are compiled
+# Build fixture - ensures cbxp (and its libcbxp dependency) are compiled
 # before any test runs.  Building cbxp is sufficient; libcbxp is already a
 # link dependency of cbxp so CMake will build it automatically.
 # ---------------------------------------------------------------------------
