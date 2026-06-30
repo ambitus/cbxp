@@ -136,7 +136,7 @@ cbxp_test_fail(ExtractErrorUnknownFlagX         ${EXE} extract -x "unknown flag"
 cbxp_test_fail(ExtractErrorIncludeNoValue       ${EXE} extract -i cvt)
 cbxp_test_fail(ExtractErrorIncludeMissingValue  ${EXE} extract -i -i cvt psa)
 cbxp_test_fail(ExtractErrorFilterNoValue        ${EXE} extract -f psa)
-cbxp_test_fail(ExtractErrorFilterNoBlock        ${EXE} extract -f psapsa=psa psa)
+cbxp_test_fail(ExtractErrorFilterNoBlock        ${EXE} extract -f psapsa=psa)
 cbxp_test_fail(ExtractErrorBadFlagF             ${EXE} extract -F ${SAMPLES}/ascb.bin psa)
 cbxp_test_fail(ExtractErrorBadFlagO             ${EXE} extract -o 1 psa)
 
