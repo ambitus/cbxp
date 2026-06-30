@@ -15,23 +15,34 @@ set(EXE $<TARGET_FILE:cbxp>)
 set(SAMPLES ${CMAKE_SOURCE_DIR}/tests/samples)
 
 # ---------------------------------------------------------------------------
+# Build fixture — ensures cbxp (and its libcbxp dependency) are compiled
+# before any test runs.  Building cbxp is sufficient; libcbxp is already a
+# link dependency of cbxp so CMake will build it automatically.
+# ---------------------------------------------------------------------------
+add_test(NAME cbxp.build
+    COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target cbxp)
+set_property(TEST cbxp.build PROPERTY FIXTURES_SETUP cbxp.built)
+
+# ---------------------------------------------------------------------------
 # Helper macros - "cbxp.test" prefix is prepended to every test name
-#
 # ---------------------------------------------------------------------------
 macro(cbxp_test_success name)
     add_test(NAME cbxp.test${name} COMMAND ${ARGN})
+    set_property(TEST cbxp.test${name} PROPERTY FIXTURES_REQUIRED cbxp.built)
 endmacro()
 
 # Helper macro - tests that MUST exit non-zero (255)
 macro(cbxp_test_fail name)
     add_test(NAME cbxp.test${name} COMMAND ${ARGN})
     set_property(TEST cbxp.test${name} PROPERTY WILL_FAIL TRUE)
+    set_property(TEST cbxp.test${name} PROPERTY FIXTURES_REQUIRED cbxp.built)
 endmacro()
 
 # Helper macro - tests whose stdout must contain "null"
 macro(cbxp_test_null name)
     add_test(NAME cbxp.test${name} COMMAND ${ARGN})
     set_property(TEST cbxp.test${name} PROPERTY PASS_REGULAR_EXPRESSION "null")
+    set_property(TEST cbxp.test${name} PROPERTY FIXTURES_REQUIRED cbxp.built)
 endmacro()
 
 # =============================================================================
