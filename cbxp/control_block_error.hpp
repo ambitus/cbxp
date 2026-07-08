@@ -7,7 +7,10 @@ enum Error {
   BadInclude      = 2,
   BadFilter       = 3,
   DataTooSmall    = 4,
-  NullDataPtr     = 5
+  NullDataPtr     = 5,
+  BadCbxpPath     = 6,
+  BadJsonFile     = 7,
+  CantReachBlock  = 8,
 };
 
 class CBXPError : public std::exception {
@@ -37,6 +40,21 @@ class FilterError : public CBXPError {
 class DataLengthError : public CBXPError {
  public:
   DataLengthError() : CBXPError(Error::DataTooSmall) {}
+};
+
+class CbxpPathError : public CBXPError {
+ public:
+  CbxpPathError() : CBXPError(Error::BadCbxpPath) {}
+};
+
+class CbxpJsonError : public CBXPError {
+ public:
+  CbxpJsonError() : CBXPError(Error::BadJsonFile) {}
+};
+
+class CbxpReachBlockError : public CBXPError {
+ public:
+  CbxpReachBlockError() : CBXPError(Error::CantReachBlock) {}
 };
 
 }  // namespace CBXP

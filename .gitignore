@@ -36,6 +36,10 @@ artifacts
 dist
 cbxp-*
 *egg-info/
+cbxp/mappings/*.hpp
+cbxp/schemas/*.hpp
+*.DS_Store
+*.txt
 
 # CMake
 CMakeLists.txt.user

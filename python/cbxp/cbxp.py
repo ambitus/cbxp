@@ -42,6 +42,10 @@ class CBXPErrorCode(Enum):
     BAD_INCLUDE = 2
     BAD_FILTER = 3
     DATA_TOO_SMALL = 4
+    NULL_DATA_POINTER = 5
+    BAD_CBXP_PATH = 6
+    BAD_JSON_FILE = 7
+    CANT_REACH_BLOCK = 8
 
 
 class CBXPError(Exception):
@@ -65,6 +69,14 @@ class CBXPError(Exception):
                     "Data provided is not large enough for specified "
                     f"control block: {control_block_name}"
                 )
+            case CBXPErrorCode.NULL_DATA_POINTER.value:
+                message = "A null data pointer was provided"
+            case CBXPErrorCode.BAD_CBXP_PATH.value:
+                message = "Error with your CBXPPATH environment variable"
+            case CBXPErrorCode.BAD_JSON_FILE.value:
+                message = "Could not parse a JSON file"
+            case CBXPErrorCode.CANT_REACH_BLOCK.value:
+                message = "Cannot reach control block"
             case _:
                 message = "An unknown error occurred"
         super().__init__(message)

@@ -29,6 +29,48 @@ run_with_expected_null_response() {
     echo
 }
 
+# Runs one shared CBXPPATH fixture (tests/fixtures/cbxppath/<name>/case.conf).
+# tests/test.py runs the same fixtures, so each case only needs to be added once.
+run_cbxppath_fixture() {
+    fixture_dir="$(cd "$1" && pwd)"
+    echo "Running CBXPPATH fixture: $(basename "$fixture_dir")"
+    (
+        unset CBXPPATH EXPECT CODE MESSAGE COMMAND BLOCK SAMPLE CONTAINS NOT_CONTAINS EXPECT_OUTPUT_FILE
+        . "$fixture_dir/case.conf"
+        if [ -n "${CBXPPATH+x}" ]; then
+            CBXPPATH="$(printf '%s' "$CBXPPATH" | sed "s|@CASE@|$fixture_dir|g")"
+            export CBXPPATH
+        fi
+        if [ "${COMMAND:-format}" = "extract" ]; then
+            set -- ./dist/cbxp extract "$BLOCK"
+        else
+            set -- ./dist/cbxp format -F "tests/samples/$SAMPLE" "$BLOCK"
+        fi
+        stdout_file="${TMPDIR:-/tmp}/cbxp_fixture_$$.out"
+        stderr_file="${TMPDIR:-/tmp}/cbxp_fixture_$$.err"
+        trap 'rm -f "$stdout_file" "$stderr_file"' EXIT
+        "$@" > "$stdout_file" 2> "$stderr_file"
+        return_code=$?
+        if [ "$EXPECT" = "ok" ]; then
+            [ $return_code -eq 0 ] || { echo "Unexpected exit code: got $return_code, expected 0"; cat "$stderr_file"; exit 1; }
+            if [ -n "${CONTAINS:-}" ]; then
+                grep -q -F -- "$CONTAINS" "$stdout_file" || { echo "Output does not contain: $CONTAINS"; exit 1; }
+            fi
+            if [ -n "${NOT_CONTAINS:-}" ]; then
+                ! grep -q -F -- "$NOT_CONTAINS" "$stdout_file" || { echo "Output unexpectedly contains: $NOT_CONTAINS"; exit 1; }
+            fi
+            if [ -n "${EXPECT_OUTPUT_FILE:-}" ]; then
+                [ "$(cat "$stdout_file")" = "$(cat "$fixture_dir/$EXPECT_OUTPUT_FILE")" ] || { echo "Output does not match $EXPECT_OUTPUT_FILE"; cat "$stdout_file"; exit 1; }
+            fi
+        else
+            [ $return_code -eq 255 ] || { echo "Unexpected exit code: got $return_code, expected 255"; exit 1; }
+            grep -q -F -- "$MESSAGE" "$stderr_file" || { echo "Error output does not contain: $MESSAGE"; cat "$stderr_file"; exit 1; }
+        fi
+        echo "Fixture behaved as expected."
+        echo
+    ) || exit 1
+}
+
 ## General Test Cases
 
 # General - Show Usage
@@ -130,7 +172,7 @@ run_with_expected_exit_code 255 ./dist/cbxp extract -i asvt.ascb psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -i ascb psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -i ecvt ascb
 run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt.ecvt -i cvt.ascb psa
-run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt.asvt.ascb -i ecvt psa
+run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt.asvt.ascb -i oucb psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt cvt
 run_with_expected_exit_code 255 ./dist/cbxp extract -i ldax psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -i ldax cvt
@@ -183,6 +225,11 @@ run_with_expected_exit_code 255 ./dist/cbxp format psa
 run_with_expected_exit_code 255 sh -c 'cat tests/samples/cvt.bin | ./dist/cbxp format -F tests/samples/cvt.bin cvt'
 # Format - Errors: Data Too Small
 run_with_expected_exit_code 255 ./dist/cbxp format -F tests/samples/ascb.bin psa
+
+## CBXPPATH Fixtures
+for fixture in tests/fixtures/cbxppath/*/; do
+    run_cbxppath_fixture "$fixture"
+done
 
 echo " -------------------------------- "
 echo " -------------------------------- "
