@@ -1,0 +1,4198 @@
+{
+  "version": 1,
+  "name": "psa",
+  "commonName": "Prefixed Save Area",
+  "macroId": "ihapsa",
+  "description": "= PROVIDE DATA MAPPING OF THE PSA.                    */ %GOTO PSAL2;   /*",
+  "aliases": [],
+  "pointedToBy": [],
+  "storageAttributes": {
+    "subpools": [
+      239
+    ],
+    "key": 0,
+    "residency": "Below 16 MB line"
+  },
+  "controlBlock": [
+    {
+      "name": "flcippsw",
+      "description": "IPL PSW",
+      "offset": 0,
+      "length": 8,
+      "type": "hex",
+      "aliases": [
+        "iplpsw"
+      ]
+    },
+    {
+      "name": "flcrnpsw",
+      "description": "RESTART NEW PSW (AFTER IPL)",
+      "offset": 0,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "vrstr"
+    },
+    {
+      "name": "flciccw1",
+      "description": "IPL CCW1",
+      "offset": 8,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "flcropsw",
+      "description": "RESTART OLD PSW (AFTER IPL)",
+      "offset": 8,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "cvt"
+    },
+    {
+      "name": "flciccw2",
+      "description": "IPL CCW2",
+      "offset": 16,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "flccvt",
+      "description": "ADDRESS OF CVT (AFTER IPL).",
+      "offset": 16,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "cvt"
+    },
+    {
+      "name": "flceopsw",
+      "description": "EXTERNAL OLD PSW",
+      "offset": 24,
+      "length": 8,
+      "type": "hex",
+      "aliases": [
+        "exopsw"
+      ]
+    },
+    {
+      "name": "flcsopsw",
+      "description": "SVC OLD PSW.  THIS OFFSET FIXED BY ARCHITECTURE.",
+      "offset": 32,
+      "length": 8,
+      "type": "hex",
+      "aliases": [
+        "svcopsw"
+      ]
+    },
+    {
+      "name": "flcpopsw",
+      "description": "PROGRAM CHECK OLD PSW",
+      "offset": 40,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "cvt",
+      "aliases": [
+        "piopsw"
+      ]
+    },
+    {
+      "name": "flcmopsw",
+      "description": "MACHINE CHECK OLD PSW",
+      "offset": 48,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "cvt",
+      "aliases": [
+        "mcopsw"
+      ]
+    },
+    {
+      "name": "flciopsw",
+      "description": "INPUT/OUTPUT OLD PSW",
+      "offset": 56,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "cvt",
+      "aliases": [
+        "ioopsw"
+      ]
+    },
+    {
+      "name": "flccvt64",
+      "description": "8-byte CVT address",
+      "offset": 72,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "flccvt2",
+      "description": "ADDRESS OF CVT - USED BY DUMP ROUTINES",
+      "offset": 76,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "cvt"
+    },
+    {
+      "name": "flcenpsw",
+      "description": "EXTERNAL NEW PSW",
+      "offset": 88,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "qex",
+      "aliases": [
+        "exnpsw"
+      ]
+    },
+    {
+      "name": "flcsnpsw",
+      "description": "SVC NEW PSW",
+      "offset": 96,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "qsc",
+      "aliases": [
+        "svcnpsw"
+      ]
+    },
+    {
+      "name": "flcpnpsw",
+      "description": "PROGRAM CHECK NEW PSW, DISABLED FOR MACHINE CHECKS.",
+      "offset": 104,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "qpk",
+      "aliases": [
+        "pinpsw"
+      ]
+    },
+    {
+      "name": "flcmnpsw",
+      "description": "MACHINE CHECK NEW PSW",
+      "offset": 112,
+      "length": 8,
+      "type": "hex",
+      "aliases": [
+        "mcnpsw"
+      ]
+    },
+    {
+      "name": "flcinpsw",
+      "description": "INPUT/OUTPUT NEW PSW",
+      "offset": 120,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "qio",
+      "aliases": [
+        "ionpsw"
+      ]
+    },
+    {
+      "name": "psaeparm",
+      "description": "EXTERNAL INTERRUPTION PARAMETER FIELD.",
+      "offset": 128,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaeepsw",
+      "description": "EXTENDED PSW DATA STORED ON EXTERNAL INTERRUPT",
+      "offset": 132,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaspad",
+      "description": "ISSUING PROCESSOR'S PHYSICAL ADDRESS ON MFA, EMS, OR EXTERNAL CALL INTERRUPT",
+      "offset": 132,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "flceicod",
+      "description": "EXTERNAL INTERRUPTION CODE",
+      "offset": 134,
+      "length": 2,
+      "type": "signed-integer",
+      "aliases": [
+        "excode"
+      ]
+    },
+    {
+      "name": "psaespsw",
+      "description": "EXTENDED PSW DATA STORED ON SVC INTERRUPT",
+      "offset": 136,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "flcsvilc",
+      "description": "SVC INSTRUCTION LENGTH COUNTER - NUMBER OF BYTES.  THIS OFFSET FIXED BY ARCHITECTURE.",
+      "offset": 137,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcsilcb": {
+          "description": "SIGNIFICANT BITS IN ILC FIELD - LAST BIT IS ALWAYS ZERO",
+          "offset": 5,
+          "length": 3
+        }
+      },
+      "aliases": [
+        "svcilc"
+      ]
+    },
+    {
+      "name": "flcsvcn",
+      "description": "SVC INTERRUPTION CODE - SVC NUMBER. THIS OFFSET FIXED BY ARCHITECTURE.",
+      "offset": 138,
+      "length": 2,
+      "type": "signed-integer",
+      "aliases": [
+        "svcnum"
+      ]
+    },
+    {
+      "name": "psaeppsw",
+      "description": "EXTENDED PSW FOR PROGRAM INTERRUPT",
+      "offset": 140,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "flcpiilc",
+      "description": "PROGRAM INTERRUPT LENGTH COUNTER - NUMBER OF BYTES IN INSTRUCTION CAUSING PROGRAM INTERRUPTION.  THIS OFFSET FIXED BY ARCHITECTURE.",
+      "offset": 141,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcpilcb": {
+          "description": "SIGNIFICANT BITS IN ILC FIELD - LAST BIT IS ALWAYS ZERO",
+          "offset": 5,
+          "length": 3
+        }
+      },
+      "aliases": [
+        "piilc"
+      ]
+    },
+    {
+      "name": "flcpicod",
+      "description": "PROGRAM INTERRUPTION CODE",
+      "offset": 142,
+      "length": 2,
+      "type": "signed-integer",
+      "aliases": [
+        "picode"
+      ]
+    },
+    {
+      "name": "psaeecod",
+      "description": "EXCEPTION-EXTENSION CODE.",
+      "offset": 142,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psapicod",
+      "description": "8-BIT INTERRUPT CODE.  THIS OFFSET FIXED BY ARCHITECTURE.",
+      "offset": 143,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psapiper": {
+          "description": "PER INTERRUPT OCCURRED",
+          "offset": 0,
+          "length": 1
+        },
+        "psapimc": {
+          "description": "MONITOR CALL INTERRUPT OCCURRED",
+          "offset": 1,
+          "length": 1
+        },
+        "psapipc": {
+          "description": "AN UNSOLICITED PROGRAM CHECK HAS OCCURRED IF ANY OF THESE 6 BITS ARE ON",
+          "offset": 2,
+          "length": 6
+        },
+        "flcteaxm": {
+          "description": "IF 0 FLCTEA IS RELATIVE TO THE PRIMARY SEGMENT TABLE IF 1 FLCTEA IS RELATIVE TO THE SECONDARY SEGMENT TABLE",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "flctea",
+      "description": "TRANSLATION EXCEPTION ADDRESS.  THIS OFFSET FIXED BY ARCHITECTURE.",
+      "offset": 144,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "flcdxc",
+      "description": "Data exception code for PI 7",
+      "offset": 147,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "flcteab3",
+      "description": "LAST BYTE OF TEA.",
+      "offset": 147,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcsopi": {
+          "description": "Suppression on protection flag",
+          "offset": 5,
+          "length": 1
+        },
+        "flctstda": {
+          "description": "IF 1, THE STD WAS AR QUALIFIED.",
+          "offset": 7,
+          "length": 1
+        },
+        "flctstds": {
+          "description": "IF 1, THE SECONDARY STD WAS USED.",
+          "offset": 6,
+          "length": 1
+        },
+        "flctstdh": {
+          "description": "IF 1, THE HOME STD WAS USED.",
+          "offset": 6,
+          "length": 2
+        }
+      }
+    },
+    {
+      "name": "flcmcnum",
+      "description": "MONITOR CLASS NUMBER",
+      "offset": 149,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "flcpercd",
+      "description": "PROGRAM EVENT RECORDING CODE",
+      "offset": 150,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "flcatmid",
+      "description": "ATM ID",
+      "offset": 151,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcpswb4": {
+          "description": "PSW.4 part of ATMID",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "flcper",
+      "description": "PER ADDRESS - ESA/390",
+      "offset": 152,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "flcmtrcd",
+      "description": "MONITOR CODE (ESA/390)",
+      "offset": 157,
+      "length": 3,
+      "type": "hex"
+    },
+    {
+      "name": "flctearn",
+      "description": "CONTAINS THE ACCESS REGISTER NUMBER INVOLVED IN THE TRANSLATION EXCEPTION IF BITS 30-31 OF THE TEA='01'.",
+      "offset": 160,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "flcperrn",
+      "description": "CONTAINS THE PER STORAGE ACCESS REGISTER NUMBER.",
+      "offset": 161,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "flcarch",
+      "description": "Architecture information",
+      "offset": 163,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psazarch": {
+          "description": "z/Architecture",
+          "offset": 7,
+          "length": 1
+        },
+        "psaesame": {
+          "description": "z/Architecture",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psampl",
+      "description": "Used only prior to z/Architecture",
+      "offset": 164,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "flciocdp",
+      "description": "I/O INFORMATION CODE",
+      "offset": 184,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "flcsid",
+      "description": "SUBSYSTEM ID",
+      "offset": 184,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "flciofp",
+      "description": "I/O INTERRUPTION PARAMETER",
+      "offset": 188,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "flcfacl",
+      "description": "Facilities List. See FaclBytes0To15 in IHAFACL for description",
+      "offset": 200,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "flcfacl0",
+      "description": "Byte 0 of FLCFACL",
+      "offset": 200,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcfn3": {
+          "description": "N3 installed",
+          "offset": 0,
+          "length": 1
+        },
+        "flcfzari": {
+          "description": "z/Architecture installed",
+          "offset": 1,
+          "length": 1
+        },
+        "flcfzara": {
+          "description": "z/Architecture active",
+          "offset": 2,
+          "length": 1
+        },
+        "flcfaslx": {
+          "description": "ASN & LX reuse facility installed",
+          "offset": 6,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "flcfacl1",
+      "description": "Byte 1 of FLCFACL",
+      "offset": 201,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcfedat": {
+          "description": "DAT features",
+          "offset": 0,
+          "length": 1
+        },
+        "flcfsrs": {
+          "description": "Sense-running-status",
+          "offset": 1,
+          "length": 1
+        },
+        "flcfsske": {
+          "description": "Cond. SSKE instruction installed",
+          "offset": 2,
+          "length": 1
+        },
+        "flcfctop": {
+          "description": "STSI-enhancement",
+          "offset": 3,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "flcfacl2",
+      "description": "Byte 2 of FLCFACL",
+      "offset": 202,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcfetf2": {
+          "description": "Extended Translation facility 2",
+          "offset": 0,
+          "length": 1
+        },
+        "flcfcrya": {
+          "description": "Cryptographic assist",
+          "offset": 1,
+          "length": 1
+        },
+        "flcfld": {
+          "description": "Long Displacement facility",
+          "offset": 2,
+          "length": 1
+        },
+        "flcfldhp": {
+          "description": "Long Displacement High Performance",
+          "offset": 3,
+          "length": 1
+        },
+        "flcfhmas": {
+          "description": "HFP Multiply Add/Subtract",
+          "offset": 4,
+          "length": 1
+        },
+        "flcfeimm": {
+          "description": "Extended immediate when z/Arch",
+          "offset": 5,
+          "length": 1
+        },
+        "flcfetf3": {
+          "description": "Extended Translation Facility 3 when z/Arch",
+          "offset": 6,
+          "length": 1
+        },
+        "flcfhun": {
+          "description": "HFP unnormalized extension",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "flcfacl3",
+      "description": "Byte 3 of FLCFACL",
+      "offset": 203,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcfet2e": {
+          "description": "ETF2-enhancement                   031215",
+          "offset": 0,
+          "length": 1
+        },
+        "flcfstkf": {
+          "description": "STCKF-enhancement",
+          "offset": 1,
+          "length": 1
+        },
+        "flcfet3e": {
+          "description": "ETF3-enhancement                   040512",
+          "offset": 6,
+          "length": 1
+        },
+        "flcfect": {
+          "description": "ECT-facility",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "flcfacl4",
+      "description": "Byte 4 of FLCFACL",
+      "offset": 204,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcfcssf": {
+          "description": "Compare-and-swap-and-store",
+          "offset": 0,
+          "length": 1
+        },
+        "flcfcsf2": {
+          "description": "Compare-and-swap-and-store 2",
+          "offset": 1,
+          "length": 1
+        },
+        "flcfgief": {
+          "description": "General-Instructions-Extension Facility",
+          "offset": 2,
+          "length": 1
+        },
+        "flcfocm": {
+          "description": "Obsolete CPU-measurement facility. Use FLCFCMC and FLCFCMS instead.",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "flcfacl5",
+      "description": "Byte 5 of FLCFACL",
+      "offset": 205,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcffpse": {
+          "description": "Floating-point-support enhancement",
+          "offset": 1,
+          "length": 1
+        },
+        "flcfdfp": {
+          "description": "Decimal-floating-point",
+          "offset": 2,
+          "length": 1
+        },
+        "flcfdfph": {
+          "description": "Decimal-floating-point high performance",
+          "offset": 3,
+          "length": 1
+        },
+        "flcfpfpo": {
+          "description": "PFPO instruction                   070424",
+          "offset": 4,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "flcfacl6",
+      "description": "Byte 6 of FLCFACL",
+      "offset": 206,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "flcfacl7",
+      "description": "Byte 7 of FLCFACL",
+      "offset": 207,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "flcfacl8",
+      "description": "Byte 8 of FLCFACL",
+      "offset": 208,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcfcaai": {
+          "description": "Crypto AP-Queue adapter interruption",
+          "offset": 1,
+          "length": 1
+        },
+        "flcfcmc": {
+          "description": "CPU-measurement counter facility",
+          "offset": 3,
+          "length": 1
+        },
+        "flcfcms": {
+          "description": "CPU-measurement sampling facility",
+          "offset": 4,
+          "length": 1
+        },
+        "flcfsclp": {
+          "description": "Possible future enhancement",
+          "offset": 5,
+          "length": 1
+        },
+        "flcfaisi": {
+          "description": "AISI facility",
+          "offset": 6,
+          "length": 1
+        },
+        "flcfaen": {
+          "description": "AEN  facility",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "flcfacl9",
+      "description": "Byte 9 of FLCFACL",
+      "offset": 209,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "flcfais": {
+          "description": "AIS  facility IHAPSAE FLCEFacilitiesList will have any future bit definitions.",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "flcfacle",
+      "description": "Facilities List bytes 16-31. See FaclBytes16To31 in IHAFACL for description",
+      "offset": 216,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "flcmcic",
+      "description": "MACHINE-CHECK INTERRUPTION CODE",
+      "offset": 232,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "flcfsa",
+      "description": "FAILING STORAGE ADDRESS",
+      "offset": 248,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "flcfla",
+      "description": "FIXED LOGOUT AREA. SIZE FIXED BY ARCHITECTURE.",
+      "offset": 256,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "flcrv110",
+      "description": "RESERVED.",
+      "offset": 272,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "flcarsav",
+      "description": "ACCESS REGISTER SAVE AREA",
+      "offset": 288,
+      "length": 64,
+      "type": "signed-integer"
+    },
+    {
+      "name": "flcfpsav",
+      "description": "FLOATING POINT REGISTER SAVE AREA",
+      "offset": 352,
+      "length": 32,
+      "type": "hex"
+    },
+    {
+      "name": "flcgrsav",
+      "description": "GENERAL REGISTER SAVE AREA",
+      "offset": 384,
+      "length": 64,
+      "type": "signed-integer"
+    },
+    {
+      "name": "flccrsav",
+      "description": "CONTROL REGISTER SAVE AREA",
+      "offset": 448,
+      "length": 64,
+      "type": "signed-integer"
+    },
+    {
+      "name": "flchdend",
+      "description": "END OF HARDWARE ASSIGNMENTS",
+      "offset": 512,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psapsa",
+      "description": "CONTROL BLOCK ACRONYM IN EBCDIC",
+      "offset": 512,
+      "length": 4,
+      "type": "string"
+    },
+    {
+      "name": "psacpupa",
+      "description": "PHYSICAL CPU ADDRESS (CHANGED DURING ACR)",
+      "offset": 516,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psacpula",
+      "description": "LOGICAL CPU ADDRESS",
+      "offset": 518,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psapccav",
+      "description": "VIRTUAL ADDRESS OF PCCA",
+      "offset": 520,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "pcca"
+    },
+    {
+      "name": "psapccar",
+      "description": "REAL ADDRESS OF PCCA",
+      "offset": 524,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "pcca"
+    },
+    {
+      "name": "psalccav",
+      "description": "VIRTUAL ADDRESS OF LCCA",
+      "offset": 528,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "lcca"
+    },
+    {
+      "name": "psalccar",
+      "description": "REAL ADDRESS OF LCCA",
+      "offset": 532,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "lcca"
+    },
+    {
+      "name": "psatnew",
+      "description": "TCB pointer. Field maintained for code compatability with previous MVS releases. DO NOT USE.",
+      "offset": 536,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "current"
+    },
+    {
+      "name": "psatold",
+      "description": "Pointer to current TCB or zero if in SRB mode.                           e",
+      "offset": 540,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "current"
+    },
+    {
+      "name": "psaanew",
+      "description": "ASCB pointer.  Field maintained for code compatability with previous MVS releases. DO NOT USE.",
+      "offset": 544,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "mascb"
+    },
+    {
+      "name": "psaaold",
+      "description": "Pointer to the home (current) ASCB.",
+      "offset": 548,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "home"
+    },
+    {
+      "name": "psasuper",
+      "description": "SUPERVISOR CONTROL WORD.",
+      "offset": 552,
+      "length": 4,
+      "type": "bitstring"
+    },
+    {
+      "name": "psasup1",
+      "description": "FIRST BYTE OF PSASUPER",
+      "offset": 552,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaio": {
+          "description": "I/O FLIH",
+          "offset": 0,
+          "length": 1
+        },
+        "psasvc": {
+          "description": "SVC FLIH",
+          "offset": 1,
+          "length": 1
+        },
+        "psaext": {
+          "description": "EXTERNAL FLIH",
+          "offset": 2,
+          "length": 1
+        },
+        "psapi": {
+          "description": "PROGRAM CHECK FLIH",
+          "offset": 3,
+          "length": 1
+        },
+        "psalock": {
+          "description": "LOCK ROUTINE",
+          "offset": 4,
+          "length": 1
+        },
+        "psadisp": {
+          "description": "DISPATCHER",
+          "offset": 5,
+          "length": 1
+        },
+        "psatctl": {
+          "description": "TCTL RECOVERY FLAG",
+          "offset": 6,
+          "length": 1
+        },
+        "psatype6": {
+          "description": "TYPE 6 SVC IN CONTROL",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psasup2",
+      "description": "SECOND BYTE OF PSASUPER",
+      "offset": 553,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaipcri": {
+          "description": "REMOTE IMMEDIATE SIGNAL SERVICE ROUTINE (IEAVERI)",
+          "offset": 0,
+          "length": 1
+        },
+        "psasvcr": {
+          "description": "SUPER FRR USES FOR SVC FLIH RECURSION TRACKING",
+          "offset": 1,
+          "length": 1
+        },
+        "psasvcrr": {
+          "description": "SVC RECOVERY RECURSION INDICATOR. OWNER: SUPERVISOR CONTROL. SERIALIZATION: DISABLEMENT.",
+          "offset": 2,
+          "length": 1
+        },
+        "psaacr": {
+          "description": "AUTOMATIC CPU RECONFIGURATION (ACR) IN CONTROL",
+          "offset": 5,
+          "length": 1
+        },
+        "psartm": {
+          "description": "RECOVERY TERMINATION MONITOR (RTM) IN CONTROL",
+          "offset": 6,
+          "length": 1
+        },
+        "psalcr": {
+          "description": "USED BY RTM TO SERIALIZE CALLS OF THE SUPERIVSOR ANALYSIS ROUTER",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psasup3",
+      "description": "THIRD BYTE OF PSASUPER",
+      "offset": 554,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaiosup": {
+          "description": "IF ON, A MAINLINE IOS COMPONENT SUCH AS CHANNEL SCHEDULER HAS ENTERED A PHYSICALLY DISABLED STATE WITHOUT REGARD TO LOCKING REQUIREMENTS",
+          "offset": 0,
+          "length": 1
+        },
+        "psaspr": {
+          "description": "SUPER FRR IS ACTIVE",
+          "offset": 3,
+          "length": 1
+        },
+        "psaesta": {
+          "description": "SVC 60 RECOVERY ROUTINE ACTIVE",
+          "offset": 4,
+          "length": 1
+        },
+        "psarsm": {
+          "description": "REAL STORAGE MANAGER (RSM) ENTERED FOR PAGE FIX",
+          "offset": 5,
+          "length": 1
+        },
+        "psaulcms": {
+          "description": "LOCK MANAGER UNCONDITIONAL LOCAL OR CMS LOCK ROUTINES",
+          "offset": 6,
+          "length": 1
+        },
+        "psaslip": {
+          "description": "IEAVTSLP RECURSION CONTROL BIT",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psasup4",
+      "description": "FOURTH BYTE OF PSASUPER",
+      "offset": 555,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaldwt": {
+          "description": "BLWLDWT IS IN CONTROL TO LOAD A RESTARTABLE OR NON-RESTARTABLE WAIT STATE CODE OWNERSHIP: LDWT",
+          "offset": 0,
+          "length": 1
+        },
+        "psasmf": {
+          "description": "SMF SUSPEND/RESET",
+          "offset": 1,
+          "length": 1
+        },
+        "psaesar": {
+          "description": "SUPERVISOR ANALYSIS ROUTER IS ACTIVE",
+          "offset": 2,
+          "length": 1
+        },
+        "psamch": {
+          "description": "Machine Check Handler is active.",
+          "offset": 3,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psarv22c",
+      "description": "RESERVED",
+      "offset": 556,
+      "length": 9,
+      "type": "hex"
+    },
+    {
+      "name": "psa_workunit_cbf_atdisp",
+      "description": "",
+      "offset": 565,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "psarv237",
+      "description": "RESERVED",
+      "offset": 567,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psa_workunit_procclassatdisp",
+      "description": "",
+      "offset": 568,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "psa_workunit_procclassatdisp_byte0",
+      "description": "",
+      "offset": 568,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psa_workunit_procclassatdisp_byte1",
+      "description": "",
+      "offset": 569,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psaprocclass",
+      "description": "PROCESSOR WUQ Offset.",
+      "offset": 570,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "psa_bylpar_procclass",
+      "description": "PROCESSOR WUQ Offset.",
+      "offset": 570,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "psaprocclass_byte0",
+      "description": "",
+      "offset": 570,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psaprocclass_byte1",
+      "description": "This field is for IBM use only. OWNERSHIP: SUPERVISOR CONTROL SERIALIZATION: READ = NONE WRITE = NO WRITE ALLOWED See PSAProcClass_xxx constants.",
+      "offset": 571,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psa_bylpar_procclass_byte0",
+      "description": "",
+      "offset": 570,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psa_bylpar_procclass_byte1",
+      "description": "",
+      "offset": 571,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psaptype",
+      "description": "PROCESSOR TYPE INDICATOR OWNERSHIP: SUPERVISOR CONTROL SERIALIZATION: READ = NONE WRITE = DISABLEMENT.",
+      "offset": 572,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaifa": {
+          "description": "Indicates Special Processor",
+          "offset": 1,
+          "length": 1
+        },
+        "psa_bylpar_zcbp": {
+          "description": "",
+          "offset": 1,
+          "length": 1
+        },
+        "psa_bylpar_zaap": {
+          "description": "",
+          "offset": 1,
+          "length": 1
+        },
+        "psa_bylpar_ifa": {
+          "description": "",
+          "offset": 1,
+          "length": 1
+        },
+        "psazcbpds": {
+          "description": "zCBP that is different speed than CP",
+          "offset": 2,
+          "length": 1
+        },
+        "psaifads": {
+          "description": "zAAP (IFA) that is different speed than CP",
+          "offset": 2,
+          "length": 1
+        },
+        "psadscrp": {
+          "description": "Discretionary Processor",
+          "offset": 3,
+          "length": 1
+        },
+        "psaziip": {
+          "description": "zIIP",
+          "offset": 4,
+          "length": 1
+        },
+        "psa_bylpar_ziip": {
+          "description": "",
+          "offset": 4,
+          "length": 1
+        },
+        "psasup": {
+          "description": "zIIP",
+          "offset": 4,
+          "length": 1
+        },
+        "psa_bylpar_sup": {
+          "description": "",
+          "offset": 4,
+          "length": 1
+        },
+        "psaziipds": {
+          "description": "zIIP that is different speed than CP",
+          "offset": 5,
+          "length": 1
+        },
+        "psasupds": {
+          "description": "zIIP that is different speed than CP",
+          "offset": 5,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psails",
+      "description": "INTERRUPT HANDLER LINKAGE STACK INDICATORS.",
+      "offset": 573,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psailsio": {
+          "description": "THE I/O FLIH IS USING THE INTERRUPT HANDLER LINKAGE STACK.",
+          "offset": 0,
+          "length": 1
+        },
+        "psailsex": {
+          "description": "THE EXTERNAL FLIH IS USING THE INTERRUPT HANDLER LINKAGE STACK.",
+          "offset": 1,
+          "length": 1
+        },
+        "psailspc": {
+          "description": "THE PROGRAM FLIH IS USING THE INTERRUPT HANDLER LINKAGE STACK.",
+          "offset": 2,
+          "length": 1
+        },
+        "psailsds": {
+          "description": "THE DISPATCHER IS USING THE INTERRUPT HANDLER LINKAGE STACK.",
+          "offset": 3,
+          "length": 1
+        },
+        "psailsrs": {
+          "description": "THE RESTART FLIH IS USING THE INTERRUPT HANDLER LINKAGE STACK.",
+          "offset": 4,
+          "length": 1
+        },
+        "psailsor": {
+          "description": "EXIT IS USING THE INTERRUPT HANDLER LINKAGE STACK.",
+          "offset": 5,
+          "length": 1
+        },
+        "psailst6": {
+          "description": "TYPE 6 SVC IS USING THE INTERRUPT HANDLER LINKAGE STACK.",
+          "offset": 6,
+          "length": 1
+        },
+        "psailslk": {
+          "description": "THE INTERRUPT HANDLER LINKAGE STACK IS ACTIVE BECAUSE THE RSM LOCK OR A LOCK HIGHER THAN THE RSM LOCK IS HELD.",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psalsvci",
+      "description": "LAST SVC ISSUED ON THIS PROCESSOR PRIOR TO ENABLEMENT BY THE SVC FLIH. OWNERSHIP: SUPERVISOR CONTROL SERIALIZATION: DISABLEMENT",
+      "offset": 574,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "psaflags",
+      "description": "SYSTEM FLAGS This field is PI for bits PSATX and PSATXC only OWNERSHIP: SUPERVISOR CONTROL SERIALIZATION: DISABLEMENT SERIALIZATION: None for PI bits",
+      "offset": 576,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaaeit": {
+          "description": "ADDRESSING ENVIRONMENT IS IN TRANSITION. INDICATES THAT THE SPACE TYPE (ADDRESS SPACE OR SUBSPACE) ASSOCIATED WITH PASN OR SASN IS UNKNOWN. Was PSAFPAC, PSAFPPE",
+          "offset": 0,
+          "length": 1
+        },
+        "psatx": {
+          "description": "Equivalent to CVTTX",
+          "offset": 4,
+          "length": 1
+        },
+        "psatxc": {
+          "description": "Equivalent to CVTTXC",
+          "offset": 5,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psarv241",
+      "description": "RESERVED FOR FUTURE USE - SC1C5.",
+      "offset": 577,
+      "length": 10,
+      "type": "hex"
+    },
+    {
+      "name": "psascaff",
+      "description": "$$SCAFFOLD",
+      "offset": 587,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaemema": {
+          "description": "$$SCAFFOLD: z/Architecture",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psalkcrf",
+      "description": "LINKAGE STACK POINTER SAVE AREA. USED WHEN THE RSM OR ANY LOCK ABOVE THE RSM LOCK IS HELD.",
+      "offset": 588,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "stack"
+    },
+    {
+      "name": "psampsw",
+      "description": "SETLOCK MODEL PSW",
+      "offset": 592,
+      "length": 8,
+      "type": "bitstring",
+      "bitmasks": {
+        "psapiom": {
+          "description": "INPUT/OUTPUT INTERRUPT MASK",
+          "offset": 62,
+          "length": 1
+        },
+        "psapexm": {
+          "description": "EXTERNAL INTERRUPT MASK",
+          "offset": 63,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psaicnt",
+      "description": "Instruction count at last (re)dispatch",
+      "offset": 600,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psaxad",
+      "description": "Must be x'AD' - ISV dependency",
+      "offset": 608,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psaintsm",
+      "description": "Used by IEAVEINT. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: DISABLEMENT.",
+      "offset": 609,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psarv262",
+      "description": "Reserved",
+      "offset": 610,
+      "length": 14,
+      "type": "hex"
+    },
+    {
+      "name": "psastosm",
+      "description": "STOSM PSASLSA,X'00' Instruction. In order to use this field, move the system mask to PSASTSSM and immediately issue EX 0,PSASTOSM. The system mask field (PSASTSSM) is not preserved across calls. Note that this technique causes a store into the instruction stream, which causes poor performance.",
+      "offset": 624,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psahlhis",
+      "description": "SAVE AREA FOR PSAHLHI",
+      "offset": 628,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psarecur",
+      "description": "RESTART FLIH RECURSION INDICATOR.  IF X'00', FLIH NOT IN CONTROL.  IF X'FF', FLIH IN CONTROL, ENTRY IS RECURSIVE.",
+      "offset": 632,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psarssm",
+      "description": "STNSM AREA FOR IEAVERES",
+      "offset": 633,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psasnsm2",
+      "description": "STNSM AREA FOR IEAVTRT1",
+      "offset": 634,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psartm1s",
+      "description": "Bits 0-7 of the current PSW are stored here",
+      "offset": 635,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psarsmex": {
+          "description": "BIT 0 OF PSARSML. IF ON, THE RSM LOCK IS HELD EXCLUSIVE.",
+          "offset": 0,
+          "length": 1
+        },
+        "psatrcex": {
+          "description": "BIT 0 OF PSATRCEL. IF ON THE TRACE LOCK IS HELD EXCLUSIVE.",
+          "offset": 0,
+          "length": 1
+        },
+        "psaiosex": {
+          "description": "BIT 0 OF PSAIOSL. IF ON THE IOS LOCK IS HELD EXCLUSIVE.",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psalwtsa",
+      "description": "REAL ADDRESS OF SAVE AREA USED WHEN A RESTARTABLE WAIT STATE IS LOADED OWNERSHIP: LDWT",
+      "offset": 636,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "save"
+    },
+    {
+      "name": "psaclht",
+      "description": "CPU LOCKS TABLE",
+      "offset": 640,
+      "length": 116,
+      "type": "hex"
+    },
+    {
+      "name": "psaclht1",
+      "description": "SPIN LOCKS TABLE",
+      "offset": 640,
+      "length": 80,
+      "type": "hex"
+    },
+    {
+      "name": "psadispl",
+      "description": "GLOBAL DISPATCHER LOCK",
+      "offset": 640,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psaasml",
+      "description": "AUXILIARY STORAGE MANAGEMENT (ASM) LOCK",
+      "offset": 644,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psasalcl",
+      "description": "SPACE ALLOCATION LOCK",
+      "offset": 648,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psaiossl",
+      "description": "IOS SYNCHRONIZATION LOCK",
+      "offset": 652,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psarsmdl",
+      "description": "ADDRESS OF THE RSM DATA SPACE LOCK",
+      "offset": 656,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psaiosul",
+      "description": "IOS UNIT CONTROL BLOCK LOCK",
+      "offset": 660,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarsmql",
+      "description": "RSMQ lock",
+      "offset": 664,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarv29c",
+      "description": "RESERVED FOR LOCK EXPANSION",
+      "offset": 668,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarv2a0",
+      "description": "RESERVED FOR LOCK EXPANSION",
+      "offset": 672,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psatpacl",
+      "description": "TCAM'S TPACBDEB LOCK",
+      "offset": 676,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psaoptl",
+      "description": "OPTIMIZER LOCK",
+      "offset": 680,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarsmgl",
+      "description": "RSM GLOBAL LOCK",
+      "offset": 684,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psavfixl",
+      "description": "VSM FIXED SUBPOOLS LOCK",
+      "offset": 688,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psaasmgl",
+      "description": "ASM GLOBAL LOCK",
+      "offset": 692,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarsmsl",
+      "description": "RSM STEAL LOCK",
+      "offset": 696,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarsmxl",
+      "description": "RSM CROSS MEMORY LOCK",
+      "offset": 700,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarsmal",
+      "description": "RSM ADDRESS SPACE LOCK",
+      "offset": 704,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psavpagl",
+      "description": "VSM PAGEABLE SUBPOOLS LOCK",
+      "offset": 708,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarsmcl",
+      "description": "RSM COMMON LOCK",
+      "offset": 712,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarvlk2",
+      "description": "RESERVED FOR LOCK EXPANSION",
+      "offset": 716,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psaclht2",
+      "description": "SHARED EXCLUSIVE LOCKS TABLE",
+      "offset": 720,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "psarsml",
+      "description": "RSM GLOBAL FUNCTION/RECOVERY LOCK",
+      "offset": 720,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psatrcel",
+      "description": "TRACE BUFFER MANAGEMENT LOCK",
+      "offset": 724,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psaiosl",
+      "description": "IOS LOCK",
+      "offset": 728,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarvlk4",
+      "description": "RESERVED FOR LOCK EXPANSION",
+      "offset": 732,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psaclht3",
+      "description": "SPECIAL LOCKS TABLE",
+      "offset": 736,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psacpul",
+      "description": "CPU TABLE LOCKS",
+      "offset": 736,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarvlk5",
+      "description": "RESERVED FOR LOCK EXPANSION",
+      "offset": 740,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psaclht4",
+      "description": "SUSPEND LOCKS TABLE",
+      "offset": 744,
+      "length": 12,
+      "type": "hex"
+    },
+    {
+      "name": "psacmsl",
+      "description": "CROSS MEMORY SERVICES LOCK",
+      "offset": 744,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psalocal",
+      "description": "LOCAL LOCK",
+      "offset": 748,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarvlk6",
+      "description": "RESERVED FOR LOCK EXPANSION",
+      "offset": 752,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psalcpua",
+      "description": "LOGICAL CPU ADDRESS FOR LOCK INSTRUCTION.",
+      "offset": 756,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psahlhi",
+      "description": "HIGHEST LOCK HELD INDICATOR.",
+      "offset": 760,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaclhs",
+      "description": "CPU LOCKS HELD STRING",
+      "offset": 760,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaclhs1",
+      "description": "FIRST BYTE OF PSACLHS.",
+      "offset": 760,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psacpuli": {
+          "description": "CPU LOCK INDICATOR",
+          "offset": 0,
+          "length": 1
+        },
+        "psasum": {
+          "description": "SUMMARY BIT. IF ON, AT LEAST ONE LOCK IN PSACLHSE IS HELD BY THIS PROCESSOR.",
+          "offset": 3,
+          "length": 1
+        },
+        "psarsmli": {
+          "description": "RSM LOCK INDICATOR",
+          "offset": 4,
+          "length": 1
+        },
+        "psatrcei": {
+          "description": "TRACE LOCK INDICATOR",
+          "offset": 5,
+          "length": 1
+        },
+        "psaiosi": {
+          "description": "IOS LOCK INDICATOR",
+          "offset": 6,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psaclhs2",
+      "description": "SECOND BYTE OF PSACLHS.",
+      "offset": 761,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psarsmci": {
+          "description": "RSM COMMON LOCK INDICATOR",
+          "offset": 3,
+          "length": 1
+        },
+        "psarsmgi": {
+          "description": "RSM GLOBAL LOCK INDICATOR",
+          "offset": 4,
+          "length": 1
+        },
+        "psavfixi": {
+          "description": "VSM FIX LOCK INDICATOR",
+          "offset": 5,
+          "length": 1
+        },
+        "psaasmgi": {
+          "description": "ASM GLOBAL LOCK INDICATOR",
+          "offset": 6,
+          "length": 1
+        },
+        "psarsmsi": {
+          "description": "RSM STEAL LOCK INDICATOR",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psaclhs3",
+      "description": "THIRD BYTE OF PSACLHS",
+      "offset": 762,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psarsmxi": {
+          "description": "RSM CROSS MEMORY LOCK INDICATOR",
+          "offset": 0,
+          "length": 1
+        },
+        "psarsmai": {
+          "description": "RSM ADDRESS SPACE LOCK INDICATOR",
+          "offset": 1,
+          "length": 1
+        },
+        "psavpagi": {
+          "description": "VSM PAGE LOCK INDICATOR",
+          "offset": 2,
+          "length": 1
+        },
+        "psadspli": {
+          "description": "DISPATCHER LOCK INDICATOR",
+          "offset": 3,
+          "length": 1
+        },
+        "psaasmli": {
+          "description": "ASM LOCK INDICATOR",
+          "offset": 4,
+          "length": 1
+        },
+        "psasalli": {
+          "description": "SPACE ALLOCATION LOCK INDICATOR",
+          "offset": 5,
+          "length": 1
+        },
+        "psaiosli": {
+          "description": "IOS SYNCHRONIZATION LOCK INDICATOR",
+          "offset": 6,
+          "length": 1
+        },
+        "psarsmdi": {
+          "description": "RSM DATA SPACE LOCK INDICATOR",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psaclhs4",
+      "description": "FOURTH BYTE OF PSACLHS",
+      "offset": 763,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaiouli": {
+          "description": "IOS UCB LOCK INDICATOR",
+          "offset": 0,
+          "length": 1
+        },
+        "psarsmqi": {
+          "description": "RSMQ lock indicator",
+          "offset": 1,
+          "length": 1
+        },
+        "psatpali": {
+          "description": "TPACBDEB LOCK INDICATOR",
+          "offset": 4,
+          "length": 1
+        },
+        "psasrmli": {
+          "description": "SYSTEM RESOURCE MANAGER (SRM) LOCK INDICATOR",
+          "offset": 5,
+          "length": 1
+        },
+        "psacmsli": {
+          "description": "CROSS MEMORY SERVICES LOCK INDICATOR (CMS, CMSSMF, CMSEQDQ, CMSLATCH)",
+          "offset": 6,
+          "length": 1
+        },
+        "psalclli": {
+          "description": "LOCAL LOCK INDICATOR",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psalita",
+      "description": "ADDRESS OF LOCK INTERFACE TABLE.",
+      "offset": 764,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "velt"
+    },
+    {
+      "name": "psastor8",
+      "description": "8-BYTE value for master's STO",
+      "offset": 768,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psacr0",
+      "description": "SAVE AREA FOR CONTROL REGISTER 0",
+      "offset": 776,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psamchfl",
+      "description": "MCH RECURSION FLAGS",
+      "offset": 780,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psasymsk",
+      "description": "THIS FIELD WILL BE USED IN CONJUNCTION WITH THE STNSM INSTRUCTION TO PLACE IOS CHANNEL SCHEDULER INTO A DISABLED STATE AND SIMULTANEOUSLY SAVE THE SYSTEM MASK OF THE CALLER",
+      "offset": 781,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psaactcd",
+      "description": "ACTION CODE SUPPLIED BY OPERATOR AFTER SYSTEM HAS LOADED RESTARTABLE WAIT STATE AND BEFORE THE RESTART KEY IS DEPRESSED.  VALUE DEPENDS ON RESTARTABLE WAIT STATE CODE.  UNPREDICTABLE DURING NORMAL SYSTEM OPERATION. OWNERSHIP: LDWT",
+      "offset": 782,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psamchic",
+      "description": "MCH INITIALIZATION COMPLETE FLAGS",
+      "offset": 783,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psawkrap",
+      "description": "REAL ADDRESS OF VARY CPU PARAMETER LIST",
+      "offset": 784,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vary"
+    },
+    {
+      "name": "psawkvap",
+      "description": "VIRTUAL ADDRESS OF VARY CPU PARAMETER LIST",
+      "offset": 788,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vary"
+    },
+    {
+      "name": "psavstap",
+      "description": "WORK AREA FOR VARY CPU",
+      "offset": 792,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psacpusa",
+      "description": "PHYSICAL CPU ADDRESS (STATIC)",
+      "offset": 794,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psastor",
+      "description": "MASTER MEMORY'S SEGMENT TABLE ORIGIN REGISTER (STOR) VALUE",
+      "offset": 796,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaidawk",
+      "description": "WORK SAVE AREA FOR private DEBUG TOOL.",
+      "offset": 800,
+      "length": 90,
+      "type": "hex"
+    },
+    {
+      "name": "psaret",
+      "description": "BSM 0,14 BRANCH RETURN TO CALLER USED BY ROUTINES INVOKED BY IOS",
+      "offset": 890,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaretcd",
+      "description": "BSM 0,14 BRANCH RETURN TO CALLER WITH RETURN CODE IN REGISTER 15, USED BY ROUTINES INVOKED BY IOS",
+      "offset": 892,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaval",
+      "description": "Virtual Architecture Level. Bits 0-11 are the same as IHASCCB field SCCBVAL bits 20-31. Bits 12-15 are not defined.",
+      "offset": 894,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "psaval_machine",
+      "description": "First byte. Sample values: 0 meant z10 or earlier but is not possible for this release. 1 meant z196 but is not possible for this release. 2 meant zEC12 but is not possible for this release. 3 meant zEC13 but is not possible for this release. 4 meant z14 but is not possible for this release.",
+      "offset": 894,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psarsvt",
+      "description": "RECOVERY STACK VECTOR TABLE",
+      "offset": 896,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psarsvte",
+      "description": "RECOVERY STACK VECTOR TABLE",
+      "offset": 896,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psacstk",
+      "description": "ADDRESS OF CURRENTLY USED FUNCTIONAL RECOVERY ROUTINE (FRR) STACK",
+      "offset": 896,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psanstk",
+      "description": "ADDRESS OF NORMAL FRR STACK",
+      "offset": 900,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "normal"
+    },
+    {
+      "name": "psasstk",
+      "description": "ADDRESS OF SVC-I/O-DISPATCHER FRR STACK",
+      "offset": 904,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "svc"
+    },
+    {
+      "name": "psassav",
+      "description": "ADDRESS OF INTERRUPTED STACK SAVED BY SVC, I/O, DISPATCHER",
+      "offset": 908,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psamstk",
+      "description": "ADDRESS OF MCH FRR STACK",
+      "offset": 912,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "mch"
+    },
+    {
+      "name": "psamsav",
+      "description": "ADDRESS OF INTERRUPTED STACK SAVED BY MCH",
+      "offset": 916,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psapstk",
+      "description": "ADDRESS OF PROGRAM CHECK FLIH FRR STACK",
+      "offset": 920,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "program"
+    },
+    {
+      "name": "psapsav",
+      "description": "ADDRESS OF INTERRUPTED STACK SAVED BY PROGRAM CHECK FLIH",
+      "offset": 924,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psaestk1",
+      "description": "ADDRESS OF EXTERNAL FLIH FRR STACK FOR NON-RECURSIVE ENTRIES",
+      "offset": 928,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "external"
+    },
+    {
+      "name": "psaesav1",
+      "description": "ADDRESS OF INTERRUPTED STACK SAVED BY EXTERNAL FLIH FOR NON-RECURSIVE ENTRIES",
+      "offset": 932,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psaestk2",
+      "description": "ADDRESS OF EXTERNAL FLIH FRR STACK FOR FIRST LEVEL RECURSIONS",
+      "offset": 936,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "external"
+    },
+    {
+      "name": "psaesav2",
+      "description": "ADDRESS OF INTERRUPTED STACK SAVE BY EXTERNAL FLIH FOR FIRST LEVEL RECURSIONS",
+      "offset": 940,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psaestk3",
+      "description": "ADDRESS OF EXTERNAL FLIH FRR STACK FOR SECOND LEVEL RECURSIONS AND ACR",
+      "offset": 944,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "external"
+    },
+    {
+      "name": "psaesav3",
+      "description": "ADDRESS OF INTERRUPTED STACK SAVED BY EXTERNAL FLIH FOR SECOND LEVEL RECURSIONS",
+      "offset": 948,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarstk",
+      "description": "ADDRESS OF RESTART FLIH FRR STACK",
+      "offset": 952,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "restart"
+    },
+    {
+      "name": "psarsav",
+      "description": "ADDRESS OF INTERRUPTED STACK SAVED BY RESTART FLIH",
+      "offset": 956,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psalwpsw",
+      "description": "PSW OF WORK INTERRUPTED WHEN A RESTARTABLE WAIT STATE IS LOADED OWNERSHIP: LDWT",
+      "offset": 960,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "rtm"
+    },
+    {
+      "name": "psarv3c8",
+      "description": "Reserved",
+      "offset": 968,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psatstk",
+      "description": "ADDRESS OF RTM RECOVERY STACK. SERIALIZATION: NONE - THE FIELD IS INITIALIZED AT IPL/VARY CPU ONLINE TIME ONLY. OWNER: RTM.",
+      "offset": 976,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "rtm"
+    },
+    {
+      "name": "psatsav",
+      "description": "ADDRESS OF ERROR STACK SAVED BY RTM WHEN SWITCHING TO RTM RECOVERY STACK. OWNERSHIP: RTM",
+      "offset": 980,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "error"
+    },
+    {
+      "name": "psaastk",
+      "description": "ADDRESS OF ACR FRR STACK. OWNERSHIP: ACR",
+      "offset": 984,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "acr"
+    },
+    {
+      "name": "psaasav",
+      "description": "ADDRESS OF INTERRUPT STACK SAVED BY ACR. OWNERSHIP: ACR",
+      "offset": 988,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psartpsw",
+      "description": "RESUME PSW FOR RTM SETRP RETRY OPTION OWNERSHIP: RTM",
+      "offset": 992,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psapcr0e",
+      "description": "Temp for PC FLIH/Disp for CR0E",
+      "offset": 1000,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psasfacc",
+      "description": "SETFRR ABEND COMPLETION CODE USED WHEN A SETFRR ADD IS ISSUED AGAINST A FULL FRR STACK",
+      "offset": 1008,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psalsfcc",
+      "description": "L  1,PSASFACC INSTRUCTION TO LOAD REGISTER 1 WITH THE SETFRR ABEND COMPLETION CODE IN PSASFACC",
+      "offset": 1012,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psasvc13",
+      "description": "AN SVC 13 INSTRUCTION",
+      "offset": 1016,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psafpfl",
+      "description": "See LCCAFPFL Interface only for PSABFP, PSAVSS",
+      "offset": 1018,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psabfp": {
+          "description": "Additional FP status is being saved",
+          "offset": 3,
+          "length": 1
+        },
+        "psavss": {
+          "description": "VRs are being saved",
+          "offset": 4,
+          "length": 1
+        },
+        "psagsf": {
+          "description": "GSF controls are being saved",
+          "offset": 5,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psainte",
+      "description": "FLAGS FOR CPU TIMER",
+      "offset": 1019,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psanuin": {
+          "description": "CPU TIMER CANNOT BE USED",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psarv3fc",
+      "description": "Reserved",
+      "offset": 1020,
+      "length": 12,
+      "type": "hex"
+    },
+    {
+      "name": "psaatcvt",
+      "description": "ADDRESS OF VTAM ATCVT.  INITIALIZED BY VTAM.",
+      "offset": 1032,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vtam"
+    },
+    {
+      "name": "psawtcod",
+      "description": "WAIT STATE CODE LOADED OWNERSHIP: LDWT",
+      "offset": 1036,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psascwa",
+      "description": "ADDRESS OF SUPERVISOR CONTROL CPU RELATED WORK SAVE AREA",
+      "offset": 1040,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarsmsa",
+      "description": "ADDRESS OF RSM CPU RELATED WORK SAVE AREA",
+      "offset": 1044,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "rsm"
+    },
+    {
+      "name": "psascpsw",
+      "description": "MODEL PSW OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: DISABLED.",
+      "offset": 1048,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psasmpsw",
+      "description": "SRB DISPATCH PSW",
+      "offset": 1056,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psapcpsw",
+      "description": "=     TEMPORARY OLD PSW STORAGE FOR PROGRAM FLIH",
+      "offset": 1064,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "psarv438",
+      "description": "=     Reserved",
+      "offset": 1080,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psamcx16",
+      "description": "MCH exit PSW16",
+      "offset": 1088,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "psarsp16",
+      "description": "Resume PSW field for restart interrupt   -",
+      "offset": 1104,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "psapswsv16",
+      "description": "PSW SAVE AREA FOR DISPATCHER AND ACR",
+      "offset": 1120,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "psapswsv",
+      "description": "PSW SAVE AREA FOR DISPATCHER AND ACR",
+      "offset": 1128,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psacput",
+      "description": "SUPERVISOR CPU TIMER SAVE AREA",
+      "offset": 1136,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psapcfun",
+      "description": "PROGRAM FLIH RECURSION FLAGS",
+      "offset": 1144,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psapcfb1",
+      "description": "FUNCTION VALUE",
+      "offset": 1144,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psapcmc": {
+          "description": "MC INTERRUPT",
+          "offset": 7,
+          "length": 1
+        },
+        "psapcpf": {
+          "description": "PAGE FAULT",
+          "offset": 6,
+          "length": 1
+        },
+        "psapcps": {
+          "description": "PER/SPACE SWITCH INTERRUPT",
+          "offset": 6,
+          "length": 2
+        },
+        "psapcad": {
+          "description": "ADDRESSING EXCEPTION",
+          "offset": 5,
+          "length": 1
+        },
+        "psapcpc": {
+          "description": "PROGRAM CHECK",
+          "offset": 5,
+          "length": 2
+        },
+        "psapctrc": {
+          "description": "TRACE INTERRUPT",
+          "offset": 5,
+          "length": 3
+        },
+        "psapcaf": {
+          "description": "NEW VALUE FOR PROGRAM INTERRUPT FLAG.  ASYMMETRIC FEATURE OPERATION EXCEPTION.",
+          "offset": 4,
+          "length": 1
+        },
+        "psapcdar": {
+          "description": "DISABLED ART PIC X'2B' FUNCTION VALUE FOR PROGRAM FLIH.",
+          "offset": 4,
+          "length": 2
+        }
+      }
+    },
+    {
+      "name": "psapcfb2",
+      "description": "FUNCTION FLAGS",
+      "offset": 1145,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psapctrr": {
+          "description": "TRACE INTERRUPT RECURSION HANDLER FLAG.",
+          "offset": 0,
+          "length": 1
+        },
+        "psapcmt": {
+          "description": "TRACE RECURSION FLAG",
+          "offset": 1,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psapcfb3",
+      "description": "RECURSION FLAGS",
+      "offset": 1146,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psapcp1": {
+          "description": "FIRST LEVEL PROGRAM CHECK",
+          "offset": 0,
+          "length": 1
+        },
+        "psapcp2": {
+          "description": "SECOND LEVEL PROGRAM CHECK",
+          "offset": 1,
+          "length": 1
+        },
+        "psapcde": {
+          "description": "DAT ERROR CONDITION",
+          "offset": 2,
+          "length": 1
+        },
+        "psapclv": {
+          "description": "0=REGISTERS IN LCCA, 1=REGISTERS NOT IN LCCA.",
+          "offset": 3,
+          "length": 1
+        },
+        "psapcp3": {
+          "description": "THIRD LEVEL PROGRAM CHECK",
+          "offset": 4,
+          "length": 1
+        },
+        "psapcp4": {
+          "description": "FOURTH LEVEL PROGRAM CHECK",
+          "offset": 5,
+          "length": 1
+        },
+        "psapcpfr": {
+          "description": "RECURSIVE PAGE FAULT INDICATOR",
+          "offset": 6,
+          "length": 1
+        },
+        "psapcavr": {
+          "description": "RECURSIVE ASTE VALIDITY INDICATOR",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psapcfb4",
+      "description": "RECURSION FLAGS",
+      "offset": 1147,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psapcdnv": {
+          "description": "DUCT validity indicator",
+          "offset": 0,
+          "length": 1
+        },
+        "psapclsr": {
+          "description": "IEAVLSIH has invoked IARPTEPR and recursion into RSM is not permitted.",
+          "offset": 1,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psapcps2",
+      "description": "PASID AT TIME OF SECOND LEVEL INTERRUPT",
+      "offset": 1148,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psarv47e",
+      "description": "RESERVED",
+      "offset": 1150,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "psapcwka",
+      "description": "Work area for PC FLIH. Must be qword-aligned",
+      "offset": 1152,
+      "length": 24,
+      "type": "hex"
+    },
+    {
+      "name": "psapcps3",
+      "description": "PASID AT TIME OF THIRD LEVEL INTERRUPT",
+      "offset": 1176,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psapcps4",
+      "description": "PASID AT TIME OF FOURTH LEVEL INTERRUPT",
+      "offset": 1178,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psamodew",
+      "description": "Word label to address PSAMODE.",
+      "offset": 1180,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psamflgs",
+      "description": "SECOND BYTE OF PSAMODEW",
+      "offset": 1181,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psanss": {
+          "description": "ENABLED UNLOCKED TASK WITH FRR",
+          "offset": 0,
+          "length": 1
+        },
+        "psaprsrb": {
+          "description": "Preemptable-class SRB",
+          "offset": 1,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psamodeh",
+      "description": "SECOND HALFWORD OF PSAMODEW. FIRST BYTE MUST BE ZERO FOR I/O AND EXTERNAL FLIHS.",
+      "offset": 1182,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psamode",
+      "description": "SYSTEM MODE INDICATOR AND DISPLACEMENT INTO TABLES FOR EXTERNAL AND I/O FLIHS",
+      "offset": 1183,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psasrbm": {
+          "description": "SRB MODE VALUE",
+          "offset": 5,
+          "length": 1
+        },
+        "psawaitm": {
+          "description": "WAIT MODE VALUE",
+          "offset": 4,
+          "length": 1
+        },
+        "psadispm": {
+          "description": "DISPATCHER MODE VALUE",
+          "offset": 3,
+          "length": 1
+        },
+        "psapsrbm": {
+          "description": "PSEUDO SRB MODE FLAG BIT.  THIS BIT MAY BE ON WITH ANY OF ABOVE MODE VALUES.",
+          "offset": 2,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psastnsm",
+      "description": "STNSM TARGET USED BY EXIT PROLOGUE",
+      "offset": 1187,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psalkjw",
+      "description": "LOCAL LOCK RELEASE SRB JOURNAL WORD",
+      "offset": 1188,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psadzero",
+      "description": "DOUBLEWORD OF ZERO",
+      "offset": 1192,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psafzero",
+      "description": "FULLWORD OF ZERO",
+      "offset": 1192,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkjw2",
+      "description": "CMS LOCK RELEASE JOURNAL WORD.",
+      "offset": 1200,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkpt",
+      "description": "SETLOCK TEST,TYPE=HIER PARAMETER LIST TABLE. OWNERSHIP: LOCK MANAGER. SERIALIZATION: NONE.",
+      "offset": 1204,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "lkpt"
+    },
+    {
+      "name": "psalaa",
+      "description": "LE Anchor Area. Owner: LE",
+      "offset": 1208,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psalit2",
+      "description": "POINTER TO THE EXTENDED LOCK INTERFACE TABLE.",
+      "offset": 1212,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "velt"
+    },
+    {
+      "name": "psaecltp",
+      "description": "POINTER TO THE EXTENDED CURRENT LOCKS HELD TABLE.",
+      "offset": 1216,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "clte"
+    },
+    {
+      "name": "psaclhse",
+      "description": "CURRENT LOCKS HELD STRING EXTENSION",
+      "offset": 1220,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalheb0",
+      "description": "BYTE 0 OF THE CURRENT LOCK HELD STRING EXTENSION.",
+      "offset": 1220,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psablsdi": {
+          "description": "BMFLSD LOCK INDICATOR.",
+          "offset": 0,
+          "length": 1
+        },
+        "psaxdsi": {
+          "description": "XCFDS LOCK INDICATOR.",
+          "offset": 1,
+          "length": 1
+        },
+        "psaxresi": {
+          "description": "XCFRES LOCK INDICATOR.",
+          "offset": 2,
+          "length": 1
+        },
+        "psaxqi": {
+          "description": "XCFQ LOCK INDICATOR.",
+          "offset": 3,
+          "length": 1
+        },
+        "psaeseti": {
+          "description": "ETRSET LOCK INDICATOR.",
+          "offset": 4,
+          "length": 1
+        },
+        "psaixsci": {
+          "description": "IXLSCH LOCK INDICATOR.",
+          "offset": 5,
+          "length": 1
+        },
+        "psaixshi": {
+          "description": "IXLSHR LOCK INDICATOR.",
+          "offset": 6,
+          "length": 1
+        },
+        "psaixdsi": {
+          "description": "IXLDS LOCK INDICATOR.",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psalheb1",
+      "description": "BYTE 1 OF THE CURRENT LOCK HELD STRING EXTENSION.",
+      "offset": 1221,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaixlli": {
+          "description": "IXLSHELL LOCK INDICATOR.",
+          "offset": 0,
+          "length": 1
+        },
+        "psauluti": {
+          "description": "IOSULUT LOCK INDICATOR.",
+          "offset": 1,
+          "length": 1
+        },
+        "psaixlri": {
+          "description": "IXLREQST LOCK INDICATOR.",
+          "offset": 2,
+          "length": 1
+        },
+        "psawlmri": {
+          "description": "WLMRES LOCK INDICATOR",
+          "offset": 3,
+          "length": 1
+        },
+        "psawlmqi": {
+          "description": "WLMQ LOCK INDICATOR.",
+          "offset": 4,
+          "length": 1
+        },
+        "psacntxi": {
+          "description": "CONTEXT LOCK INDICATOR",
+          "offset": 5,
+          "length": 1
+        },
+        "psaregsi": {
+          "description": "REGSRV LOCK INDICATOR.",
+          "offset": 6,
+          "length": 1
+        },
+        "psassdli": {
+          "description": "SSD LOCK INDICATOR.",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psalheb2",
+      "description": "BYTE 2 OF THE CURRENT LOCK HELD STRING EXTENSION.",
+      "offset": 1222,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psagrsli": {
+          "description": "GRSINT lock indicator",
+          "offset": 0,
+          "length": 1
+        },
+        "psamisli": {
+          "description": "MISC lock indicator",
+          "offset": 1,
+          "length": 1
+        },
+        "psapslk1": {
+          "description": "n/a",
+          "offset": 1,
+          "length": 1
+        },
+        "psadnu2": {
+          "description": "n/a",
+          "offset": 2,
+          "length": 1
+        },
+        "psapnlk1": {
+          "description": "n/a",
+          "offset": 2,
+          "length": 1
+        },
+        "psadnu3": {
+          "description": "n/a",
+          "offset": 3,
+          "length": 1
+        },
+        "psaiolk1": {
+          "description": "n/a",
+          "offset": 3,
+          "length": 1
+        },
+        "psadnu4": {
+          "description": "n/a",
+          "offset": 4,
+          "length": 1
+        },
+        "psapxlk1": {
+          "description": "n/a",
+          "offset": 4,
+          "length": 1
+        },
+        "psadnu5": {
+          "description": "n/a",
+          "offset": 5,
+          "length": 1
+        },
+        "psadrlk3": {
+          "description": "n/a",
+          "offset": 5,
+          "length": 1
+        },
+        "psadrlk2": {
+          "description": "HCWDRLK2 lock indicator",
+          "offset": 6,
+          "length": 1
+        },
+        "psadrlk1": {
+          "description": "HCWDRLK1 lock indicator",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psalheb3",
+      "description": "BYTE 3 OF THE CURRENT LOCK HELD STRING EXTENSION.",
+      "offset": 1223,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psasrmei": {
+          "description": "SRMENQ lock indicator",
+          "offset": 0,
+          "length": 1
+        },
+        "psassdgi": {
+          "description": "SSDGROUP lock indicator",
+          "offset": 1,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psarv4c8",
+      "description": "RESERVED FOR FUTURE LOCK EXPANSION.",
+      "offset": 1224,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psarv4d0",
+      "description": "RESERVED.",
+      "offset": 1232,
+      "length": 144,
+      "type": "hex"
+    },
+    {
+      "name": "psadiag560",
+      "description": "Diagnostic data for IBM use only",
+      "offset": 1376,
+      "length": 36,
+      "type": "hex"
+    },
+    {
+      "name": "psarv584",
+      "description": "RESERVED.",
+      "offset": 1412,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psahwfb",
+      "description": "HARDWARE FLAG BYTE.",
+      "offset": 1416,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "psacr0cb",
+      "description": "CR0 CONTROL BYTE USED BY PROTPSA MACRO",
+      "offset": 1417,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaenabl": {
+          "description": "TO ENABLE PSA PROTECTION",
+          "offset": 3,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psarv58a",
+      "description": "RESERVED",
+      "offset": 1418,
+      "length": 2,
+      "type": "bitstring",
+      "bitmasks": {
+        "psacr0en": {
+          "description": "IF 0, PSA PROTECT DISABLED.  IF 1, PSA PROTECT ENABLED.  BIT IS IN HIGH-ORDER BYTE OF PSACR0SV.",
+          "offset": 11,
+          "length": 1
+        },
+        "psacr0ed": {
+          "description": "DAT features. Bit is in PSACR0SV+1",
+          "offset": 8,
+          "length": 1
+        },
+        "psacr0al": {
+          "description": "IF 1, ASN & LX Reuse facility is enabled. Bit is in PSACR0SV+1",
+          "offset": 12,
+          "length": 1
+        },
+        "psacr0fp": {
+          "description": "IF 1, extended floating point is enabled. Bit is in PSACR0SV+1",
+          "offset": 13,
+          "length": 1
+        },
+        "psacr0vi": {
+          "description": "IF 1, vector instructions are enabled. Bit is in PSACR0SV+1",
+          "offset": 14,
+          "length": 1
+        },
+        "psarpen": {
+          "description": "IF 0, PSA PROTECT DISABLED.  IF 1, PSA PROTECT ENABLED.  BIT IS IN HIGH-ORDER BYTE OF PSARCR0.",
+          "offset": 11,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psacr0sv",
+      "description": "CR0 SAVE AREA USED BY PROTPSA MACRO",
+      "offset": 1420,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psapccr0",
+      "description": "PROGRAM CHECK FLIH CR0 SAVE AREA",
+      "offset": 1424,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psarcr0",
+      "description": "RESTART FLIH CR0 SAVE AREA",
+      "offset": 1428,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psastke",
+      "description": "CURRENT STACK CONTROL WORD FOR SRB'S AND TYPE 6 SVC'S.",
+      "offset": 1432,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psatkn",
+      "description": "CURRENT STACK TOKEN",
+      "offset": 1432,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaasd",
+      "description": "CURRENT STACK ADDRESS SPACE DESIGNATOR",
+      "offset": 1434,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psasel",
+      "description": "CURRENT STACK ELEMENTS ADDRESS",
+      "offset": 1436,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaskpsw",
+      "description": "PCLINK STACK/UNSTACK MODEL PSW",
+      "offset": 1440,
+      "length": 4,
+      "type": "hex",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psaskps2",
+      "description": "PCLINK PSW ADDRESS",
+      "offset": 1444,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psacpcls",
+      "description": "PCLINK WORKAREA - CURRENT STACK HEADER ADDRESS",
+      "offset": 1448,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psarv5ac",
+      "description": "RESERVED.",
+      "offset": 1452,
+      "length": 4,
+      "type": "hex",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psascfs",
+      "description": "ADDRESS OF THE SUPERVISOR CONTROL FLIH SAVEAREA.",
+      "offset": 1456,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psapawa",
+      "description": "ADDRESS OF PC/AUTH WORK AREA.",
+      "offset": 1460,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "pc"
+    },
+    {
+      "name": "psascfb",
+      "description": "SUPERVISOR CONTROL FLAG BYTE.",
+      "offset": 1464,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaiopr": {
+          "description": "INDICATES IF INTERRUPTED TASK SHOULD BE PREEMPTED.  USED BY THE I/O FLIH.",
+          "offset": 0,
+          "length": 1
+        },
+        "psaiorty": {
+          "description": "I/O FLIH RECOVERY FLAG. IF 1, CONTINUE RETRY PROCESSING INSTEAD OF ABENDING",
+          "offset": 1,
+          "length": 1
+        },
+        "psa_lockspinentered": {
+          "description": "Set whenever supervisor spins for a lock",
+          "offset": 2,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psarv5b9",
+      "description": "RESERVED",
+      "offset": 1465,
+      "length": 3,
+      "type": "hex"
+    },
+    {
+      "name": "psacr0m1",
+      "description": "MASK OF CR0 WITH EXTERNAL MASK BITS OFF - USED BY WINDOW.",
+      "offset": 1468,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psacr0m2",
+      "description": "MASK OF CR0 WITH ONLY EXTERNAL MASK BITS ON - USED BY WINDOW.",
+      "offset": 1472,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psarv5c4",
+      "description": "RESERVED",
+      "offset": 1476,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psa_cr0emaskoffextint",
+      "description": "Mask of bits to turn off all external interrupts in grande CR0",
+      "offset": 1480,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psa_cr0emaskonextint",
+      "description": "Mask of bits to turn on all external interrupts in grande CR0",
+      "offset": 1488,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psa_cr0esavearea",
+      "description": "Save area for grande CR0",
+      "offset": 1496,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psa_cr0esavearea_hw",
+      "description": "High word save area for high word of CR0",
+      "offset": 1496,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psa_cr0esavearea_lw",
+      "description": "Low word save area for low word of CR0",
+      "offset": 1500,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psa_windowworkarea",
+      "description": "WorkArea for IEAMWIN",
+      "offset": 1504,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "psa_windowtoddelta",
+      "description": "Difference in TOD values - used in IEAMWIN PL/X",
+      "offset": 1504,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psa_windowtoddelta_hw",
+      "description": "High word area for difference in TOD values",
+      "offset": 1504,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psa_windowtoddelta_lw",
+      "description": "Low word area for difference in TOD values",
+      "offset": 1508,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psa_windowlastopentod",
+      "description": "TOD when IEAMWIN last opened a window",
+      "offset": 1520,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psa_windowcurrenttod",
+      "description": "TOD when IEAMWIN last checked to open a window",
+      "offset": 1528,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "current"
+    },
+    {
+      "name": "psarv600",
+      "description": "RESERVED",
+      "offset": 1536,
+      "length": 80,
+      "type": "hex"
+    },
+    {
+      "name": "psa_time_on_cp",
+      "description": "Current SRB's accumulated CPU time on a standard CP. This field must immediately precede PSATIME This field is valid only when there is at least one zCBP/zAAP or zIIP installed.",
+      "offset": 1616,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "current"
+    },
+    {
+      "name": "psatime",
+      "description": "CURRENT SRB'S ACCUMULATED CPU TIME",
+      "offset": 1624,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "current"
+    },
+    {
+      "name": "psasrsav",
+      "description": "ADDRESS OF CURRENT FRR STACK SAVED BY STOP/RESET.",
+      "offset": 1632,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "current"
+    },
+    {
+      "name": "psaesc8",
+      "description": "Save area for IEAVESC8",
+      "offset": 1636,
+      "length": 12,
+      "type": "hex"
+    },
+    {
+      "name": "psadexmw",
+      "description": "Work area for dispatcher CR3/4",
+      "offset": 1648,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psadsars",
+      "description": "DISPATCHER ACCESS REGISTER SAVE AREA",
+      "offset": 1656,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psa_pcflih_trace_interrupt_cput",
+      "description": "Trace interrupt CPU timer saved",
+      "offset": 1720,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psadtsav",
+      "description": "CPU TIMER VALUE AT LAST DISPATCH, SRBTIMER REQUEST, CPUTIMER EXPIRATION, OR STATUS SAVE OR RESTORE.",
+      "offset": 1728,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psaff6c0",
+      "description": "INITIALIZE FIELD PSADTSAV",
+      "offset": 1728,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psadexms",
+      "description": "DISPATCHER CONTROL REGISTER 3 AND 4 SAVE AREA",
+      "offset": 1736,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "psadcr3",
+      "description": "DISPATCHER CONTROL REGISTER 3 SAVE AREA",
+      "offset": 1736,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psadsins",
+      "description": "DISPATCHER Secondary ASTE Inst# S/A",
+      "offset": 1736,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psadpksa",
+      "description": "PKM and SASID",
+      "offset": 1740,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psadpkm",
+      "description": "DISPATCHER PROGRAM KEY MASK SAVE AREA",
+      "offset": 1740,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psadsas",
+      "description": "DISPATCHER SECONDARY ASID SAVE AREA",
+      "offset": 1742,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psadcr4",
+      "description": "DISPATCHER CONTROL REGISTER 4 SAVE AREA",
+      "offset": 1744,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psadpins",
+      "description": "DISPATCHER Primary ASTE Inst# S/A",
+      "offset": 1744,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psadaxpa",
+      "description": "AX and PASID",
+      "offset": 1748,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psadax",
+      "description": "DISPATCHER  AUTHORIZATION INDEX SAVE AREA.",
+      "offset": 1748,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psadpas",
+      "description": "DISPATCHER PRIMARY ASID SAVE AREA.",
+      "offset": 1750,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psa_time_on_zcbp_normalized",
+      "description": "Current SRB's accumulated CPU time on a zCBP. Normalized.",
+      "offset": 1752,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psausend",
+      "description": "END FIRST SET OF ASSIGNED FIELDS SAVED BY ACR.",
+      "offset": 1760,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psarv6e0",
+      "description": "RESERVED",
+      "offset": 1760,
+      "length": 192,
+      "type": "hex"
+    },
+    {
+      "name": "psaecvt",
+      "description": "Address of ECVT",
+      "offset": 1768,
+      "length": 8,
+      "type": "address"
+    },
+    {
+      "name": "psaxcvt",
+      "description": "Address of XCVT",
+      "offset": 1776,
+      "length": 8,
+      "type": "address"
+    },
+    {
+      "name": "psadatlk",
+      "description": "AREA FOR DAT-OFF ASSIST LINKAGE CODE",
+      "offset": 1784,
+      "length": 48,
+      "type": "hex"
+    },
+    {
+      "name": "psadatof",
+      "description": "REAL STORAGE ADDRESS OF THE DAT-OFF LINKAGE TABLE WHICH IS INITIALIZED BY NIP FOR DAT-ON/DAT-OFF LINKAGE",
+      "offset": 1832,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "psadatln",
+      "description": "LENGTH OF THE DAT-OFF INDEX TABLE (IEAVEDFT)",
+      "offset": 1836,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatbvtv",
+      "description": "VIRTUAL ADDRESS CORRESPONDING TO PSATBVTR.",
+      "offset": 1840,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "system"
+    },
+    {
+      "name": "psatrace",
+      "description": "SYSTEM TRACE FLAGS.",
+      "offset": 1844,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psatroff": {
+          "description": "IF ON, SYSTEM TRACE SUSPENDED ON THIS PROCESSOR BECAUSE WAIT TASK DISPATCHED.",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psarv7ed",
+      "description": "RESERVED FOR SYSTEM TRACE.",
+      "offset": 1845,
+      "length": 3,
+      "type": "hex"
+    },
+    {
+      "name": "psatbvtr",
+      "description": "REAL ADDRESS OF SYSTEM TRACE BUFFER VECTOR TABLE (TBVT) REPRESENTING THE CURRENT SYSTEM TRACE BUFFER FOR THIS PROCESSOR. OWNERSHIP: SYSTEM TRACE. SERIALIZATION: DISABLEMENT FOR EXTERNAL INTERRUPTS ON THIS PROCESSOR OR THE TRACE SPIN LOCK.",
+      "offset": 1848,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vetvt"
+    },
+    {
+      "name": "psatrvt",
+      "description": "ADDRESS OF SYSTEM TRACE VECTOR TABLE.",
+      "offset": 1852,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vetvt"
+    },
+    {
+      "name": "psatot",
+      "description": "ADDRESS OF SYSTEM TRACE OPERAND TABLE.",
+      "offset": 1856,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vetot"
+    },
+    {
+      "name": "psaus2st",
+      "description": "START SECOND SET OF ASSIGNED FIELDS SAVED BY ACR.",
+      "offset": 1860,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psacdsav",
+      "description": "CALLDISP REGISTER SAVE AREA FOR REGISTERS 14 - 1",
+      "offset": 1860,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "psacdsae",
+      "description": "CALLDISP REGISTER 14 SAVE AREA",
+      "offset": 1860,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psacdsaf",
+      "description": "CALLDISP REGISTER 15 SAVE AREA",
+      "offset": 1864,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psacdsa0",
+      "description": "CALLDISP REGISTER 0  SAVE AREA",
+      "offset": 1868,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psacdsa1",
+      "description": "CALLDISP REGISTER 1  SAVE AREA",
+      "offset": 1872,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psagspsw",
+      "description": "GLOBAL SCHEDULE SYSTEM MASK SAVE AREA. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: DISABLEMENT.",
+      "offset": 1876,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psagsrgs",
+      "description": "GLOBAL SCHEDULE REGISTER SAVE AREA. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: DISABLEMENT.",
+      "offset": 1880,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psa_masterasterealaddr",
+      "description": "",
+      "offset": 1884,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psasv01r",
+      "description": "IEAVTRG1 register 1 save area.",
+      "offset": 1888,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psasv14r",
+      "description": "IEAVTRG1 register 14 save area.",
+      "offset": 1892,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaems2r",
+      "description": "REGISTER SAVE AREA OWNERSHIP: MEMORY SWITCH. SERIALIZATION: DISABLED.",
+      "offset": 1896,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrsav",
+      "description": "TRACE REGISTER SAVE AREA.",
+      "offset": 1900,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psatrgr0",
+      "description": "TRACE REGISTER 0 SAVE AREA.",
+      "offset": 1900,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgr1",
+      "description": "TRACE REGISTER 1 SAVE AREA.",
+      "offset": 1904,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgr2",
+      "description": "TRACE REGISTER 2 SAVE AREA.",
+      "offset": 1908,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgr3",
+      "description": "TRACE REGISTER 3 SAVE AREA.",
+      "offset": 1912,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgr4",
+      "description": "TRACE REGISTER 4 SAVE AREA.",
+      "offset": 1916,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgr5",
+      "description": "TRACE REGISTER 5 SAVE AREA.",
+      "offset": 1920,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgr6",
+      "description": "TRACE REGISTER 6 SAVE AREA.",
+      "offset": 1924,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgr7",
+      "description": "TRACE REGISTER 7 SAVE AREA.",
+      "offset": 1928,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgr8",
+      "description": "TRACE REGISTER 8 SAVE AREA.",
+      "offset": 1932,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgr9",
+      "description": "TRACE REGISTER 9 SAVE AREA.",
+      "offset": 1936,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgra",
+      "description": "TRACE REGISTER 10 SAVE AREA.",
+      "offset": 1940,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgrb",
+      "description": "TRACE REGISTER 11 SAVE AREA.",
+      "offset": 1944,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgrc",
+      "description": "TRACE REGISTER 12 SAVE AREA.",
+      "offset": 1948,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgrd",
+      "description": "TRACE REGISTER 13 SAVE AREA.",
+      "offset": 1952,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgre",
+      "description": "TRACE REGISTER 14 SAVE AREA.",
+      "offset": 1956,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrgrf",
+      "description": "TRACE REGISTER 15 SAVE AREA.",
+      "offset": 1960,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psatrsv1",
+      "description": "Trace Save 1",
+      "offset": 1964,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psatrsvs",
+      "description": "Trace Save for SLIP/PER",
+      "offset": 1968,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "psatrsv2",
+      "description": "Trace Save 2",
+      "offset": 1972,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psarv878",
+      "description": "RESERVED.",
+      "offset": 1980,
+      "length": 40,
+      "type": "hex"
+    },
+    {
+      "name": "psagsavh",
+      "description": "Register save area used by dispatcher",
+      "offset": 2020,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psagsav",
+      "description": "REGISTER SAVE AREA USED BY DISPATCHER AND SCHEDULE",
+      "offset": 2032,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psaff8a8",
+      "description": "INITIALIZE FIELD PSAGSAV",
+      "offset": 2032,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psascrg1",
+      "description": "GLOBAL SCHEDULE REGISTER SAVE AREA",
+      "offset": 2096,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psascrg2",
+      "description": "GLOBAL SCHEDULE REGISTER SAVE AREA",
+      "offset": 2100,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psagpreg",
+      "description": "REGISTER SAVE AREA FOR SVC FLIH AND SCHEDULE",
+      "offset": 2104,
+      "length": 12,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psarsreg",
+      "description": "RESTART FLIH REGISTER SAVE",
+      "offset": 2116,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psapcgr8",
+      "description": "PROGRAM FLIH REGISTER 8 SAVE AREA",
+      "offset": 2120,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psapcgr9",
+      "description": "PROGRAM FLIH REGISTER 9 SAVE AREA",
+      "offset": 2124,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psapcgab",
+      "description": "PROGRAM FLIH REG 10-11 SAVE AREA",
+      "offset": 2128,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psapcgra",
+      "description": "PROGRAM FLIH REGISTER 10 SAVE AREA",
+      "offset": 2128,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psapcgrb",
+      "description": "PROGRAM FLIH REGISTER 11 SAVE AREA",
+      "offset": 2132,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalksa",
+      "description": "IEAVELK REGISTER SAVE AREA OWNERSHIP: SUPERVISOR CONTROL SERIALIZATION: DISABLEMENT",
+      "offset": 2136,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psalkr0",
+      "description": "IEAVELK REGISTER 0 SAVE AREA",
+      "offset": 2136,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr1",
+      "description": "IEAVELK REGISTER 1 SAVE AREA",
+      "offset": 2140,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr2",
+      "description": "IEAVELK REGISTER 2 SAVE AREA",
+      "offset": 2144,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr3",
+      "description": "IEAVELK REGISTER 3 SAVE AREA",
+      "offset": 2148,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr4",
+      "description": "IEAVELK REGISTER 4 SAVE AREA",
+      "offset": 2152,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr5",
+      "description": "IEAVELK REGISTER 5 SAVE AREA",
+      "offset": 2156,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr6",
+      "description": "IEAVELK REGISTER 6 SAVE AREA",
+      "offset": 2160,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr7",
+      "description": "IEAVELK REGISTER 7 SAVE AREA",
+      "offset": 2164,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr8",
+      "description": "IEAVELK REGISTER 8 SAVE AREA",
+      "offset": 2168,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr9",
+      "description": "IEAVELK REGISTER 9 SAVE AREA",
+      "offset": 2172,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr10",
+      "description": "IEAVELK REGISTER 10 SAVE AREA",
+      "offset": 2176,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr11",
+      "description": "IEAVELK REGISTER 11 SAVE AREA",
+      "offset": 2180,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr12",
+      "description": "IEAVELK REGISTER 12 SAVE AREA",
+      "offset": 2184,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr13",
+      "description": "IEAVELK REGISTER 13 SAVE AREA",
+      "offset": 2188,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr14",
+      "description": "IEAVELK REGISTER 14 SAVE AREA",
+      "offset": 2192,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psalkr15",
+      "description": "IEAVELK REGISTER 15 SAVE AREA",
+      "offset": 2196,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslsa",
+      "description": "SINGLE LEVEL SAVE AREA USED BY DISABLED ROUTINES WITH NO DEPENDENCY THAT THE SAVE AREA REMAIN INTACT ACROSS A CALL. THIS AREA IS NOT MAINTAINED BY RESTART PROCESSING THAT RESULTS IN AN ABEND OF OF THE INTERRUPTED ROUTINE.",
+      "offset": 2200,
+      "length": 72,
+      "type": "hex"
+    },
+    {
+      "name": "psaff950",
+      "description": "INITIALIZE FIELD PSASLSA",
+      "offset": 2200,
+      "length": 72,
+      "type": "hex"
+    },
+    {
+      "name": "psajstsa",
+      "description": "SAVE AREA FOR JOB STEP TIMING ROUTINE. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: DISABLEMENT.",
+      "offset": 2272,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psaff998",
+      "description": "INITIALIZE FIELD PSAJSTSA",
+      "offset": 2272,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psaus2nd",
+      "description": "END SECOND SET OF ASSIGNED FIELDS SAVED BY ACR.",
+      "offset": 2336,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psaslksa",
+      "description": "IEAVESLK REGISTER SAVE AREA OWNERSHIP: SUPERVISOR CONTROL SERIALIZATION: DISABLEMENT",
+      "offset": 2336,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psaslkr0",
+      "description": "IEAVESLK REGISTER 0 SAVE AREA",
+      "offset": 2336,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkr1",
+      "description": "IEAVESLK REGISTER 1 SAVE AREA",
+      "offset": 2340,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkr2",
+      "description": "IEAVESLK REGISTER 2 SAVE AREA",
+      "offset": 2344,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkr3",
+      "description": "IEAVESLK REGISTER 3 SAVE AREA",
+      "offset": 2348,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkr4",
+      "description": "IEAVESLK REGISTER 4 SAVE AREA",
+      "offset": 2352,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkr5",
+      "description": "IEAVESLK REGISTER 5 SAVE AREA",
+      "offset": 2356,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkr6",
+      "description": "IEAVESLK REGISTER 6 SAVE AREA",
+      "offset": 2360,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkr7",
+      "description": "IEAVESLK REGISTER 7 SAVE AREA",
+      "offset": 2364,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkr8",
+      "description": "IEAVESLK REGISTER 8 SAVE AREA",
+      "offset": 2368,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkr9",
+      "description": "IEAVESLK REGISTER 9 SAVE AREA",
+      "offset": 2372,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkra",
+      "description": "IEAVESLK REGISTER 10 SAVE AREA",
+      "offset": 2376,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkrb",
+      "description": "IEAVESLK REGISTER 11 SAVE AREA",
+      "offset": 2380,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkrc",
+      "description": "IEAVESLK REGISTER 12 SAVE AREA",
+      "offset": 2384,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkrd",
+      "description": "IEAVESLK REGISTER 13 SAVE AREA",
+      "offset": 2388,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkre",
+      "description": "IEAVESLK REGISTER 14 SAVE AREA",
+      "offset": 2392,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psaslkrf",
+      "description": "IEAVESLK REGISTER 15 SAVE AREA",
+      "offset": 2396,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psa_setlocki_savearea",
+      "description": "SETLOCKI Register save area",
+      "offset": 2400,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psa_lastlogcpuheldlock",
+      "description": "When waiting to obtain a spin lock, the last observed lockword content.",
+      "offset": 2408,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "psarva24",
+      "description": "RESERVED",
+      "offset": 2412,
+      "length": 24,
+      "type": "hex"
+    },
+    {
+      "name": "psascsav",
+      "description": "IEAVESC0 save area",
+      "offset": 2436,
+      "length": 64,
+      "type": "hex"
+    },
+    {
+      "name": "psasflgs",
+      "description": "Schedule flags Ownership: Supervisor Control Serialization: Disablement",
+      "offset": 2500,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaschda": {
+          "description": "Schedule is active",
+          "offset": 0,
+          "length": 1
+        },
+        "psamcha": {
+          "description": "Machine Check is active",
+          "offset": 1,
+          "length": 1
+        },
+        "psarsta": {
+          "description": "Restart is active",
+          "offset": 2,
+          "length": 1
+        },
+        "psaegra": {
+          "description": "Global Recovery is active",
+          "offset": 3,
+          "length": 1
+        },
+        "psartma": {
+          "description": "Selected RTM functions are active",
+          "offset": 4,
+          "length": 1
+        },
+        "psadontgetweb": {
+          "description": "A WEB or WEBQLOCK is held. IEAVESC0      -",
+          "offset": 5,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psamiscf",
+      "description": "Miscellaneous flags set ONLY at IPL. Ownership: Supervisor Control Serialization: None",
+      "offset": 2501,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "psaalr": {
+          "description": "Equivalent to CVTALR",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "psarva7e",
+      "description": "Reserved for future use - SC1C5",
+      "offset": 2502,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "psarva80",
+      "description": "RESERVED",
+      "offset": 2504,
+      "length": 188,
+      "type": "hex"
+    },
+    {
+      "name": "psagsch7",
+      "description": "ENABLED GLOBAL SCHEDULE ENTRY POINT",
+      "offset": 2692,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vesc"
+    },
+    {
+      "name": "psagsch8",
+      "description": "DISABLED GLOBAL SCHEDULE ENTRY POINT",
+      "offset": 2696,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vesc"
+    },
+    {
+      "name": "psalsch1",
+      "description": "ENABLED SCHEDULE ENTRY POINT",
+      "offset": 2700,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vesc"
+    },
+    {
+      "name": "psalsch2",
+      "description": "DISABLED SCHEDULE ENTRY POINT",
+      "offset": 2704,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vesc"
+    },
+    {
+      "name": "psasvt",
+      "description": "ADDRESS OF SUPERVISOR VECTOR TABLE",
+      "offset": 2708,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vesvt"
+    },
+    {
+      "name": "psasvtx",
+      "description": "Address of Supervisor Vector Table extension. SERIALIZATION: None OWNERSHIP: Supervisor Control",
+      "offset": 2712,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vsvtx"
+    },
+    {
+      "name": "psafafrr",
+      "description": "Fast FRR fields.  These fields are for IBM use only.",
+      "offset": 2716,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "psaffrr",
+      "description": "Fast FRR address.  This field is for IBM use only. Serialization: CPU Lock, PSAFFRRS must be set before PSAFFRR Ownership: RTM",
+      "offset": 2716,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psaffrrs",
+      "description": "Fast FRR stack.  This field is for IBM use only. Serialization: CPU Lock, PSAFFRRS must be set before PSAFFRR Ownership: RTM",
+      "offset": 2720,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "psarvb5c",
+      "description": "Reserved",
+      "offset": 2724,
+      "length": 36,
+      "type": "hex"
+    },
+    {
+      "name": "psarvb80",
+      "description": "Reserved",
+      "offset": 2760,
+      "length": 1112,
+      "type": "hex"
+    },
+    {
+      "name": "psastak",
+      "description": "Do not use.",
+      "offset": 2760,
+      "length": 1112,
+      "type": "hex"
+    },
+    {
+      "name": "psarvfd8",
+      "description": "Reserved",
+      "offset": 3872,
+      "length": 40,
+      "type": "hex"
+    },
+    {
+      "name": "psaend",
+      "description": "END OF PSA",
+      "offset": 3912,
+      "length": 8,
+      "type": "hex"
+    }
+  ]
+}

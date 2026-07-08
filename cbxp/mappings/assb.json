@@ -1,0 +1,2159 @@
+{
+  "version": 1,
+  "name": "assb",
+  "commonName": "Address Space Secondary Block",
+  "macroId": "ihaassb",
+  "description": "%GOTO ASSBL2;  /*",
+  "aliases": [],
+  "pointedToBy": [],
+  "storageAttributes": {
+    "subpools": [
+      245
+    ],
+    "key": 0,
+    "residency": "Above 16M line"
+  },
+  "controlBlock": [
+    {
+      "name": "assbegin",
+      "description": "BEGINNING OF ASSB.",
+      "offset": 0,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbassb",
+      "description": "ACRONYM IN EBCDIC - ASSB.",
+      "offset": 0,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "assbsmfl",
+      "description": "Lock word for BMFLSD lock for TCTIOT serialization",
+      "offset": 4,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbubav",
+      "description": "",
+      "offset": 8,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbubad",
+      "description": "",
+      "offset": 12,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbupav",
+      "description": "",
+      "offset": 16,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbr014",
+      "description": "",
+      "offset": 20,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "assbxmf1",
+      "description": "CROSS MEMORY FLAGS 1 OWNERSHIP: PC/AUTH SERIALIZATION: PC/AUTH ADDRESS SPACE LOCAL LOCK.",
+      "offset": 24,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbxeax": {
+          "description": "ADDRESS SPACE OWNS ENTRY TABLES CONTAINING NON-ZERO EAX VALUES",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbxmf2",
+      "description": "CROSS MEMORY FLAGS 2 OWNERSHIP: PC/AUTH SERIALIZATION: PC/AUTH ADDRESS SPACE LOCAL LOCK.",
+      "offset": 25,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbstyp": {
+          "description": "FIRST 4 BITS REPRESENT STOKEN TYPE INFORMATION. ALWAYS ZERO FOR ADDRESS SPACE STOKENS.",
+          "offset": 0,
+          "length": 4
+        }
+      }
+    },
+    {
+      "name": "assbxmcc",
+      "description": "CROSS MEMORY CONNECTIONS COUNT. NUMBER OF SPACE SWITCHING CONNECTIONS DONE TO THIS SPACE. OWNERSHIP: PC/AUTH SERIALIZATION: PC/AUTH ADDRESS SPACE LOCAL LOCK.",
+      "offset": 26,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbcbtp",
+      "description": "POINTER TO IHAACBT SERIALIZATION: CMS LOCK",
+      "offset": 28,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbvsc",
+      "description": "VIO SLOT ALLOCATED COUNT. OWNERSHIP: ASM. SERIALIZATION: ASM ADDRESS SPACE RELATED CLASS LOCK.",
+      "offset": 32,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbnvsc",
+      "description": "NON-VIO SLOT ALLOCATED COUNT. OWNERSHIP: ASM. SERIALIZATION: ASMGL LOCK.",
+      "offset": 36,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbasrr",
+      "description": "ADDRESS SPACE RE-READS TO BE REPORTED IN THE TYPE 30 SMF RECORD.",
+      "offset": 40,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbdexp",
+      "description": "POINTER TO IHADEXP SERIALIZATION: LOCAL LOCK",
+      "offset": 44,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbstkn",
+      "description": "STOKEN. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: NONE. As with other ASCB/ASSB fields, serialization may be required when accessing something other than your address space's data.",
+      "offset": 48,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbstw1",
+      "description": "FIRST WORD OF ASSBSTKN.",
+      "offset": 48,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbisqn",
+      "description": "Initial address space sequence number / instance number. It can be used with ASCBASID for the SSAIR instruction",
+      "offset": 52,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbbpsa",
+      "description": "IBMPM ANCHOR BLOCK. OWNERSHIP: IBM PRESENTATION MANAGER. SERIALIZATION: NONE.",
+      "offset": 56,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbcsct",
+      "description": "CACHING FACILITY STOP COUNT OWNERSHIP: DFP SERIALIZATION: LOCAL LOCK",
+      "offset": 60,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbbalv",
+      "description": "VIRTUAL ADDRESS OF THE BASIC ACCESS LIST. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: LOCAL LOCK.",
+      "offset": 64,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbbald",
+      "description": "BASIC ACCESS LIST DESIGNATOR. BITS 1-24 WITH SEVEN ZEROES APPENDED ON THE RIGHT FORM THE 31-BIT REAL ADDRESS OF THE BASIC ACCESS LIST. BITS 25-31 REPRESENT THE NUMBER OF 128 BYTE ACCESS LISTS, MINUS ONE. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: LOCAL LOCK.",
+      "offset": 68,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbxmse",
+      "description": "ADDRESS OF XMSE FOR THIS ADDRESS SPACE",
+      "offset": 72,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbtsqn",
+      "description": "NEXT TTOKEN SEQUENCE NUMBER. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: LOCAL LOCK.",
+      "offset": 76,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbvcnt",
+      "description": "COUNT OF CURRENT TASKS WITH VECTOR AFFINITY. SERIALIZED WITH SRM VIA COMPARE AND SWAP",
+      "offset": 80,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbpalv",
+      "description": "PASN ACCESS LIST VIRTUAL OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: LOCAL LOCK.",
+      "offset": 84,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbasei",
+      "description": "ADDRESS OF ADDRESS SPACE RELATED INFORMATION. OWNERSHIP: ADDRESS SPACE SERVICES. SERIALIZATION: NONE.",
+      "offset": 88,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbrma",
+      "description": "ADDRESS OF ADDRESS SPACE RELATED RESOURCE MANAGER CONTROL STRUCTURE. OWNERSHIP: RTM. SERIALIZATION: NONE.",
+      "offset": 92,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbhst",
+      "description": "CPU time for Hiperspace reads and writes.  This CPU time is \"normalized\" to standard CP time. Ownership: RSM. Serialization: CSG",
+      "offset": 96,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbiipt",
+      "description": "CPU time for I/O interrupt processing.  This CPU time is \"normalized\" to standard CP time. Ownership: IOS. Serialization: CSG",
+      "offset": 104,
+      "length": 8,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbemcs_activated": {
+          "description": "At least one EMCS console was activated by this address space.",
+          "offset": 56,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbanec",
+      "description": "ALESERV ADD WITH NO EAX COUNT. OWNERSHIP: PC/AUTH. SERIALIZATION: COMPARE AND SWAP (CS).",
+      "offset": 112,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbsdov",
+      "description": "ADDRESS OF SHARED DATA OBJECT MANAGER VECTOR TABLE OWNERSHIP: VLF SERIALIZATION: CS",
+      "offset": 116,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbmcso",
+      "description": "NUMBER OF CONSOLE IDS ACTIVATED BY THIS ADDRESS SPACE. OWNERSHIP: CONSOLE SERVICES. SERIALIZATION: COMPARE AND SWAP.",
+      "offset": 120,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbdfas",
+      "description": "ADDRESS OF DFP=SMSX STRUCTURE FOR THE ADDRESS SPACE. OWNERSHIP: DFP. SERIALIZATION: NONE.",
+      "offset": 124,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbflgs",
+      "description": "ASSB FLAGS.",
+      "offset": 128,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "assbflg0",
+      "description": "ASSB FLAG BYTE 0. SERIALIZATION: COMPARE AND SWAP.",
+      "offset": 128,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbbsdn": {
+          "description": "BYPASS SVC DUMP NON-DISPATCHABILITY. OWNERSHIP: SDUMP.",
+          "offset": 0,
+          "length": 1
+        },
+        "assbcdsi": {
+          "description": "CDSI Resources Held or signalling resources held. Once set, must stay set. OWNERSHIP: XCF.",
+          "offset": 1,
+          "length": 1
+        },
+        "assbpsch": {
+          "description": "Parallel Detach SRB scheduled to this address space Ownership: RTM",
+          "offset": 2,
+          "length": 1
+        },
+        "assbpnsw": {
+          "description": "If on, this space is declared by the setter to be permanently non-swappable. The validity is not checked. System routines may rely on the space being non-swappable if the bit is on. Must be set by CS",
+          "offset": 3,
+          "length": 1
+        },
+        "assbnoml": {
+          "description": "NoML used internally Ownership: RTM Must be set by CS The following 3 bits are OWNERSHIP: SDUMP / and Must be set via C/S",
+          "offset": 4,
+          "length": 1
+        },
+        "assbsdumpas": {
+          "description": "SDUMP is dumping this address space",
+          "offset": 5,
+          "length": 1
+        },
+        "assbsdumpnd": {
+          "description": "SDUMP set the tasks in this space non-dispatchable",
+          "offset": 6,
+          "length": 1
+        },
+        "assbsdumpresetnd": {
+          "description": "Request SDUMP to set tasks dispatchable The previous 3 bits are  OWNERSHIP: SDUMP / and Must be set via C/S",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbflg1",
+      "description": "ASSB FLAG BYTE 1 OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: COMPARE AND SWAP. EQU   X'80'               Available EQU   X'40'               Available",
+      "offset": 129,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbntsl": {
+          "description": "JOB STEP HAS CREATED SYSTEM LEVEL NAME/TOKEN PAIRS.",
+          "offset": 2,
+          "length": 1
+        },
+        "assbfrst": {
+          "description": "The first pool of SVRBs has been obtained.",
+          "offset": 3,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbflg2",
+      "description": "ASSB FLAG BYTE 2.",
+      "offset": 130,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbenfl": {
+          "description": "IF ON, INDICATES ADDRESS SPACE ISSUED ENF LISTEN REQUEST. OWNERSHIP: ENF. SERIALIZATION: NONE.",
+          "offset": 0,
+          "length": 1
+        },
+        "assbnswf": {
+          "description": "If on, indicates IEAVEGR found a WEB on the TAWQ, not marked SWAP. The TCBs in this space must be examined. Ownership: Supervisor Control Serialization: IEAVEGR",
+          "offset": 1,
+          "length": 1
+        },
+        "assbpran": {
+          "description": "No longer set - kept for compatibility. Ownership: RTM. Serialization: Local lock.",
+          "offset": 2,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbflg3",
+      "description": "ASSB FLAG BYTE 3",
+      "offset": 131,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbarm": {
+          "description": "The job or STC running in this address space is registered with the Automatic Restart Manager (ARM). Serialization: Compare and Swap. Ownership: XCF (ARM)",
+          "offset": 0,
+          "length": 1
+        },
+        "assbnrst": {
+          "description": "The Automatic Restart Manager (ARM) should not restart the job or STC running in this address space even if it is registered with ARM. Serialization: Compare and Swap. Ownership: XCF (ARM)",
+          "offset": 1,
+          "length": 1
+        },
+        "assbgdps": {
+          "description": "If on, indicates this is the Geographically Dispersed Parallel Sysplex (GDPS) service address space. Ownership: GDPS Serialization: Compare and Swap",
+          "offset": 2,
+          "length": 1
+        },
+        "assbmdip": {
+          "description": "If on, indicates that a Memterm dump is in progress. Ownership: RTM Serialization: Compare and Swap",
+          "offset": 3,
+          "length": 1
+        },
+        "assbbcpiiused": {
+          "description": "If on, indicates this space has used BCPii services Ownership: BCPii Serialization: Compare and swap",
+          "offset": 4,
+          "length": 1
+        },
+        "assb_initially_zaap_on_ziip": {
+          "description": "Indicates that zAAP on zIIP was active when this job started. Ownership: SUP Serialization: Compare and swap",
+          "offset": 5,
+          "length": 1
+        },
+        "assbmtdc": {
+          "description": "If on, indicates that Memterm dump has completed Ownership: RTM Serialization: Compare and Swap",
+          "offset": 6,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbascb",
+      "description": "ADDRESS OF ASCB.",
+      "offset": 132,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbasrf",
+      "description": "CREATED ASSB FORWARD POINTER.",
+      "offset": 136,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbasrb",
+      "description": "CREATED ASSB BACKWARD POINTER.",
+      "offset": 140,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbssd",
+      "description": "ADDRESS OF THE SUSPENDED SRB DESCRIPTOR (SSD) QUEUE. SERIALIZATION: DISPATCHER LOCK. OWNERSHIP: SUPERVISOR CONTROL.",
+      "offset": 144,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbmqma",
+      "description": "CONTROL BLOCK ANCHOR FOR MQM MVS/ESA. SERIALIZATION: NONE. OWNERSHIP: MQSERIES",
+      "offset": 148,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assblasb",
+      "description": "TOKEN INDICATING IF MVS/APPC RESOURCES ARE ASSOCIATED WITH THIS ADDRESS SPACE. IF 0, THEN NONE ARE ASSOCIATED. OWNERSHIP: MVS/APPC. SERIALIZATION: NONE.",
+      "offset": 152,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbsch",
+      "description": "POINTER TO APPC SCHEDULER ADDRESS SPACE BLOCK. OWNERSHIP: MVS/APPC. SERIALIZATION: NONE.",
+      "offset": 160,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbfsc",
+      "description": "COUNT ACCUMULATED BY IEAMFCNT FOR THIS ADDRESS SPACE. SERIALIZATION:  CS.",
+      "offset": 164,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbjsab",
+      "description": "ADDRESS OF JOB SCHEDULER ADDRESS SPACE BLOCK. OWNERSHIP: CONTROLLING JOB SCHEDULER. SERIALIZATION: SEE IAZXJSAB MACRO",
+      "offset": 168,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbrctw",
+      "description": "ADDRESS OF RCT's WEB. OWNERSHIP: Supervisor Control. SERIALIZATION: Disablement.",
+      "offset": 172,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbldax",
+      "description": "Address of LDAX for this space",
+      "offset": 176,
+      "length": 8,
+      "type": "address"
+    },
+    {
+      "name": "assbldxh",
+      "description": "High half",
+      "offset": 176,
+      "length": 4,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbmtp": {
+          "description": "MEMTERM PENDING.  TURNED ON WHEN A MEMTERM IS RECEIVED FOR A MEMTERMABLE ADDRESS SPACE. PREVENTS FURTHER DISABLEMENT.",
+          "offset": 24,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbldxl",
+      "description": "Low half of address",
+      "offset": 180,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbtlmi",
+      "description": "ADDRESS OF TAILORED LOCK MANAGER INFORMATION BLOCK. OWNERSHIP: SYSTEM LOCK MANAGER. SERIALIZATION: LOCAL LOCK.",
+      "offset": 184,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbsdas",
+      "description": "POINTER TO WORKING STORAGE OBTAINED BY THE DUMP TASK. OWNERSHIP: SVC DUMP. SERIALIZATION: SVC DUMP.",
+      "offset": 188,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbtpin",
+      "description": "THE COUNT OF UCB PIN REQUESTS ISSUED IN TASK MODE OUTSTANDING FOR THE ADDRESS SPACE. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: IOS.",
+      "offset": 192,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbspin",
+      "description": "THE COUNT OF UCB PIN REQUESTS ISSUED IN SRB MODE OUTSTANDING FOR THE ADDRESS SPACE. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: IOS.",
+      "offset": 196,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbect1",
+      "description": "THE COUNT OF ALLOCATION REQUESTS IN THIS ADDRESS SPACE CURRENTLY BOUND ON EDT NUMBER ONE. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: ALLOCATION.",
+      "offset": 200,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbect2",
+      "description": "THE COUNT OF ALLOCATION REQUESTS IN THIS ADDRESS SPACE CURRENTLY BOUND ON EDT NUMBER TWO. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: ALLOCATION.",
+      "offset": 204,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbdfp",
+      "description": "RESERVED FOR USE BY DFP. OWNERSHIP: DFP. SERIALIZATION: LOCAL LOCK.",
+      "offset": 208,
+      "length": 4,
+      "type": "bitstring",
+      "bitmasks": {
+        "assboam": {
+          "description": "ADDRESS SPACE IS A USER OF OAM RESOURCES.",
+          "offset": 24,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbsasi",
+      "description": "SASI info",
+      "offset": 212,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbsnew",
+      "description": "Count of SASN=NEW connections included in ASCBETCN SERIALIZATION - PC/AUTH Address space Local Lock. OWNERSHIP - XM Services.",
+      "offset": 214,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbnttp",
+      "description": "ADDRESS OF ADDRESS SPACE LEVEL NAME/TOKEN HEADER. SERIALIZATION: LOCAL LOCK. OWNERSHIP: SUPERVISOR CONTROL.",
+      "offset": 216,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assboecb",
+      "description": "ECB WHICH IS WAITED ON BY THE INITIATOR FOR AN OpenMVS EVENT. SERIALIZATION: POST AND WAIT. OWNERSHIP: OpenMVS.",
+      "offset": 220,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assboepc",
+      "description": "POST CODE: '81'X=>BPX1EXC '82'X=>BPX1EXI",
+      "offset": 220,
+      "length": 1,
+      "type": "bitstring"
+    },
+    {
+      "name": "assboecd",
+      "description": "OpenMVS completion codes.",
+      "offset": 221,
+      "length": 3,
+      "type": "hex"
+    },
+    {
+      "name": "assboees",
+      "description": "Exit Status passed on BPX1EXI.",
+      "offset": 221,
+      "length": 1,
+      "type": "bitstring"
+    },
+    {
+      "name": "assboasb",
+      "description": "OpenMVS ADDRESS SPACE BLOCK. SERIALIZATION: ENQ MAJOR=SYSZBPX MINOR=PROCESS_INIT. OWNERSHIP: OpenMVS.",
+      "offset": 222,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbxsba",
+      "description": "XSB POOL QUEUE. SERIALIZATION: COMPARE-AND-SWAP WHEN RETURNING XSBS. : COMPARE-AND-SWAP AND THE LOCAL LOCK WHEN REMOVING XSBS OWNERSHIP: SUPERVISOR CONTROL.",
+      "offset": 224,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbdlcb",
+      "description": "Contains the address of the Dynamic LNKLST Control Block (DLCB) mapped by CSVDLCB. Ownership: CSV Serialization: ENQ",
+      "offset": 228,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbvab",
+      "description": "ADDRESS OF VSM ADDRESS SPACE BLOCK (VAB), WHICH ANCHORS SOME OF THE VSM CONTROL BLOCKS THAT DESCRIBE COMMON STORAGE. SERIALIZATION: NONE. OWNERSHIP: VIRTUAL STORAGE MANAGER.",
+      "offset": 232,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assblmab",
+      "description": "LATCH MANAGER ADDRESS SPACE BLOCK. SERIALIZATION: CMSEQDQ LOCK. OWNERSHIP: GRS.",
+      "offset": 236,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbioct",
+      "description": "DIV/IO count",
+      "offset": 240,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbctt",
+      "description": "CTT field",
+      "offset": 244,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbxrct",
+      "description": "XES REQUEST COUNT SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: XES.",
+      "offset": 248,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbetsc_prezos11",
+      "description": "Enclave TCB Summary Count Not set as of z/OS 1.11",
+      "offset": 252,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_nonenct_psrb_cp_disps",
+      "description": "Count of non-enclave preemptable SRB dispatches for CP work. Incremented when ASSBPHTM updated for CP work on non-enclave SRBs. Cache aligned with ASSBPHTM. Corresponding time is: ASSBPHTM - ASSB_zCBP_PHTM - ASSB_zIIP_PHTM - ASSB_ENCT SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 252,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbtasb",
+      "description": "TCPIP ASSB Extension Ownership: TCPIP Serialization: Compare and Swap when first TCPIP client is initialized in this space.",
+      "offset": 256,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbtpma",
+      "description": "OWNER:  IOS.",
+      "offset": 260,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbrosu",
+      "description": "OWNER:  IOS.",
+      "offset": 264,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbtpmt",
+      "description": "OWNER:  IOS.",
+      "offset": 268,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbssdt",
+      "description": "SSD Trailer",
+      "offset": 272,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "assbtawq",
+      "description": "ADDRESS OF TASK WEB QUEUE. SERIALIZATION: WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL",
+      "offset": 276,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbwcml",
+      "description": "ADDRESS OF CML PROMOTION WEB. SERIALIZATION: NONE OWNERSHIP: SUPERVISOR CONTROL",
+      "offset": 280,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbws3s",
+      "description": "ADDRESS OF ASYNCHRONOUS EXIT WEB. SERIALIZATION: NONE OWNERSHIP: SUPERVISOR CONTROL",
+      "offset": 284,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbwsss",
+      "description": "ADDRESS OF SUSPENDED STATUS WEB. SERIALIZATION: GLOBAL INTERSECT OWNERSHIP: SUPERVISOR CONTROL",
+      "offset": 288,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbcapq",
+      "description": "ADDRESS OF FIRST WEB ON THE CAP QUEUE. SERIALIZATION: DISPATCHER ACTIVE AND COMPARE AND SWAP TO ENQUEUE, GLOBAL INTERSECT TO DEQUEUE. OWNERSHIP: SUPERVISOR CONTROL",
+      "offset": 292,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbptar",
+      "description": "Pointer used by RTM processing to control task structure terminations. Ownership: RTM2. Serialization: Local lock.",
+      "offset": 296,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbwtct",
+      "description": "When this counter is non-zero, a recovery routine has requested temporary deferral of Parallel Detach trigger detection. Ownership: RTM Serialization: Compare and Swap.",
+      "offset": 300,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbsbct",
+      "description": "XES-owned count of requests with storage binds, incremented in the ASSB of the storage owner. Ownership: XES Serialization: Compare and Swap",
+      "offset": 304,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbarbp",
+      "description": "ARM (Automatic Restart Manager) Resource Block. Serialization: Local Lock Ownership: XCF (ARM)",
+      "offset": 308,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbrctr",
+      "description": "ADDRESS OF RCT's RB OWNERSHIP: Region Control Task SERIALIZATION: None",
+      "offset": 312,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbscah",
+      "description": "Address of the SCA (SPIE/ESPIE Control Area) chain Ownership: RTM Serialization: Local Lock",
+      "offset": 316,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbttfl",
+      "description": "Transaction Trace flags. Serialization: None Ownership: Transaction Trace",
+      "offset": 320,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbttrc": {
+          "description": "Transaction Trace has been used.",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbwmf1",
+      "description": "WLM flags SERIALIZATION: none",
+      "offset": 321,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbwini": {
+          "description": "WLM Managed Batch initiator",
+          "offset": 0,
+          "length": 1
+        },
+        "assbfsas": {
+          "description": "WLM Managed OE Forked/Spawned address space",
+          "offset": 1,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbpswc",
+      "description": "Preemptable-class SRB short wait count. OWNERSHIP: Supervisor control SERIALIZATION: none",
+      "offset": 322,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbixga",
+      "description": "Pointer to SLC address space related information. Serialization: Local Lock and CMS Lock Ownership: System Logger",
+      "offset": 324,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbjbni",
+      "description": "Jobname for the Initiated Program that is associated with this Address Space. If the first byte is x'00', none is associated. OWNERSHIP: Initiator. SERIALIZATION: None.",
+      "offset": 328,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbjbns",
+      "description": "Jobname for the START/MOUNT/ LOGON that is associated with this Address Space. If the first byte is x'00', none is associated. OWNERSHIP: Console Services. SERIALIZATION: None.",
+      "offset": 336,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbasst",
+      "description": "Additional SRB Service Time. CPU time is accumulated here for this address space's non-Enclave Preemptable SRBs and for Client Related SRBs for which this address space is the client. Format: TOD Clock Format Ownership: Supervisor Control Serialization: CS",
+      "offset": 344,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbphtm",
+      "description": "Preemptable-class Time. The CPU time for all types of preemptable SRBs (PSRB, CSRB, ESRB) executing with this address space as their home space and enclave tasks is accumulated here.  This value is not used in SMF or SRM calculations. This value is not reset at step/job start.",
+      "offset": 352,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbcrwq",
+      "description": "Client Related WEB Queue. Address of the first WEB on the queue.  WEBs on this queue are client SRBs for which this space is the client. Ownership: Supervisor Control Serialization: AWQ Lock",
+      "offset": 360,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbscwq",
+      "description": "Suspended Client related WEB Queue.  Address of the first WEB on the queue.  WEBs on this queue are suspended client SRBs for which this space is the client. Ownership: Supervisor Control Serialization: AWQ Lock",
+      "offset": 364,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assblcnt",
+      "description": "Number of latched operations in progess for System Logger in an address space. Ownership: System Logger Serialization: CS",
+      "offset": 368,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbacnt",
+      "description": "Number of asynchronous requests in progress in System.  This information will be used by TSO during 'Authorized' command processing Ownership: System Logger Serialization: CS",
+      "offset": 372,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assblcpd",
+      "description": "CPOOLID of the cpool created by system logger",
+      "offset": 376,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbslsc",
+      "description": "Slip serialization counts. Ownership: SLIP Serialization: CS",
+      "offset": 380,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbslpc",
+      "description": "Slip PER serialization count",
+      "offset": 380,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbslnc",
+      "description": "Slip Non-PER serialization count",
+      "offset": 382,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbpvtc",
+      "description": "Queue of privately managed contexts for this address space Ownership:  Context Services Serialization: Local lock",
+      "offset": 384,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbctx",
+      "description": "Context Services Word",
+      "offset": 388,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbctxf",
+      "description": "Context Services flags Ownership: Context Services Serialization: Local lock",
+      "offset": 388,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbncl": {
+          "description": "There is no limit to the number of private contexts in this space",
+          "offset": 0,
+          "length": 1
+        },
+        "assbmsgi": {
+          "description": "The message to relax the above limit has been issued and rejected",
+          "offset": 1,
+          "length": 1
+        },
+        "assburmx": {
+          "description": "There is no limit to the number of unauthorized resource managers in this space.",
+          "offset": 2,
+          "length": 1
+        },
+        "assburmm": {
+          "description": "The message to relax the above limit has been issued for this space.",
+          "offset": 3,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbctx2",
+      "description": "Reserved context services.",
+      "offset": 389,
+      "length": 3,
+      "type": "hex"
+    },
+    {
+      "name": "assbhale",
+      "description": "Copy of Home ALE",
+      "offset": 392,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_on_zcbp_disps",
+      "description": "Count of task dispatches for zCBP work. Incremented and cache aligned with ASSB_TIME_ON_zCBP. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 408,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_time_on_zaap_disps",
+      "description": "Count of task dispatches for zAAP work. Incremented and cache aligned with ASSB_TIME_ON_zAAP. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 408,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbsrsn",
+      "description": "Suspend/Resume sequence number Ownership: Supervisor Control Serialization: CS",
+      "offset": 412,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbwlms",
+      "description": "Address of WLM managed server SERIALIZATION: WLMQ lock",
+      "offset": 416,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbbcba",
+      "description": "Address of SOMObjects data structure Ownership: SOMObjects for OS/390 Serialization: CS",
+      "offset": 420,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbcsm",
+      "description": "CSM user bitmap Ownership: VTAM",
+      "offset": 424,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "assbpect",
+      "description": "Number of Pause elements allocated by unauthorized programs Ownership: Supervisor Control Serialization: Dispatcher lock",
+      "offset": 428,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbrrsa",
+      "description": "RRS data area pointer",
+      "offset": 432,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assboflg",
+      "description": "ASSB USS flags Ownership: USS Serialization: None",
+      "offset": 436,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "assbofl0",
+      "description": "ASSB USS flag byte 0",
+      "offset": 436,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbomsc": {
+          "description": "USS address space must remain program controlled.",
+          "offset": 0,
+          "length": 1
+        },
+        "assbodwt": {
+          "description": "USS process awaiting dub.",
+          "offset": 1,
+          "length": 1
+        },
+        "assbosdb": {
+          "description": "Allow address space to dub at same time as superusers",
+          "offset": 2,
+          "length": 1
+        },
+        "assbtdaff": {
+          "description": "CInet Addr Sp Transport Dr Affinity has been setup",
+          "offset": 3,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbofl1",
+      "description": "ASSB USS flag byte 1",
+      "offset": 437,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "assbscaf",
+      "description": "CPU affinity indicator associated with SRM. Serialization: SRM spin lock",
+      "offset": 438,
+      "length": 2,
+      "type": "bitstring"
+    },
+    {
+      "name": "assbctxc",
+      "description": "Number of private contexts owned by PKM 8 to 15 resource managers in this space. Ownership: Context Services Serialization: C&S",
+      "offset": 440,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbrmct",
+      "description": "Number of PKM 8 to 15 resource managers. Ownership: Registration Services Serialization: C&S",
+      "offset": 444,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assblrba",
+      "description": "License manager resource block",
+      "offset": 448,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbslfa",
+      "description": "Shadow LFT address",
+      "offset": 452,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbpfidassigncnt",
+      "description": "PCIE PFID Assign Count to track the number of assigned items Owner: IOS PCIE Serialization: PCTE Latch",
+      "offset": 456,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "assbfabricpriority",
+      "description": "Fabric I/O Priority. Will be zero if the system does not support Fabric I/O Priority. Owner: WLM/SRM Serialization: SRM Lock",
+      "offset": 457,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "assbioms",
+      "description": "I/O Management Support Data.        -",
+      "offset": 458,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "assbpromotioncount",
+      "description": "Number of WEBs to promote.          -",
+      "offset": 460,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbtiop",
+      "description": "Tape I/O Priority",
+      "offset": 462,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "assbcsdp",
+      "description": "Channel Subsystem I/O Priority. Will be zero if the system does not support channel subsystem priority. Ownership: SRM Serialization: SRM lock",
+      "offset": 466,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "assb_zcbp_time_area",
+      "description": "",
+      "offset": 470,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ifa_time_area",
+      "description": "",
+      "offset": 470,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_zcbp_on_cp",
+      "description": "",
+      "offset": 470,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_ifa_on_cp",
+      "description": "",
+      "offset": 470,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_on_zcbp",
+      "description": "zCBP time. Enclave time not included",
+      "offset": 478,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_on_zaap",
+      "description": "zAAP time. Enclave time not included",
+      "offset": 478,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_on_ifa",
+      "description": "",
+      "offset": 478,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_task_time_on_cp",
+      "description": "Time on CP in task mode for this space. Valid only when zCBPs, zAAPs or zIIPs are installed",
+      "offset": 486,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_on_cp",
+      "description": "Synonym for ASSB_TASK_TIME_ON_CP",
+      "offset": 486,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbmtci",
+      "description": "Memterm component ID. Set only when sdump needs to be taken",
+      "offset": 494,
+      "length": 5,
+      "type": "hex"
+    },
+    {
+      "name": "assbflg4",
+      "description": "Flags Ownership: LE Serialization: none",
+      "offset": 499,
+      "length": 4,
+      "type": "bitstring",
+      "bitmasks": {
+        "assb_authle": {
+          "description": "Resources have been allocated.",
+          "offset": 24,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbqiop",
+      "description": "Queued Director I/O Priority Owner: WLM/SRM Serialization: SRM lock",
+      "offset": 503,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "assbcryp",
+      "description": "Crypto flags. Serialization: none.",
+      "offset": 507,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbsods": {
+          "description": "If set to '1'b, the address space is using an ICSF session object data space.",
+          "offset": 0,
+          "length": 1
+        },
+        "assbcrnq": {
+          "description": "If set to '1'b, the address space has done key data set serialization.",
+          "offset": 1,
+          "length": 1
+        },
+        "assbssl": {
+          "description": "If set to '1'b, the address space has called the SSL session caching service and may hold a GRS latch.",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbphtm_base",
+      "description": "Value in ASSBPHTM at the end of the previous jobstep. Serialization: none",
+      "offset": 508,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbearlymemtermrm",
+      "description": "Address of Early Memterm Resource Manager",
+      "offset": 516,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_laa_cpid",
+      "description": "Anchor for LAA CPOOL Ownership: LE",
+      "offset": 520,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_zcbp_phtm",
+      "description": "zCBP-only equivalent of ASSBPHTM This is \"normalized\" time",
+      "offset": 524,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_zaap_phtm",
+      "description": "zAAP-only equivalent of ASSBPHTM This is \"normalized\" time This value is not reset at step/job start.",
+      "offset": 524,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ifa_phtm",
+      "description": "",
+      "offset": 524,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_enct_prezos11",
+      "description": "Enclave time in an address space on a standard CP Not set as of z/OS 1.11",
+      "offset": 532,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_on_ziip_disps",
+      "description": "Count of task dispatches for zIIP work. Incremented and cache aligned with ASSB_TIME_ON_zIIP. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 532,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_ziip_enct_disps",
+      "description": "Count of enclave dispatches for zIIP work. Incremented and cache aligned with ASSB_zIIP_ENCT. This value is not reset at step/job start. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 536,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_ifa_enct_prezos11",
+      "description": "Enclave IFA time in an address space. This is \"normalized\" time Not set as of z/OS 1.11",
+      "offset": 540,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_nonenct_psrb_zcbp_disps",
+      "description": "Count of non-enclave preemptable SRB dispatches for zCBP work. Incremented when ASSB_zCBP_PHTM updated for non-enclave SRBs. Cache aligned with ASSB_zCBP_PHTM. Corresponding time is: ASSB_zCBP_PHTM - ASSB_zCBP_ENCT SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 540,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_nonenct_psrb_zaap_disps",
+      "description": "Count of non-enclave preemptable SRB dispatches for zAAP work. Incremented when ASSB_zAAP_PHTM updated for non-enclave SRBs. Cache aligned with ASSB_zAAP_PHTM. Corresponding time is: ASSB_zAAP_PHTM - ASSB_zAAP_ENCT SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 540,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_nonenct_psrb_ziip_disps",
+      "description": "Count of non-enclave preemptable SRB dispatches for zIIP work. Incremented when ASSB_zIIP_PHTM updated for non-enclave SRBs. Cache aligned with ASSB_zIIP_PHTM. Corresponding time is: ASSB_zIIP_PHTM - ASSB_zIIP_ENCT SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 544,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_base_phtm",
+      "description": "Base value, set by WLM",
+      "offset": 548,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_zcbp_base_phtm",
+      "description": "Base value, set by WLM",
+      "offset": 556,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ifa_base_phtm",
+      "description": "Base value, set by WLM",
+      "offset": 556,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_base_enct",
+      "description": "Base value, set by WLM",
+      "offset": 564,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_zcbp_base_enct",
+      "description": "Base value, set by WLM",
+      "offset": 572,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ifa_base_enct",
+      "description": "Base value, set by WLM",
+      "offset": 572,
+      "length": 8,
+      "type": "bitstring",
+      "bitmasks": {
+        "assb_entitle_nominee": {
+          "description": "Entitle nominee",
+          "offset": 56,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assb_cp_affinity_node",
+      "description": "WUQ for CP affinity",
+      "offset": 580,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_zcbp_affinity_node",
+      "description": "WUQ for zCBP affinity",
+      "offset": 584,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_ifa_affinity_node",
+      "description": "WUQ for IFA affinity",
+      "offset": 584,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_ziip_affinity_node",
+      "description": "WUQ for zIIP affinity",
+      "offset": 588,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_sup_affinity_node",
+      "description": "",
+      "offset": 588,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbsrbcpoolpmecount",
+      "description": "Count of active SRB CPOOL PMEs in the Home address space Serialization: Compare and Swap",
+      "offset": 592,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_time_on_ziip",
+      "description": "zIIP time. Enclave time not included",
+      "offset": 596,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_on_sup",
+      "description": "",
+      "offset": 596,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_ziip_on_cp",
+      "description": "zIIP time on CP. Enclave time not included. When zAAPzIIP=YES is in effect, zAAP-eligible work running on a CP is included.",
+      "offset": 604,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_sup_on_cp",
+      "description": "",
+      "offset": 604,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ziip_phtm",
+      "description": "zIIP-only equivalent of ASSBPHTM This is \"normalized\" time This value is not reset at step/job start.",
+      "offset": 612,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_sup_phtm",
+      "description": "",
+      "offset": 612,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_srb_time_on_cp",
+      "description": "Time on CP in SRB mode for this space. Valid only when zAAPs or SUPs are installed",
+      "offset": 620,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ziip_enct",
+      "description": "Enclave zIIP time in an address space. This is \"normalized\" time This value is not reset at step/job start.",
+      "offset": 628,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_sup_enct",
+      "description": "",
+      "offset": 628,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_zcbp_on_cp_enct",
+      "description": "Enclave time for zCBP on CP in an address space This value is not reset at step/job start.",
+      "offset": 636,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ifa_on_cp_enct",
+      "description": "Enclave time for IFA on CP in an address space This value is not reset at step/job start.",
+      "offset": 636,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbsown",
+      "description": "Address of the Suspended SRB Descriptor (SSD) static queue. Serialization: Dispatcher Lock. Ownership: Supervisor Control.",
+      "offset": 644,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbsowt",
+      "description": "SSD Static Ownership queue trailer.",
+      "offset": 648,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_zcbp_on_cp_base_enct",
+      "description": "Enclave base time for zCBP on CP in an address space",
+      "offset": 652,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ifa_on_cp_base_enct",
+      "description": "Enclave base time for IFA on CP in an address space",
+      "offset": 652,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_at_pdp",
+      "description": "Trickle promotion CPU time (PDP means Promotion Dispatch Priority) Owner: Supervisor Control Serialization: Compare and Swap",
+      "offset": 660,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_srbt_base",
+      "description": "BASE TIME FOR ASCBSRBT Ownership: SRM Serialization: SRMLOCK",
+      "offset": 668,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbcasc",
+      "description": "Address of the Console Address Space Control block. Ownership: Console Services Serialization: Compare and Swap",
+      "offset": 676,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbnumberunauthpets",
+      "description": "Number of unauthorized PETs currently in use in the Home address space Serialization: DISP lock",
+      "offset": 680,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_asst_time_on_cp",
+      "description": "Additional SRB Service Time on a standard CP. CPU time is accumulated here for this address space's Preemptable SRBs and for Client Related SRBs for which this address space is the client. Valid only when zAAPs or zIIPs are installed Format: TOD Clock Format Ownership: Supervisor Control",
+      "offset": 684,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_switch_to_zaapziip_count",
+      "description": "When not zAAP_On_zIIP initially, this is incremented on switches to zAAP. When zAAP_On_zIIP initially, this is incremented on switches to both zAAP and zIIP",
+      "offset": 692,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbasab",
+      "description": "Address of IQP ASAB Owner: IQP Serialization: local lock",
+      "offset": 700,
+      "length": 8,
+      "type": "address"
+    },
+    {
+      "name": "assb_ziip_base_enct",
+      "description": "Base value, set by WLM",
+      "offset": 708,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_sup_base_enct",
+      "description": "Base value, set by WLM",
+      "offset": 708,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ziip_on_cp_enct",
+      "description": "Enclave time for zIIP on CP in an address space. When zAAPzIIP=YES is in effect, zAAP-eligible work running on a CP is included. This value is not reset at step/job start.",
+      "offset": 716,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_sup_on_cp_enct",
+      "description": "See ASSB_zIIP_ON_CP_ENCT",
+      "offset": 716,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ziip_on_cp_base_enct",
+      "description": "Enclave base time for zIIP on CP in an address space. When zAAPzIIP=YES is in effect, zAAP-eligible work running on a CP is included.",
+      "offset": 724,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_sup_on_cp_base_enct",
+      "description": "Enclave base time for SUP on CP in an address space. When zAAPzIIP=YES is in effect, zAAP-eligible work running on a CP is included.",
+      "offset": 724,
+      "length": 8,
+      "type": "bitstring",
+      "bitmasks": {
+        "assbrtmi": {
+          "description": "When on, the reserved RMPL pointed to by ASSBRMIN and the reserved RTM2WA pointed to by ASSBRTMA are in use",
+          "offset": 56,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assbrmin",
+      "description": "Address of RTM's reserved RMPL and associated storage - this will always be below the 16M line Ownership: RTM Serialization: Local lock",
+      "offset": 732,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbrtma",
+      "description": "Address of RTM's reserved RTM2WA and associated storage Ownership: RTM Serialization: Local lock",
+      "offset": 736,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_hdlockpromotion_time_at_pdp",
+      "description": "Non-enclave HD=YES lock promote CPU time (PDP means Promotion Dispatch Priority). This is \"normalized\" time. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 740,
+      "length": 8,
+      "type": "bitstring",
+      "bitmasks": {
+        "assburrq": {
+          "description": "SYSEVENT USER READY REQUIRED SERIALIZATION: WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL",
+          "offset": 56,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "assb_lockinst_ptrs",
+      "description": "",
+      "offset": 748,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_smfcms_lockinst_addr",
+      "description": "Address of the SMF CMS instrumentation data for this address space",
+      "offset": 748,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_enqdeq_cms_lockinst_addr",
+      "description": "Address of the ENQ/DEQ CMS instrumentation data for this address space",
+      "offset": 752,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_latch_cms_lockinst_addr",
+      "description": "Address of the Latch CMS instrumentation data for this address space",
+      "offset": 756,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_cms_lockinst_addr",
+      "description": "Address of the CMS instrumentation data for this address space",
+      "offset": 760,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_local_lockinst_addr",
+      "description": "Address of the local and CML lock instrumentation data for this address space",
+      "offset": 764,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_hdlockpromote_disps",
+      "description": "Count of non-enclave HD=YES lock promote dispatches. Incremented and cache aligned with ASSB_HdLockPromotion_Time_At_PDP. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control Start of x'300' primarily write cache line",
+      "offset": 768,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_300",
+      "description": "",
+      "offset": 772,
+      "length": 256,
+      "type": "hex"
+    },
+    {
+      "name": "assbsawq",
+      "description": "ADDRESS OF ADDRESS SPACE SRB WEB QUEUE SERIALIZATION: WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL",
+      "offset": 772,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbr304",
+      "description": "Reserved. DO NOT USE Start of x'400' primarily write cache line",
+      "offset": 776,
+      "length": 252,
+      "type": "hex"
+    },
+    {
+      "name": "assb_400",
+      "description": "",
+      "offset": 1028,
+      "length": 256,
+      "type": "hex"
+    },
+    {
+      "name": "assbhreq",
+      "description": "Local lock requestor address",
+      "offset": 1028,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbhasi",
+      "description": "Local lock owning ASID",
+      "offset": 1032,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbr406",
+      "description": "Reserved. DO NOT USE Start of x'500' primarily write cache line",
+      "offset": 1034,
+      "length": 250,
+      "type": "hex"
+    },
+    {
+      "name": "assb_500",
+      "description": "",
+      "offset": 1284,
+      "length": 256,
+      "type": "hex"
+    },
+    {
+      "name": "assb_enct",
+      "description": "Enclave time in an address space on a standard CP This value is not reset at step/job start.",
+      "offset": 1284,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_enct_disps",
+      "description": "Count of enclave dispatches for cp work. Incremented and cache aligned with ASSB_ENCT. This value is not reset at step/job start. SERIALIZATION:  COMPARE AND SWAP. OWNERSHIP:  Supervisor Control",
+      "offset": 1292,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_enct_hdlockpromote_disps",
+      "description": "Count of enclave HD=YES lock promote dispatches. Incremented and cache aligned with ASSB_ENCT_HdLockPromote_Time. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 1296,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_enct_hdlockpromote_time",
+      "description": "Enclave HD=YES lock promote CPU time. This is \"normalized\" time. This is the enclave version of ASSB_HdLockPromotion_Time_At_PDP. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 1300,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbr518",
+      "description": "Reserved. DO NOT USE Start of x'600' primarily write cache line",
+      "offset": 1308,
+      "length": 232,
+      "type": "hex"
+    },
+    {
+      "name": "assb_600",
+      "description": "",
+      "offset": 1540,
+      "length": 256,
+      "type": "hex"
+    },
+    {
+      "name": "assb_zcbp_enct",
+      "description": "Enclave zCBP time in an address space. This is \"normalized\" time This value is not reset at step/job start.",
+      "offset": 1540,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_zaap_enct",
+      "description": "Enclave zAAP time in an address space. This is \"normalized\" time This value is not reset at step/job start.",
+      "offset": 1540,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ifa_enct",
+      "description": "",
+      "offset": 1540,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_zcbp_enct_disps",
+      "description": "Count of enclave dispatches for zCBP work Incremented when ASSB_zCBP_ENCT updated. Incremented and cache aligned with ASSB_zCBP_ENCT. This value is not reset at step/job start. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 1548,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_zaap_enct_disps",
+      "description": "Count of enclave dispatches for zAAP work Incremented when ASSB_zAAP_ENCT updated. Incremented and cache aligned with ASSB_zAAP_ENCT. This value is not reset at step/job start. SERIALIZATION: COMPARE AND SWAP. OWNERSHIP: Supervisor Control",
+      "offset": 1548,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbbrokenup_seqnum",
+      "description": "Sequence number of changes to ASCBBrokenUp",
+      "offset": 1552,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbdiag610",
+      "description": "Diagnostic data for IBM use only",
+      "offset": 1556,
+      "length": 160,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ccbaicb_realaddrs",
+      "description": "",
+      "offset": 1716,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ccb_realaddr",
+      "description": "Real address of CCB for this AS, or 0",
+      "offset": 1716,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_aicb_realaddr",
+      "description": "Real address of area for AICB for this AS, or 0",
+      "offset": 1720,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbr6c0",
+      "description": "Reserved. DO NOT USE",
+      "offset": 1724,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ctrs_virtaddr",
+      "description": "",
+      "offset": 1732,
+      "length": 24,
+      "type": "hex"
+    },
+    {
+      "name": "assb_aicb_virtaddr",
+      "description": "Virtual address of area for other counter sets for this AS, or 0",
+      "offset": 1732,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_crypctrs_virtaddr",
+      "description": "Virtual address of crypto counter set for this AS, or 0",
+      "offset": 1736,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_nnpictrs_virtaddr",
+      "description": "Virtual address of NNPI counter set for this AS, or 0",
+      "offset": 1740,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assb_after_ctrs",
+      "description": "",
+      "offset": 1744,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_srb_time_on_zcbp",
+      "description": "Non-preemptable SRB time on zCBP",
+      "offset": 1744,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_asst_time_on_zcbp",
+      "description": "non-enclave preemptable SRB time on zCBP",
+      "offset": 1752,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_srb_time_on_zcbp_disps",
+      "description": "Count of dispatches for non-preemptable SRB time on zCBP",
+      "offset": 1760,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_asst_time_on_zcbp_disps",
+      "description": "Count of dispatches for non-enclave preemptable SRB time on zCBP Start of x'700' primarily write cache line - these fields can  be written to from any address space",
+      "offset": 1764,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_700",
+      "description": "",
+      "offset": 1768,
+      "length": 256,
+      "type": "hex"
+    },
+    {
+      "name": "assbetsc",
+      "description": "Enclave TCB Summary Count SERIALIZATION: CS OWNERSHIP: SUPERVISOR CONTROL",
+      "offset": 1768,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbr704",
+      "description": "Reserved. DO NOT USE Start of x'800' primarily write cache line",
+      "offset": 1772,
+      "length": 252,
+      "type": "hex"
+    },
+    {
+      "name": "assb_800",
+      "description": "We considered putting ASSBCMLC and ASSBSUPC into separate cache lines as opposed to a single cache line. The performance people said to put then into the same cache line.",
+      "offset": 2024,
+      "length": 256,
+      "type": "hex"
+    },
+    {
+      "name": "assbcmlc",
+      "description": "Count of CML locks held by          -",
+      "offset": 2024,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbr804",
+      "description": "Reserved.",
+      "offset": 2028,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "assbsupc",
+      "description": "SVRB pool header",
+      "offset": 2032,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbsvrb",
+      "description": "Address of first available SVRB",
+      "offset": 2032,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "assbsync",
+      "description": "Synchronization count",
+      "offset": 2036,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbr810",
+      "description": "Reserved. DO NOT USE End of cache line Start of x'900' Miscellaneous fields",
+      "offset": 2040,
+      "length": 240,
+      "type": "hex"
+    },
+    {
+      "name": "assb_900",
+      "description": "",
+      "offset": 2280,
+      "length": 192,
+      "type": "hex"
+    },
+    {
+      "name": "assb_vartime_at_pdp",
+      "description": "Total time promoted to a variable dispatch priority",
+      "offset": 2280,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_varweighted_time_at_pdp",
+      "description": "Time promoted to a variable dispatch priority weighted by the dispatch priority",
+      "offset": 2288,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_hcwa",
+      "description": "HCW",
+      "offset": 2296,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_scmbc",
+      "description": "Storage Class Memory (SCM) block    x",
+      "offset": 2304,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_ziip_phtm_base",
+      "description": "Value in ASSB_zIIP_PHTM at the end  x",
+      "offset": 2312,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_majors_preempted",
+      "description": "Number of times major timeslices were preempted for this address space",
+      "offset": 2320,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assb_minors_preempted",
+      "description": "Number of times minor timeslices were preempted for this address space",
+      "offset": 2324,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbinitiatorjobid",
+      "description": "Initiator JOB ID SERIALIZATION: NONE. Ownership - Supervisor.",
+      "offset": 2328,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbinitiatorseqnum",
+      "description": "Initiator Sequence Number. Incremented when ASSBJBNI is changed. SERIALIZATION: NONE. Ownership - Supervisor.",
+      "offset": 2336,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "assbr93c",
+      "description": "Reserved",
+      "offset": 2340,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "assbdiag940",
+      "description": "Diagnostic data for IBM use only",
+      "offset": 2344,
+      "length": 112,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_java_on_ziip",
+      "description": "Time Java is zIIP eligible and executing on zIIP engines and not in an enclave. (Unnormalized)",
+      "offset": 2456,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assb_time_java_on_cp",
+      "description": "Time Java is zIIP eligible and executing on CP engines and not in an enclave",
+      "offset": 2464,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "assbend",
+      "description": "END OF ASSB.",
+      "offset": 2472,
+      "length": 8,
+      "type": "hex"
+    }
+  ]
+}

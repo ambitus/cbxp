@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "name": "asvt",
+  "commonName": "ASVT",
+  "macroId": "ihaasvt",
+  "description": "",
+  "aliases": [],
+  "pointedToBy": [],
+  "storageAttributes": {
+    "subpools": [
+      245
+    ],
+    "key": 0,
+    "residency": "Below 16M"
+  },
+  "controlBlock": [
+    {
+      "name": "asvtprfx",
+      "description": "Reserved for future expansion",
+      "offset": 0,
+      "length": 464,
+      "type": "hex"
+    },
+    {
+      "name": "asvtbegn",
+      "description": "BEGINNING OF ASVT",
+      "offset": 464,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "asvthwmasid",
+      "description": "Highest ASID used since IPL",
+      "offset": 464,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "asvtcurhighasid",
+      "description": "Highest ASID currently used",
+      "offset": 465,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "asvtreua",
+      "description": "ADDRESS OF ASVTREUS BITS",
+      "offset": 469,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "asvtravl",
+      "description": "ADDRESS OF FIRST AVAILABLE REUSABLE ASID SLOT",
+      "offset": 473,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "asvtaav",
+      "description": "NUMBER OF FREE SLOTS ON THE ASVT AVAILABLE QUEUE.",
+      "offset": 477,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "asvtast",
+      "description": "NUMBER OF FREE SLOTS ON THE START/SASI QUEUE.",
+      "offset": 481,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "asvtanr",
+      "description": "NUMBER OF FREE SLOTS ON THE NON-REUSABLE REPLACEMENT QUEUE.",
+      "offset": 485,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "asvtstrt",
+      "description": "ORIGINAL SIZE OF START/SASI QUEUE.",
+      "offset": 489,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "asvtnonr",
+      "description": "ORIGINAL SIZE OF NON-REUSABLE REPLACEMENT QUEUE.",
+      "offset": 493,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "asvtmaxi",
+      "description": "ORIGINAL MAX USERS COUNT AS INPUT TO IEAVNP09. OWNERSHIP - SUPERVISOR CONTROL SERIALIZATION - NIP RIM PROCESS",
+      "offset": 497,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "asvtasvt",
+      "description": "ACRONYM IN EBCDIC -ASVT-",
+      "offset": 509,
+      "length": 4,
+      "type": "bitstring",
+      "bitmasks": {
+        "asvtavai": {
+          "description": "BIT ONE IF ASID IS AVAILABLE AND ZERO IF ASID IS ASSIGNED",
+          "offset": 24,
+          "length": 1
+        },
+        "asvtaval": {
+          "description": "BIT ONE IF ASID IS AVAILABLE AND ZERO IF ASID IS ASSIGNED",
+          "offset": 24,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "asvtmaxu",
+      "description": "MAXIMUM NUMBER OF ADDRESS SPACES",
+      "offset": 513,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "asvtmdsc",
+      "description": "MAXUSER DEFICIT SLOT COUNT. ASVTMDSC = ASVTMAXI - ASVTAAV - NUMBER OF ACTIVE A.S. INCREMENTED WHEN WE TRY TO TAKE A REPLACEMENT SLOT BUT THERE AREN'T ANY. DECREMENTED WHEN NON-ZERO AND A NONREUSEABLE ASID BECOMES REUSEABLE AND WE ADD A SLOT TO THE MAXUSER POOL WHEN AN ADDRESS SPACE BECOMES REUSEABLE.",
+      "offset": 517,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "asvtfrst",
+      "description": "ADDRESS OF FIRST AVAILABLE ASVT ENTRY",
+      "offset": 521,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "asvtenty",
+      "description": "ENTRY FOR EACH POSSIBLE ASID. IF ADDRESS SPACE ASSIGNED, ENTRY CONTAINS ADDRESS OF ASCB. IF NOT ASSIGNED, ENTRY CONTAINS EITHER ADDRESS OF NEXT AVAILABLE ASID OR ZEROS WITH HIGH-ORDER BIT ON IF LAST ENTRY. IF THE ADDRESS SPACE IS MARKED NON-REUSABLE, THE ENTRY CONTAINS THE ADDRESS OF MASTER'S ASVT ENTRY WITH THE HIGH BIT ON.",
+      "offset": 525,
+      "length": 4,
+      "type": "address"
+    }
+  ]
+}

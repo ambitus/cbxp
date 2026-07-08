@@ -8,13 +8,28 @@
 
 namespace CBXP {
 
+typedef struct {
+  std::vector<std::string> include_patterns;
+  std::vector<std::string> filters;
+  bool skip_buffer_length_check;
+} cbxp_options_t;
+
 class ControlBlockExplorer {
  private:
+  cbxp_options_t cbxp_options_ = {{}, {}, false};
   cbxp_result_t* p_result_;
-  cbxp_options_t cbxp_options_         = {{}, {}, false};
   const void* p_control_block_         = nullptr;
   size_t control_block_data_length_    = 0;
   std::string control_block_operation_ = "";
+
+  static std::unordered_map<std::string, ControlBlock> control_blocks_() {
+    return buildControlBlockMap();
+  };
+  static std::string mapToString(
+      const std::unordered_map<std::string, ControlBlock>& map);
+  static std::unordered_map<std::string, ControlBlock> loadCustomControlBlocks(
+      std::filesystem::path path);
+  static std::unordered_map<std::string, ControlBlock> buildControlBlockMap();
   static std::vector<std::string> createOptionsList(
       const std::string& comma_separated_string);
 

@@ -1,0 +1,2266 @@
+{
+  "version": 1,
+  "name": "ecvt",
+  "commonName": "Extended Communications Vector Table",
+  "macroId": "ihaecvt",
+  "description": "",
+  "aliases": [],
+  "pointedToBy": [
+    "cvt"
+  ],
+  "storageAttributes": {
+    "subpools": [],
+    "key": 0,
+    "residency": "EXTENDED NUCLEUS, Above 16M line"
+  },
+  "controlBlock": [
+    {
+      "name": "ecvtecvt",
+      "description": "ECVT ACRONYM",
+      "offset": 0,
+      "length": 4,
+      "type": "string"
+    },
+    {
+      "name": "ecvtcplx",
+      "description": "ADDRESS OF IXCCPLX CONTROL BLOCK. OWNERSHIP: XCF. SERIALIZATION: N/A.",
+      "offset": 4,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "ixccplx"
+    },
+    {
+      "name": "ecvtsplx",
+      "description": "SYSPLEX NAME USED FOR DEBUGGING. OWNERSHIP: XCF. SERIALIZATION: N/A.",
+      "offset": 8,
+      "length": 8,
+      "type": "string"
+    },
+    {
+      "name": "ecvtsple",
+      "description": "SYSPLEX PARTITIONING ECB THAT IS POSTED TO WAKE UP THE SYSPLEX PARTITIONING MANAGER. OWNERSHIP: XCF. SERIALIZATION: SYSPLEX PARTITIONING TASK.",
+      "offset": 16,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtsplq",
+      "description": "SYSPLEX PARTITIONING QUEUE. CONTAINS SYSPLEX PARTITIONING WORK ELEMENTS. OWNERSHIP: XCF. SERIALIZATION: COMPARE AND SWAP.",
+      "offset": 20,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "tstc"
+    },
+    {
+      "name": "ecvtstc1",
+      "description": "STCKSYNC, NON-AR MODE, NO ETRID REQUESTED. OWNERSHIP: TIMER. SERIALIZATION: NONE.",
+      "offset": 24,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "tstc"
+    },
+    {
+      "name": "ecvtstc2",
+      "description": "STCKSYNC, NON-AR MODE, ETRID REQUESTED. OWNERSHIP: TIMER. SERIALIZATION: NONE.",
+      "offset": 28,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "tstc"
+    },
+    {
+      "name": "ecvtstc3",
+      "description": "STCKSYNC, AR MODE, NO ETRID REQUESTED. OWNERSHIP: TIMER. SERIALIZATION: NONE.",
+      "offset": 32,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "tstc"
+    },
+    {
+      "name": "ecvtstc4",
+      "description": "STCKSYNC, AR MODE, ETRID REQUESTED. OWNERSHIP: TIMER. SERIALIZATION: NONE.",
+      "offset": 36,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "tstc"
+    },
+    {
+      "name": "ecvtappc",
+      "description": "ANCHOR FOR APPC DATA STRUCTURES OWNERSHIP: MVS/APPC SERIALIZATION: NONE",
+      "offset": 40,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtsch",
+      "description": "ANCHOR FOR APPC SCHEDULER DATA STRUCTURES OWNERSHIP: MVS/APPC SERIALIZATION: NONE",
+      "offset": 44,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtiosf",
+      "description": "IOS FLAGS OWNERSHIP: IOS",
+      "offset": 48,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtios1",
+      "description": "IOS FLAGS BYTE 1 SERIALIZATION: NONE",
+      "offset": 48,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvtchsc": {
+          "description": "RESERVED FOR IBM USE",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvtios2",
+      "description": "RESERVED.",
+      "offset": 49,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtios3",
+      "description": "RESERVED.",
+      "offset": 50,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtios4",
+      "description": "RESERVED.",
+      "offset": 51,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtomda",
+      "description": "ADDRESS OF THE OPERATIONS MEASUREMENT DATA GATHERER IEAVG708. OWNERSHIP: CONSOLE SERVICES. SERIALIZATION: NONE.",
+      "offset": 52,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtcsvn",
+      "description": "Counter Second Version Number for CPU counter facility",
+      "offset": 56,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtcnz",
+      "description": "Ownership: Consoles Serialization: CS",
+      "offset": 58,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvtwtov": {
+          "description": "Allow Verbose messages",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvtaloc",
+      "description": "Ownership: Allocation Serialization: None (Set during NIP)",
+      "offset": 59,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvtwarn": {
+          "description": "Warn about allocations that specify 2-digit expiration years",
+          "offset": 0,
+          "length": 1
+        },
+        "ecvtfail": {
+          "description": "Fail allocations that specify 2-digit expiration years",
+          "offset": 1,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvtbpms",
+      "description": "BELOW 16M, PAGEABLE DEVICE SUPPORT MODULES, STARTING ADDRESS. OWNERSHIP: CONTENTS SUPERVISION. SERIALIZATION: NONE.",
+      "offset": 60,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtbpme",
+      "description": "BELOW 16M, PAGEABLE DEVICE SUPPORT MODULES, ENDING ADDRESS. OWNERSHIP: CONTENTS SUPERVISION. SERIALIZATION: NONE.",
+      "offset": 64,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtapms",
+      "description": "ABOVE 16M, PAGEABLE DEVICE SUPPORT MODULES, STARTING ADDRESS. OWNERSHIP: CONTENTS SUPERVISION. SERIALIZATION: NONE.",
+      "offset": 68,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtapme",
+      "description": "ABOVE 16M, PAGEABLE DEVICE SUPPORT MODULES, ENDING ADDRESS. OWNERSHIP: CONTENTS SUPERVISION. SERIALIZATION: NONE.",
+      "offset": 72,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtqucb",
+      "description": "XCF DATA AREA (IXCYQUCB) ANCHOR. OWNERSHIP: XCF. SERIALIZATION: N/A.",
+      "offset": 76,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtssdd",
+      "description": "DOUBLE WORD USED TO COMPARE DOUBLE AND SWAP ECVTSSDF AND ECVTSSDS. SERIALIZATION: CDS. OWNERSHIP: SUPERVISOR CONTROL.",
+      "offset": 80,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtssdf",
+      "description": "THE ADDRESS OF THE FREE SSD QUEUE. SERIALIZATION: CS WHEN ADDING AN SSD TO THE FREE QUEUE. CDS ON ECVTSSDD WHEN REMOVING AN SSD FROM THE FREE QUEUE. OWNERSHIP: SUPERVISOR CONTROL.",
+      "offset": 80,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtssds",
+      "description": "F'0'    -           SEQUENCE NUMBER INCREMENTED WHEN SSDS ARE REMOVED FROM THE FREE SSD QUEUE. USED TO SERIALIZE THE FREE SSD QUEUE. OWNERSHIP: SUPERVISOR CONTROL.",
+      "offset": 84,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvt_customer_area_addr",
+      "description": "Customer Area Address.          -",
+      "offset": 88,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vecaa"
+    },
+    {
+      "name": "ecvtsrbt",
+      "description": "THE ADDRESS OF THE SSD RESOURCE MANAGER. OWNERSHIP: SUPERVISOR CONTROL.",
+      "offset": 92,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtdpqh",
+      "description": "Queue of DU-AL Pools (DPHs) Ownership:  PC Auth Serialization: Disp lock",
+      "offset": 96,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvttcre",
+      "description": "IEAVTCRE ENTRY POINT ADDRESS. OWNERSHIP: ACR. SERIALIZATION: NONE.",
+      "offset": 100,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtxcfg",
+      "description": "SYSPLEX CONFIGURATION REQUIREMENTS. OWNERSHIP: XCF. SERIALIZATION: SYSTEM INITIALIZATION.",
+      "offset": 104,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtr078",
+      "description": "RESERVED. DO NOT USE.",
+      "offset": 120,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vscha"
+    },
+    {
+      "name": "ecvtr07c",
+      "description": "RESERVED. DO NOT USE.",
+      "offset": 124,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vscha"
+    },
+    {
+      "name": "ecvtscha",
+      "description": "THE ADDRESS OF IEAVSCHA. SCHEDULE WITH ADDRESSABILITY. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: NONE.",
+      "offset": 128,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vscha"
+    },
+    {
+      "name": "ecvthfxs",
+      "description": "Address of IEAHFSXV",
+      "offset": 132,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "hfxsv"
+    },
+    {
+      "name": "ecvtdlcb",
+      "description": "Address of DLCB (CSVDLCB) for the current LNKLST set. Serialization: ENQ Ownership: CSV",
+      "offset": 136,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "dlcb"
+    },
+    {
+      "name": "ecvtnttp",
+      "description": "ADDRESS OF SYSTEM LEVEL NAME/TOKEN HEADER. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: CMS LOCK.",
+      "offset": 140,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vjoin"
+    },
+    {
+      "name": "ecvtsrbj",
+      "description": "SRB-mode enclave join - A value of 0 in ECVTSRBJ means that the function is not available - Caller must be AMODE 31 or 64, key 0, supervisor state, enabled for I/O and external interrupts, holding no locks - SRB mode (preemptible non-Client SRB only) - Primary ASC mode - Any P, Any S, Any H - Set GR 1 to the below-2G address of the 8-byte enclave token. Bits 0-31 of 64-bit",
+      "offset": 144,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vjoin"
+    },
+    {
+      "name": "ecvtsrbl",
+      "description": "SRB-mode enclave leave - A value of 0 in ECVTSRBL means that the function is not available - Caller must be AMODE 31 or 64, key 0, supervisor state, enabled for I/O and external interrupts, holding no locks - SRB mode - Primary ASC mode - Any P, Any S, Any H - Set GR 1 to the below-2G address of the 8-byte enclave token. Bits 0-31 of 64-bit",
+      "offset": 148,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vleav"
+    },
+    {
+      "name": "ecvtmsch",
+      "description": "THE ADDRESS OF SLM MESSAGE SUBCHANNEL LIST. OWNERSHIP: SYSTEM LOCK MANAGER SERIALIZATION: NIP.",
+      "offset": 152,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "slm"
+    },
+    {
+      "name": "ecvtcal",
+      "description": "THE ADDRESS OF SLM COMMON AREA LIST. OWNERSHIP: SYSTEM LOCK MANAGER SERIALIZATION: NIP.",
+      "offset": 156,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "slm"
+    },
+    {
+      "name": "ecvtload",
+      "description": "EDITED MVS LOAD PARAMETER OWNERSHIP: IPL. SERIALIZATION: NONE.",
+      "offset": 160,
+      "length": 8,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvtomvs": {
+          "description": "If on, OpenMVS is up and available.",
+          "offset": 56,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvtmlpr",
+      "description": "LOAD parameter used for this IPL. OWNERSHIP: IPL. SERIALIZATION: NONE.",
+      "offset": 168,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "block"
+    },
+    {
+      "name": "ecvttcp",
+      "description": "Token used by TCP/IP OWNERSHIP: TCPIP SERIALIZATION: Compare and Swap during TCPIP initialization",
+      "offset": 176,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "block"
+    },
+    {
+      "name": "ecvthisnmt",
+      "description": "HISMT Service",
+      "offset": 180,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "block"
+    },
+    {
+      "name": "ecvtnvdm",
+      "description": "NETVIEW DM TCP ID BLOCK POINTER OWNERSHIP: NETVIEW DISTRIBUTION MANAGER. SERIALIZATION: NONE.",
+      "offset": 184,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "block"
+    },
+    {
+      "name": "ecvtr0bc",
+      "description": "RESERVED. DO NOT USE.",
+      "offset": 188,
+      "length": 4,
+      "type": "hex",
+      "pointsTo": "block"
+    },
+    {
+      "name": "ecvtgrmp",
+      "description": "GRM DATA BLOCK POINTER OWNERSHIP: GRAPHICS RESOURCE MONITOR SERIALIZATION: TEST AND SET ON THE HIGH ORDER BYTE.",
+      "offset": 192,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "block"
+    },
+    {
+      "name": "ecvtwlm",
+      "description": "WLM VECTOR TABLE POINTER OWNERSHIP: WLM. SERIALIZATION: NONE.",
+      "offset": 196,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "table"
+    },
+    {
+      "name": "ecvtcsm",
+      "description": "Pointer to Communication Storage Manager control structure OWNERSHIP: VTAM (Communications Storage Manager(CSM)) SERIALIZATION: ENQUEUE/DEQUEUE",
+      "offset": 200,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtctbl",
+      "description": "Customer anchor table. Slots assigned by IBM. Ownership: Callable Services. Serialization: None",
+      "offset": 204,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtpmcs",
+      "description": "STATUS SET,MC,PROCESS SERVICE ROUTINE ADDRESS. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: NONE.",
+      "offset": 208,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vpmcs"
+    },
+    {
+      "name": "ecvtpmcr",
+      "description": "STATUS RESET,MC,PROCESS SERVICE ROUTINE ADDRESS WITHIN MODULE IEAVFMCS. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: NONE.",
+      "offset": 212,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vpmcr"
+    },
+    {
+      "name": "ecvtstx1",
+      "description": "STAX DEFER=YES,LINKAGE=BRANCH SERVICE ROUTINE ADDRESS. OWNERSHIP: RCT. SERIALIZATION: NONE.",
+      "offset": 216,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vax"
+    },
+    {
+      "name": "ecvtstx2",
+      "description": "STAX DEFER=NO,LINKAGE=BRANCH SERVICE ROUTINE ADDRESS WITHIN MODULE IEAVAX01. OWNERSHIP: RCT. SERIALIZATION: NONE.",
+      "offset": 220,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vax"
+    },
+    {
+      "name": "ecvtslid",
+      "description": "CONTAINS THE SLIP PER TRAP ID OR BINARY ZEROS. OWNERSHIP: SLIP SERIALIZATION: NONE.",
+      "offset": 224,
+      "length": 4,
+      "type": "hex",
+      "pointsTo": "vexpm"
+    },
+    {
+      "name": "ecvtcsvt",
+      "description": "CSV TABLE. OWNERSHIP: CSV SERIALIZATION: SET DURING NIP",
+      "offset": 228,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vexpm"
+    },
+    {
+      "name": "ecvtasa",
+      "description": "ASA TABLE. OWNERSHIP: ASA SERIALIZATION: SET DURING NIP",
+      "offset": 232,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vexpm"
+    },
+    {
+      "name": "ecvtexpm",
+      "description": "GETXSB SERVICE ROUTINE. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: NONE.",
+      "offset": 236,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vexpm"
+    },
+    {
+      "name": "ecvtocvt",
+      "description": "ANCHOR FOR OpenMVS COMMUNICATION VECTOR TABLE. OWNERSHIP: OpenMVS. SERIALIZATION: COMPARE AND SWAP DURING OpenMVS INITIALIZATION.",
+      "offset": 240,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtoext",
+      "description": "ANCHOR FOR OpenMVS EXTERNAL DATA THAT NEEDS TO BE ACCESSED BY NON-MVS CODE. OWNERSHIP: OpenMVS. SERIALIZATION: COMPARE AND SWAP DURING OpenMVS INITIALIZATION. (NEVER CHANGED AFTER INITIALIZATION)",
+      "offset": 244,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtcmps",
+      "description": "Address of the Compression Service routine. OWNERSHIP: Callable Services. SERIALIZATION: None.",
+      "offset": 248,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtnucp",
+      "description": "Pointer to nucleus dataset name, VOL=SER, and its UCB. OWNERSHIP: NIP SERIALIZATION: None.",
+      "offset": 252,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtxrat",
+      "description": "XES anchor table for branch entry routine addresses. OWNERSHIP: XES. SERIALIZATION: None.",
+      "offset": 256,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtpwvt",
+      "description": "Address of the Processor Workunit Queue Vector Table (PWVT). SERIALIZATION: None. OWNERSHIP: Supervisor Control",
+      "offset": 260,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtclon",
+      "description": "1 or 2 character value used to identify a system within a sysplex. Valid values are A-Z, 0-9, $, @, #. Not valid if blank. Serialization: None. Ownership: Supervisor Control.",
+      "offset": 264,
+      "length": 2,
+      "type": "string"
+    },
+    {
+      "name": "ecvtgmod",
+      "description": "GRS mode of operation OWNERSHIP: GRS. SERIALIZATION: None.",
+      "offset": 266,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtlpdelen",
+      "description": "Length of LPDE",
+      "offset": 267,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtducu",
+      "description": "DUCT update",
+      "offset": 268,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vducu"
+    },
+    {
+      "name": "ecvtalck",
+      "description": "ALIAS check",
+      "offset": 272,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "valck"
+    },
+    {
+      "name": "ecvtsxmp",
+      "description": "IEAMSXMP target. This field is an interface only for determining if IEAMSXMP may be used. When this field is 0, IEAMSXMP may not be used, otherwise it may be.",
+      "offset": 276,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vsxmp"
+    },
+    {
+      "name": "ecvtr118",
+      "description": "RESERVED.",
+      "offset": 280,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtptim",
+      "description": "Time value for Parallel Detach processing OWNERSHIP: RTM SERIALIZATION: None",
+      "offset": 282,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtjcct",
+      "description": "Address of the JES communication control table. OWNERSHIP: JES. SERIALIZATION: None.",
+      "offset": 284,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtlsab",
+      "description": "Pointer to Logger Services Anchor Block. Mapped by IXGPLSAB macro. OWNERSHIP: IXG. SERIALIZATION: None.",
+      "offset": 288,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "logger"
+    },
+    {
+      "name": "ecvtetpe",
+      "description": "Addr of routine IEAVETPE. Serialization: None. Ownership: Supervisor Control",
+      "offset": 292,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vetpe"
+    },
+    {
+      "name": "ecvtsymt",
+      "description": "Address of the system static symbol table. The system static symbol table is mapped by dsect SYMBT within ASASYMBP. The table is preceded by an area mapped by dsect SYMBTH within ASASYMBP. Serialization: None. Ownership: NIP",
+      "offset": 296,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtesym",
+      "description": "Address of IEAVESYM routine. Serialization: None. Ownership: NIP",
+      "offset": 300,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vesym"
+    },
+    {
+      "name": "ecvtflgs",
+      "description": "Miscellaneous Flags Serialization: None. Ownership: NIP",
+      "offset": 304,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtflg1",
+      "description": "First miscellaneous flag Serialization: None. Ownership: NIP",
+      "offset": 304,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvtclnu": {
+          "description": "When set, this flag indicates that the system static symbol &SYSCLONE value defined in an IEASYMxx member used for this IPL must be unique in the SYSPLEX. Serialization: None. Ownership: NIP",
+          "offset": 0,
+          "length": 1
+        },
+        "ecvtpmac": {
+          "description": "Serialization: None. Ownership: NIP",
+          "offset": 1,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvtesy1",
+      "description": "Address of routine IEAVESY1. Serialization: None. Ownership: NIP",
+      "offset": 308,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vesy"
+    },
+    {
+      "name": "ecvtpetm",
+      "description": "Addr of routine IEAVPETM Serialization: None Ownership: Supervisor Control",
+      "offset": 312,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vpetm"
+    },
+    {
+      "name": "ecvtetpt",
+      "description": "Addr of routine IEAVETPT Serialization: None Ownership: Supervisor Control",
+      "offset": 316,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vetpt"
+    },
+    {
+      "name": "ecvtenvt",
+      "description": "Pointer to Enclave Vector Table (ENVT). OWNERSHIP: SRM SERIALIZATION: SRM lock, if updated after NIP",
+      "offset": 320,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "enclave"
+    },
+    {
+      "name": "ecvtvser",
+      "description": "Reserved for use by VSE Ownership: VSE Serialization: none",
+      "offset": 324,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtlsen",
+      "description": "Address of module IEAVLSEN",
+      "offset": 328,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vlsen"
+    },
+    {
+      "name": "ecvtdgnb",
+      "description": "Address of DGNB Serialization: None. Ownership: VSM",
+      "offset": 332,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "dgnb"
+    },
+    {
+      "name": "ecvthdnm",
+      "description": "Hardware name of the processor configuration. Serialization: None. Ownership: NIP",
+      "offset": 336,
+      "length": 8,
+      "type": "string"
+    },
+    {
+      "name": "ecvtlpnm",
+      "description": "LPAR name of the processor configuration.  This field is blanks if processor is not in LPAR mode. Serialization: None. Ownership: NIP",
+      "offset": 344,
+      "length": 8,
+      "type": "string"
+    },
+    {
+      "name": "ecvtvmnm",
+      "description": "z/VM user id of the virtual machine, of which this z/OS image is a guest.  This field is blanks if the processor is not a guest under z/VM (such as running under PR/SM or an alternate VM). Serialization: None. Ownership: NIP",
+      "offset": 352,
+      "length": 8,
+      "type": "string"
+    },
+    {
+      "name": "ecvtgrm",
+      "description": "Address of routine CRG52GRM Serialization: None. Ownership: Context Services",
+      "offset": 360,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvtseif",
+      "description": "Address of routine CRG52SEI. Serialization: None. Ownership: Context Services",
+      "offset": 364,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvtaes",
+      "description": "Address of routine IEAVEAES. Serialization: None. Ownership: Supervisor Control",
+      "offset": 368,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "veaes"
+    },
+    {
+      "name": "ecvtrsmt",
+      "description": "Address of registration services management table. Serialization: None. Ownership: Context Services",
+      "offset": 372,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtmmem",
+      "description": "Exit manager name of the mvs miscellaneous event exit manager Serialization: None. Ownership: Supervisor Control",
+      "offset": 376,
+      "length": 16,
+      "type": "string"
+    },
+    {
+      "name": "ecvtipa",
+      "description": "Address of the Initialization Parameter Area Serialization: None. Ownership: NIP",
+      "offset": 392,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtmmet",
+      "description": "Exit Manager Token of the MVS Miscellaneous Event Exit Manager Serialization: None. Ownership: Supervisor Control",
+      "offset": 396,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtmmeq",
+      "description": "MVS Miscellaneous Event Exit Manager RM_TOKEN Queue Serialization: REGSRV EXCL lock. Ownership:  Supervisor Control",
+      "offset": 412,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtmmea",
+      "description": "Address of the MVS Miscellaneous Event Exit Manager Resource Manager Token Array. Serialization: REGSRV EXCL lock. Ownership: Supervisor Control.",
+      "offset": 416,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvteaex",
+      "description": "Address of routine IEAVEAEX. Serialization: None. Ownership: Supervisor Control",
+      "offset": 420,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "veaex"
+    },
+    {
+      "name": "ecvteaux",
+      "description": "Address of routine IEAVEAUX. Serialization: None. Ownership: Supervisor Control",
+      "offset": 424,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "veaux"
+    },
+    {
+      "name": "ecvtmmec",
+      "description": "Count of RMs registered with MVS Miscellaneous Event Exit Manager Serialization: REGSRV EXCL Lock. Ownership: Supervisor Control",
+      "offset": 428,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtipst",
+      "description": "Address of IPST Serialization: None. Ownership: NIP",
+      "offset": 432,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "ipst"
+    },
+    {
+      "name": "ecvtrrsw",
+      "description": "Address of the RRS world object Serialization: None. Ownership: RRS",
+      "offset": 436,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtrrtt",
+      "description": "RRS EOT Resmgr address with Amode indicator set on Serialization: None Ownership: RRS",
+      "offset": 440,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtrrmt",
+      "description": "RRS EOM Resmgr Address with Amode indicator set on Serialization: None Ownership: RRS",
+      "offset": 444,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtpred",
+      "description": "Product Enable/Disable block Serialization: None. Ownership: SMF",
+      "offset": 448,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtcemt",
+      "description": "Exit Manager Token of the Context Services Exit Manager. Serialization: None Ownership: Context Services",
+      "offset": 452,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtceme",
+      "description": "Address of routine CTXEMGRE. Serialization: None. Ownership: Context Services",
+      "offset": 468,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvtcemr",
+      "description": "Address of routine CTXCEMGR. Serialization: None. Ownership: Context Services Serialization: None.",
+      "offset": 472,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvtpseq",
+      "description": "Product sequence number. This field will be changed when any new version, release, or modification level is provided. It can be used to determine if the operating system is at a suitable level for a desired function. Its value will always increase from one release/mod level to the next. For z/OS 3.2 (HBB77F0), the value is For z/OS 3.1 (HBB77E0), the value is For z/OS 2.5 (HBB77D0), the value is",
+      "offset": 476,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtpown",
+      "description": "Product owner",
+      "offset": 480,
+      "length": 16,
+      "type": "string"
+    },
+    {
+      "name": "ecvtpnam",
+      "description": "Product name.",
+      "offset": 496,
+      "length": 16,
+      "type": "string"
+    },
+    {
+      "name": "ecvtpver",
+      "description": "Product version",
+      "offset": 512,
+      "length": 2,
+      "type": "string"
+    },
+    {
+      "name": "ecvtprel",
+      "description": "Product release",
+      "offset": 514,
+      "length": 2,
+      "type": "string"
+    },
+    {
+      "name": "ecvtpmod",
+      "description": "Product mod level",
+      "offset": 516,
+      "length": 2,
+      "type": "string"
+    },
+    {
+      "name": "ecvtpdvl",
+      "description": "Product development level. Note: This field is used for web deliverable for which the Product Modification Level is not changed.",
+      "offset": 518,
+      "length": 1,
+      "type": "string"
+    },
+    {
+      "name": "ecvtttfl",
+      "description": "Transaction Trace flags. Serialization: None Ownership: Transaction Trace",
+      "offset": 519,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvtttrc": {
+          "description": "Transaction Trace has been 'turned on'.",
+          "offset": 0,
+          "length": 1
+        },
+        "ecvttatf": {
+          "description": "If set on, TTrace is not active due to ATTACHX failure.",
+          "offset": 1,
+          "length": 1
+        },
+        "ecvttesf": {
+          "description": "If set on, TTrace is not active due to ESTAE failure.",
+          "offset": 2,
+          "length": 1
+        },
+        "ecvttgmf": {
+          "description": "If set on, TTrace is not active due to GETMAIN failure.",
+          "offset": 3,
+          "length": 1
+        },
+        "ecvttabt": {
+          "description": "If set on, TTrace is not active due to abnormal termination.",
+          "offset": 4,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvtcurx",
+      "description": "Address of routine CTXCSURX. Serialization: None. Ownership: Context Services",
+      "offset": 520,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvtctxr",
+      "description": "Addr of routine CTXRSMGR. Serialization: None. Ownership: Context Services",
+      "offset": 524,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvtcrgr",
+      "description": "Addr of routine CRGRSMGR. Serialization: None. Ownership: Context Services",
+      "offset": 528,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvtcsrb",
+      "description": "Addr of routine CTXSRB. Serialization: None Ownership: Context Services",
+      "offset": 532,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvtrem1",
+      "description": "Addr of routine CRGRREM1 entry point in module CRGRREMD. Serialization: None. Ownership: Context Services",
+      "offset": 536,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvtrem2",
+      "description": "Addr of routine CRGRREM2 entry point in module CRGRREMD. Serialization: None. Ownership: Context Services",
+      "offset": 540,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvtxfr3",
+      "description": "Addr of routine IEAVXFR3 entry point Serialization: None. Ownership: PC Auth",
+      "offset": 544,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vxfr"
+    },
+    {
+      "name": "ecvtcicb",
+      "description": "",
+      "offset": 548,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtdlpf",
+      "description": "Address of first CDE on dynamic LPA queue. Ownership: CSV Only CSV is allowed to change this. Serialization: CMS Lock",
+      "offset": 552,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtdlpl",
+      "description": "Address of last CDE on dynamic LPA queue. It is intended that the CDHAIN field of this CDE point to the CDE pointed to by the word pointed to by CVTQLPAQ Ownership: CSV Only CSV is allowed to change this. Serialization: CMS Lock",
+      "offset": 556,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtsrbr",
+      "description": "Return for T6EXIT RETURN=SRBSUSP Serialization: None. Ownership: Supervisor control",
+      "offset": 560,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vsyn"
+    },
+    {
+      "name": "ecvtbcba",
+      "description": "Address of SOMObjects data structure Ownership: SOMObjects for OS/390 Serialization: CS",
+      "offset": 564,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtpidn",
+      "description": "PID number",
+      "offset": 568,
+      "length": 8,
+      "type": "string"
+    },
+    {
+      "name": "ecvtrmd",
+      "description": "Double word for the CRGREMD Parameter List Free Pool.",
+      "offset": 576,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtrmdp",
+      "description": "CRGREMD Parameter List Free Pool Ptr Ownership: Registration Services. Serialization: CDS on ECVTRMD",
+      "offset": 576,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtrmds",
+      "description": "F'0'                CRGREMD Parameter List Free Pool Sequence Number. Ownership: Registration Services. Serialization: CDS on ECVTRMD",
+      "offset": 580,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtrsu1",
+      "description": "Addr of routine IEAVRSU1 (Resume with sequence number. Serialization: None. Ownership: Supervisor Control.",
+      "offset": 584,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vrsu"
+    },
+    {
+      "name": "ecvtpest",
+      "description": "Address of the Pause Element Segment Table. Serialization: Dispatcher lock Ownership: Supervisor Control.",
+      "offset": 588,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtcdyn",
+      "description": "Context Services Dynamic Area Cell Pool ID. Ownership: Context Services.",
+      "offset": 592,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtfcda",
+      "description": "",
+      "offset": 596,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvteorm",
+      "description": "Potential real high storage address",
+      "offset": 600,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtcbls",
+      "description": "Addr of IEAVCBLS (see IHACBLS)",
+      "offset": 608,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vcbls"
+    },
+    {
+      "name": "ecvtrins",
+      "description": "Address of RRS installed function block (ATRRINST) Ownership: RRS",
+      "offset": 612,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "rrs"
+    },
+    {
+      "name": "ecvtttca",
+      "description": "Address of Transaction Trace Communications Area. Serialization: None Ownership: Transaction Trace",
+      "offset": 616,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtlcxt",
+      "description": "Address of LCCXVT",
+      "offset": 620,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "lccxvt"
+    },
+    {
+      "name": "ecvtoesi",
+      "description": "When non-zero, orig SCCBMESI",
+      "offset": 624,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtoxsb",
+      "description": "When non-zero, orig SCCBNXSB",
+      "offset": 628,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtestu",
+      "description": "SVC update service",
+      "offset": 632,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vestu"
+    },
+    {
+      "name": "ecvtrbup",
+      "description": "IEARBUP service",
+      "offset": 636,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "pfa"
+    },
+    {
+      "name": "ecvtosai",
+      "description": "When non-zero, orig SCCBSAIX",
+      "offset": 640,
+      "length": 4,
+      "type": "hex",
+      "pointsTo": "pfa"
+    },
+    {
+      "name": "ecvtpfa",
+      "description": "Address of PFA block.               -",
+      "offset": 644,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "pfa"
+    },
+    {
+      "name": "ecvtcrdt",
+      "description": "Entry for RACF to get CDRACDTY bits set",
+      "offset": 648,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtctb2",
+      "description": "Customer anchor table 2 (8-byte slots) Slots assigned by IBM. Ownership: Callable Services. Serialization: None",
+      "offset": 652,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtjaof",
+      "description": "Address of IEAVJAOF when not 0. Use this when you must turn off JSCBAUTH. The system might have additional functions to perform when this is done. The JSCBAUTH bit in the JSCB pointed to by the current task's jobstep task's JSCB will be turned off. For system integrity reasons you should not turn JSCBAUTH back on once it has been turned off. - Caller must be AMODE 31 or AMODE 64. - Caller must be supervisor state and key 0",
+      "offset": 656,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vjaof"
+    },
+    {
+      "name": "ecvtxpcb",
+      "description": "",
+      "offset": 660,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "ibm"
+    },
+    {
+      "name": "ecvtlpub",
+      "description": "IBM Publisher ID for ILM",
+      "offset": 664,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtlpid",
+      "description": "IBM Product ID for ILM",
+      "offset": 680,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "ibm"
+    },
+    {
+      "name": "ecvtlvid",
+      "description": "IBM Version ID for ILM",
+      "offset": 688,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "ibm"
+    },
+    {
+      "name": "ecvtlkln",
+      "description": "Length of IBM Key for ILM",
+      "offset": 696,
+      "length": 4,
+      "type": "hex",
+      "pointsTo": "ibm"
+    },
+    {
+      "name": "ecvtlkad",
+      "description": "Address of IBM Key for ILM",
+      "offset": 700,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "ibm"
+    },
+    {
+      "name": "ecvtcachelinesize",
+      "description": "CPU Cache Line Size",
+      "offset": 704,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtcachelinestartbdy",
+      "description": "CPU Cache Line Start Boundary",
+      "offset": 706,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_osprotect",
+      "description": "- OSPROTECT system parameter in effect. X'00' indicates OSPROTECT=SYSTEM. See ECVT_OSProtect_WhenSystem. X'01' indicates OSPROTECT=1. X'FF' indicates OSPROTECT=MIN. A value in the range x'01'-x'FE' indicates \"more than minimum\"",
+      "offset": 707,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtrfpt",
+      "description": "Address of routine to update REFRPROT option for this task. Place the address in reg 15. Place 1 in reg 0 if you want to override the system REFRPROT option and not allow REFRPROT for this task for subsequent LOADs. Place 0 in reg 0 if you no longer want to override the",
+      "offset": 708,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "routine"
+    },
+    {
+      "name": "ecvt_installed_cpu_hwm",
+      "description": "The highest CPU number currently installed within this IPL. Could increase upon dynamic CPU addition",
+      "offset": 712,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvt_installed_cpu_at_ipl",
+      "description": "The highest CPU number installed at the time of IPL.",
+      "offset": 714,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtcrit",
+      "description": "Address of Common Resource Information Table Owner: IQP Serialization: None. Set during initialization",
+      "offset": 716,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "common"
+    },
+    {
+      "name": "ecvttedvectortableaddr",
+      "description": "Pointer to the Timed Event Data vector table",
+      "offset": 720,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "timed"
+    },
+    {
+      "name": "ecvttedstoragebytesallocated",
+      "description": "Amount of storage used for all TED Tables",
+      "offset": 728,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtteds",
+      "description": "V(IEAVTEDS)      Pointer to the Timed Event Data Service Module",
+      "offset": 736,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vteds"
+    },
+    {
+      "name": "ecvtmmig",
+      "description": "Machine Migration",
+      "offset": 740,
+      "length": 12,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtmmig_byte0",
+      "description": "Machine Migration Byte 0",
+      "offset": 740,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvtmmig_edat2": {
+          "description": "",
+          "offset": 0,
+          "length": 1
+        },
+        "ecvtmmig_tx": {
+          "description": "Never on as of z/OS 2.4",
+          "offset": 1,
+          "length": 1
+        },
+        "ecvtmmig_ri": {
+          "description": "",
+          "offset": 2,
+          "length": 1
+        },
+        "ecvtmmig_vef": {
+          "description": "Vector Extension Facility",
+          "offset": 3,
+          "length": 1
+        },
+        "ecvtmmig_gsf": {
+          "description": "",
+          "offset": 4,
+          "length": 1
+        },
+        "ecvtmmig_diag1": {
+          "description": "Diagnostic for IBM use only",
+          "offset": 5,
+          "length": 1
+        },
+        "ecvtmmig_diag2": {
+          "description": "Diagnostic for IBM use only",
+          "offset": 6,
+          "length": 1
+        },
+        "ecvtmmig_diag3": {
+          "description": "Diagnostic for IBM use only",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvtmmig_byte1",
+      "description": "Machine Migration Byte 1",
+      "offset": 741,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvtmmig_crypctrs": {
+          "description": "Crypto Counters",
+          "offset": 0,
+          "length": 1
+        },
+        "ecvtmmig_nnpictrs": {
+          "description": "NNPI Counters",
+          "offset": 1,
+          "length": 1
+        },
+        "ecvtmmig_diagse": {
+          "description": "Diagnostic for IBM use only",
+          "offset": 2,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvtosarx",
+      "description": "When non-zero, orig SCCBSARX",
+      "offset": 752,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtosarxh",
+      "description": "SCCBSARX - High Half",
+      "offset": 752,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtosarxl",
+      "description": "SCCBSARX - Low Half",
+      "offset": 756,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_hcwa",
+      "description": "HCW",
+      "offset": 760,
+      "length": 8,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvtceat": {
+          "description": "CEA has terminated",
+          "offset": 56,
+          "length": 1
+        },
+        "ecvtaxrt": {
+          "description": "AXR has terminated",
+          "offset": 56,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvtslca",
+      "description": "Owner: LE",
+      "offset": 768,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtcpgum",
+      "description": "IGVCPGUM",
+      "offset": 772,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtcpfrm",
+      "description": "IGVCPFRM",
+      "offset": 776,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtcpgcm",
+      "description": "IGVCPGCM",
+      "offset": 780,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvt4qv1",
+      "description": "IEAV4QV1",
+      "offset": 784,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "v4qv"
+    },
+    {
+      "name": "ecvt4qv2",
+      "description": "IEAV4QV2",
+      "offset": 788,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "v4qv"
+    },
+    {
+      "name": "ecvt4qv3",
+      "description": "IEAV4QV3",
+      "offset": 792,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "v4qv"
+    },
+    {
+      "name": "ecvt4qv4",
+      "description": "IEAV4QV4",
+      "offset": 796,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "v4qv"
+    },
+    {
+      "name": "ecvt4qv5",
+      "description": "IEAV4QV5",
+      "offset": 800,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "v4qv"
+    },
+    {
+      "name": "ecvt4qv6",
+      "description": "IEAV4QV6",
+      "offset": 804,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "v4qv"
+    },
+    {
+      "name": "ecvt4qv7",
+      "description": "IEAV4QV7",
+      "offset": 808,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "v4qv"
+    },
+    {
+      "name": "ecvttenc",
+      "description": "Timeused Enclave",
+      "offset": 812,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vrt5s"
+    },
+    {
+      "name": "ecvtscf",
+      "description": "IEAVSCAF",
+      "offset": 816,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vscaf"
+    },
+    {
+      "name": "ecvttsth",
+      "description": "IEAVTSTH",
+      "offset": 820,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vtsth"
+    },
+    {
+      "name": "ecvtstc5",
+      "description": "STCKSYNC, AR MODE, CTNID REQUESTED. OWNERSHIP: TIMER. SERIALIZATION: NONE.",
+      "offset": 824,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "tstc"
+    },
+    {
+      "name": "ecvtstc6",
+      "description": "STCKSYNC, NON-AR MODE, CTNID REQUESTED. OWNERSHIP: TIMER. SERIALIZATION: NONE.",
+      "offset": 828,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "tstc"
+    },
+    {
+      "name": "ecvtch1",
+      "description": "IEAVECH1 Storage Check Service for AMODE(31) callers",
+      "offset": 832,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vech"
+    },
+    {
+      "name": "ecvtch2",
+      "description": "IEAVECH2 Storage Check Service for AMODE(64) callers",
+      "offset": 836,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vech"
+    },
+    {
+      "name": "ecvtceab",
+      "description": "CEAB",
+      "offset": 840,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vfacl"
+    },
+    {
+      "name": "ecvtaxrb",
+      "description": "AXRB",
+      "offset": 844,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vfacl"
+    },
+    {
+      "name": "ecvtect",
+      "description": "IEAVEECT service",
+      "offset": 848,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "veect"
+    },
+    {
+      "name": "ecvtfacl",
+      "description": "Address of 2048-byte facility area mapped by IHAFACL.",
+      "offset": 852,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vfacl"
+    },
+    {
+      "name": "ecvtmaxcoreid",
+      "description": "When CvtProcAsCore is on, the maximum CPU Core Id allowed in the system for this IPL. When CvtProcAsCore is off, this will be set to CVTMAXMP.",
+      "offset": 856,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtnumcpuidsincore",
+      "description": "The maximum number of CPUs that can \"fit\" on a CPU Core. This doesn't mean all of them can be active. This can be looked at as how many IDs exist between thread 0 of two contiguous cores. When CvtProcAsCore is off, this will be set to 1.",
+      "offset": 858,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtntrm",
+      "description": "Name/Token resource manager @",
+      "offset": 860,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "ntrtm"
+    },
+    {
+      "name": "ecvtsdc",
+      "description": "A(0)                Owner: SDC",
+      "offset": 864,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvthiab",
+      "description": "Anchor for Hardware                 -",
+      "offset": 868,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvthwip",
+      "description": "Anchor Block for BCPii AS           -",
+      "offset": 872,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtscpin",
+      "description": "Address of current SCPINFO data block, unlike CVTSCPIN which is the IPL-time SCPINFO data block. Mapped by IHASCCB.",
+      "offset": 876,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "current"
+    },
+    {
+      "name": "ecvthp1",
+      "description": "Pointer to Heap Pool 1 structure supporting macro IARST64 for common storage. Ownership: RSM. Serialization: CSG",
+      "offset": 880,
+      "length": 8,
+      "type": "hex",
+      "pointsTo": "heap"
+    },
+    {
+      "name": "ecvtmaxmpnumbytesinmask",
+      "description": "Maximum number of bytes a bitmask of CVTMAXMP bits would take up, rounded to a multiple of 8",
+      "offset": 888,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtphysicaltologicalmask",
+      "description": "\"OR\" this value with a CPUs physical ID to obtain its logical ID",
+      "offset": 890,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtlogicaltophysicalmask",
+      "description": "\"AND\" this value with a CPUs logical ID to obtain its physical ID",
+      "offset": 892,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtappflags",
+      "description": "Application-set flags Serialization: CS",
+      "offset": 894,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvtstcksyncreplaced": {
+          "description": "A product has replaced system control block fields that contain the entry point addresses for STCKSYNC services. The system is not to reset these fields to their IPL-time values.",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvt_osprotect_whensystem",
+      "description": "As of z/OS 3.1, the OSPROTECT level you get when OSPROTECT=SYSTEM is in effect. Valid only when OSPROTECT=SYSTEM is in effect. Current possible values are: X'01' indicating OSPROTECT=1 (not on zPDT), X'FF' indicating OSPROTECT=MIN (on zPDT) A value in the range x'01'-x'FE' indicates \"more than minimum\"",
+      "offset": 895,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvthzrt": {
+          "description": "RTD has terminated",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvt_getsrbidtoken",
+      "description": "Address of the routine to return the SrbIdToken of the current preemptible- class SRB - Caller must be running under the preemptible- class SRB for which the SrbIdToken is to be returned. - Caller may be AMODE 31 or 64, must be key 0 Supervisor state. - Caller may hold any locks, none are required. - Primary ASC mode. - Any P, Any S, Any H.",
+      "offset": 896,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vschy"
+    },
+    {
+      "name": "ecvtxtsw",
+      "description": "Address of \"Cross-memory TCB or SRB wait\" routine. - Caller must be AMODE 31, key 0, supervisor state, enabled for I/O and external interrupts, holding no locks. - SRB or task mode. - Primary ASC mode. - Any P, Any S, Any H. - Load this address into GR 15, - Issue BASR 14,15 - 31-bit GRs 2-13, high halves 2-14, and",
+      "offset": 900,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvt_smf_cms_lockinst_addr",
+      "description": "Address of the SMF CMS instrumentation data for the system",
+      "offset": 904,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvt_enqdeq_cms_lockinst_addr",
+      "description": "Address of the ENQ/DEQ CMS instrumentation data for the system",
+      "offset": 908,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvt_latch_cms_lockinst_addr",
+      "description": "Address of the Latch CMS instrumentation data for the system",
+      "offset": 912,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvt_cms_lockinst_addr",
+      "description": "Address of the CMS instrumentation data for the system",
+      "offset": 916,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvthzrb",
+      "description": "Address of the HZRB Ownership: Runtime Diagnostics",
+      "offset": 920,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "the"
+    },
+    {
+      "name": "ecvtgtz",
+      "description": "Address of GTZ block Ownership: Generalized Tracker",
+      "offset": 924,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "gtz"
+    },
+    {
+      "name": "ecvtcpguc",
+      "description": "IGVCPGUC",
+      "offset": 928,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtcpfrc",
+      "description": "IGVCPFRC",
+      "offset": 932,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtcpgcc",
+      "description": "IGVCPGCC",
+      "offset": 936,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvt_installed_core_hwm",
+      "description": "The highest core number currently installed. Could increase upon dynamic core/CPU addition.",
+      "offset": 940,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvt_installed_core_at_ipl",
+      "description": "The highest core number installed at the time of IPL.",
+      "offset": 942,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtlso",
+      "description": "Leap second value in STCKE format. Bytes 1-8 (0 origin) have same value as CVTLSO",
+      "offset": 944,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtldto",
+      "description": "Local time/date offset in STCKE format. Bytes 1-8 (0-origin) have same value as CVTLDTO. Byte 0 is sign extended from bit 0 of byte 1",
+      "offset": 960,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtizugsp",
+      "description": "Address of z/OSMF Global Storage Pointers area. Could be 0.",
+      "offset": 976,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtsvtx",
+      "description": "Address of SVTX",
+      "offset": 980,
+      "length": 4,
+      "type": "address",
+      "pointsTo": "vsvtx"
+    },
+    {
+      "name": "ecvtr3d8",
+      "description": "Reserved",
+      "offset": 984,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_boostinfo",
+      "description": "Valid only when CVTBoost is on",
+      "offset": 992,
+      "length": 24,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_boostinfo_flags0",
+      "description": "",
+      "offset": 992,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvt_ziipboost_active": {
+          "description": "",
+          "offset": 0,
+          "length": 1
+        },
+        "ecvt_speedboost_active": {
+          "description": "",
+          "offset": 1,
+          "length": 1
+        },
+        "ecvt_iplboosts_activated": {
+          "description": "All IPL boosts to be activated have been activated.",
+          "offset": 2,
+          "length": 1
+        },
+        "ecvt_sdboosts_activated": {
+          "description": "All Shutdown boosts to be activated have been activated.",
+          "offset": 3,
+          "length": 1
+        },
+        "ecvt_rpboosts_activated": {
+          "description": "All RP boosts to be activated have been activated. This bit will be turned off once the boost ends.",
+          "offset": 4,
+          "length": 1
+        },
+        "ecvt_boostclass": {
+          "description": "See Ecvt_BoostClass_xxx equates. Valid only when one of the boosts is active",
+          "offset": 5,
+          "length": 3
+        }
+      }
+    },
+    {
+      "name": "ecvt_boostinfo_sysparm_flags",
+      "description": "",
+      "offset": 993,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvt_sysparm_ziipboost": {
+          "description": "According to the availability and the BOOST system parameter, we want to do zIIP boost. This gets turned off if it could never be right to activate, such as for the case of a non-dedicated partition",
+          "offset": 0,
+          "length": 1
+        },
+        "ecvt_sysparm_speedboost": {
+          "description": "According to the availability and the BOOST system parameter, we want to do speed boost.",
+          "offset": 1,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvt_boostinfo_flags1",
+      "description": "",
+      "offset": 994,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvt_iplziipboost_endedbyerror": {
+          "description": "",
+          "offset": 0,
+          "length": 1
+        },
+        "ecvt_iplspeedboost_endedbyerror": {
+          "description": "",
+          "offset": 1,
+          "length": 1
+        },
+        "ecvt_iplboosts_endedbytimer": {
+          "description": "",
+          "offset": 4,
+          "length": 1
+        },
+        "ecvt_iplboosts_endedbypgm": {
+          "description": "",
+          "offset": 5,
+          "length": 1
+        },
+        "ecvt_iplboosts_endedbyshutdown": {
+          "description": "",
+          "offset": 6,
+          "length": 1
+        },
+        "ecvt_iplboosts_endedbyerror": {
+          "description": "",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvt_boostinfo_sd_flags1",
+      "description": "",
+      "offset": 995,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvt_sdziipboost_endedbyerror": {
+          "description": "",
+          "offset": 0,
+          "length": 1
+        },
+        "ecvt_sdspeedboost_endedbyerror": {
+          "description": "",
+          "offset": 1,
+          "length": 1
+        },
+        "ecvt_sdboosts_endedbytimer": {
+          "description": "",
+          "offset": 4,
+          "length": 1
+        },
+        "ecvt_sdboosts_endedbypgm": {
+          "description": "",
+          "offset": 5,
+          "length": 1
+        },
+        "ecvt_sdboosts_endedbyerror": {
+          "description": "",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvt_boostinfo_transientziipcores",
+      "description": "Number of zIIP cores configured online for the zIIP boost. Those cores will be configured offline at the end of the zIIP boost. Valid only when the zIIP boost active bit is on.",
+      "offset": 996,
+      "length": 2,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvt_boostinfo_flags2",
+      "description": "",
+      "offset": 998,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvt_rpb_disabled": {
+          "description": "When on, RP boosts are disabled When off, RP boosts are enabled",
+          "offset": 0,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvt_boostlevel",
+      "description": "0: initial deliverable >0: In addition to initial deliverable data,",
+      "offset": 999,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_boostinfo_expected_endetod",
+      "description": "Time (STCKE format) when boost(s) will end. It is valid when the following is true: -- one of the \"Boost Active\" bits is on, and -- if the boost class is IPL, bit Ecvt_IplBoosts_Activated is on, and -- if the boost class is shutdown, bit Ecvt_SDBoosts_Activated is on, and -- if the boost class is RP, bit Ecvt_RPBoosts_Activated is on. End time can be extended if there are",
+      "offset": 1000,
+      "length": 16,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_boostinfo_v1",
+      "description": "Recovery process boost support. Valid when Ecvt_BoostLevel is at least Ecvt_BoostLevel_V1",
+      "offset": 1016,
+      "length": 32,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_rpboosts_num",
+      "description": "Number of recovery-process boost start requests received across the life of the IPL that were not during IPL boost or shutdown boost",
+      "offset": 1016,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvt_rpboosts_num_ignored",
+      "description": "Number of recovery-process boost start requests received across the life of the IPL that were ignored because the duration limit had been exceeded",
+      "offset": 1020,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvt_rpb_duration",
+      "description": "Total duration for the life of the IPL of recovery process boosts. Updated when RP boost is extended or ends. In STCK format.",
+      "offset": 1024,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_rp_duration",
+      "description": "Same as Ecvt_RPB_Duration",
+      "offset": 1024,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_rpb_boostinfo_flags1",
+      "description": "",
+      "offset": 1032,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_rp_boostinfo_flags1",
+      "description": "Same as Ecvt_RPB_BoostInfo_Flags1",
+      "offset": 1032,
+      "length": 1,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvt_rpboosts_last_endedbytimer": {
+          "description": "The last RPBoost(s) ended by timer. Valid only when RPBoost inactive.",
+          "offset": 4,
+          "length": 1
+        },
+        "ecvt_rpboosts_last_endedbyshutdown": {
+          "description": "The last RPBoost(s) ended due to shutdown. Valid only when RPBoost inactive.",
+          "offset": 6,
+          "length": 1
+        },
+        "ecvt_rpboosts_last_endedbyerror": {
+          "description": "The last RPBoost(s) ended due to error. Valid only when RPBoost inactive.",
+          "offset": 7,
+          "length": 1
+        }
+      }
+    },
+    {
+      "name": "ecvt_rpboosts_requestor_id",
+      "description": "The requestor ID associated with the start or extend. Updated when the boost is extended. Valid only when RP boost(s) are active. See equates ECVT_RPBReq_xxx",
+      "offset": 1033,
+      "length": 1,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtr40a",
+      "description": "",
+      "offset": 1034,
+      "length": 2,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_rpboosts_numbyrequestor_addr",
+      "description": "Address of an area that has the number of RP boost requests by each requestor. The format of the area is: 1st word - number of entries. 2nd word - number of requests by unidentified requestors. Nth word when N > 2 - number of requests by requestor N-2. The requestors are described by ID (the \"N-2\" value).",
+      "offset": 1036,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvt_rpboosts_num_whiledis",
+      "description": "Number of recovery-process boost start requests received across the life of the IPL while RP boosts were disabled",
+      "offset": 1040,
+      "length": 4,
+      "type": "signed-integer"
+    },
+    {
+      "name": "ecvtr414",
+      "description": "",
+      "offset": 1044,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_boostinfo_v2",
+      "description": "",
+      "offset": 1048,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_rpb_duration_potential",
+      "description": "Total duration for the life of the IPL of recovery process boosts. Includes time that would have been boosted except for having reached the duration limit. Includes time regardless of whether or not RP boosts were enabled. Updated when RP boost would be extended or end. In STCK format.",
+      "offset": 1048,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_rpb_duration_potential_e",
+      "description": "Same as preceding field, but only while RP Boosts are enabled",
+      "offset": 1056,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_rpb_en_dis_local_timestamp",
+      "description": "Local time when RP boosts were last enabled or disabled. In STCK format.",
+      "offset": 1064,
+      "length": 8,
+      "type": "hex"
+    },
+    {
+      "name": "ecvtr430",
+      "description": "Reserved",
+      "offset": 1072,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_ziipboostcoresaddr",
+      "description": "When not 0, the address of an area that is a bit string of which cores were config'd online for a boost. Each bit corresponds to a core (bit 0 is core 0, bit 1 is core 1, etc). When bit n is on, core n is considered a zIIP boost core",
+      "offset": 1076,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvt_ifunc_addr",
+      "description": "Address of area mapped by IHAIFUNC indicating which function codes of such instructions as PRNO, KIMD, KLMD are available.",
+      "offset": 1080,
+      "length": 4,
+      "type": "address"
+    },
+    {
+      "name": "ecvtr43c",
+      "description": "Reserved",
+      "offset": 1084,
+      "length": 4,
+      "type": "hex"
+    },
+    {
+      "name": "ecvt_maxtod",
+      "description": "A value that will not be reached by the clock comparator for this IPL. That is x'FFFFFFFF_FFFFFFFF' when a signed CC is not used, x'7FFFFFFF_FFFFFFFF' when a signed CC is used",
+      "offset": 1088,
+      "length": 8,
+      "type": "bitstring",
+      "bitmasks": {
+        "ecvt_boostclass_mask": {
+          "description": "",
+          "offset": 61,
+          "length": 3
+        },
+        "ecvt_boostclass_ipl": {
+          "description": "",
+          "offset": 63,
+          "length": 1
+        },
+        "ecvt_boostclass_shutdown": {
+          "description": "",
+          "offset": 62,
+          "length": 1
+        },
+        "ecvt_boostclass_rp": {
+          "description": "",
+          "offset": 62,
+          "length": 2
+        }
+      }
+    }
+  ]
+}

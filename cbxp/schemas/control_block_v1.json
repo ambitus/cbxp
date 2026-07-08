@@ -1,0 +1,295 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Control Block",
+  "description": "CBXP Control Block Schema",
+  "type": "object",
+  "properties": {
+    "version": {
+      "description": "CBXP control block schema version",
+      "const": 1
+    },
+    "name": {
+      "description": "Control block name",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8
+    },
+    "commonName": {
+      "description": "Full control block name",
+      "type": "string",
+      "minLength": 1
+    },
+    "macroId": {
+      "description": "Macro invocation name (e.g. ihapsa for the IHAPSA macro)",
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "description": "Control block description",
+      "type": "string"
+    },
+    "aliases": {
+      "description": "Alternative names for this control block (ACRONYM, EYE-CATCHER, DSECT name, etc.)",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 8
+      }
+    },
+    "pointedToBy": {
+      "description": "List of control blocks that points to this control block",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "storageAttributes": {
+      "description": "Storage attributes for this control block",
+      "type": "object",
+      "properties": {
+        "subpools": {
+          "description": "Subpool numbers this control block resides in. An empty array indicates 'ANY' or unknown subpool. String values like 'Nucleus' are represented as an empty array.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          }
+        },
+        "key": {
+          "description": "Storage key (0-8)",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "residency": {
+          "description": "Storage residency description",
+          "type": "string"
+        }
+      },
+      "required": ["subpools", "key", "residency"],
+      "additionalProperties": false
+    },
+    "controlBlock": {
+      "description": "List of control block fields",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "oneOf": [
+          {
+            "properties": {
+              "name": {
+                "description": "Name of the control block field",
+                "type": "string",
+                "minLength": 1
+              },
+              "aliases": {
+                "description": "Alternative names for this field",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "description": {
+                "description": "Control block field description",
+                "type": "string"
+              },
+              "offset": {
+                "description": "Decimal offset to the control block field",
+                "type": "integer"
+              },
+              "length": {
+                "description": "Decimal length of the control block field",
+                "type": "integer"
+              },
+              "type": {
+                "description": "Control block field type",
+                "enum": ["string", "signed-integer", "unsigned-integer", "hex", "address"]
+              }
+            },
+            "required": [
+              "name",
+              "offset",
+              "length",
+              "type"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "name": {
+                "description": "Name of the control block field",
+                "type": "string",
+                "minLength": 1
+              },
+              "aliases": {
+                "description": "Alternative names for this field",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "description": {
+                "description": "Control block field description",
+                "type": "string"
+              },
+              "offset": {
+                "description": "Decimal offset to the control block field",
+                "type": "integer"
+              },
+              "length": {
+                "description": "Decimal length of the control block field",
+                "enum": [4, 8]
+              },
+              "type": {
+                "description": "Control block field type",
+                "const": "hex"
+              },
+              "pointsTo": {
+                "description": "Control block field that this control block points to",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "name",
+              "offset",
+              "length",
+              "type",
+              "pointsTo"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "name": {
+                "description": "Name of the control block field",
+                "type": "string",
+                "minLength": 1
+              },
+              "aliases": {
+                "description": "Alternative names for this field",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "description": {
+                "description": "Control block field description",
+                "type": "string"
+              },
+              "offset": {
+                "description": "Decimal offset to the control block field",
+                "type": "integer"
+              },
+              "length": {
+                "description": "Decimal length of the control block field",
+                "enum": [4, 8]
+              },
+              "type": {
+                "description": "Control block field type",
+                "const": "address"
+              },
+              "pointsTo": {
+                "description": "Control block field that this control block points to",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "name",
+              "offset",
+              "length",
+              "type",
+              "pointsTo"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "properties": {
+              "name": {
+                "description": "Name of the control block field",
+                "type": "string",
+                "minLength": 1
+              },
+              "aliases": {
+                "description": "Alternative names for this field",
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "description": {
+                "description": "Control block field description",
+                "type": "string"
+              },
+              "offset": {
+                "description": "Decimal offset to the control block field",
+                "type": "integer"
+              },
+              "length": {
+                "description": "Decimal length of the control block field",
+                "type": "integer"
+              },
+              "type": {
+                "description": "Control block field type",
+                "const": "bitstring"
+              },
+              "bitmasks": {
+                "description": "Bit definitions within this bitstring field (optional)",
+                "type": "object",
+                "patternProperties": {
+                  "^[a-zA-Z][a-zA-Z0-9_]*$": {
+                    "type": "object",
+                    "properties": {
+                      "description": {
+                        "description": "Description of what this bit or bit field represents",
+                        "type": "string"
+                      },
+                      "offset": {
+                        "description": "Bit offset within the field (0-based from MSB/leftmost bit)",
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "length": {
+                        "description": "Number of bits (typically 1 for single bit flags)",
+                        "type": "integer",
+                        "minimum": 1
+                      }
+                    },
+                    "required": ["description", "offset", "length"],
+                    "additionalProperties": false
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "name",
+              "offset",
+              "length",
+              "type"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "version",
+    "name",
+    "commonName",
+    "macroId",
+    "pointedToBy",
+    "storageAttributes",
+    "controlBlock"
+  ],
+  "additionalProperties": false
+}
