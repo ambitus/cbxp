@@ -63,34 +63,6 @@ file(
 # ============================================================================
 # Build '/lib/libcbxp.a'
 # ============================================================================
-add_library(libcbxp STATIC ${CBXP_SRC_LIB})
-set_target_properties(libcbxp PROPERTIES OUTPUT_NAME "cbxp")
-
-target_include_directories(
-    libcbxp PUBLIC
-    cbxp
-    cbxp/control_blocks
-    externals
-    /usr/include/zos
-)
-
-target_compile_options(libcbxp PUBLIC ${COMPILE_OPTIONS})
-target_link_options(libcbxp PUBLIC ${LINK_OPTIONS})
-
-# ============================================================================
-# Build '/bin/cbxp'
-# ============================================================================
-add_executable(cbxp ${CBXP_SRC_CLI})
-
-target_link_libraries(cbxp libcbxp)
-
-target_include_directories(cbxp PUBLIC cbxp externals)
-
-target_compile_definitions(
-    cbxp PUBLIC
-    VERSION="${CMAKE_PROJECT_VERSION}"
-)
-
 # ============================================================================
 # Generate schema header from cbxp/schemas/control_block_v1.json
 # ============================================================================
@@ -108,11 +80,6 @@ file(WRITE "${CBXP_SCHEMAS_GENERATED_DIR}/control_block_v1.hpp"
 #endif // CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
 )
 
-target_include_directories(
-    libcbxp PUBLIC
-    "${CBXP_SCHEMAS_GENERATED_DIR}"
-)
-
 # ============================================================================
 # Generate mapping headers from JSON files in cbxp/mappings/
 # ============================================================================
@@ -120,6 +87,8 @@ set(CBXP_MAPPINGS_GENERATED_DIR "${CMAKE_BINARY_DIR}/cbxp/mappings")
 file(MAKE_DIRECTORY "${CBXP_MAPPINGS_GENERATED_DIR}")
 
 file(GLOB CBXP_MAPPING_JSON_FILES "${CMAKE_CURRENT_SOURCE_DIR}/cbxp/mappings/*.json")
+
+set(CBXP_MAPPING_FORCED_INCLUDES "")
 
 foreach(MAPPING_JSON_FILE ${CBXP_MAPPING_JSON_FILES})
     get_filename_component(MAPPING_NAME "${MAPPING_JSON_FILE}" NAME_WE)
@@ -139,11 +108,41 @@ foreach(MAPPING_JSON_FILE ${CBXP_MAPPING_JSON_FILES})
 \n\
 #endif // ${MAPPING_GUARD}\n"
     )
+
+    list(APPEND CBXP_MAPPING_FORCED_INCLUDES "-include" "${MAPPING_HEADER_PATH}")
 endforeach()
+
+add_library(libcbxp STATIC ${CBXP_SRC_LIB})
+set_target_properties(libcbxp PROPERTIES OUTPUT_NAME "cbxp")
 
 target_include_directories(
     libcbxp PUBLIC
-    "${CBXP_MAPPINGS_GENERATED_DIR}"
+    cbxp
+    cbxp/control_blocks
+    externals
+    /usr/include/zos
+)
+
+target_compile_options(
+    libcbxp PUBLIC
+    ${COMPILE_OPTIONS}
+    -include "${CBXP_SCHEMAS_GENERATED_DIR}/control_block_v1.hpp"
+    ${CBXP_MAPPING_FORCED_INCLUDES}
+)
+target_link_options(libcbxp PUBLIC ${LINK_OPTIONS})
+
+# ============================================================================
+# Build '/bin/cbxp'
+# ============================================================================
+add_executable(cbxp ${CBXP_SRC_CLI})
+
+target_link_libraries(cbxp libcbxp)
+
+target_include_directories(cbxp PUBLIC cbxp externals)
+
+target_compile_definitions(
+    cbxp PUBLIC
+    VERSION="${CMAKE_PROJECT_VERSION}"
 )
 
 target_compile_options(cbxp PUBLIC ${COMPILE_OPTIONS})
