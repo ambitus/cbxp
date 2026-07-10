@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstring>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <nlohmann/json.hpp>
 
@@ -21,17 +22,18 @@ ControlBlockExplorer::loadCustomControlBlocks(std::filesystem::path path) {
         !std::filesystem::is_directory(path)) {
       throw CbxpPathError();
     }
-    for (const auto& file : std::filesystem::directory_iterator(dir_path)) {
+    for (const auto& file : std::filesystem::directory_iterator(path)) {
       if (file.extension() != ".json") {
         continue;
       }
-      std::ifstream ifs(file);
+      std::string file_name = file.stem().string();
+      std::ifstream ifs(file.path());
       nlohmann::json json_data = nlohmann::json::parse(ifs);
       Logger::getInstance().debug("Adding '" + file_name +
-                                  "' control block from '" + file + "'.");
+                                  "' control block from '" +
+                                  file.path().string() + "'.");
       ControlBlock new_map = ControlBlock(json_data);
-      std::string file_name   = file.stem().string();
-      new_maps[file_name]     = new_map;
+      new_maps[file_name]  = new_map;
     }
   } catch (const std::filesystem::filesystem_error& e) {
     throw CbxpPathError();
@@ -63,7 +65,7 @@ std::string ControlBlockExplorer::mapToString(
   return map_as_string;
 }
 
-static std::unordered_map<std::string, ControlBlock>
+std::unordered_map<std::string, ControlBlock>
 ControlBlockExplorer::buildControlBlock() {
   // Load known control blocks
   std::unordered_map<std::string, ControlBlock> control_blocks = {
