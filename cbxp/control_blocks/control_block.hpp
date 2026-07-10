@@ -1,7 +1,7 @@
 #ifndef __CONTROL_BLOCK_H_
 #define __CONTROL_BLOCK_H_
 
-#include <json-schema-validator/nlohmann/json-schema.hpp>
+#include <nlohmann/json-schema.hpp>
 #include <nlohmann/json.hpp>
 
 #include "control_block_field_formatter.hpp"
@@ -28,9 +28,7 @@ typedef struct {
 
 class ControlBlock {
  private:
-  // Check that static does what it wants here
-  static const nlohmann::json_schema::json_validator cbxp_schema_validator_{
-      CBXP_SCHEMA_JSON};
+  static const nlohmann::json_schema::json_validator cbxp_schema_validator_;
   std::unordered_map<std::string, control_block_field_t> control_block_map_ =
       {};
   storage_attributes_t storage_attributes_ = {

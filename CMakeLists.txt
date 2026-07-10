@@ -119,16 +119,13 @@ target_include_directories(
     libcbxp PUBLIC
     cbxp
     cbxp/control_blocks
-    externals/json
-    externals/json-schema-validator
+    externals
     /usr/include/zos
 )
 
 target_compile_options(
     libcbxp PUBLIC
     ${COMPILE_OPTIONS}
-    "-I${CMAKE_CURRENT_SOURCE_DIR}/externals/json"
-    "-I${CMAKE_CURRENT_SOURCE_DIR}/externals/json-schema-validator"
     "--include=${CBXP_SCHEMAS_GENERATED_DIR}/control_block_v1.hpp"
     ${CBXP_MAPPING_FORCED_INCLUDES}
 )
