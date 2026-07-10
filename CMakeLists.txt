@@ -119,7 +119,8 @@ target_include_directories(
     libcbxp PUBLIC
     cbxp
     cbxp/control_blocks
-    externals
+    externals/json
+    externals/json-schema-validor
     /usr/include/zos
 )
 
