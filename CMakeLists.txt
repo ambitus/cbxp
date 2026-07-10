@@ -120,7 +120,7 @@ target_include_directories(
     cbxp
     cbxp/control_blocks
     externals/json
-    externals/json-schema-validor
+    externals/json-schema-validator
     /usr/include/zos
 )
 
