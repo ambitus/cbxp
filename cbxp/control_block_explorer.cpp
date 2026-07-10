@@ -13,9 +13,9 @@
 
 namespace CBXP {
 
-std::unordered_map<std::string, ControlBlockMap>
+std::unordered_map<std::string, ControlBlock>
 ControlBlockExplorer::loadCustomControlBlocks(std::filesystem::path path) {
-  std::unordered_map<std::string, ControlBlockMap> new_maps = {};
+  std::unordered_map<std::string, ControlBlock> new_maps = {};
   try {
     if (!std::filesystem::exists(path) ||
         !std::filesystem::is_directory(path)) {
@@ -29,7 +29,7 @@ ControlBlockExplorer::loadCustomControlBlocks(std::filesystem::path path) {
       nlohmann::json json_data = nlohmann::json::parse(ifs);
       Logger::getInstance().debug("Adding '" + file_name +
                                   "' control block from '" + file + "'.");
-      ControlBlockMap new_map = ControlBlockMap(json_data);
+      ControlBlock new_map = ControlBlock(json_data);
       std::string file_name   = file.stem().string();
       new_maps[file_name]     = new_map;
     }
@@ -42,7 +42,7 @@ ControlBlockExplorer::loadCustomControlBlocks(std::filesystem::path path) {
 }
 
 std::string ControlBlockExplorer::mapToString(
-    const std::unordered_map<std::string, ControlBlockMap>& map) {
+    const std::unordered_map<std::string, ControlBlock>& map) {
   std::string map_as_string = "";
   if (map.empty()) {
     return map_as_string;
@@ -63,18 +63,18 @@ std::string ControlBlockExplorer::mapToString(
   return map_as_string;
 }
 
-static std::unordered_map<std::string, ControlBlockMap>
-ControlBlockExplorer::buildControlBlockMap() {
+static std::unordered_map<std::string, ControlBlock>
+ControlBlockExplorer::buildControlBlock() {
   // Load known control blocks
-  std::unordered_map<std::string, ControlBlockMap> control_blocks = {
-      { "psa",  ControlBlockMap(PSA_JSON)},
-      { "cvt",  ControlBlockMap(CVT_JSON)},
-      {"ecvt", ControlBlockMap(ECVT_JSON)},
-      {"asvt", ControlBlockMap(ASVT_JSON)},
-      {"ascb", ControlBlockMap(ASCB_JSON)},
-      {"assb", ControlBlockMap(ASSB_JSON)},
-      {"oucb", ControlBlockMap(OUCB_JSON)},
-      {"ldax", ControlBlockMap(LDAX_JSON)},
+  std::unordered_map<std::string, ControlBlock> control_blocks = {
+      { "psa",  ControlBlock(PSA_JSON)},
+      { "cvt",  ControlBlock(CVT_JSON)},
+      {"ecvt", ControlBlock(ECVT_JSON)},
+      {"asvt", ControlBlock(ASVT_JSON)},
+      {"ascb", ControlBlock(ASCB_JSON)},
+      {"assb", ControlBlock(ASSB_JSON)},
+      {"oucb", ControlBlock(OUCB_JSON)},
+      {"ldax", ControlBlock(LDAX_JSON)},
   };
 
   // Load custom control blocks
@@ -86,7 +86,7 @@ ControlBlockExplorer::buildControlBlockMap() {
   // already loaded with custom mappings as well.
   std::filesystem::path cbxp_path(env_p);
   for (const auto& path : cbxp_path) {
-    std::unordered_map<std::string, ControlBlockMap> custom_control_blocks =
+    std::unordered_map<std::string, ControlBlock> custom_control_blocks =
         ControlBlockExplorer::loadCustomControlBlocks(path);
     if (!custom_control_blocks.empty()) {
       Logger::getInstance().debug(
