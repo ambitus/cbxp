@@ -109,7 +109,7 @@ foreach(MAPPING_JSON_FILE ${CBXP_MAPPING_JSON_FILES})
 #endif // ${MAPPING_GUARD}\n"
     )
 
-    list(APPEND CBXP_MAPPING_FORCED_INCLUDES "-include" "${MAPPING_HEADER_PATH}")
+    list(APPEND CBXP_MAPPING_FORCED_INCLUDES "--include=${MAPPING_HEADER_PATH}")
 endforeach()
 
 add_library(libcbxp STATIC ${CBXP_SRC_LIB})
@@ -126,7 +126,7 @@ target_include_directories(
 target_compile_options(
     libcbxp PUBLIC
     ${COMPILE_OPTIONS}
-    -include "${CBXP_SCHEMAS_GENERATED_DIR}/control_block_v1.hpp"
+    "--include=${CBXP_SCHEMAS_GENERATED_DIR}/control_block_v1.hpp"
     ${CBXP_MAPPING_FORCED_INCLUDES}
 )
 target_link_options(libcbxp PUBLIC ${LINK_OPTIONS})
