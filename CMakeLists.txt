@@ -75,7 +75,7 @@ file(WRITE "${CBXP_SCHEMAS_GENERATED_DIR}/control_block_v1.hpp"
 "#ifndef CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n\
 #define CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n\
 \n\
-#define CB_SCHEMA_JSON R\"(${CBXP_SCHEMA_JSON})\"\n\
+#define CB_SCHEMA_JSON R\"JSON(${CBXP_SCHEMA_JSON})JSON\"\n\
 \n\
 #endif // CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
 )
@@ -104,7 +104,7 @@ foreach(MAPPING_JSON_FILE ${CBXP_MAPPING_JSON_FILES})
 "#ifndef ${MAPPING_GUARD}\n\
 #define ${MAPPING_GUARD}\n\
 \n\
-#define ${MAPPING_MACRO} R\"(${MAPPING_JSON})\"\n\
+#define ${MAPPING_MACRO} R\"JSON(${MAPPING_JSON})JSON\"\n\
 \n\
 #endif // ${MAPPING_GUARD}\n"
     )
