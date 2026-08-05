@@ -74,12 +74,12 @@ ControlBlockExplorer::buildControlBlockMap() {
       nlohmann::json::parse(CBXP_SCHEMA_JSON));
   // Load known control blocks
   std::unordered_map<std::string, ControlBlock> control_blocks = {
-      { "psa",  ControlBlock(PSA_JSON)},
-      { "cvt",  ControlBlock(CVT_JSON)},
-      {"ecvt", ControlBlock(ECVT_JSON)},
-      {"asvt", ControlBlock(ASVT_JSON)},
-      {"ascb", ControlBlock(ASCB_JSON)},
-      {"assb", ControlBlock(ASSB_JSON)},
+      { "psa", ControlBlock(cbxp_schema_validator,  PSA_JSON)},
+      { "cvt", ControlBlock(cbxp_schema_validator,  CVT_JSON)},
+      {"ecvt", ControlBlock(cbxp_schema_validator, ECVT_JSON)},
+      {"asvt", ControlBlock(cbxp_schema_validator, ASVT_JSON)},
+      {"ascb", ControlBlock(cbxp_schema_validator, ASCB_JSON)},
+      {"assb", ControlBlock(cbxp_schema_validator, ASSB_JSON)},
       //{"oucb", ControlBlock(OUCB_JSON)},
       //{"ldax", ControlBlock(LDAX_JSON)},
   };
