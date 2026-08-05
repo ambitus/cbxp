@@ -23,10 +23,10 @@ ControlBlockExplorer::loadCustomControlBlocks(std::filesystem::path path) {
       throw CbxpPathError();
     }
     for (const auto& file : std::filesystem::directory_iterator(path)) {
-      if (file.extension() != ".json") {
+      if (file.path().extension() != ".json") {
         continue;
       }
-      std::string file_name = file.stem().string();
+      std::string file_name = file.path().stem().string();
       std::ifstream ifs(file.path());
       nlohmann::json json_data = nlohmann::json::parse(ifs);
       Logger::getInstance().debug("Adding '" + file_name +
@@ -66,7 +66,7 @@ std::string ControlBlockExplorer::mapToString(
 }
 
 std::unordered_map<std::string, ControlBlock>
-ControlBlockExplorer::buildControlBlock() {
+ControlBlockExplorer::buildControlBlockMap() {
   // Load known control blocks
   std::unordered_map<std::string, ControlBlock> control_blocks = {
       { "psa",  ControlBlock(PSA_JSON)},
@@ -75,8 +75,8 @@ ControlBlockExplorer::buildControlBlock() {
       {"asvt", ControlBlock(ASVT_JSON)},
       {"ascb", ControlBlock(ASCB_JSON)},
       {"assb", ControlBlock(ASSB_JSON)},
-      {"oucb", ControlBlock(OUCB_JSON)},
-      {"ldax", ControlBlock(LDAX_JSON)},
+      //{"oucb", ControlBlock(OUCB_JSON)},
+      //{"ldax", ControlBlock(LDAX_JSON)},
   };
 
   // Load custom control blocks
@@ -92,12 +92,14 @@ ControlBlockExplorer::buildControlBlock() {
         ControlBlockExplorer::loadCustomControlBlocks(path);
     if (!custom_control_blocks.empty()) {
       Logger::getInstance().debug(
-          "Added the following custom control blocks from path '" + path +
+          "Added the following custom control blocks from path '" +
+          path.string() +
           "': " + ControlBlockExplorer::mapToString(custom_control_blocks));
       custom_control_blocks.insert(control_blocks.begin(),
                                    control_blocks.end());
     }
   }
+  return control_blocks;
 }
 
 std::vector<std::string> ControlBlockExplorer::createOptionsList(
@@ -172,7 +174,7 @@ void ControlBlockExplorer::processControlBlock(
   nlohmann::json control_block_json = {};
 
   try {
-    if (control_blocks_.contains(control_block_name)) {
+    if (control_blocks_.find(control_block_name) != control_blocks_.end()) {
       explorer_options_ =
           ExplorerOptionsMap(cbxp_options_, control_block_name, control_blocks_,
                              p_control_block_, control_block_data_length_);

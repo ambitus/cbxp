@@ -5,6 +5,7 @@
 
 #include "cbxp.h"
 #include "control_blocks/control_block.hpp"
+#include "explorer_options_map.hpp"
 
 namespace CBXP {
 
@@ -21,10 +22,10 @@ class ControlBlockExplorer {
   const void* p_control_block_         = nullptr;
   size_t control_block_data_length_    = 0;
   std::string control_block_operation_ = "";
+  ExplorerOptionsMap explorer_options_;
 
-  static std::unordered_map<std::string, ControlBlock> control_blocks_() {
-    return buildControlBlockMap();
-  };
+  static std::unordered_map<std::string, ControlBlock> control_blocks_ =
+      buildControlBlockMap();
   static std::string mapToString(
       const std::unordered_map<std::string, ControlBlock>& map);
   static std::unordered_map<std::string, ControlBlock> loadCustomControlBlocks(

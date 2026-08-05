@@ -333,7 +333,6 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
   if (!field_data.pointsTo.empty() &&
       options_map_.find(field_data.pointsTo) != options_map_.end()) {
     std::string control_block_name = field_data.pointsTo;
-    ControlBlock control_block     = control_blocks_.at(control_block_name);
     const void* p_control_block;
     if (field_data.length == 8) {
       p_control_block =
