@@ -15,6 +15,10 @@
 namespace CBXP {
 
 std::unordered_map<std::string, ControlBlock>
+    ControlBlockExplorer::control_blocks_ =
+        ControlBlockExplorer::buildControlBlockMap();
+
+std::unordered_map<std::string, ControlBlock>
 ControlBlockExplorer::loadCustomControlBlocks(std::filesystem::path path) {
   std::unordered_map<std::string, ControlBlock> new_maps = {};
   try {

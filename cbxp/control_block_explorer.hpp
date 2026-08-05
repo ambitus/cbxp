@@ -4,16 +4,11 @@
 #include <nlohmann/json.hpp>
 
 #include "cbxp.h"
+#include "cbxp_types.hpp"
 #include "control_blocks/control_block.hpp"
 #include "explorer_options_map.hpp"
 
 namespace CBXP {
-
-typedef struct {
-  std::vector<std::string> include_patterns;
-  std::vector<std::string> filters;
-  bool skip_buffer_length_check;
-} cbxp_options_t;
 
 class ControlBlockExplorer {
  private:
@@ -24,8 +19,7 @@ class ControlBlockExplorer {
   std::string control_block_operation_ = "";
   ExplorerOptionsMap explorer_options_;
 
-  static std::unordered_map<std::string, ControlBlock> control_blocks_ =
-      buildControlBlockMap();
+  static std::unordered_map<std::string, ControlBlock> control_blocks_;
   static std::string mapToString(
       const std::unordered_map<std::string, ControlBlock>& map);
   static std::unordered_map<std::string, ControlBlock> loadCustomControlBlocks(

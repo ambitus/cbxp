@@ -4,7 +4,8 @@
 #include <nlohmann/json.hpp>
 
 #include "cbxp.h"
-#include "control_block_explorer.hpp"
+#include "cbxp_types.hpp"
+#include "control_blocks/control_block.hpp"
 
 namespace CBXP {
 
