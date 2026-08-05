@@ -60,7 +60,7 @@ class ControlBlock {
   const void* getFixedAddress() const { return fixed_address_; }
   explicit ControlBlock(
       const nlohmann::json_schema::json_validator& cbxp_schema_validator,
-      const nlconst nlohmann::json& control_block_map);
+      const nlohmann::json& control_block_map);
 };
 
 }  // namespace CBXP
