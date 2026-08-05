@@ -63,7 +63,8 @@ cbxp_result_t* cbxp_format(const char* control_block_name,
   CBXP::Logger::getInstance().debugAllocate(p_cbxp_result, 64,
                                             sizeof(cbxp_result_t));
 
-  CBXP::ControlBlockExplorer explorer try {
+  CBXP::ControlBlockExplorer explorer;
+  try {
     explorer = CBXP::ControlBlockExplorer(p_cbxp_result);
   } catch (const CBXPError& e) {
     p_cbxp_result.return_code = e.getErrorCode();
