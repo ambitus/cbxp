@@ -39,7 +39,8 @@ ControlBlockExplorer::loadCustomControlBlocks(
                                   "' control block from '" +
                                   file.path().string() + "'.");
       new_maps.emplace(file_name,
-                       ControlBlock(cbxp_schema_validator, json_data));
+                       ControlBlock(cbxp_schema_validator,
+                                    nlohmann::json::parse(json_data)));
     }
   } catch (const std::filesystem::filesystem_error& e) {
     throw CbxpPathError();
@@ -77,12 +78,18 @@ ControlBlockExplorer::buildControlBlockMap() {
       nlohmann::json::parse(CBXP_SCHEMA_JSON));
   // Load known control blocks
   std::unordered_map<std::string, ControlBlock> control_blocks = {
-      { "psa", ControlBlock(cbxp_schema_validator,  PSA_JSON)},
-      { "cvt", ControlBlock(cbxp_schema_validator,  CVT_JSON)},
-      {"ecvt", ControlBlock(cbxp_schema_validator, ECVT_JSON)},
-      {"asvt", ControlBlock(cbxp_schema_validator, ASVT_JSON)},
-      {"ascb", ControlBlock(cbxp_schema_validator, ASCB_JSON)},
-      {"assb", ControlBlock(cbxp_schema_validator, ASSB_JSON)},
+      { "psa",
+       ControlBlock(cbxp_schema_validator,  nlohmann::json::parse(PSA_JSON))},
+      { "cvt",
+       ControlBlock(cbxp_schema_validator,  nlohmann::json::parse(CVT_JSON))},
+      {"ecvt",
+       ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ECVT_JSON))},
+      {"asvt",
+       ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASVT_JSON))},
+      {"ascb",
+       ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASCB_JSON))},
+      {"assb",
+       ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASSB_JSON))},
       //{"oucb", ControlBlock(cbxp_schema_validator, OUCB_JSON)},
       //{"ldax", ControlBlock(cbxp_schema_validator, LDAX_JSON)},
   };
