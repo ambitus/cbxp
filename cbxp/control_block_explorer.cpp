@@ -14,6 +14,8 @@
 
 namespace CBXP {
 
+bool ControlBlockExplorer::control_blocks_init_failed_ = false;
+
 std::unordered_map<std::string, ControlBlock>
     ControlBlockExplorer::control_blocks_ =
         ControlBlockExplorer::buildControlBlockMap();
@@ -77,23 +79,29 @@ ControlBlockExplorer::buildControlBlockMap() {
       nlohmann::json::parse(CBXP_SCHEMA_JSON));
   std::unordered_map<std::string, ControlBlock> control_blocks;
   // Load known control blocks
-  // Can't catch errors in static initialization
-  control_blocks = {
-      { "psa",
-       ControlBlock(cbxp_schema_validator,  nlohmann::json::parse(PSA_JSON))},
-      { "cvt",
-       ControlBlock(cbxp_schema_validator,  nlohmann::json::parse(CVT_JSON))},
-      {"ecvt",
-       ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ECVT_JSON))},
-      {"asvt",
-       ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASVT_JSON))},
-      {"ascb",
-       ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASCB_JSON))},
-      {"assb",
-       ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASSB_JSON))},
-      //{"oucb", ControlBlock(cbxp_schema_validator, OUCB_JSON)},
-      //{"ldax", ControlBlock(cbxp_schema_validator, LDAX_JSON)},
-  };
+  try {
+    control_blocks = {
+        { "psa",
+         ControlBlock(cbxp_schema_validator,  nlohmann::json::parse(PSA_JSON))},
+        { "cvt",
+         ControlBlock(cbxp_schema_validator,  nlohmann::json::parse(CVT_JSON))},
+        {"ecvt",
+         ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ECVT_JSON))},
+        {"asvt",
+         ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASVT_JSON))},
+        {"ascb",
+         ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASCB_JSON))},
+        {"assb",
+         ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASSB_JSON))},
+        //{"oucb", ControlBlock(cbxp_schema_validator, OUCB_JSON)},
+        //{"ldax", ControlBlock(cbxp_schema_validator, LDAX_JSON)},
+    };
+  } catch (const std::exception& e) {
+    Logger::getInstance().debug(e.what());
+    Logger::getInstance().debug("JSON Validation error for included files");
+    control_blocks_init_failed_ = true;
+    return {};
+  }
 
   // Load custom control blocks
   std::string env_p(std::getenv("CBXPPATH"));
@@ -191,6 +199,9 @@ void ControlBlockExplorer::processControlBlock(
   nlohmann::json control_block_json = {};
 
   try {
+    if (control_blocks_init_failed_) {
+      throw CbxpJsonError();
+    }
     if (control_blocks_.find(control_block_name) != control_blocks_.end()) {
       ExplorerOptionsMap explorer_options =
           ExplorerOptionsMap(cbxp_options_, control_block_name, control_blocks_,

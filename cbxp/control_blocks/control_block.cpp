@@ -40,8 +40,11 @@ ControlBlock::ControlBlock(
       control_block_map["storageAttributes"]["key"].get<uint8_t>();
   for (auto it = control_block_map["storageAttributes"]["subpools"].begin();
        it != control_block_map["storageAttributes"]["subpools"].end(); ++it) {
-    unsigned char subpool            = (*it).get<uint8_t>();
-    const zos::SubpoolInfo* info     = zos::subpool_info_for(subpool);
+    unsigned char subpool        = (*it).get<uint8_t>();
+    const zos::SubpoolInfo* info = zos::subpool_info_for(subpool);
+    if (info == nullptr) {
+      throw CbxpJsonError();
+    }
     storage_attributes_.is_common    = zos::is_common(info->location);
     storage_attributes_.is_protected = info->fetch_protected;
   }
