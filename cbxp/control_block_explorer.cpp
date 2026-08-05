@@ -36,8 +36,7 @@ ControlBlockExplorer::loadCustomControlBlocks(std::filesystem::path path) {
       Logger::getInstance().debug("Adding '" + file_name +
                                   "' control block from '" +
                                   file.path().string() + "'.");
-      ControlBlock new_map = ControlBlock(json_data);
-      new_maps[file_name]  = new_map;
+      new_maps.emplace(file_name, ControlBlock(json_data));
     }
   } catch (const std::filesystem::filesystem_error& e) {
     throw CbxpPathError();
