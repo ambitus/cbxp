@@ -339,7 +339,7 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
           reinterpret_cast<const void*>(field_json.get<uint64_t>());
     } else {
       p_control_block =
-          reinterpret_cast<const void __ptr32*>(field_json.get<uint32_t>());
+          reinterpret_cast<const void* __ptr32>(field_json.get<uint32_t>());
     }
     field_json =
         ExplorerOptionsMap(options_map_[control_block_name], control_block_name,
@@ -422,12 +422,12 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
           // __ptr32 is a z/OS platform qualifier; branches are intentionally
           // distinct
           control_block_pointers.push_back(
-              reinterpret_cast<const void __ptr32*>(*base));
+              reinterpret_cast<const void* __ptr32>(*base));
         }
       }
     }
-    return control_block_pointers;
   }
+  return control_block_pointers;
 }
 
 nlohmann::json ExplorerOptionsMap::parseFields() {
@@ -446,6 +446,7 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
     }
     control_block_data.merge_patch(field_json);
   }
+  return control_block_data;
 }
 
 nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
