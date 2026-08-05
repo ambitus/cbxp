@@ -11,7 +11,8 @@
 namespace CBXP {
 
 const nlohmann::json_schema::json_validator
-    ControlBlock::cbxp_schema_validator_{CBXP_SCHEMA_JSON};
+    ControlBlock::cbxp_schema_validator_{
+        nlohmann::json::parse(CBXP_SCHEMA_JSON)};
 
 FieldType ControlBlock::stringToType(const std::string& type_str) {
   if (type_str == "string") {

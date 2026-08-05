@@ -41,6 +41,7 @@ file(
     GLOB CBXP_SRC_LIB
     "cbxp/*.cpp"
     "cbxp/control_blocks/*.cpp"
+    "externals/json-schema-validator/*.cpp"
 )
 
 file(
