@@ -43,10 +43,13 @@ ControlBlock::ControlBlock(
     unsigned char subpool        = (*it).get<uint8_t>();
     const zos::SubpoolInfo* info = zos::subpool_info_for(subpool);
     if (info == nullptr) {
-      throw CbxpJsonError();
+      // If subpool information isn't there, we try to get the control block
+      storage_attributes_.is_common    = true;
+      storage_attributes_.is_protected = false;
+    } else {
+      storage_attributes_.is_common    = zos::is_common(info->location);
+      storage_attributes_.is_protected = info->fetch_protected;
     }
-    storage_attributes_.is_common    = zos::is_common(info->location);
-    storage_attributes_.is_protected = info->fetch_protected;
   }
 
   for (auto it = control_block_map["pointedToBy"].begin();

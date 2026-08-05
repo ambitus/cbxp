@@ -190,6 +190,8 @@ void ControlBlockExplorer::processControlBlock(
 
   try {
     if (control_blocks_init_failed_) {
+      Logger::getInstance().debug(
+          "Static initialization of JSON mappings failed.");
       throw CbxpJsonError();
     }
     if (control_blocks_.find(control_block_name) != control_blocks_.end()) {
