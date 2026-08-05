@@ -32,12 +32,7 @@ FieldType ControlBlock::stringToType(const std::string& type_str) {
 ControlBlock::ControlBlock(
     const nlohmann::json_schema::json_validator& cbxp_schema_validator,
     const nlohmann::json& control_block_map) {
-  try {
-    cbxp_schema_validator.validate(control_block_map);
-  } catch (const std::exception& e) {
-    Logger::getInstance().debug("JSON Validation error");
-    throw CbxpJsonError()();
-  }
+  cbxp_schema_validator.validate(control_block_map);
 
   control_block_length_ = 0;
 

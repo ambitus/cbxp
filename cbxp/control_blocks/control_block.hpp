@@ -28,7 +28,6 @@ typedef struct {
 
 class ControlBlock {
  private:
-  static const nlohmann::json_schema::json_validator cbxp_schema_validator_;
   std::unordered_map<std::string, control_block_field_t> control_block_map_ =
       {};
   storage_attributes_t storage_attributes_ = {

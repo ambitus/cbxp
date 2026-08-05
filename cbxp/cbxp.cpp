@@ -2,6 +2,7 @@
 
 #include <nlohmann/json.hpp>
 
+#include "control_block_error.hpp"
 #include "control_block_explorer.hpp"
 #include "logger.hpp"
 
@@ -31,8 +32,13 @@ cbxp_result_t* cbxp_extract(const char* control_block_name,
   CBXP::Logger::getInstance().debugAllocate(p_cbxp_result, 64,
                                             sizeof(cbxp_result_t));
 
-  CBXP::ControlBlockExplorer explorer =
-      CBXP::ControlBlockExplorer(p_cbxp_result);
+  CBXP::ControlBlockExplorer explorer;
+  try {
+    explorer = CBXP::ControlBlockExplorer(p_cbxp_result);
+  } catch (const CBXPError& e) {
+    p_cbxp_result.return_code = e.getErrorCode();
+    return p_cbxp_result;
+  }
 
   explorer.extractControlBlock(control_block_name_string,
                                includes_string_string, filters_string_string);
@@ -57,8 +63,12 @@ cbxp_result_t* cbxp_format(const char* control_block_name,
   CBXP::Logger::getInstance().debugAllocate(p_cbxp_result, 64,
                                             sizeof(cbxp_result_t));
 
-  CBXP::ControlBlockExplorer explorer =
-      CBXP::ControlBlockExplorer(p_cbxp_result);
+  CBXP::ControlBlockExplorer explorer try {
+    explorer = CBXP::ControlBlockExplorer(p_cbxp_result);
+  } catch (const CBXPError& e) {
+    p_cbxp_result.return_code = e.getErrorCode();
+    return p_cbxp_result;
+  }
 
   explorer.formatControlBlock(control_block_name_string, data, data_length);
 
