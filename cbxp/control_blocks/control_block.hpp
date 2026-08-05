@@ -58,7 +58,9 @@ class ControlBlock {
   }
   size_t getMaxOffset() const { return max_offset_; }
   const void* getFixedAddress() const { return fixed_address_; }
-  explicit ControlBlock(const nlohmann::json& control_block_map);
+  explicit ControlBlock(
+      const nlohmann::json_schema::json_validator& cbxp_schema_validator,
+      const nlconst nlohmann::json& control_block_map);
 };
 
 }  // namespace CBXP

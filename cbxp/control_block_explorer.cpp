@@ -70,6 +70,8 @@ std::string ControlBlockExplorer::mapToString(
 
 std::unordered_map<std::string, ControlBlock>
 ControlBlockExplorer::buildControlBlockMap() {
+  nlohmann::json_schema::json_validator cbxp_schema_validator(
+      nlohmann::json::parse(CBXP_SCHEMA_JSON));
   // Load known control blocks
   std::unordered_map<std::string, ControlBlock> control_blocks = {
       { "psa",  ControlBlock(PSA_JSON)},

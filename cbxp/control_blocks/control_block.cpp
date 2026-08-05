@@ -10,10 +10,6 @@
 
 namespace CBXP {
 
-const nlohmann::json_schema::json_validator
-    ControlBlock::cbxp_schema_validator_{
-        nlohmann::json::parse(CBXP_SCHEMA_JSON)};
-
 FieldType ControlBlock::stringToType(const std::string& type_str) {
   if (type_str == "string") {
     return STRING;
@@ -33,8 +29,10 @@ FieldType ControlBlock::stringToType(const std::string& type_str) {
   throw CbxpJsonError();
 }
 
-ControlBlock::ControlBlock(const nlohmann::json& control_block_map) {
-  cbxp_schema_validator_.validate(control_block_map);
+ControlBlock::ControlBlock(
+    const nlohmann::json_schema::json_validator& cbxp_schema_validator,
+    const nlohmann::json& control_block_map) {
+  cbxp_schema_validator.validate(control_block_map);
   control_block_length_ = 0;
 
   storage_attributes_.key =
