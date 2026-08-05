@@ -25,7 +25,6 @@ ControlBlockExplorer::loadCustomControlBlocks(
     const nlohmann::json_schema::json_validator& cbxp_schema_validator,
     std::filesystem::path path) {
   std::unordered_map<std::string, ControlBlock> new_maps = {};
-  // try {
   if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
     throw CbxpPathError();
   }
@@ -41,13 +40,6 @@ ControlBlockExplorer::loadCustomControlBlocks(
                                 file.path().string() + "'.");
     new_maps.emplace(file_name, ControlBlock(cbxp_schema_validator, json_data));
   }
-  /* Doesn't matter this is during static initialization
-  } catch (const std::filesystem::filesystem_error& e) {
-    throw CbxpPathError();
-  } catch (const std::exception& e) {
-    throw CbxpJsonError();
-  }
-  */
   return new_maps;
 }
 
@@ -97,8 +89,6 @@ ControlBlockExplorer::buildControlBlockMap() {
         //{"ldax", ControlBlock(cbxp_schema_validator, LDAX_JSON)},
     };
   } catch (const std::exception& e) {
-    Logger::getInstance().debug(e.what());
-    Logger::getInstance().debug("JSON Validation error for included files");
     control_blocks_init_failed_ = true;
     return {};
   }

@@ -18,6 +18,7 @@ class ControlBlockExplorer {
   size_t control_block_data_length_    = 0;
   std::string control_block_operation_ = "";
 
+  static bool control_blocks_init_failed_;
   static std::unordered_map<std::string, ControlBlock> control_blocks_;
   static std::string mapToString(
       const std::unordered_map<std::string, ControlBlock>& map);
