@@ -179,10 +179,10 @@ void ControlBlockExplorer::processControlBlock(
 
   try {
     if (control_blocks_.find(control_block_name) != control_blocks_.end()) {
-      explorer_options_ =
+      ExplorerOptionsMap explorer_options =
           ExplorerOptionsMap(cbxp_options_, control_block_name, control_blocks_,
                              p_control_block_, control_block_data_length_);
-      control_block_json = explorer_options_.getControlBlockData();
+      control_block_json = explorer_options.getControlBlockData();
     } else {
       throw ControlBlockError();
     }

@@ -17,7 +17,6 @@ class ControlBlockExplorer {
   const void* p_control_block_         = nullptr;
   size_t control_block_data_length_    = 0;
   std::string control_block_operation_ = "";
-  ExplorerOptionsMap explorer_options_;
 
   static std::unordered_map<std::string, ControlBlock> control_blocks_;
   static std::string mapToString(
