@@ -19,7 +19,9 @@ std::unordered_map<std::string, ControlBlock>
         ControlBlockExplorer::buildControlBlockMap();
 
 std::unordered_map<std::string, ControlBlock>
-ControlBlockExplorer::loadCustomControlBlocks(std::filesystem::path path) {
+ControlBlockExplorer::loadCustomControlBlocks(
+    const nlohmann::json_schema::json_validator& cbxp_schema_validator,
+    std::filesystem::path path) {
   std::unordered_map<std::string, ControlBlock> new_maps = {};
   try {
     if (!std::filesystem::exists(path) ||
@@ -36,7 +38,8 @@ ControlBlockExplorer::loadCustomControlBlocks(std::filesystem::path path) {
       Logger::getInstance().debug("Adding '" + file_name +
                                   "' control block from '" +
                                   file.path().string() + "'.");
-      new_maps.emplace(file_name, ControlBlock(json_data));
+      new_maps.emplace(file_name,
+                       ControlBlock(cbxp_schema_validator, json_data));
     }
   } catch (const std::filesystem::filesystem_error& e) {
     throw CbxpPathError();
@@ -80,8 +83,8 @@ ControlBlockExplorer::buildControlBlockMap() {
       {"asvt", ControlBlock(cbxp_schema_validator, ASVT_JSON)},
       {"ascb", ControlBlock(cbxp_schema_validator, ASCB_JSON)},
       {"assb", ControlBlock(cbxp_schema_validator, ASSB_JSON)},
-      //{"oucb", ControlBlock(OUCB_JSON)},
-      //{"ldax", ControlBlock(LDAX_JSON)},
+      //{"oucb", ControlBlock(cbxp_schema_validator, OUCB_JSON)},
+      //{"ldax", ControlBlock(cbxp_schema_validator, LDAX_JSON)},
   };
 
   // Load custom control blocks
@@ -94,7 +97,8 @@ ControlBlockExplorer::buildControlBlockMap() {
   std::filesystem::path cbxp_path(env_p);
   for (const auto& path : cbxp_path) {
     std::unordered_map<std::string, ControlBlock> custom_control_blocks =
-        ControlBlockExplorer::loadCustomControlBlocks(path);
+        ControlBlockExplorer::loadCustomControlBlocks(cbxp_schema_validator,
+                                                      path);
     if (!custom_control_blocks.empty()) {
       Logger::getInstance().debug(
           "Added the following custom control blocks from path '" +

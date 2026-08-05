@@ -22,6 +22,7 @@ class ControlBlockExplorer {
   static std::string mapToString(
       const std::unordered_map<std::string, ControlBlock>& map);
   static std::unordered_map<std::string, ControlBlock> loadCustomControlBlocks(
+      const nlohmann::json_schema::json_validator& cbxp_schema_validator,
       std::filesystem::path path);
   static std::unordered_map<std::string, ControlBlock> buildControlBlockMap();
   static std::vector<std::string> createOptionsList(
