@@ -25,29 +25,29 @@ ControlBlockExplorer::loadCustomControlBlocks(
     const nlohmann::json_schema::json_validator& cbxp_schema_validator,
     std::filesystem::path path) {
   std::unordered_map<std::string, ControlBlock> new_maps = {};
-  try {
-    if (!std::filesystem::exists(path) ||
-        !std::filesystem::is_directory(path)) {
-      throw CbxpPathError();
+  // try {
+  if (!std::filesystem::exists(path) || !std::filesystem::is_directory(path)) {
+    throw CbxpPathError();
+  }
+  for (const auto& file : std::filesystem::directory_iterator(path)) {
+    if (file.path().extension() != ".json") {
+      continue;
     }
-    for (const auto& file : std::filesystem::directory_iterator(path)) {
-      if (file.path().extension() != ".json") {
-        continue;
-      }
-      std::string file_name = file.path().stem().string();
-      std::ifstream ifs(file.path());
-      nlohmann::json json_data = nlohmann::json::parse(ifs);
-      Logger::getInstance().debug("Adding '" + file_name +
-                                  "' control block from '" +
-                                  file.path().string() + "'.");
-      new_maps.emplace(file_name,
-                       ControlBlock(cbxp_schema_validator, json_data));
-    }
+    std::string file_name = file.path().stem().string();
+    std::ifstream ifs(file.path());
+    nlohmann::json json_data = nlohmann::json::parse(ifs);
+    Logger::getInstance().debug("Adding '" + file_name +
+                                "' control block from '" +
+                                file.path().string() + "'.");
+    new_maps.emplace(file_name, ControlBlock(cbxp_schema_validator, json_data));
+  }
+  /* Doesn't matter this is during static initialization
   } catch (const std::filesystem::filesystem_error& e) {
     throw CbxpPathError();
   } catch (const std::exception& e) {
     throw CbxpJsonError();
   }
+  */
   return new_maps;
 }
 
@@ -193,9 +193,6 @@ void ControlBlockExplorer::processControlBlock(
   nlohmann::json control_block_json = {};
 
   try {
-    if (control_blocks_init_failed_) {
-      throw CbxpJsonError();
-    }
     if (control_blocks_.find(control_block_name) != control_blocks_.end()) {
       ExplorerOptionsMap explorer_options =
           ExplorerOptionsMap(cbxp_options_, control_block_name, control_blocks_,

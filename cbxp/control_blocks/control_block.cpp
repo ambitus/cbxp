@@ -26,7 +26,7 @@ FieldType ControlBlock::stringToType(const std::string& type_str) {
   if (type_str == "address") {
     return ADDRESS;
   }
-  throw CbxpJsonError();
+  return UNSIGNED_INT;
 }
 
 ControlBlock::ControlBlock(
