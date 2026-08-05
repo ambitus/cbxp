@@ -14,8 +14,6 @@
 
 namespace CBXP {
 
-bool ControlBlockExplorer::control_blocks_init_failed_ = false;
-
 std::unordered_map<std::string, ControlBlock>
     ControlBlockExplorer::control_blocks_ =
         ControlBlockExplorer::buildControlBlockMap();
