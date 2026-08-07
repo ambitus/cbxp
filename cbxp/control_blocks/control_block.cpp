@@ -35,7 +35,7 @@ ControlBlock::ControlBlock(
   cbxp_schema_validator.validate(control_block_map);
 
   control_block_length_ = 0;
-
+  control_block_name_   = control_block_map["name"].get<std::string>();
   storage_attributes_.key =
       control_block_map["storageAttributes"]["key"].get<uint8_t>();
   for (auto it = control_block_map["storageAttributes"]["subpools"].begin();

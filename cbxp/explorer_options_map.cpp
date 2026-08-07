@@ -278,6 +278,7 @@ bool ExplorerOptionsMap::matchFilter(nlohmann::json& control_block_json) {
 
 nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
                                                size_t offset) {
+  offset += field_data.offset;
   ExplorerOptionsMap::checkDataLength(offset);
   nlohmann::json field_json;
   // do try/except to stop an 0C4?
@@ -434,6 +435,8 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
   nlohmann::json control_block_data = {};
   for (const auto& [field_name, field_data] : control_block_->getMap()) {
     nlohmann::json field_json = {};
+    Logger::getInstance.debug("Loading field '" + field_name "' at offset '" +
+                              std::to_string(field_data.offset) + "'");
     if (field_data.repeated) {
       field_json[field_name + "s"] = {};
       size_t count = control_block_data[field_data.count].get<uint8_t>();
