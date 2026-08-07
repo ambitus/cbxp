@@ -435,7 +435,8 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
   nlohmann::json control_block_data = {};
   for (const auto& [field_name, field_data] : control_block_->getMap()) {
     nlohmann::json field_json = {};
-    Logger::getInstance().debug("Loading field '" + field_name "' at offset '" +
+    Logger::getInstance().debug("Loading field '" + field_name +
+                                "' at offset '" +
                                 std::to_string(field_data.offset) + "'");
     if (field_data.repeated) {
       field_json[field_name + "s"] = {};
