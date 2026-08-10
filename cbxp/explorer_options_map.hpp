@@ -45,7 +45,8 @@ class ExplorerOptionsMap {
       const cbxp_options_t& cbxp_options, const std::string& control_block_name,
       const std::unordered_map<std::string, ControlBlock>& control_blocks,
       const void* p_control_block, const size_t buffer_length)
-      : control_block_(control_blocks.at(control_block_name)),
+      : skip_buffer_length_check_(cbxp_options.skip_buffer_length_check),
+        control_block_(control_blocks.at(control_block_name)),
         control_blocks_(control_blocks),
         p_control_block_(p_control_block),
         buffer_length_(buffer_length) {
