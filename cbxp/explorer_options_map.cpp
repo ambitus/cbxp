@@ -435,6 +435,12 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
   nlohmann::json control_block_data = {};
   for (const auto& [field_name, field_data] : control_block_->getMap()) {
     nlohmann::json field_json = {};
+    if (control_block_->getName() == "psa" &&
+        field_data.offset >= control_block_->getMaxOffset() / 2) {
+      // Half of the PSA is fetch protected, so we can't actually get the "back
+      // half" of it
+      return control_block_data;
+    }
     Logger::getInstance().debug("Loading field '" + field_name +
                                 "' at offset '" +
                                 std::to_string(field_data.offset) + "'");
