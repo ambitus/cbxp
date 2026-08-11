@@ -439,7 +439,7 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
         field_data.offset >= control_block_->getMaxOffset() / 2) {
       // Half of the PSA is fetch protected, so we can't actually get the "back
       // half" of it
-      return control_block_data;
+      continue;
     }
     Logger::getInstance().debug("Loading field '" + field_name +
                                 "' at offset '" +
