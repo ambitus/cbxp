@@ -413,7 +413,8 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
     size_t offset = 0, field_length = 4;
     for (const auto& [field_name, field_data] : next_control_block_map) {
       // Somehow this is very wrong, i'll need to look at this later
-      Logger::getInstance().debug("Points To: " + field_data.pointsTo);
+      Logger::getInstance().debug("Field Name: " + field_name +
+                                  ", Points To: " + field_data.pointsTo);
       if (field_data.pointsTo.empty() ||
           field_data.pointsTo != control_block->getName()) {
         continue;
