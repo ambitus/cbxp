@@ -26,6 +26,9 @@ FieldType ControlBlock::stringToType(const std::string& type_str) {
   if (type_str == "address") {
     return ADDRESS;
   }
+  if (type_str == "bitstring") {
+    return BITSTRING;
+  }
   return UNSIGNED_INT;
 }
 

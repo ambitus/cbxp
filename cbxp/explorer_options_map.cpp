@@ -302,9 +302,24 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
         break;
       case SIGNED_INT:
         if (field_data.length == 8) {
-          field_json = *(static_cast<const long*>(p_control_block_) + offset);
+          field_json = *(reinterpret_cast<const int64_t*>(
+              static_cast<const char*>(p_control_block_) + offset));
+        } else if (field_data.length == 2) {
+          field_json = *(reinterpret_cast<const int16_t*>(
+              static_cast<const char*>(p_control_block_) + offset));
         } else {
-          field_json = *(static_cast<const int*>(p_control_block_) + offset);
+          field_json = *(reinterpret_cast<const int32_t*>(
+              static_cast<const char*>(p_control_block_) + offset));
+        }
+        break;
+      case BITSTRING:
+        // We can later differentiate this from Hex
+        if (field_data.length == 8) {
+          field_json = control_block_->formatter_.getHex<uint64_t>(
+              static_cast<const char*>(p_control_block_) + offset);
+        } else {
+          field_json = control_block_->formatter_.getHex<uint32_t>(
+              static_cast<const char*>(p_control_block_) + offset);
         }
         break;
       case HEX:

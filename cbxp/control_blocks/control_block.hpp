@@ -8,7 +8,7 @@
 
 namespace CBXP {
 
-enum FieldType { STRING, SIGNED_INT, UNSIGNED_INT, HEX, ADDRESS };
+enum FieldType { STRING, SIGNED_INT, UNSIGNED_INT, HEX, ADDRESS, BITSTRING };
 
 typedef struct {
   std::string name;
