@@ -3,6 +3,7 @@
 #include <fnmatch.h>
 
 #include <nlohmann/json.hpp>
+#include <sstream>
 
 #include "control_block_error.hpp"
 #include "logger.hpp"
@@ -407,21 +408,25 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
         next_control_block_map = next_control_block->getMap();
     const std::vector<const void*> next_vector =
         ExplorerOptionsMap::findControlBlockPointer(next_control_block);
-    std::string count_field = "";
+    std::string count_field        = "";
+    std::string pointer_field_name = "";
     size_t offset = 0, field_length = 4;
     for (const auto& [field_name, field_data] : next_control_block_map) {
       if (field_data.pointsTo.empty() ||
           field_data.pointsTo != control_block->getName()) {
         continue;
       }
-      offset       = field_data.offset;
-      field_length = field_data.length;
-      count_field  = field_data.count;
+      offset             = field_data.offset;
+      field_length       = field_data.length;
+      count_field        = field_data.count;
+      pointer_field_name = field_name;
+      break;
     }
     for (const auto& next : next_vector) {
       // In case we are ALREADY looking at a list of control blocks, we iterate
       // through this
       Logger::getInstance().debug("Polling '" + next_control_block->getName() +
+                                  "' field '" + pointer_field_name +
                                   "' at offset '" + std::to_string(offset) +
                                   "' for control block tree...");
       size_t count = 1;
@@ -434,16 +439,23 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
         // Then we iterate through the "next" control blocks
         const char* base =
             static_cast<const char*>(next) + i * field_length + offset;
+        const void* resolved;
         if (field_length == 8) {
-          control_block_pointers.push_back(reinterpret_cast<const void*>(
-              *reinterpret_cast<const uint64_t*>(base)));
+          resolved = reinterpret_cast<const void*>(
+              *reinterpret_cast<const uint64_t*>(base));
         } else {
           // __ptr32 is a z/OS platform qualifier; branches are intentionally
           // distinct
-          control_block_pointers.push_back(
-              reinterpret_cast<const void* __ptr32>(
-                  *reinterpret_cast<const uint32_t*>(base)));
+          resolved = reinterpret_cast<const void* __ptr32>(
+              *reinterpret_cast<const uint32_t*>(base));
         }
+        Logger::getInstance().debug("Resolved '" + control_block->getName() +
+                                    "' pointer to address " + [&]() {
+                                      std::ostringstream oss;
+                                      oss << resolved;
+                                      return oss.str();
+                                    }());
+        control_block_pointers.push_back(resolved);
       }
     }
   }
