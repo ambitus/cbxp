@@ -517,6 +517,10 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
     return control_block_data;
   } else if (p_control_blocks.size() == 1) {
     p_control_block_ = p_control_blocks[0];
+    Logger::getInstance().debug(control_block_name + " hex dump:");
+    Logger::getInstance().hexDump(
+        reinterpret_cast<const char*>(p_control_block_),
+        control_block_->getMaxOffset());
     nlohmann::json single_control_block_json =
         ExplorerOptionsMap::parseFields();
     if (ExplorerOptionsMap::matchFilter(single_control_block_json)) {
