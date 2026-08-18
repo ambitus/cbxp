@@ -420,6 +420,11 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
       field_length       = field_data.length;
       count_field        = field_data.count;
       pointer_field_name = field_name;
+      Logger::getInstance().debug(
+          "storing '" + next_control_block->getName() + "' field '" +
+          pointer_field_name + "' at offset '" + std::to_string(offset) +
+          "' with length '" + std::to_string(field_length) + "' and count '" +
+          std::to_string(count_field) + "' for control block tree...");
       break;
     }
     for (const auto& next : next_vector) {
