@@ -44,8 +44,7 @@
       "description": "RESTART OLD PSW (AFTER IPL)",
       "offset": 8,
       "length": 8,
-      "type": "hex",
-      "pointsTo": "cvt"
+      "type": "hex"
     },
     {
       "name": "flciccw2",
@@ -88,7 +87,6 @@
       "offset": 40,
       "length": 8,
       "type": "hex",
-      "pointsTo": "cvt",
       "aliases": [
         "piopsw"
       ]
@@ -99,7 +97,6 @@
       "offset": 48,
       "length": 8,
       "type": "hex",
-      "pointsTo": "cvt",
       "aliases": [
         "mcopsw"
       ]
@@ -110,7 +107,6 @@
       "offset": 56,
       "length": 8,
       "type": "hex",
-      "pointsTo": "cvt",
       "aliases": [
         "ioopsw"
       ]

@@ -424,21 +424,25 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
       Logger::getInstance().debug("Polling '" + next_control_block->getName() +
                                   "' at offset '" + std::to_string(offset) +
                                   "' for control block tree...");
-      const size_t count = *(static_cast<const size_t*>(next) +
-                             next_control_block_map[count_field].offset);
-      for (int i = 0; i < count; i++) {
+      size_t count = 1;
+      if (!count_field.empty()) {
+        count = *(reinterpret_cast<const size_t*>(
+            static_cast<const char*>(next) +
+            next_control_block_map[count_field].offset));
+      }
+      for (size_t i = 0; i < count; i++) {
         // Then we iterate through the "next" control blocks
         const char* base =
             static_cast<const char*>(next) + i * field_length + offset;
-        // cppcheck-suppress duplicateBranch
         if (field_length == 8) {
-          control_block_pointers.push_back(
-              reinterpret_cast<const void*>(*base));
+          control_block_pointers.push_back(reinterpret_cast<const void*>(
+              *reinterpret_cast<const uint64_t*>(base)));
         } else {
           // __ptr32 is a z/OS platform qualifier; branches are intentionally
           // distinct
           control_block_pointers.push_back(
-              reinterpret_cast<const void* __ptr32>(*base));
+              reinterpret_cast<const void* __ptr32>(
+                  *reinterpret_cast<const uint32_t*>(base)));
         }
       }
     }
@@ -507,7 +511,11 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
     p_control_blocks =
         ExplorerOptionsMap::findControlBlockPointer(control_block_);
   }
-  if (p_control_blocks.size() == 1) {
+  if (p_control_blocks.size() == 0) {
+    Logger::getInstance().debug("No pointers found for '" + control_block_name +
+                                "' control block.");
+    return control_block_data;
+  } else if (p_control_blocks.size() == 1) {
     p_control_block_ = p_control_blocks[0];
     nlohmann::json single_control_block_json =
         ExplorerOptionsMap::parseFields();
