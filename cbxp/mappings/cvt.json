@@ -17,63 +17,63 @@
     {
       "name": "cvtprod",
       "description": "SYSTEM CONTROL PROGRAM PRODUCT LEVEL.",
-      "offset": 216,
+      "offset": -40,
       "length": 16,
       "type": "hex"
     },
     {
       "name": "cvtprodn",
       "description": "PRODUCT NAME OF THE CONTROL PROGRAM, EX.(SP3.2). This is maintained for compatibility reasons only. The true product name version, release, and modification level information is in the ECVT (ECVTPNAM, PVER, PREL, PMOD). This can be considered a shorthand for the offical name For z/OS V3R2 (HBB77F0), the value is SP7.3.2",
-      "offset": 216,
+      "offset": -40,
       "length": 8,
       "type": "string"
     },
     {
       "name": "cvtprodi",
       "description": "PRODUCT FMID IDENTIFIER FOR THE CONTROL PROGRAM, EX.(JBB1328).",
-      "offset": 224,
+      "offset": -32,
       "length": 8,
       "type": "string"
     },
     {
       "name": "cvtverid",
       "description": "OPTIONAL USER PERSONALIZATION OF SOFTWARE SYSTEM VERSION.",
-      "offset": 232,
+      "offset": -24,
       "length": 16,
       "type": "string"
     },
     {
       "name": "cvtmdl",
       "description": "CPU NUMBER IN SIGNLESS PACKED DECIMAL, I.E., A 3090 PROCESSOR WOULD APPEAR AS X'3090'",
-      "offset": 250,
+      "offset": -6,
       "length": 2,
       "type": "hex"
     },
     {
       "name": "cvtrelno",
       "description": "RELEASE NUMBER (EBCDIC)",
-      "offset": 252,
+      "offset": -4,
       "length": 4,
       "type": "hex"
     },
     {
       "name": "cvtnumb",
       "description": "RELEASE NUMBER",
-      "offset": 252,
+      "offset": -4,
       "length": 2,
       "type": "hex"
     },
     {
       "name": "cvtlevl",
       "description": "LEVEL NUMBER OF THIS RELEASE",
-      "offset": 254,
+      "offset": -2,
       "length": 2,
       "type": "hex"
     },
     {
       "name": "cvttcbp",
       "description": "Address of PSATNEW.",
-      "offset": 256,
+      "offset": 0,
       "length": 4,
       "type": "address",
       "pointsTo": "tcbp"
@@ -81,7 +81,7 @@
     {
       "name": "cvt0ef00",
       "description": "ADDRESS OF ROUTINE TO SCHEDULE ASYNCHRONOUS EXITS",
-      "offset": 260,
+      "offset": 4,
       "length": 4,
       "type": "address",
       "pointsTo": "0ef"
@@ -89,7 +89,7 @@
     {
       "name": "cvtlink",
       "description": "ADDRESS OF DCB FOR SYS1.LINKLIB DATA SET. UPDATED BY CONTENTS SUPERVISION RIM. OWNERSHIP: CONTENTS SUPERVISION.",
-      "offset": 264,
+      "offset": 8,
       "length": 4,
       "type": "address",
       "pointsTo": "0vl"
@@ -97,7 +97,7 @@
     {
       "name": "cvtauscb",
       "description": "ADDRESS OF ASSIGN/UNASSIGN SERVICE DATA MODULE.",
-      "offset": 268,
+      "offset": 12,
       "length": 4,
       "type": "address",
       "pointsTo": "0vl"
@@ -105,7 +105,7 @@
     {
       "name": "cvtbuf",
       "description": "ADDRESS OF THE BUFFER OF THE RESIDENT CONSOLE INTERRUPT ROUTINE",
-      "offset": 272,
+      "offset": 16,
       "length": 4,
       "type": "address",
       "pointsTo": "0vl"
@@ -113,7 +113,7 @@
     {
       "name": "cvtxapg",
       "description": "ADDRESS OF I/O SUPERVISOR APPENDAGE VECTOR TABLE",
-      "offset": 276,
+      "offset": 20,
       "length": 4,
       "type": "address",
       "pointsTo": "0vl"
@@ -121,7 +121,7 @@
     {
       "name": "cvt0vl00",
       "description": "ADDRESS OF ENTRY POINT OF THE TASK SUPERVISOR'S ADDRESS VALIDITY CHECKING ROUTINE",
-      "offset": 280,
+      "offset": 24,
       "length": 4,
       "type": "address",
       "pointsTo": "0vl"
@@ -129,7 +129,7 @@
     {
       "name": "cvtpcnvt",
       "description": "ADDRESS OF ENTRY POINT OF THE ROUTINE WHICH CONVERTS A RELATIVE TRACK ADDRESS (TTR) TO AN ABSOLUTE TRACK ADDRESS (MBBCCHHR)",
-      "offset": 284,
+      "offset": 28,
       "length": 4,
       "type": "address",
       "pointsTo": "entry"
@@ -137,7 +137,7 @@
     {
       "name": "cvtprltv",
       "description": "ADDRESS OF ENTRY POINT OF THE ROUTINE WHICH CONVERTS AN ABSOLUTE TRACK ADDRESS (MBBCCHHR) TO A RELATIVE TRACK ADDRESS (TTR)",
-      "offset": 288,
+      "offset": 32,
       "length": 4,
       "type": "address",
       "pointsTo": "entry"
@@ -145,7 +145,7 @@
     {
       "name": "cvtllcb",
       "description": "ADDRESS OF THE LLCB.",
-      "offset": 292,
+      "offset": 36,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -153,7 +153,7 @@
     {
       "name": "cvtlltrm",
       "description": "ADDRESS OF LLA'S MEMORY TERNIMATION RESOURCE MANAGER.",
-      "offset": 296,
+      "offset": 40,
       "length": 4,
       "type": "address",
       "pointsTo": "vtrg"
@@ -161,7 +161,7 @@
     {
       "name": "cvtxtler",
       "description": "ADDRESS OF ERROR RECOVERY PROCEDURE (ERP) LOADER (IECVERPL) ENTRY POINT IECXTLER",
-      "offset": 300,
+      "offset": 44,
       "length": 4,
       "type": "address",
       "pointsTo": "vtrg"
@@ -169,7 +169,7 @@
     {
       "name": "cvtsysad",
       "description": "UCB ADDRESS FOR THE SYSTEM RESIDENCE VOLUME                   (MDCXXX)",
-      "offset": 304,
+      "offset": 48,
       "length": 4,
       "type": "address",
       "pointsTo": "vtrg"
@@ -177,7 +177,7 @@
     {
       "name": "cvtbterm",
       "description": "ADDRESS OF ENTRY POINT OF THE ABTERM ROUTINE",
-      "offset": 308,
+      "offset": 52,
       "length": 4,
       "type": "address",
       "pointsTo": "vtrg"
@@ -185,14 +185,14 @@
     {
       "name": "cvtdate",
       "description": "CURRENT DATE IN PACKED DECIMAL",
-      "offset": 312,
+      "offset": 56,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtmslt",
       "description": "ADDRESS OF THE MASTER COMMON AREA IN MASTER SCHEDULER RESIDENT DATA AREA. NOTE - USE CVTMSER INSTEAD TO ADDRESS MASTER SCHEDULER RESIDENT DATA AREA",
-      "offset": 316,
+      "offset": 60,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -200,14 +200,14 @@
     {
       "name": "cvtzdtab",
       "description": "ADDRESS OF I/O DEVICE CHARACTERISTIC TABLE",
-      "offset": 320,
+      "offset": 64,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtxitp",
       "description": "ADDRESS OF ERROR INTERPRETER ROUTINE",
-      "offset": 324,
+      "offset": 68,
       "length": 4,
       "type": "address",
       "pointsTo": "error"
@@ -215,7 +215,7 @@
     {
       "name": "cvt0ef01",
       "description": "ENTRY POINT IN STAGE II EXIT EFFECTOR USED BY SCHEDXIT MACRO",
-      "offset": 328,
+      "offset": 72,
       "length": 4,
       "type": "address",
       "pointsTo": "0ef"
@@ -223,42 +223,42 @@
     {
       "name": "cvtvprm",
       "description": "VECTOR PARAMETERS",
-      "offset": 332,
+      "offset": 76,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtvss",
       "description": "VECTOR SECTION SIZE",
-      "offset": 332,
+      "offset": 76,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtvpsm",
       "description": "VECTOR PARTIAL SUM NUMBER",
-      "offset": 334,
+      "offset": 78,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtexit",
       "description": "An SVC 3 instruction. Exit to dispatcher. This is a programming interface for IRBs only. An IRB may return to the system by branching to this location",
-      "offset": 336,
+      "offset": 80,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtbret",
       "description": "A BR 14 INSTRUCTION.  RETURN TO CALLER (USED BY DATA MANAGEMENT ROUTINES)",
-      "offset": 338,
+      "offset": 82,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtsvdcb",
       "description": "ADDRESS OF THE DCB FOR THE SYS1.SVCLIB DATA SET",
-      "offset": 340,
+      "offset": 84,
       "length": 4,
       "type": "address",
       "pointsTo": "svdcb"
@@ -266,7 +266,7 @@
     {
       "name": "cvttpc",
       "description": "ADDRESS OF THE TIMER SUPERVISOR WORK AREA",
-      "offset": 344,
+      "offset": 88,
       "length": 4,
       "type": "address",
       "pointsTo": "tpc"
@@ -274,14 +274,14 @@
     {
       "name": "cvtflgcs",
       "description": "Flags set by CS",
-      "offset": 348,
+      "offset": 92,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtflgc0",
       "description": "Flags",
-      "offset": 348,
+      "offset": 92,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -295,28 +295,28 @@
     {
       "name": "cvtflgc1",
       "description": "Flags",
-      "offset": 349,
+      "offset": 93,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvticpid",
       "description": "IPL'ED CPU PHYSICAL ID",
-      "offset": 350,
+      "offset": 94,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtcvt",
       "description": "CVT ACRONYM IN EBCDIC (EYE-CATCHER)",
-      "offset": 352,
+      "offset": 96,
       "length": 4,
       "type": "string"
     },
     {
       "name": "cvtcucb",
       "description": "ADDRESS OF THE UNIT CONTOL MODULE (UCM)",
-      "offset": 356,
+      "offset": 100,
       "length": 4,
       "type": "address",
       "pointsTo": "qte"
@@ -324,7 +324,7 @@
     {
       "name": "cvtqte00",
       "description": "ADDRESS OF THE TIMER ENQUEUE ROUTINE FOR INTERVAL TIMER",
-      "offset": 360,
+      "offset": 104,
       "length": 4,
       "type": "address",
       "pointsTo": "qte"
@@ -332,7 +332,7 @@
     {
       "name": "cvtqtd00",
       "description": "ADDRESS OF THE TIMER DEQUEUE ROUTINE FOR INTERVAL TIMER",
-      "offset": 364,
+      "offset": 108,
       "length": 4,
       "type": "address",
       "pointsTo": "qtd"
@@ -340,7 +340,7 @@
     {
       "name": "cvtstb",
       "description": "ADDRESS OF THE I/O DEVICE STATISTICS TABLE",
-      "offset": 368,
+      "offset": 112,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -348,7 +348,7 @@
     {
       "name": "cvtdcb",
       "description": "OPERATING SYSTEM FOR S/370-XA MODE EXECUTION, CVTMVSE, CVT4MS1, CVTOSEXT, CVT6DAT, AND CVTMVS2 ARE SET ON AT CVT CREATION",
-      "offset": 372,
+      "offset": 116,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -397,21 +397,21 @@
     {
       "name": "cvtdcba",
       "description": "ADDRESS OF THE DCB FOR THE SYS1.LOGREC (OUTBOARD RECORDER) DATA SET FOR SYSTEM ENVIRONMENT RECORDING (SER)",
-      "offset": 373,
+      "offset": 117,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtsv76m",
       "description": "SVC 76 MESSAGE COUNT FIELD (OS/VS2)",
-      "offset": 376,
+      "offset": 120,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtixavl",
       "description": "ADDRESS OF THE I/O SUPERVISOR'S FREELIST POINTER WHICH CONTAINS THE ADDRESS OF THE NEXT REQUEST ELEMENT  (OS/VS1) ADDRESS OF THE I/O SUPERVISOR'S COMMUNICATION AREA (IOCOM)  (OS/VS2)",
-      "offset": 380,
+      "offset": 124,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -419,7 +419,7 @@
     {
       "name": "cvtnucb",
       "description": "RESERVED                (MDCXXX)",
-      "offset": 384,
+      "offset": 128,
       "length": 4,
       "type": "address",
       "pointsTo": "0ds"
@@ -427,7 +427,7 @@
     {
       "name": "cvtfbosv",
       "description": "ADDRESS OF PROGRAM FETCH ROUTINE",
-      "offset": 388,
+      "offset": 132,
       "length": 4,
       "type": "address",
       "pointsTo": "0ds"
@@ -435,7 +435,7 @@
     {
       "name": "cvt0ds",
       "description": "V(IEA0DS) -   ADDRESS OF ENTRY POINT OF THE DISPATCHER",
-      "offset": 392,
+      "offset": 136,
       "length": 4,
       "type": "address",
       "pointsTo": "0ds"
@@ -443,7 +443,7 @@
     {
       "name": "cvtecvt",
       "description": "POINTER TO THE EXTENDED CVT",
-      "offset": 396,
+      "offset": 140,
       "length": 4,
       "type": "address",
       "pointsTo": "ecvt"
@@ -451,7 +451,7 @@
     {
       "name": "cvtdairx",
       "description": "ADDRESS OF THE 31- BIT ENTRY POINT OF IKJDAIR, TSO DYNAMIC ALLOCATION INTERFACE ROUTINE.",
-      "offset": 400,
+      "offset": 144,
       "length": 4,
       "type": "address",
       "pointsTo": "0pt"
@@ -459,7 +459,7 @@
     {
       "name": "cvtmser",
       "description": "ADDRESS OF DATA AREA OF MASTER SCHEDULER RESIDENT DATA AREA",
-      "offset": 404,
+      "offset": 148,
       "length": 4,
       "type": "address",
       "pointsTo": "0pt"
@@ -467,7 +467,7 @@
     {
       "name": "cvt0pt01",
       "description": "ADDRESS OF BRANCH ENTRY POINT OF POST ROUTINE",
-      "offset": 408,
+      "offset": 152,
       "length": 4,
       "type": "address",
       "pointsTo": "0pt"
@@ -475,7 +475,7 @@
     {
       "name": "cvttvt",
       "description": "ADDRESS OF TSO VECTOR TABLE",
-      "offset": 412,
+      "offset": 156,
       "length": 4,
       "type": "address",
       "pointsTo": "tso"
@@ -483,14 +483,14 @@
     {
       "name": "cvt040id",
       "description": "IFB040I WTO MESSAGE ID. OWNERSHIP: OUTBOARD RECORDING (OBR). SERIALIZATION: COMPARE AND SWAP.",
-      "offset": 416,
+      "offset": 160,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtmz00",
       "description": "HIGHEST ADDRESS IN VIRTUAL STORAGE FOR THIS MACHINE",
-      "offset": 420,
+      "offset": 164,
       "length": 4,
       "type": "hex",
       "pointsTo": "routine"
@@ -498,7 +498,7 @@
     {
       "name": "cvt1ef00",
       "description": "ADDRESS OF ROUTINE WHICH CREATES IRB'S FOR EXITS",
-      "offset": 424,
+      "offset": 168,
       "length": 4,
       "type": "address",
       "pointsTo": "routine"
@@ -506,7 +506,7 @@
     {
       "name": "cvtqocr",
       "description": "GRAPHICS INTERFACE TASK (GFX) FIELD. ADDRESS OF SEVENTH WORD OF GFX PARAMETER LIST, IF GFX IS ACTIVE.  ZERO IF GFX IS NOT ACTIVE",
-      "offset": 428,
+      "offset": 172,
       "length": 4,
       "type": "address",
       "pointsTo": "seventh"
@@ -514,7 +514,7 @@
     {
       "name": "cvtqmwr",
       "description": "ADDRESS OF THE ALLOCATION COMMUNICATION AREA (MAPPED BY IEFZB432) - CONTAINS THE ADDRESSES OF SERVICE ROUTINES AND THE CHAIN OF MOUNT AND VERIFY COMMUNICATION AREAS.",
-      "offset": 432,
+      "offset": 176,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -522,14 +522,14 @@
     {
       "name": "cvtsnctr",
       "description": "SERIAL NUMBER COUNTER FOR ASSIGNING SERIAL NUMBERS TO NON-SPECIFIC, UNLABELED MAGNETIC TAPE VOLUMES",
-      "offset": 436,
+      "offset": 180,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtopta",
       "description": "OPTION INDICATORS",
-      "offset": 438,
+      "offset": 182,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -578,7 +578,7 @@
     {
       "name": "cvtoptb",
       "description": "MISCELLANEOUS FLAGS",
-      "offset": 439,
+      "offset": 183,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -627,7 +627,7 @@
     {
       "name": "cvtqcdsr",
       "description": "CDE SEARCH ROUTINE ADDRESS  (OS/VS2)",
-      "offset": 440,
+      "offset": 184,
       "length": 4,
       "type": "address",
       "pointsTo": "qcdsr"
@@ -635,7 +635,7 @@
     {
       "name": "cvtqlpaq",
       "description": "ADDRESS OF POINTER TO MOST RECENT ENTRY ON LINK PACK AREA CDE QUEUE  (OS/VS2)",
-      "offset": 444,
+      "offset": 188,
       "length": 4,
       "type": "address",
       "pointsTo": "qlpaq"
@@ -643,7 +643,7 @@
     {
       "name": "cvtenfct",
       "description": "EVENT NOTIFICATION CONTROL TABLE",
-      "offset": 448,
+      "offset": 192,
       "length": 4,
       "type": "address",
       "pointsTo": "bend"
@@ -651,7 +651,7 @@
     {
       "name": "cvtsmca",
       "description": "ADDRESS OF THE SYSTEM MANAGEMENT CONTROL AREA (SMCA) IF THE SYSTEM MANAGEMENT FACILITIES (SMF) OPTION IS PRESENT IN THE SYSTEM.  OTHERWISE, ZERO.",
-      "offset": 452,
+      "offset": 196,
       "length": 4,
       "type": "address",
       "pointsTo": "bend"
@@ -659,7 +659,7 @@
     {
       "name": "cvtabend",
       "description": "ADDRESS OF SECONDARY CVT FOR ABEND IN EOT (OS/VS2)",
-      "offset": 456,
+      "offset": 200,
       "length": 4,
       "type": "address",
       "pointsTo": "bend"
@@ -667,7 +667,7 @@
     {
       "name": "cvtuser",
       "description": "A WORD AVAILABLE TO THE USER",
-      "offset": 460,
+      "offset": 204,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -675,7 +675,7 @@
     {
       "name": "cvtmdlds",
       "description": "A(0) -        RESERVED FOR MODEL-DEPENDENT SUPPORT",
-      "offset": 464,
+      "offset": 208,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -683,21 +683,21 @@
     {
       "name": "cvtqabst",
       "description": "AN SVC 13 (ABEND) INVOCATION (OS/VS2)",
-      "offset": 468,
+      "offset": 212,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtlnksc",
       "description": "AN SVC  6 (LINK) INVOCATION",
-      "offset": 470,
+      "offset": 214,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvttsce",
       "description": "ADDRESS OF THE FIRST TIME SLICE CONTROL ELEMENT (TSCE)",
-      "offset": 472,
+      "offset": 216,
       "length": 4,
       "type": "address",
       "pointsTo": "patch"
@@ -705,7 +705,7 @@
     {
       "name": "cvtpatch",
       "description": "ADDRESS OF A 200-BYTE FE PATCH AREA",
-      "offset": 476,
+      "offset": 220,
       "length": 4,
       "type": "address",
       "pointsTo": "patch"
@@ -713,14 +713,14 @@
     {
       "name": "cvtrms",
       "description": "RECOVERY MANAGEMENT SUPPORT (RMS) COMMUNICATIONS VECTOR.  ADDRESS OF A MACHINE STATUS BLOCK.",
-      "offset": 480,
+      "offset": 224,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtspdme",
       "description": "SERVICE PROCESSOR DAMAGE MONITOR ECB.",
-      "offset": 484,
+      "offset": 228,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -728,7 +728,7 @@
     {
       "name": "cvt0scr1",
       "description": "ADDRESS OF THE SECTOR CALCULATION ROUTINE FOR ROTATIONAL POSITION SENSING (RPS)",
-      "offset": 488,
+      "offset": 232,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -736,14 +736,14 @@
     {
       "name": "cvtgtf",
       "description": "GENERALIZED TRACE FACILITY (GTF) CONTROL WORD",
-      "offset": 492,
+      "offset": 236,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtgtfst",
       "description": "GTF FLAG BYTES",
-      "offset": 492,
+      "offset": 236,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -777,21 +777,21 @@
     {
       "name": "cvtgtfa",
       "description": "ADDRESS OF MAIN MONITOR CALL ROUTING TABLE, MCHEAD  (OS/VS2)",
-      "offset": 493,
+      "offset": 237,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtaqavt",
       "description": "ADDRESS OF THE FIRST WORD OF THE TCAM DISPATCHER WHICH CONTAINS THE ADDRESS OF THE ADDRESS VECTOR TABLE (AVT).  IF ZERO, TCAM IS NOT STARTED.",
-      "offset": 496,
+      "offset": 240,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvttcmfg",
       "description": "TCAM FLAGS",
-      "offset": 496,
+      "offset": 240,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -815,14 +815,14 @@
     {
       "name": "cvtaqavb",
       "description": "SAME AS CVTAQAVT ABOVE",
-      "offset": 497,
+      "offset": 241,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtflag5",
       "description": "Flags, refreshed upon error, set during NIP and never changed",
-      "offset": 500,
+      "offset": 244,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -851,7 +851,7 @@
     {
       "name": "cvtflag6",
       "description": "More flags",
-      "offset": 501,
+      "offset": 245,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -865,7 +865,7 @@
     {
       "name": "cvtflag7",
       "description": "More flags",
-      "offset": 502,
+      "offset": 246,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -884,7 +884,7 @@
     {
       "name": "cvtflag8",
       "description": "More flags. IBM use only",
-      "offset": 503,
+      "offset": 247,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -898,7 +898,7 @@
     {
       "name": "cvtsaf",
       "description": "ADDRESS OF ROUTER VECTOR TABLE.",
-      "offset": 504,
+      "offset": 248,
       "length": 4,
       "type": "address",
       "pointsTo": "vmsgs"
@@ -906,7 +906,7 @@
     {
       "name": "cvtext1",
       "description": "ADDRESS OF OS - OS/VS COMMON EXTENSION",
-      "offset": 508,
+      "offset": 252,
       "length": 4,
       "type": "address",
       "pointsTo": "vmsgs"
@@ -914,7 +914,7 @@
     {
       "name": "cvtcbsp",
       "description": "ADDRESS OF ACCESS METHOD CONTROL BLOCK STRUCTURE",
-      "offset": 512,
+      "offset": 256,
       "length": 4,
       "type": "address",
       "pointsTo": "vmsgs"
@@ -922,21 +922,21 @@
     {
       "name": "cvtpurg",
       "description": "ADDRESS OF SUBSYSTEM PURGE ROUTINE",
-      "offset": 516,
+      "offset": 260,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtpurga",
       "description": "ADDRESS OF SUBSYSTEM PURGE ROUTINE",
-      "offset": 517,
+      "offset": 261,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtamff",
       "description": "RESERVED FOR ACCESS METHOD FLAGS",
-      "offset": 520,
+      "offset": 264,
       "length": 4,
       "type": "hex",
       "pointsTo": "vmsgs"
@@ -944,7 +944,7 @@
     {
       "name": "cvtqmsg",
       "description": "ADDRESS OF INFORMATION TO BE PRINTED BY ABEND.",
-      "offset": 524,
+      "offset": 268,
       "length": 4,
       "type": "address",
       "pointsTo": "vmsgs"
@@ -952,14 +952,14 @@
     {
       "name": "cvtdmsr",
       "description": "SAME AS CVTDMSRA BELOW",
-      "offset": 528,
+      "offset": 272,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtdmsrf",
       "description": "OPEN/CLOSE/EOV FLAG BYTE.  SETTING BOTH BIT 0 AND BIT 1 ON WILL CAUSE BOTH KINDS OF DUMPS TO BE TAKEN.  THESE BITS ARE USED DURING TESTING AND DEBUGGING WHEN OTHER DEBUG METHODS ARE INEFFECTIVE.  (OS/VS2)",
-      "offset": 528,
+      "offset": 272,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -978,14 +978,14 @@
     {
       "name": "cvtdmsra",
       "description": "ADDRESS OF THE OPEN/CLOSE/EOV SUPERVISORY ROUTINE IN LPA.  THIS ROUTINE HANDLES THE ROUTING OF CONTROL AMONG THE I/O SUPPORT ROUTINES.",
-      "offset": 529,
+      "offset": 273,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtsfr",
       "description": "ADDRESS OF SETFRR ROUTINE (IEAVTSFR)",
-      "offset": 532,
+      "offset": 276,
       "length": 4,
       "type": "address",
       "pointsTo": "vtsfr"
@@ -993,7 +993,7 @@
     {
       "name": "cvtgxl",
       "description": "ADDRESS OF CONTENTS SUPERVISION MEMORY TERMINATION ROUTINE OWNERSHIP - CONTENTS SUPERVISION.",
-      "offset": 536,
+      "offset": 280,
       "length": 4,
       "type": "address",
       "pointsTo": "contents"
@@ -1001,7 +1001,7 @@
     {
       "name": "cvtreal",
       "description": "ADDRESS OF THE VIRTUAL STORAGE BYTE FOLLOWING THE HIGHEST V=R STORAGE ADDRESS.",
-      "offset": 540,
+      "offset": 284,
       "length": 4,
       "type": "address",
       "pointsTo": "ptrv"
@@ -1009,7 +1009,7 @@
     {
       "name": "cvtptrv",
       "description": "ADDRESS OF PAGING SUPERVISOR GENERAL ROUTINE TO TRANSLATE 24 BIT REAL ADDRESSES TO VIRTUAL ADDRESSES.",
-      "offset": 544,
+      "offset": 288,
       "length": 4,
       "type": "address",
       "pointsTo": "ptrv"
@@ -1017,7 +1017,7 @@
     {
       "name": "cvtihvp",
       "description": "POINTER TO IHV$COMM. INITIALIZED TO ZERO. OWNER: IHV/DATA HANDLER. SET BY: IHVSTRTM. SERIALIZATION: NONE.",
-      "offset": 548,
+      "offset": 292,
       "length": 4,
       "type": "address",
       "pointsTo": "job"
@@ -1025,7 +1025,7 @@
     {
       "name": "cvtjesct",
       "description": "ADDRESS OF JOB ENTRY SUBSYSTEM (JES) CONTROL TABLE",
-      "offset": 552,
+      "offset": 296,
       "length": 4,
       "type": "address",
       "pointsTo": "job"
@@ -1033,7 +1033,7 @@
     {
       "name": "cvtrs12c",
       "description": "RESERVED",
-      "offset": 556,
+      "offset": 300,
       "length": 4,
       "type": "hex",
       "pointsTo": "machine"
@@ -1041,14 +1041,14 @@
     {
       "name": "cvttz",
       "description": "Difference between local time and UTC (Coordinated Universal Time) in binary units of 1.048576 seconds.  Contains the same value as CVTLDTOL.  CVTLDTO (which contains CVTLDTOL) has this difference to a finer degree of accuracy.",
-      "offset": 560,
+      "offset": 304,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtmchpr",
       "description": "ADDRESS OF MACHINE CHECK PARAMETER LIST",
-      "offset": 564,
+      "offset": 308,
       "length": 4,
       "type": "address",
       "pointsTo": "machine"
@@ -1056,7 +1056,7 @@
     {
       "name": "cvteorm",
       "description": "POTENTIAL REAL HIGH STORAGE ADDRESS. ONLY VALID PRE-z/Architecture. (SEE ECVTEORM IN IHAECVT).",
-      "offset": 568,
+      "offset": 312,
       "length": 4,
       "type": "address",
       "pointsTo": "vtrv"
@@ -1064,7 +1064,7 @@
     {
       "name": "cvtptrv3",
       "description": "ADDRESS OF PAGING SUPERVISOR ROUTINE TO TRANSLATE REAL ADDRESSES WHICH MAY EXCEED 24 BITS TO VIRTUAL ADDRESSES.",
-      "offset": 572,
+      "offset": 316,
       "length": 4,
       "type": "address",
       "pointsTo": "vtrv"
@@ -1072,7 +1072,7 @@
     {
       "name": "cvtlkrm",
       "description": "ADDRESS OF CML LOCK RESOURCE MANAGER",
-      "offset": 576,
+      "offset": 320,
       "length": 4,
       "type": "address",
       "pointsTo": "vlkrm"
@@ -1080,84 +1080,84 @@
     {
       "name": "cvtapf",
       "description": "SAME AS CVTAPFA BELOW",
-      "offset": 580,
+      "offset": 324,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtapfa",
       "description": "ADDRESS OF BRANCH ENTRY POINT IN AUTHORIZED PROGRAM FACILITY (APF) ROUTINE",
-      "offset": 581,
+      "offset": 325,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtext2",
       "description": "ADDRESS OF OS/VS1 - OS/VS2 COMMON EXTENSION",
-      "offset": 584,
+      "offset": 328,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtext2a",
       "description": "SAME AS CVTEXT2 ABOVE",
-      "offset": 585,
+      "offset": 329,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvthjes",
       "description": "SAME AS CVTHJESA BELOW",
-      "offset": 588,
+      "offset": 332,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvthjesa",
       "description": "ADDRESS OF OPTIONAL JOB ENTRY SUBSYSTEM (JES) COMMUNICATION VECTOR TABLE",
-      "offset": 589,
+      "offset": 333,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtrstw2",
       "description": "STATUS DATA FOR RESTART FLIH OWNERSHIP: RESTART FLIH SERIALIZATION: RESTART RESOURCE",
-      "offset": 592,
+      "offset": 336,
       "length": 4,
       "type": "hex"
     },
     {
       "name": "cvtrs150",
       "description": "Reserved.  Was CVTRSTCP: LOGICAL CPU ADDRESS OF TARGET OF RESTART.",
-      "offset": 592,
+      "offset": 336,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtrstrs",
       "description": "RESTART REASON.",
-      "offset": 593,
+      "offset": 337,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtrcp2b",
       "description": "Logical CPU address of target of the restart.",
-      "offset": 594,
+      "offset": 338,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtsname",
       "description": "SYSTEM NAME FOR CURRENT SYSTEM. OWNERSHIP: IPL/NIP. SERIALIZATION: NONE.",
-      "offset": 596,
+      "offset": 340,
       "length": 8,
       "type": "string"
     },
     {
       "name": "cvtgetl",
       "description": "ADDRESS OF IKJGETL, TSO GET LINE ROUTINE",
-      "offset": 604,
+      "offset": 348,
       "length": 4,
       "type": "address",
       "pointsTo": "vvmsr"
@@ -1165,7 +1165,7 @@
     {
       "name": "cvtlpdsr",
       "description": "ADDRESS OF LINK PACK AREA (LPA) DIRECTORY SEARCH ROUTINE",
-      "offset": 608,
+      "offset": 352,
       "length": 4,
       "type": "address",
       "pointsTo": "vvmsr"
@@ -1173,7 +1173,7 @@
     {
       "name": "cvtpvtp",
       "description": "ADDRESS OF PAGE VECTOR TABLE",
-      "offset": 612,
+      "offset": 356,
       "length": 4,
       "type": "address",
       "pointsTo": "page"
@@ -1181,14 +1181,14 @@
     {
       "name": "cvtlpdia",
       "description": "ADDRESS OF LINK PACK AREA (LPA) DIRECTORY (ON PAGE BOUNDARY)",
-      "offset": 616,
+      "offset": 360,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtdirst",
       "description": "FLAG BYTE",
-      "offset": 616,
+      "offset": 360,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -1202,14 +1202,14 @@
     {
       "name": "cvtlpdir",
       "description": "ADDRESS OF LINK PACK AREA (LPA) DIRECTORY (ON PAGE BOUNDARY)",
-      "offset": 617,
+      "offset": 361,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtrbcb",
       "description": "ADDRESS OF THE RECORD BUFFER'S CONTROL BLOCK",
-      "offset": 620,
+      "offset": 364,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -1217,21 +1217,21 @@
     {
       "name": "cvtrs170",
       "description": "RESERVED",
-      "offset": 624,
+      "offset": 368,
       "length": 4,
       "type": "hex"
     },
     {
       "name": "cvtslida",
       "description": "IDENTITY OF TCB CAUSING SUPERVISOR LOCK BYTE (CVTSYLK) TO BE SET OR IDENTITY OF TCB THAT SECOND EXIT PROCESSING IS FOR WHEN CVTSEIC=1",
-      "offset": 628,
+      "offset": 372,
       "length": 4,
       "type": "hex"
     },
     {
       "name": "cvtsylk",
       "description": "SUPERVISOR LOCK.  ONLY ENABLED TASKS MAY BE DISPATCHED",
-      "offset": 628,
+      "offset": 372,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -1245,21 +1245,21 @@
     {
       "name": "cvtslid",
       "description": "SAME AS CVTSLIDA ABOVE",
-      "offset": 629,
+      "offset": 373,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtflags",
       "description": "SYSTEM GLOBAL FLAGS",
-      "offset": 632,
+      "offset": 376,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtflag1",
       "description": "FLAG BYTE",
-      "offset": 632,
+      "offset": 376,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -1308,7 +1308,7 @@
     {
       "name": "cvtflag2",
       "description": "FLAG BYTE",
-      "offset": 633,
+      "offset": 377,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -1357,7 +1357,7 @@
     {
       "name": "cvtflag3",
       "description": "FLAG BYTE refreshed upon error, set during NIP and never changed",
-      "offset": 634,
+      "offset": 378,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -1411,7 +1411,7 @@
     {
       "name": "cvtflag4",
       "description": "Flag byte This is an interface for      CA CVTZNALC, CVTDCPA, CVTTX, CVTTXC, CVTEDAT2 only",
-      "offset": 635,
+      "offset": 379,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -1470,7 +1470,7 @@
     {
       "name": "cvtrt03",
       "description": "ADDRESS OF SRB TIMING INITIALIZATION MODULE.",
-      "offset": 636,
+      "offset": 380,
       "length": 4,
       "type": "address",
       "pointsTo": "vrt"
@@ -1478,35 +1478,35 @@
     {
       "name": "cvtrs180",
       "description": "RESERVED",
-      "offset": 640,
+      "offset": 384,
       "length": 8,
       "type": "hex"
     },
     {
       "name": "cvtexsnr",
       "description": "ADDRESS OF EXCESSIVE SPIN NOTIFICATION ROUTINE",
-      "offset": 648,
+      "offset": 392,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtexsnl",
       "description": "SERIALIZATION BYTE FOR EXCESSIVE SPIN NOTIFICATION ROUTINE",
-      "offset": 652,
+      "offset": 396,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtspvlk",
       "description": "NUMBER OF TASKS WHICH HAVE TERMINATED WHILE OWNING SUPERVISOR LOCK WITHOUT OPERATOR HAVING YET BEEN NOTIFIED",
-      "offset": 653,
+      "offset": 397,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtctlfg",
       "description": "SYSTEM CONTROL FLAGS",
-      "offset": 654,
+      "offset": 398,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -1555,14 +1555,14 @@
     {
       "name": "cvtapg",
       "description": "DISPATCHING PRIORITY OF AUTOMATIC PRIORITY GROUP (APG)",
-      "offset": 655,
+      "offset": 399,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtrscn",
       "description": "ADDRESS OF ROUTINE TO SCAN TCB TREE",
-      "offset": 656,
+      "offset": 400,
       "length": 4,
       "type": "address",
       "pointsTo": "trscn"
@@ -1570,7 +1570,7 @@
     {
       "name": "cvttas",
       "description": "ADDRESS OF ROUTINE TO TRANSFER ADDRESS SPACE",
-      "offset": 660,
+      "offset": 404,
       "length": 4,
       "type": "address",
       "pointsTo": "0vl"
@@ -1578,7 +1578,7 @@
     {
       "name": "cvttrcrm",
       "description": "ADDRESS POINTER OF THE SYSTEM TRACE RESOURCE MANAGER.",
-      "offset": 664,
+      "offset": 408,
       "length": 4,
       "type": "address",
       "pointsTo": "0vl"
@@ -1586,7 +1586,7 @@
     {
       "name": "cvtshrvm",
       "description": "LOWEST ADDRESS OF SHARED VIRTUAL STORAGE AREA.  THIS ADDRESS WILL BE THE BEGINNING OF THE COMMON SERVICE AREA (CSA)",
-      "offset": 668,
+      "offset": 412,
       "length": 4,
       "type": "address",
       "pointsTo": "0vl"
@@ -1594,7 +1594,7 @@
     {
       "name": "cvt0vl01",
       "description": "ENTRY POINT ADDRESS OF VALIDITY CHECK ROUTINE (IEA0VL01) USED TO COMPARE PROTECT KEY OF AN ADDRESS WITH TCB PROTECT KEY",
-      "offset": 672,
+      "offset": 416,
       "length": 4,
       "type": "address",
       "pointsTo": "0vl"
@@ -1602,7 +1602,7 @@
     {
       "name": "cvtppgmx",
       "description": "ADDRESS POINTER FOR MVS/370-XA.",
-      "offset": 676,
+      "offset": 420,
       "length": 4,
       "type": "address",
       "pointsTo": "address"
@@ -1610,7 +1610,7 @@
     {
       "name": "cvtgrsst",
       "description": "GRS status. SERIALIZATION: None.",
-      "offset": 680,
+      "offset": 424,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -1629,7 +1629,7 @@
     {
       "name": "cvtflag9",
       "description": "Function-available flags",
-      "offset": 681,
+      "offset": 425,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -1653,14 +1653,14 @@
     {
       "name": "cvtbsm0f",
       "description": "Return via reg 15, BSM 0,15",
-      "offset": 682,
+      "offset": 426,
       "length": 2,
       "type": "hex"
     },
     {
       "name": "cvtgvt",
       "description": "ADDRESS OF THE GRS VECTOR TABLE",
-      "offset": 684,
+      "offset": 428,
       "length": 4,
       "type": "address",
       "pointsTo": "pdsrt"
@@ -1668,7 +1668,7 @@
     {
       "name": "cvtascrf",
       "description": "CREATED ASCB QUEUE HEADER",
-      "offset": 688,
+      "offset": 432,
       "length": 4,
       "type": "address",
       "pointsTo": "pdsrt"
@@ -1676,7 +1676,7 @@
     {
       "name": "cvtascrl",
       "description": "CREATED ASCB QUEUE TRAILER",
-      "offset": 692,
+      "offset": 436,
       "length": 4,
       "type": "address",
       "pointsTo": "pdsrt"
@@ -1684,7 +1684,7 @@
     {
       "name": "cvtputl",
       "description": "ADDRESS OF IKJPUTL, TSO PUT LINE ROUTINE",
-      "offset": 696,
+      "offset": 440,
       "length": 4,
       "type": "address",
       "pointsTo": "pdsrt"
@@ -1692,7 +1692,7 @@
     {
       "name": "cvtsrbrt",
       "description": "DISPATCHER RETURN ADDRESS FOR SRB ROUTINES",
-      "offset": 700,
+      "offset": 444,
       "length": 4,
       "type": "address",
       "pointsTo": "pdsrt"
@@ -1700,7 +1700,7 @@
     {
       "name": "cvtolt0a",
       "description": "BRANCH ENTRY TO OLTEP MEMORY TERMINATION RESOURCE MANAGER",
-      "offset": 704,
+      "offset": 448,
       "length": 4,
       "type": "address",
       "pointsTo": "smfeg"
@@ -1708,7 +1708,7 @@
     {
       "name": "cvtsmfex",
       "description": "BRANCH ENTRY TO SYSTEM MANAGEMENT FACILITIES (SMF) EXCP COUNTING ROUTINE FOR VAM WINDOW INTERCEPT",
-      "offset": 708,
+      "offset": 452,
       "length": 4,
       "type": "address",
       "pointsTo": "smfeg"
@@ -1716,7 +1716,7 @@
     {
       "name": "cvtcspie",
       "description": "ENTRY POINT ADDRESS OF THE SUPERVISOR CHECKPOINT/RESTART ROUTER (IEAVCKRS). RESOLVED BY IEAVNP05 AFTER THE LPA HAS BEEN BUILT. PREVIOUSLY CONTAINED THE ENTRY POINT ADDRESS OF THE RTM CHECKPOINT/ RESTART EXIT ROUTINE (IEAVSPI).",
-      "offset": 712,
+      "offset": 456,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -1724,7 +1724,7 @@
     {
       "name": "cvtptgt",
       "description": "ADDRESS OF IKJPTGT, TSO PUTGET ROUTINE",
-      "offset": 716,
+      "offset": 460,
       "length": 4,
       "type": "address",
       "pointsTo": "ikjptgt"
@@ -1732,35 +1732,35 @@
     {
       "name": "cvtsigpt",
       "description": "SIGP TIMEOUT VALUE. OWNERSHIP: MACHINE CHECK HANDLER (MCH). SERIALIZATION: NONE (SET DURING IPL).",
-      "offset": 720,
+      "offset": 464,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtspdmc",
       "description": "SERVICE PROCESSOR DAMAGE MACHINE CHECK LOCK BYTE.",
-      "offset": 721,
+      "offset": 465,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtdssac",
       "description": "DYNAMIC SUPPORT SYSTEM (DSS) ACTIVATED FLAG - USED BY RESTART FLIH.  IF X'00', DSS NOT INITIALIZED.  IF X'FF', DSS HAS BEEN INITIALIZED.",
-      "offset": 722,
+      "offset": 466,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtrs1d7",
       "description": "RESERVED",
-      "offset": 723,
+      "offset": 467,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtstck",
       "description": "ADDRESS OF IKJSTCK, TSO STACK ROUTINE",
-      "offset": 724,
+      "offset": 468,
       "length": 4,
       "type": "address",
       "pointsTo": "vbldp"
@@ -1768,21 +1768,21 @@
     {
       "name": "cvtmaxmp",
       "description": "Maximum CPU address available for this IPL",
-      "offset": 728,
+      "offset": 472,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtbsm2",
       "description": "RETURN VIA REG 2, BSM 0,2.",
-      "offset": 730,
+      "offset": 474,
       "length": 2,
       "type": "hex"
     },
     {
       "name": "cvtscan",
       "description": "ADDRESS OF IKJSCAN, TSO SCAN ROUTINE",
-      "offset": 732,
+      "offset": 476,
       "length": 4,
       "type": "address",
       "pointsTo": "vbldp"
@@ -1790,7 +1790,7 @@
     {
       "name": "cvtauthl",
       "description": "POINTER TO AUTHORIZED LIBRARY TABLE. X'7FFFF001' IF DYNAMIC FORMAT APF TABLE. OWNED AND SET BY CONTENTS SUPERVISOR.",
-      "offset": 736,
+      "offset": 480,
       "length": 4,
       "type": "address",
       "pointsTo": "vbldp"
@@ -1798,7 +1798,7 @@
     {
       "name": "cvtbldcp",
       "description": "BRANCH ENTRY TO BUILD POOL",
-      "offset": 740,
+      "offset": 484,
       "length": 4,
       "type": "address",
       "pointsTo": "vbldp"
@@ -1806,7 +1806,7 @@
     {
       "name": "cvtgetcl",
       "description": "BRANCH ENTRY TO GET CELL",
-      "offset": 744,
+      "offset": 488,
       "length": 4,
       "type": "address",
       "pointsTo": "vgtcl"
@@ -1814,7 +1814,7 @@
     {
       "name": "cvtfrecl",
       "description": "BRANCH ENTRY TO FREE CELL",
-      "offset": 748,
+      "offset": 492,
       "length": 4,
       "type": "address",
       "pointsTo": "vfrcl"
@@ -1822,7 +1822,7 @@
     {
       "name": "cvtdelcp",
       "description": "BRANCH ENTRY TO DELETE POOL",
-      "offset": 752,
+      "offset": 496,
       "length": 4,
       "type": "address",
       "pointsTo": "vdelp"
@@ -1830,7 +1830,7 @@
     {
       "name": "cvtcrmn",
       "description": "BRANCH ENTRY TO SVC 120 (GETMAIN/FREEMAIN CRBRANCH)",
-      "offset": 756,
+      "offset": 500,
       "length": 4,
       "type": "address",
       "pointsTo": "branch"
@@ -1838,7 +1838,7 @@
     {
       "name": "cvtcras",
       "description": "POINTER DEFINED ADDRESS OF BRANCH ENTRY TO 'CREATE ADDRESS SPACE'",
-      "offset": 760,
+      "offset": 504,
       "length": 4,
       "type": "address",
       "pointsTo": "branch"
@@ -1846,14 +1846,14 @@
     {
       "name": "cvtqsas",
       "description": "POINTER DEFINED ADDRESS OF BRANCH ENTRY TO TASK TERMINATION",
-      "offset": 764,
+      "offset": 508,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtfras",
       "description": "POINTER DEFINED ENTRY TO TASK TERMINATION",
-      "offset": 768,
+      "offset": 512,
       "length": 4,
       "type": "address",
       "pointsTo": "var"
@@ -1861,7 +1861,7 @@
     {
       "name": "cvts1ee",
       "description": "BRANCH ENTRY TO STAGE 1 EXIT EFFECTOR",
-      "offset": 772,
+      "offset": 516,
       "length": 4,
       "type": "address",
       "pointsTo": "var"
@@ -1869,7 +1869,7 @@
     {
       "name": "cvtpars",
       "description": "ADDRESS OF IKJPARS, TSO PARSE ROUTINE",
-      "offset": 776,
+      "offset": 520,
       "length": 4,
       "type": "address",
       "pointsTo": "var"
@@ -1877,7 +1877,7 @@
     {
       "name": "cvtquis",
       "description": "BRANCH ENTRY TO QUIESCE",
-      "offset": 780,
+      "offset": 524,
       "length": 4,
       "type": "address",
       "pointsTo": "var"
@@ -1885,7 +1885,7 @@
     {
       "name": "cvtstxu",
       "description": "BRANCH ENTRY TO ATTENTION EXIT EPILOGUE",
-      "offset": 784,
+      "offset": 528,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -1893,7 +1893,7 @@
     {
       "name": "cvtopte",
       "description": "BRANCH ENTRY ADDRESS TO SYSEVENT",
-      "offset": 788,
+      "offset": 532,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -1901,7 +1901,7 @@
     {
       "name": "cvtsdrm",
       "description": "BRANCH ENTRY ADDRESS OF THE RESOURCE MANAGER ROUTINE FOR SVC DUMP.  THIS ROUTINE CAN BE INVOKED BY MEMORY TERMINATION",
-      "offset": 792,
+      "offset": 536,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -1909,7 +1909,7 @@
     {
       "name": "cvtcsrt",
       "description": "POINTER TO CALLABLE SERVICE REQUEST TABLE OWNERSHIP: CSR SERIALIZATION: NONE",
-      "offset": 796,
+      "offset": 540,
       "length": 4,
       "type": "address",
       "pointsTo": "callable"
@@ -1917,7 +1917,7 @@
     {
       "name": "cvtaqtop",
       "description": "POINTER TO THE ALLOCATION QUEUE LOCK AREA.",
-      "offset": 800,
+      "offset": 544,
       "length": 4,
       "type": "address",
       "pointsTo": "mascb"
@@ -1925,7 +1925,7 @@
     {
       "name": "cvtvvmdi",
       "description": "CONSTANT USED BY PAGED LINK PACK AREA (LPA) DIRECTORY SEARCH ALGORITHM",
-      "offset": 804,
+      "offset": 548,
       "length": 4,
       "type": "address",
       "pointsTo": "mascb"
@@ -1933,7 +1933,7 @@
     {
       "name": "cvtasvt",
       "description": "POINTER TO ADDRESS SPACE VECTOR TABLE (ASVT)",
-      "offset": 808,
+      "offset": 552,
       "length": 4,
       "type": "address",
       "pointsTo": "mascb"
@@ -1941,7 +1941,7 @@
     {
       "name": "cvtgda",
       "description": "POINTER TO GLOBAL DATA AREA (GDA) IN SQA",
-      "offset": 812,
+      "offset": 556,
       "length": 4,
       "type": "address",
       "pointsTo": "mascb"
@@ -1949,7 +1949,7 @@
     {
       "name": "cvtascbh",
       "description": "POINTER TO HIGHEST PRIORITY ADDRESS SPACE CONTROL BLOCK (ASCB) ON THE ASCB DISPATCHING QUEUE (HEAD OF ASCB QUEUE)",
-      "offset": 816,
+      "offset": 560,
       "length": 4,
       "type": "address",
       "pointsTo": "mascb"
@@ -1957,7 +1957,7 @@
     {
       "name": "cvtascbl",
       "description": "POINTER TO LOWEST PRIORITY ASCB ON THE ASCB DISPATCHING QUEUE",
-      "offset": 820,
+      "offset": 564,
       "length": 4,
       "type": "address",
       "pointsTo": "mascb"
@@ -1965,7 +1965,7 @@
     {
       "name": "cvtrtmct",
       "description": "POINTER TO RECOVERY/TERMINATION CONTROL TABLE",
-      "offset": 824,
+      "offset": 568,
       "length": 4,
       "type": "address",
       "pointsTo": "vstag"
@@ -1973,7 +1973,7 @@
     {
       "name": "cvtsv60",
       "description": "BRANCH ENTRY ADDRESS FOR 24 OR 31 BIT ADDRESSING MODE USERS OF SVC 60. ENTRY TO A GLUE ROUTINE.",
-      "offset": 828,
+      "offset": 572,
       "length": 4,
       "type": "address",
       "pointsTo": "vstag"
@@ -1981,7 +1981,7 @@
     {
       "name": "cvtsdmp",
       "description": "ADDRESS OF SVC DUMP BRANCH ENTRY POINT",
-      "offset": 832,
+      "offset": 576,
       "length": 4,
       "type": "address",
       "pointsTo": "vtsgl"
@@ -1989,7 +1989,7 @@
     {
       "name": "cvtscbp",
       "description": "ADDRESS OF SCB PURGE RESOURCE MANAGER.",
-      "offset": 836,
+      "offset": 580,
       "length": 4,
       "type": "address",
       "pointsTo": "vtsbp"
@@ -1997,7 +1997,7 @@
     {
       "name": "cvtsdbf",
       "description": "Address of 4K SQA buffer used by SVC Dump.  High-order bit of this CVT word is used as lock to indicate buffer is in use. See related bit ASCBSDBF in macro IHAASCB.",
-      "offset": 840,
+      "offset": 584,
       "length": 4,
       "type": "address",
       "pointsTo": "4k"
@@ -2005,7 +2005,7 @@
     {
       "name": "cvtrtms",
       "description": "ADDRESS OF SERVICABILITY LEVEL INDICATOR PROCESSING (SLIP) HEADER",
-      "offset": 844,
+      "offset": 588,
       "length": 4,
       "type": "address",
       "pointsTo": "vexpr"
@@ -2013,7 +2013,7 @@
     {
       "name": "cvttpios",
       "description": "ADDRESS OF THE TELEPROCESSING I/O SUPERVISOR ROUTINE (TPIOS)",
-      "offset": 848,
+      "offset": 592,
       "length": 4,
       "type": "address",
       "pointsTo": "vexpr"
@@ -2021,7 +2021,7 @@
     {
       "name": "cvtsic",
       "description": "BRANCH ADDRESS OF THE ROUTINE TO SCHEDULE SYSTEM INITIALIZED CANCEL",
-      "offset": 852,
+      "offset": 596,
       "length": 4,
       "type": "address",
       "pointsTo": "vexpr"
@@ -2029,7 +2029,7 @@
     {
       "name": "cvtopctp",
       "description": "ADDRESS OF SYSTEM RESOURCES MANAGER (SRM) CONTROL TABLE",
-      "offset": 856,
+      "offset": 600,
       "length": 4,
       "type": "address",
       "pointsTo": "vexpr"
@@ -2037,7 +2037,7 @@
     {
       "name": "cvtexpro",
       "description": "ADDRESS OF EXIT PROLOGUE/TYPE 1 EXIT",
-      "offset": 860,
+      "offset": 604,
       "length": 4,
       "type": "address",
       "pointsTo": "vexpr"
@@ -2045,7 +2045,7 @@
     {
       "name": "cvtgsmq",
       "description": "ADDRESS OF GLOBAL SERVICE MANAGER QUEUE",
-      "offset": 864,
+      "offset": 608,
       "length": 4,
       "type": "address",
       "pointsTo": "gsmq"
@@ -2053,7 +2053,7 @@
     {
       "name": "cvtlsmq",
       "description": "ADDRESS OF LOCAL SERVICE MANAGER QUEUE",
-      "offset": 868,
+      "offset": 612,
       "length": 4,
       "type": "address",
       "pointsTo": "lsmq"
@@ -2061,7 +2061,7 @@
     {
       "name": "cvtrs26c",
       "description": "RESERVED.",
-      "offset": 872,
+      "offset": 616,
       "length": 4,
       "type": "hex",
       "pointsTo": "vwait"
@@ -2069,7 +2069,7 @@
     {
       "name": "cvtvwait",
       "description": "ADDRESS OF WAIT ROUTINE",
-      "offset": 876,
+      "offset": 620,
       "length": 4,
       "type": "address",
       "pointsTo": "vwait"
@@ -2077,7 +2077,7 @@
     {
       "name": "cvtparrl",
       "description": "ADDRESS OF PARTIALLY LOADED DELETE QUEUE.",
-      "offset": 880,
+      "offset": 624,
       "length": 4,
       "type": "address",
       "pointsTo": "qcs"
@@ -2085,7 +2085,7 @@
     {
       "name": "cvtapft",
       "description": "ADDRESS OF AUTHORIZED PROGRAM FACILITY (APF) TABLE.  INITIALIZED BY NIP.",
-      "offset": 884,
+      "offset": 628,
       "length": 4,
       "type": "address",
       "pointsTo": "qcs"
@@ -2093,7 +2093,7 @@
     {
       "name": "cvtqcs01",
       "description": "BRANCH ENTRY ADDRESS TO PROGRAM MANAGER USED BY ATTACH",
-      "offset": 888,
+      "offset": 632,
       "length": 4,
       "type": "address",
       "pointsTo": "qcs"
@@ -2101,21 +2101,21 @@
     {
       "name": "cvtfqcb",
       "description": "FORMERLY USED BY ENQ/DEQ. SHOULD ALWAYS BE ZERO.",
-      "offset": 892,
+      "offset": 636,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtlqcb",
       "description": "FORMERLY USED BY ENQ/DEQ. SHOULD ALWAYS BE ZERO.",
-      "offset": 896,
+      "offset": 640,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtrenq",
       "description": "RESOURCE MANAGER ADDRESS FOR ENQ",
-      "offset": 900,
+      "offset": 644,
       "length": 4,
       "type": "address",
       "pointsTo": "venq"
@@ -2123,7 +2123,7 @@
     {
       "name": "cvtrspie",
       "description": "RESOURCE MANAGER FOR SPIE.",
-      "offset": 904,
+      "offset": 648,
       "length": 4,
       "type": "address",
       "pointsTo": "velrm"
@@ -2131,7 +2131,7 @@
     {
       "name": "cvtlkrma",
       "description": "RESOURCE MANAGER ADDRESS FOR LOCK MANAGER.",
-      "offset": 908,
+      "offset": 652,
       "length": 4,
       "type": "address",
       "pointsTo": "velrm"
@@ -2139,7 +2139,7 @@
     {
       "name": "cvtcsd",
       "description": "VIRTUAL ADDRESS OF COMMON SYSTEM DATA AREA (CSD).  INITIALIZED BY NIP.",
-      "offset": 912,
+      "offset": 656,
       "length": 4,
       "type": "address",
       "pointsTo": "dqiqe"
@@ -2147,7 +2147,7 @@
     {
       "name": "cvtdqiqe",
       "description": "RESOURCE MANAGER FOR EXIT EFFECTORS.",
-      "offset": 916,
+      "offset": 660,
       "length": 4,
       "type": "address",
       "pointsTo": "dqiqe"
@@ -2155,7 +2155,7 @@
     {
       "name": "cvtrpost",
       "description": "RESOURCE MANAGER FOR POST.",
-      "offset": 920,
+      "offset": 664,
       "length": 4,
       "type": "address",
       "pointsTo": "rpost"
@@ -2163,7 +2163,7 @@
     {
       "name": "cvt062r1",
       "description": "BRANCH ENTRY TO DETACH",
-      "offset": 924,
+      "offset": 668,
       "length": 4,
       "type": "address",
       "pointsTo": "veac"
@@ -2171,7 +2171,7 @@
     {
       "name": "cvtveac0",
       "description": "ASCBCHAP BRANCH ENTRY",
-      "offset": 928,
+      "offset": 672,
       "length": 4,
       "type": "address",
       "pointsTo": "veac"
@@ -2179,7 +2179,7 @@
     {
       "name": "cvtglmn",
       "description": "GLOBAL BRANCH ENTRY ADDRESS FOR GETMAIN/FREEMAIN",
-      "offset": 932,
+      "offset": 676,
       "length": 4,
       "type": "address",
       "pointsTo": "vgwsa"
@@ -2187,7 +2187,7 @@
     {
       "name": "cvtspsa",
       "description": "POINTER TO GLOBAL WORK/SAVE AREA VECTOR TABLE (WSAG)",
-      "offset": 936,
+      "offset": 680,
       "length": 4,
       "type": "address",
       "pointsTo": "vgwsa"
@@ -2195,7 +2195,7 @@
     {
       "name": "cvtwsal",
       "description": "ADDRESS OF TABLE OF LENGTHS OF LOCAL WORK/SAVE AREAS",
-      "offset": 940,
+      "offset": 684,
       "length": 4,
       "type": "address",
       "pointsTo": "vwsal"
@@ -2203,7 +2203,7 @@
     {
       "name": "cvtwsag",
       "description": "ADDRESS OF TABLE OF LENGTHS OF GLOBAL WORK/SAVE AREAS",
-      "offset": 944,
+      "offset": 688,
       "length": 4,
       "type": "address",
       "pointsTo": "vwsag"
@@ -2211,7 +2211,7 @@
     {
       "name": "cvtwsac",
       "description": "ADDRESS OF TABLE OF LENGTHS OF CPU WORK/SAVE AREAS",
-      "offset": 948,
+      "offset": 692,
       "length": 4,
       "type": "address",
       "pointsTo": "vwsac"
@@ -2219,7 +2219,7 @@
     {
       "name": "cvtrecrq",
       "description": "ADDRESS OF THE RECORDING REQUEST FACILITY (PART OF RTM1 - CALLED BY RTM2 AND RMS).",
-      "offset": 952,
+      "offset": 696,
       "length": 4,
       "type": "address",
       "pointsTo": "vtrgr"
@@ -2227,7 +2227,7 @@
     {
       "name": "cvtasmvt",
       "description": "POINTER TO AUXILIARY STORAGE MANAGEMENT VECTOR TABLE (AMVT)",
-      "offset": 956,
+      "offset": 700,
       "length": 4,
       "type": "address",
       "pointsTo": "spost"
@@ -2235,7 +2235,7 @@
     {
       "name": "cvtiobp",
       "description": "ADDRESS OF THE BLOCK PROCESSOR CVT",
-      "offset": 960,
+      "offset": 704,
       "length": 4,
       "type": "address",
       "pointsTo": "spost"
@@ -2243,7 +2243,7 @@
     {
       "name": "cvtspost",
       "description": "POST RESOURCE MANAGER TERMINATION ROUTINE (RMTR) ENTRY POINT",
-      "offset": 964,
+      "offset": 708,
       "length": 4,
       "type": "address",
       "pointsTo": "spost"
@@ -2251,21 +2251,21 @@
     {
       "name": "cvtrstwd",
       "description": "RESTART RESOURCE MANAGEMENT WORD. CONTAINS IDENTIFIER OF USER IF RESTART IS IN USE. OTHERWISE, ZERO.",
-      "offset": 968,
+      "offset": 712,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtrstci",
       "description": "CPU ID OF THE CPU HOLDING THE RESTART RESOURCE.",
-      "offset": 968,
+      "offset": 712,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtrstri",
       "description": "IDENTIFIER OF OWNING ROUTINE",
-      "offset": 970,
+      "offset": 714,
       "length": 2,
       "type": "bitstring",
       "bitmasks": {
@@ -2284,7 +2284,7 @@
     {
       "name": "cvtfetch",
       "description": "ADDRESS OF ENTRY POINT FOR BASIC FETCH.",
-      "offset": 972,
+      "offset": 716,
       "length": 4,
       "type": "address",
       "pointsTo": "entry"
@@ -2292,7 +2292,7 @@
     {
       "name": "cvt044r2",
       "description": "ADDRESS OF IGC044R2 IN CHAP SERVICE ROUTINE",
-      "offset": 976,
+      "offset": 720,
       "length": 4,
       "type": "address",
       "pointsTo": "igc044r"
@@ -2300,7 +2300,7 @@
     {
       "name": "cvtperfm",
       "description": "ADDRESS OF THE PERFORMANCE WORK AREA. SET BY IGX00018.",
-      "offset": 980,
+      "offset": 724,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -2308,7 +2308,7 @@
     {
       "name": "cvtdair",
       "description": "ADDRESS OF IKJDAIR, TSO DYNAMIC ALLOCATION INTERFACE ROUTINE",
-      "offset": 984,
+      "offset": 728,
       "length": 4,
       "type": "address",
       "pointsTo": "vedr"
@@ -2316,7 +2316,7 @@
     {
       "name": "cvtehdef",
       "description": "ADDRESS OF IKJEHDEF, TSO DEFAULT SERVICE ROUTINE.",
-      "offset": 988,
+      "offset": 732,
       "length": 4,
       "type": "address",
       "pointsTo": "vedr"
@@ -2324,7 +2324,7 @@
     {
       "name": "cvtehcir",
       "description": "ADDRESS OF IKJEHCIR, TSO CATALOG INFORMATION ROUTINE.",
-      "offset": 992,
+      "offset": 736,
       "length": 4,
       "type": "address",
       "pointsTo": "vedr"
@@ -2332,7 +2332,7 @@
     {
       "name": "cvtssap",
       "description": "ADDRESS OF SYSTEM SAVE AREA",
-      "offset": 996,
+      "offset": 740,
       "length": 4,
       "type": "address",
       "pointsTo": "vedr"
@@ -2340,7 +2340,7 @@
     {
       "name": "cvtaidvt",
       "description": "POINTER TO APPENDAGE ID VECTOR TABLE",
-      "offset": 1000,
+      "offset": 744,
       "length": 4,
       "type": "address",
       "pointsTo": "vedr"
@@ -2348,7 +2348,7 @@
     {
       "name": "cvtipcds",
       "description": "V(IEAVEDR1) - BRANCH ENTRY FOR DIRECT SIGNAL SERVICE ROUTINE",
-      "offset": 1004,
+      "offset": 748,
       "length": 4,
       "type": "address",
       "pointsTo": "vedr"
@@ -2356,7 +2356,7 @@
     {
       "name": "cvtipcri",
       "description": "BRANCH ENTRY FOR REMOTE IMMEDIATE SIGNAL SERVICE ROUTINE",
-      "offset": 1008,
+      "offset": 752,
       "length": 4,
       "type": "address",
       "pointsTo": "veri"
@@ -2364,7 +2364,7 @@
     {
       "name": "cvtipcrp",
       "description": "BRANCH ENTRY FOR REMOTE PENDABLE SIGNAL SERVICE ROUTINE",
-      "offset": 1012,
+      "offset": 756,
       "length": 4,
       "type": "address",
       "pointsTo": "verp"
@@ -2372,7 +2372,7 @@
     {
       "name": "cvtpccat",
       "description": "POINTER TO PHYSICAL CCA VECTOR TABLE",
-      "offset": 1016,
+      "offset": 760,
       "length": 4,
       "type": "address",
       "pointsTo": "vxsft"
@@ -2380,7 +2380,7 @@
     {
       "name": "cvtlccat",
       "description": "POINTER TO LOGICAL CCA VECTOR TABLE",
-      "offset": 1020,
+      "offset": 764,
       "length": 4,
       "type": "address",
       "pointsTo": "vxsft"
@@ -2388,7 +2388,7 @@
     {
       "name": "cvtxsft",
       "description": "ADDRESS OF SYSTEM FUNCTION TABLE CONTAINING LINKAGE INDEX (LX) AND ENTRY INDEX (EX) NUMBERS FOR SYSTEM ROUTINES.",
-      "offset": 1024,
+      "offset": 768,
       "length": 4,
       "type": "address",
       "pointsTo": "vxsft"
@@ -2396,7 +2396,7 @@
     {
       "name": "cvtxstks",
       "description": "ADDRESS OF PCLINK STACK (SAVE=YES) ROUTINE.",
-      "offset": 1028,
+      "offset": 772,
       "length": 4,
       "type": "address",
       "pointsTo": "vxsts"
@@ -2404,7 +2404,7 @@
     {
       "name": "cvtxstkn",
       "description": "ADDRESS OF PCLINK STACK (SAVE=NO) ROUTINE.",
-      "offset": 1032,
+      "offset": 776,
       "length": 4,
       "type": "address",
       "pointsTo": "vxstn"
@@ -2412,7 +2412,7 @@
     {
       "name": "cvtxunss",
       "description": "ADDRESS OF PCLINK UNSTACK (SAVE=YES) ROUTINE.",
-      "offset": 1036,
+      "offset": 780,
       "length": 4,
       "type": "address",
       "pointsTo": "vxuns"
@@ -2420,7 +2420,7 @@
     {
       "name": "cvtpwi",
       "description": "ADDRESS OF THE WINDOW INTERCEPT ROUTINE",
-      "offset": 1040,
+      "offset": 784,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -2428,7 +2428,7 @@
     {
       "name": "cvtpvbp",
       "description": "ADDRESS OF THE VIRTUAL BLOCK PROCESSOR",
-      "offset": 1044,
+      "offset": 788,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -2436,28 +2436,28 @@
     {
       "name": "cvtmfctl",
       "description": "POINTER TO MEASUREMENT FACILITY CONTROL BLOCK",
-      "offset": 1048,
+      "offset": 792,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtmfrtr",
       "description": "IF MEASUREMENT FACILITY IS ACTIVE, CONTAINS ADDRESS OF MEASUREMENT FACILITY ROUTINE.  OTHERWISE, ADDRESS OF CVTBRET.",
-      "offset": 1052,
+      "offset": 796,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtvpsib",
       "description": "BRANCH ENTRY TO PAGE SERVICES",
-      "offset": 1056,
+      "offset": 800,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtvsi",
       "description": "POINTER DEFINED, BRANCH ENTRY TO VAM SERVICES.",
-      "offset": 1060,
+      "offset": 804,
       "length": 4,
       "type": "address",
       "pointsTo": "excp"
@@ -2465,7 +2465,7 @@
     {
       "name": "cvtexcl",
       "description": "ADDRESS POINTER TO THE EXCP TERMINATION ROUTINE.",
-      "offset": 1064,
+      "offset": 808,
       "length": 4,
       "type": "address",
       "pointsTo": "vxunn"
@@ -2473,7 +2473,7 @@
     {
       "name": "cvtxunsn",
       "description": "ADDRESS OF PCLINK UNSTACK (SAVE=NO) ROUTINE.",
-      "offset": 1068,
+      "offset": 812,
       "length": 4,
       "type": "address",
       "pointsTo": "vxunn"
@@ -2481,7 +2481,7 @@
     {
       "name": "cvtisnbr",
       "description": "ENTRY POINT ADDRESS OF DISABLED SERVICE PROCESSOR INTERFACE MODULE",
-      "offset": 1072,
+      "offset": 816,
       "length": 4,
       "type": "address",
       "pointsTo": "vxext"
@@ -2489,7 +2489,7 @@
     {
       "name": "cvtxextr",
       "description": "ADDRESS OF PCLINK EXTRACT ROUTINE",
-      "offset": 1076,
+      "offset": 820,
       "length": 4,
       "type": "address",
       "pointsTo": "vxext"
@@ -2497,7 +2497,7 @@
     {
       "name": "cvtmsfrm",
       "description": "ADDRESS OF THE PROCESSOR CONTROLLER.",
-      "offset": 1080,
+      "offset": 824,
       "length": 4,
       "type": "address",
       "pointsTo": "vmfrm"
@@ -2505,7 +2505,7 @@
     {
       "name": "cvtscpin",
       "description": "ADDRESS OF IPL-TIME SCPINFO DATA BLOCK (ECVTSCPIN has address of \"current\"). Mapped by IHASCCB",
-      "offset": 1084,
+      "offset": 828,
       "length": 4,
       "type": "address",
       "pointsTo": "ipl"
@@ -2513,7 +2513,7 @@
     {
       "name": "cvtwsma",
       "description": "ADDRESS OF WAIT STATE MESSAGE AREA MUST BE DISPLAYABLE BY OPERATOR",
-      "offset": 1088,
+      "offset": 832,
       "length": 4,
       "type": "address",
       "pointsTo": "wait"
@@ -2521,7 +2521,7 @@
     {
       "name": "cvtrmbr",
       "description": "ADDRESS OF REGMAIN BRANCH ENTRY.",
-      "offset": 1092,
+      "offset": 836,
       "length": 4,
       "type": "address",
       "pointsTo": "regmain"
@@ -2529,7 +2529,7 @@
     {
       "name": "cvtlfrm",
       "description": "LIST FORMAT FREEMAIN BRANCH ENTRY POINT.",
-      "offset": 1096,
+      "offset": 840,
       "length": 4,
       "type": "address",
       "pointsTo": "task"
@@ -2537,7 +2537,7 @@
     {
       "name": "cvtgmbr",
       "description": "LIST FORMAT GETMAIN BRANCH ENTRY POINT.",
-      "offset": 1100,
+      "offset": 844,
       "length": 4,
       "type": "address",
       "pointsTo": "task"
@@ -2545,7 +2545,7 @@
     {
       "name": "cvt0tc0a",
       "description": "ADDRESS OF TASK CLOSE MODULE IFG0TC0A.",
-      "offset": 1104,
+      "offset": 848,
       "length": 4,
       "type": "address",
       "pointsTo": "task"
@@ -2553,14 +2553,14 @@
     {
       "name": "cvtrlstg",
       "description": "SIZE OF ACTUAL REAL STORAGE ONLINE AT IPL TIME IN 'K'. ACCURATE ONLY BELOW 4TB, FOR LARGER SYSTEMS THIS CONTAINS 'FFFFFFFF'X. SEE RCE_ONLINEFRAMECOUNTATIPL.",
-      "offset": 1108,
+      "offset": 852,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtspfrr",
       "description": "'SUPER FRR' ADDRESS (ADDRESS OF FUNCTIONAL RECOVERY ROUTINE ESTABLISHED AT NIP0 TIME TO PROTECT SUPERVISOR CONTROL PROGRAM).",
-      "offset": 1112,
+      "offset": 856,
       "length": 4,
       "type": "address",
       "pointsTo": "vespr"
@@ -2568,7 +2568,7 @@
     {
       "name": "cvtrs360",
       "description": "RESERVED.",
-      "offset": 1116,
+      "offset": 860,
       "length": 4,
       "type": "hex",
       "pointsTo": "vesvt"
@@ -2576,7 +2576,7 @@
     {
       "name": "cvtsvt",
       "description": "ADDRESS POINTER FOR FETCH PROTECTED PSASVT.",
-      "offset": 1120,
+      "offset": 864,
       "length": 4,
       "type": "address",
       "pointsTo": "vesvt"
@@ -2584,7 +2584,7 @@
     {
       "name": "cvtirecm",
       "description": "ADDRESS OF INITIATOR RESOURCE MANAGER.",
-      "offset": 1124,
+      "offset": 868,
       "length": 4,
       "type": "address",
       "pointsTo": "0pt"
@@ -2592,7 +2592,7 @@
     {
       "name": "cvtdarcm",
       "description": "ADDRESS OF DEVICE ALLOCATION RESOURCE MANAGER.",
-      "offset": 1128,
+      "offset": 872,
       "length": 4,
       "type": "address",
       "pointsTo": "0pt"
@@ -2600,7 +2600,7 @@
     {
       "name": "cvt0pt02",
       "description": "ADDRESS OF POST ENTRY POINT IEA0PT02.",
-      "offset": 1132,
+      "offset": 876,
       "length": 4,
       "type": "address",
       "pointsTo": "0pt"
@@ -2608,7 +2608,7 @@
     {
       "name": "cvtrs374",
       "description": "RESERVED",
-      "offset": 1136,
+      "offset": 880,
       "length": 4,
       "type": "hex",
       "pointsTo": "wtcb"
@@ -2616,7 +2616,7 @@
     {
       "name": "cvtwtcb",
       "description": "ADDRESS OF WAIT STATE TCB.",
-      "offset": 1140,
+      "offset": 884,
       "length": 4,
       "type": "address",
       "pointsTo": "wtcb"
@@ -2624,7 +2624,7 @@
     {
       "name": "cvtvacr",
       "description": "ACR/VARY CPU CHANNEL RECOVERY ROUTINE ADDRESS. ADDRESS FILLED IN BY VARY CPU PROCESSOR.",
-      "offset": 1144,
+      "offset": 888,
       "length": 4,
       "type": "address",
       "pointsTo": "vary"
@@ -2632,7 +2632,7 @@
     {
       "name": "cvtrecon",
       "description": "VARY CPU SHUTDOWN ROUTINE ADDRESS. ADDRESS FILLED IN BY VARY CPU PROCESSOR.",
-      "offset": 1148,
+      "offset": 892,
       "length": 4,
       "type": "address",
       "pointsTo": "vary"
@@ -2640,7 +2640,7 @@
     {
       "name": "cvtgtfr8",
       "description": "GENERALIZED TRACE FACILITY (GTF) CONTROL REGISTER 8 INITIALIZATION ROUTINE ADDRESS.",
-      "offset": 1152,
+      "offset": 896,
       "length": 4,
       "type": "address",
       "pointsTo": "vary"
@@ -2648,7 +2648,7 @@
     {
       "name": "cvtvstop",
       "description": "ADDRESS OF VARY CPU STOP CPU ROUTINE.",
-      "offset": 1156,
+      "offset": 900,
       "length": 4,
       "type": "address",
       "pointsTo": "vary"
@@ -2656,7 +2656,7 @@
     {
       "name": "cvtvpsa",
       "description": "ADDRESS OF COPY OF SYSGEN'ED PSA - PLACED HERE BY NIP.",
-      "offset": 1160,
+      "offset": 904,
       "length": 4,
       "type": "address",
       "pointsTo": "vexp"
@@ -2664,7 +2664,7 @@
     {
       "name": "cvtrmptt",
       "description": "ADDRESS OF ISTRAMA1, THE VTAM RESOURCE MANAGER FOR NORMAL AND ABNORMAL TASK TERMINATION.",
-      "offset": 1164,
+      "offset": 908,
       "length": 4,
       "type": "address",
       "pointsTo": "vexp"
@@ -2672,7 +2672,7 @@
     {
       "name": "cvtrmpmt",
       "description": "ADDRESS OF ISTRAMA2, THE VTAM RESOURCE MANAGER FOR NORMAL AND ABNORMAL MEMORY TERMINATION.",
-      "offset": 1168,
+      "offset": 912,
       "length": 4,
       "type": "address",
       "pointsTo": "vexp"
@@ -2680,7 +2680,7 @@
     {
       "name": "cvtexp1",
       "description": "ADDRESS OF EXIT PROLOGUE WHICH RETURNS TO THE DISPATCHER.",
-      "offset": 1172,
+      "offset": 916,
       "length": 4,
       "type": "address",
       "pointsTo": "vexp"
@@ -2688,7 +2688,7 @@
     {
       "name": "cvtcsdrl",
       "description": "REAL ADDRESS OF COMMON SYSTEM DATA AREA (CSD). INITIALIZED BY NIP.",
-      "offset": 1176,
+      "offset": 920,
       "length": 4,
       "type": "address",
       "pointsTo": "vgqv"
@@ -2696,7 +2696,7 @@
     {
       "name": "cvtssrb",
       "description": "STATUS STOP SRB ENTRY.",
-      "offset": 1180,
+      "offset": 924,
       "length": 4,
       "type": "address",
       "pointsTo": "vgqv"
@@ -2704,7 +2704,7 @@
     {
       "name": "cvtrs3a4",
       "description": "RESERVED",
-      "offset": 1184,
+      "offset": 928,
       "length": 4,
       "type": "hex",
       "pointsTo": "vgqv"
@@ -2712,7 +2712,7 @@
     {
       "name": "cvtqv1",
       "description": "ADDRESS OF QUEUE VERIFICATION FOR SINGLE THREADED QUEUES WITH HEADERS ONLY.",
-      "offset": 1188,
+      "offset": 932,
       "length": 4,
       "type": "address",
       "pointsTo": "vgqv"
@@ -2720,7 +2720,7 @@
     {
       "name": "cvtqv2",
       "description": "ADDRESS OF QUEUE VERIFICATION FOR SINGLE THREADED QUEUES WITH HEADER AND TRAILER.",
-      "offset": 1192,
+      "offset": 936,
       "length": 4,
       "type": "address",
       "pointsTo": "veqv"
@@ -2728,7 +2728,7 @@
     {
       "name": "cvtqv3",
       "description": "ADDRESS OF QUEUE VERIFICATION FOR DOUBLE THREADED QUEUES.",
-      "offset": 1196,
+      "offset": 940,
       "length": 4,
       "type": "address",
       "pointsTo": "veqv"
@@ -2736,7 +2736,7 @@
     {
       "name": "cvtgsda",
       "description": "ADDRESS OF GLOBAL SYSTEM DUPLEX AREA.",
-      "offset": 1200,
+      "offset": 944,
       "length": 4,
       "type": "address",
       "pointsTo": "vgsda"
@@ -2744,7 +2744,7 @@
     {
       "name": "cvtadv",
       "description": "ADDRESS OF ADDRESS VERIFICATION ROUTINE.",
-      "offset": 1204,
+      "offset": 948,
       "length": 4,
       "type": "address",
       "pointsTo": "veadv"
@@ -2752,7 +2752,7 @@
     {
       "name": "cvttpio",
       "description": "ADDRESS OF VTAM TPIO (SVC 124) ROUTINE.",
-      "offset": 1208,
+      "offset": 952,
       "length": 4,
       "type": "address",
       "pointsTo": "vevt"
@@ -2760,7 +2760,7 @@
     {
       "name": "cvtrs3c0",
       "description": "RESERVED",
-      "offset": 1212,
+      "offset": 956,
       "length": 4,
       "type": "hex",
       "pointsTo": "vevt"
@@ -2768,7 +2768,7 @@
     {
       "name": "cvtevent",
       "description": "BRANCH ENTRY ADDRESS TO EVENTS (FAST MULTIPLE WAIT ROUTINE).",
-      "offset": 1216,
+      "offset": 960,
       "length": 4,
       "type": "address",
       "pointsTo": "vevt"
@@ -2776,7 +2776,7 @@
     {
       "name": "cvtsscr",
       "description": "ADDRESS OF STORAGE SYSTEM CONTROLLER RECOVERY MANAGER CLEANUP ROUTINE (SSC RMCR).",
-      "offset": 1220,
+      "offset": 964,
       "length": 4,
       "type": "address",
       "pointsTo": "vesc"
@@ -2784,7 +2784,7 @@
     {
       "name": "cvtcbbr",
       "description": "BRANCH ENTRY ADDRESS TO GETMAIN/FREEMAIN.",
-      "offset": 1224,
+      "offset": 968,
       "length": 4,
       "type": "address",
       "pointsTo": "vesc"
@@ -2792,7 +2792,7 @@
     {
       "name": "cvteff02",
       "description": "ADDRESS OF IKJEFF02, TSO MESSAGE ISSUER SERVICE ROUTINE.",
-      "offset": 1228,
+      "offset": 972,
       "length": 4,
       "type": "address",
       "pointsTo": "vesc"
@@ -2800,7 +2800,7 @@
     {
       "name": "cvtlsch",
       "description": "ADDRESS OF LOCAL SCHEDULE.",
-      "offset": 1232,
+      "offset": 976,
       "length": 4,
       "type": "address",
       "pointsTo": "vesc"
@@ -2808,7 +2808,7 @@
     {
       "name": "cvtcdeq",
       "description": "ADDRESS OF PROGRAM MANAGER AVAILBLE CDE QUEUE CONTROL AREA.",
-      "offset": 1236,
+      "offset": 980,
       "length": 4,
       "type": "address",
       "pointsTo": "program"
@@ -2816,7 +2816,7 @@
     {
       "name": "cvthsm",
       "description": "POINTER TO HIERARCHICAL STORAGE MANAGER (HSM) QUEUE CONTROL TABLE.",
-      "offset": 1240,
+      "offset": 984,
       "length": 4,
       "type": "address",
       "pointsTo": "access"
@@ -2824,7 +2824,7 @@
     {
       "name": "cvtrac",
       "description": "ADDRESS OF ACCESS CONTROL CVT.",
-      "offset": 1244,
+      "offset": 988,
       "length": 4,
       "type": "address",
       "pointsTo": "access"
@@ -2832,7 +2832,7 @@
     {
       "name": "cvtcgk",
       "description": "ADDRESS OF ROUTINE USED TO CHANGE THE KEY OF VIRTUAL PAGES.",
-      "offset": 1248,
+      "offset": 992,
       "length": 4,
       "type": "address",
       "pointsTo": "0pt0e"
@@ -2840,7 +2840,7 @@
     {
       "name": "cvtsrm",
       "description": "ADDRESS OF ENTRY TABLE FOR SRM, ENTRY TABLE IS INITIALIZED BY NIP10.",
-      "offset": 1252,
+      "offset": 996,
       "length": 4,
       "type": "address",
       "pointsTo": "0pt0e"
@@ -2848,7 +2848,7 @@
     {
       "name": "cvt0pt0e",
       "description": "ENTRY POINT TO IDENTIFY POST EXIT ROUTINES.",
-      "offset": 1256,
+      "offset": 1000,
       "length": 4,
       "type": "address",
       "pointsTo": "0pt0e"
@@ -2856,7 +2856,7 @@
     {
       "name": "cvt0pt03",
       "description": "POST REINVOCATION ENTRY POINT FROM POST EXIT ROUTINES.",
-      "offset": 1260,
+      "offset": 1004,
       "length": 4,
       "type": "address",
       "pointsTo": "0pt"
@@ -2864,7 +2864,7 @@
     {
       "name": "cvttcasp",
       "description": "POINTER TO THE TSO/VTAM TERMINAL CONTROL ADDRESS SPACE (TCAS) TABLE.",
-      "offset": 1264,
+      "offset": 1008,
       "length": 4,
       "type": "address",
       "pointsTo": "tso"
@@ -2872,14 +2872,14 @@
     {
       "name": "cvtcttvt",
       "description": "CTT VT",
-      "offset": 1268,
+      "offset": 1012,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtjterm",
       "description": "POINTER DEFINED ADDRESS OF AUXILIARY STORAGE MANAGEMENT JOB TERMINATION RESOURCE MANAGER.",
-      "offset": 1272,
+      "offset": 1016,
       "length": 4,
       "type": "address",
       "pointsTo": "vrsuh"
@@ -2887,7 +2887,7 @@
     {
       "name": "cvtrsume",
       "description": "ADDRESS OF RESUME FUNCTION.",
-      "offset": 1276,
+      "offset": 1020,
       "length": 4,
       "type": "address",
       "pointsTo": "vrsuh"
@@ -2895,7 +2895,7 @@
     {
       "name": "cvttctl",
       "description": "ADDRESS OF TRANSFER CONTROL (TCTL) FUNCTION.",
-      "offset": 1280,
+      "offset": 1024,
       "length": 4,
       "type": "address",
       "pointsTo": "vtctl"
@@ -2903,7 +2903,7 @@
     {
       "name": "cvtrmt",
       "description": "ADDRESS OF RESOURCE MANAGER CONTROL STRUCTURE (RMT) OWNERSHIP: RTM. SERIALIZATION: NONE.",
-      "offset": 1284,
+      "offset": 1028,
       "length": 4,
       "type": "address",
       "pointsTo": "vet6e"
@@ -2911,7 +2911,7 @@
     {
       "name": "cvtt6svc",
       "description": "ENTRY POINT ADDRESS FOR TYPE 6 SVC EXIT FUNCTION.",
-      "offset": 1288,
+      "offset": 1032,
       "length": 4,
       "type": "address",
       "pointsTo": "vet6e"
@@ -2919,7 +2919,7 @@
     {
       "name": "cvtsusp",
       "description": "ADDRESS OF SUSPEND ROUTINE.",
-      "offset": 1292,
+      "offset": 1036,
       "length": 4,
       "type": "address",
       "pointsTo": "vspnd"
@@ -2927,7 +2927,7 @@
     {
       "name": "cvtihasu",
       "description": "ADDRESS OF BIT STRING.",
-      "offset": 1296,
+      "offset": 1040,
       "length": 4,
       "type": "address",
       "pointsTo": "su"
@@ -2935,7 +2935,7 @@
     {
       "name": "cvtsfv",
       "description": "ADDRESS OF SETFRR ROUTINE ABOVE 16M",
-      "offset": 1300,
+      "offset": 1044,
       "length": 4,
       "type": "address",
       "pointsTo": "vtsfv"
@@ -2943,7 +2943,7 @@
     {
       "name": "cvtidevn",
       "description": "ADDRESS OF DEVICE NUMBER CONVERSION ROUTINE OWNERSHIP: IOS. SERIALIZATION: NONE.",
-      "offset": 1304,
+      "offset": 1048,
       "length": 4,
       "type": "address",
       "pointsTo": "device"
@@ -2951,7 +2951,7 @@
     {
       "name": "cvtsmf83",
       "description": "ADDRESS OF BRANCH ENTRY TO SMF SVC 83.",
-      "offset": 1308,
+      "offset": 1052,
       "length": 4,
       "type": "address",
       "pointsTo": "smfsp"
@@ -2959,7 +2959,7 @@
     {
       "name": "cvtsmfsp",
       "description": "ADDRESS OF SMF SUSPEND HANDLER.",
-      "offset": 1312,
+      "offset": 1056,
       "length": 4,
       "type": "address",
       "pointsTo": "smfsp"
@@ -2967,14 +2967,14 @@
     {
       "name": "cvtmsfcb",
       "description": "ADDRESS OF MAINTENANCE AND SERVICE FACILITY CONTROL BLOCK (MSFCB).",
-      "offset": 1316,
+      "offset": 1060,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvthid",
       "description": "ADDRESS OF SCP HOST ID.",
-      "offset": 1320,
+      "offset": 1064,
       "length": 4,
       "type": "address",
       "pointsTo": "scp"
@@ -2982,7 +2982,7 @@
     {
       "name": "cvtpsxm",
       "description": "ADDRESS OF CROSS MEMORY PAGE FIX AND PAGE FREE.",
-      "offset": 1324,
+      "offset": 1068,
       "length": 4,
       "type": "address",
       "pointsTo": "cross"
@@ -2990,7 +2990,7 @@
     {
       "name": "cvtucbsc",
       "description": "ADDRESS OF UCB SCAN SERVICE.",
-      "offset": 1328,
+      "offset": 1072,
       "length": 4,
       "type": "address",
       "pointsTo": "ucb"
@@ -2998,49 +2998,49 @@
     {
       "name": "cvttpur",
       "description": "DDR QUEUE OF TAPE UNIT-RECORD SWAP REQUESTS.",
-      "offset": 1332,
+      "offset": 1076,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtdpur",
       "description": "DDR QUEUE OF DASD SWAP REQUESTS.",
-      "offset": 1336,
+      "offset": 1080,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvttrpos",
       "description": "DDR QUEUE OF TAPES TO BE REPRESENTED.",
-      "offset": 1340,
+      "offset": 1084,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtrs444",
       "description": "Reserved, must always be 0. Was CVTRESTX, VIRTUAL ADDRESS OF TEXT TO BE PLACED ON CONSOLE FRAME.",
-      "offset": 1344,
+      "offset": 1088,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtxcpct",
       "description": "MAXIMUM EXCP COUNT PER ADDRESS SPACE.",
-      "offset": 1348,
+      "offset": 1092,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtcall",
       "description": "A BASSM 14,15 INSTRUCTION.  POINTER USED VIA AN EXECUTE INSTRUCTION TO BRANCH TO USERS EXITS",
-      "offset": 1350,
+      "offset": 1094,
       "length": 2,
       "type": "signed-integer"
     },
     {
       "name": "cvtvfind",
       "description": "THE POINTER TO VIRTUAL FETCH BUILD AND FIND ROUTINE.",
-      "offset": 1352,
+      "offset": 1096,
       "length": 4,
       "type": "address",
       "pointsTo": "virtual"
@@ -3048,7 +3048,7 @@
     {
       "name": "cvtvfget",
       "description": "THE POINTER TO VIRTUAL FETCH GET ROUTINE.",
-      "offset": 1356,
+      "offset": 1100,
       "length": 4,
       "type": "address",
       "pointsTo": "virtual"
@@ -3056,7 +3056,7 @@
     {
       "name": "cvtvfmem",
       "description": "RESERVED. THIS FIELD IS NO LONGER USED. ANYONE USING IT AS A POINTER WILL PROGRAM CHECK",
-      "offset": 1360,
+      "offset": 1104,
       "length": 4,
       "type": "address",
       "pointsTo": "virtual"
@@ -3064,7 +3064,7 @@
     {
       "name": "cvtvfcb",
       "description": "THE POINTER TO VIRTUAL FETCH INTERNAL CONTROL BLOCK IN CSA, INITIALIZED TO ZERO AND SET TO NON-ZERO VALUE BY VIRTUAL FETCH INITIALIZATION ROUTINE.",
-      "offset": 1364,
+      "offset": 1108,
       "length": 4,
       "type": "address",
       "pointsTo": "virtual"
@@ -3072,7 +3072,7 @@
     {
       "name": "cvtpgser",
       "description": "POINTER DEFINED ADDRESS OF ENTRY TO PAGE SERVICES (FIX,FREE,LOAD, OUT,RLSE,ANYWHER).",
-      "offset": 1368,
+      "offset": 1112,
       "length": 4,
       "type": "address",
       "pointsTo": "entry"
@@ -3080,7 +3080,7 @@
     {
       "name": "cvttski",
       "description": "POINTER DEFINED ADDRESS OF TASK MANAGEMENT/STORAGE MANAGEMENT INTERFACE ROUTINE.",
-      "offset": 1372,
+      "offset": 1116,
       "length": 4,
       "type": "address",
       "pointsTo": "task"
@@ -3088,7 +3088,7 @@
     {
       "name": "cvtcpgub",
       "description": "POINTER DEFINED ADDRESS OF CPOOL GET UNCONDITIONAL BRANCH ENTRY ROUTINE.",
-      "offset": 1376,
+      "offset": 1120,
       "length": 4,
       "type": "address",
       "pointsTo": "cpool"
@@ -3096,7 +3096,7 @@
     {
       "name": "cvtcpgup",
       "description": "POINTER DEFINED ADDRESS OF CPOOL GET UNCONDITIONAL PC-ENTRY ROUTINE.",
-      "offset": 1380,
+      "offset": 1124,
       "length": 4,
       "type": "address",
       "pointsTo": "cpool"
@@ -3104,7 +3104,7 @@
     {
       "name": "cvtcpgtc",
       "description": "POINTER DEFINED ADDRESS OF GET UNCONDITIONAL ROUTINE.",
-      "offset": 1384,
+      "offset": 1128,
       "length": 4,
       "type": "address",
       "pointsTo": "get"
@@ -3112,7 +3112,7 @@
     {
       "name": "cvtcpfre",
       "description": "POINTER DEFINED ADDRESS OF CPOOL FREE ROUTINE.",
-      "offset": 1388,
+      "offset": 1132,
       "length": 4,
       "type": "address",
       "pointsTo": "cpool"
@@ -3120,7 +3120,7 @@
     {
       "name": "cvtslist",
       "description": "POINTER DEFINED ADDRESS OF VSM LIST SERVICE.",
-      "offset": 1392,
+      "offset": 1136,
       "length": 4,
       "type": "address",
       "pointsTo": "vsm"
@@ -3128,7 +3128,7 @@
     {
       "name": "cvtsregn",
       "description": "POINTER DEFINED ADDRESS OF VSM REGION SIZE.",
-      "offset": 1396,
+      "offset": 1140,
       "length": 4,
       "type": "address",
       "pointsTo": "vsm"
@@ -3136,7 +3136,7 @@
     {
       "name": "cvtsloc",
       "description": "POINTER DEFINED ADDRESS OF VSM LOCATOR SERVICE.",
-      "offset": 1400,
+      "offset": 1144,
       "length": 4,
       "type": "address",
       "pointsTo": "vsm"
@@ -3144,7 +3144,7 @@
     {
       "name": "cvtcpbdb",
       "description": "POINTER DEFINED ADDRESS OF CPOOL BUILD ENTRY ROUTINE.",
-      "offset": 1404,
+      "offset": 1148,
       "length": 4,
       "type": "address",
       "pointsTo": "cpool"
@@ -3152,7 +3152,7 @@
     {
       "name": "cvtcpdlb",
       "description": "POINTER DEFINED ADDRESS OF CPOOL DELETE BRANCH ENTRY ROUTINE.",
-      "offset": 1408,
+      "offset": 1152,
       "length": 4,
       "type": "address",
       "pointsTo": "cpool"
@@ -3160,7 +3160,7 @@
     {
       "name": "cvtdoffs",
       "description": "STARTING REAL ADDRESS OF DAT-OFF NUCLEUS.",
-      "offset": 1412,
+      "offset": 1156,
       "length": 4,
       "type": "address",
       "pointsTo": "dat"
@@ -3168,7 +3168,7 @@
     {
       "name": "cvtdoffe",
       "description": "ENDING REAL ADDRESS OF DAT-OFF NUCLEUS.",
-      "offset": 1416,
+      "offset": 1160,
       "length": 4,
       "type": "address",
       "pointsTo": "dat"
@@ -3176,7 +3176,7 @@
     {
       "name": "cvtrcep",
       "description": "ADDRESS OF THE RSM CONTROL AND ENUMERATION AREA.",
-      "offset": 1420,
+      "offset": 1164,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -3184,7 +3184,7 @@
     {
       "name": "cvtcpgus",
       "description": "ADDRESS OF CPOOL GET UNCONDITIONAL PC-ENTRY ROUTINE WHICH SAVES SECONDARY ASID STATUS.",
-      "offset": 1424,
+      "offset": 1168,
       "length": 4,
       "type": "address",
       "pointsTo": "cpool"
@@ -3192,7 +3192,7 @@
     {
       "name": "cvtgrrgn",
       "description": "POINTER DEFINED ADDRESS OF GET REAL REGION ROUTINE.",
-      "offset": 1428,
+      "offset": 1172,
       "length": 4,
       "type": "address",
       "pointsTo": "get"
@@ -3200,7 +3200,7 @@
     {
       "name": "cvtgvrgn",
       "description": "POINTER DEFINED ADDRESS OF GET VIRTUAL REGION ROUTINE.",
-      "offset": 1432,
+      "offset": 1176,
       "length": 4,
       "type": "address",
       "pointsTo": "get"
@@ -3208,14 +3208,14 @@
     {
       "name": "cvtionlv",
       "description": "DEFAULT VALUE OF IOS LEVEL.",
-      "offset": 1436,
+      "offset": 1180,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtrs4a1",
       "description": "RESERVED EXIT CODE FOR NORMAL AND/OR ABNORMAL END APPENDAGES FOR I/O DRIVERS.",
-      "offset": 1437,
+      "offset": 1181,
       "length": 5,
       "type": "bitstring",
       "bitmasks": {
@@ -3229,7 +3229,7 @@
     {
       "name": "cvtfunc",
       "description": "Reserved for solution/offering use. Must be zero for full function MVS.",
-      "offset": 1442,
+      "offset": 1186,
       "length": 4,
       "type": "hex",
       "pointsTo": "storage"
@@ -3237,7 +3237,7 @@
     {
       "name": "cvtsmext",
       "description": "ADDRESS OF STORAGE MAP EXTENSION.",
-      "offset": 1446,
+      "offset": 1190,
       "length": 4,
       "type": "address",
       "pointsTo": "storage"
@@ -3245,7 +3245,7 @@
     {
       "name": "cvtnucmp",
       "description": "ADDRESS OF NUCLEUS MAP.",
-      "offset": 1450,
+      "offset": 1194,
       "length": 4,
       "type": "address",
       "pointsTo": "nucleus"
@@ -3253,7 +3253,7 @@
     {
       "name": "cvtxafl",
       "description": "FLAG BYTE FOR MVS/XA PROCESSING.",
-      "offset": 1454,
+      "offset": 1198,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -3267,14 +3267,14 @@
     {
       "name": "cvtrs4b5",
       "description": "RESERVED",
-      "offset": 1455,
+      "offset": 1199,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtvtam",
       "description": "ADDRESS OF VTAM COMMAND PROCESSOR (ISTCFF3D).",
-      "offset": 1458,
+      "offset": 1202,
       "length": 4,
       "type": "address",
       "pointsTo": "vnvt"
@@ -3282,7 +3282,7 @@
     {
       "name": "cvtspip",
       "description": "ADDRESS OF RTM INTERFACE TO RETURN PROGRAM MASK TO CONTENTS SUPERVISOR,(ON SPIE/ESPIE).",
-      "offset": 1462,
+      "offset": 1206,
       "length": 4,
       "type": "address",
       "pointsTo": "vnvt"
@@ -3290,14 +3290,14 @@
     {
       "name": "cvtckras",
       "description": "OLD NAME FOR CVTDFA FIELD.",
-      "offset": 1466,
+      "offset": 1210,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtdfa",
       "description": "ADDRESS OF DFP ID TABLE, MAPPED BY THE DFA. OWNERSHIP: DFP.",
-      "offset": 1466,
+      "offset": 1210,
       "length": 4,
       "type": "address",
       "pointsTo": "vnvt"
@@ -3305,7 +3305,7 @@
     {
       "name": "cvtnvt0",
       "description": "ADDRESS OF DATA IN DAT-ON NUCLEUS",
-      "offset": 1470,
+      "offset": 1214,
       "length": 4,
       "type": "address",
       "pointsTo": "vnvt"
@@ -3313,7 +3313,7 @@
     {
       "name": "cvtcsomf",
       "description": "OWNER OF CHANNEL MEASUREMENT FACILITY.",
-      "offset": 1474,
+      "offset": 1218,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -3321,7 +3321,7 @@
     {
       "name": "cvtcsoal",
       "description": "OWNER OF ADDRESS LIMIT FACILITY.",
-      "offset": 1478,
+      "offset": 1222,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -3329,7 +3329,7 @@
     {
       "name": "cvtichpt",
       "description": "ADDRESS OF THE INSTALLED CHANNEL PATH TABLE.",
-      "offset": 1482,
+      "offset": 1226,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -3337,7 +3337,7 @@
     {
       "name": "cvtcsocr",
       "description": "CHANNEL SUBSYSTEM OWNER - CHANNEL PATH RESET FACILITY.",
-      "offset": 1486,
+      "offset": 1230,
       "length": 4,
       "type": "address",
       "pointsTo": "device"
@@ -3345,7 +3345,7 @@
     {
       "name": "cvtcsocs",
       "description": "CHANNEL SUBSYSTEM OWNER - CHANNEL PATH STATUS FACILITY.",
-      "offset": 1490,
+      "offset": 1234,
       "length": 4,
       "type": "address",
       "pointsTo": "device"
@@ -3353,7 +3353,7 @@
     {
       "name": "cvtllta",
       "description": "LINK LIST TABLE ADDRESS.",
-      "offset": 1494,
+      "offset": 1238,
       "length": 4,
       "type": "address",
       "pointsTo": "device"
@@ -3361,7 +3361,7 @@
     {
       "name": "cvtdcqa",
       "description": "ADDRESS OF DEVICE CLASS QUEUE",
-      "offset": 1498,
+      "offset": 1242,
       "length": 4,
       "type": "address",
       "pointsTo": "vestu"
@@ -3369,7 +3369,7 @@
     {
       "name": "cvtucba",
       "description": "ADDRESS OF THE FIRST UCB IN THE CHAIN OF UCB'S.",
-      "offset": 1502,
+      "offset": 1246,
       "length": 4,
       "type": "address",
       "pointsTo": "vestu"
@@ -3377,7 +3377,7 @@
     {
       "name": "cvtvestu",
       "description": "ADDRESS OF THE ENTRY POINT OF THE SVC UPDATE ROUTINE.",
-      "offset": 1506,
+      "offset": 1250,
       "length": 4,
       "type": "address",
       "pointsTo": "vestu"
@@ -3385,7 +3385,7 @@
     {
       "name": "cvtnuclu",
       "description": "ADDRESS TO SUPPORT THE NUCLEUS MAP LOOKUP ROUTINE.",
-      "offset": 1510,
+      "offset": 1254,
       "length": 4,
       "type": "address",
       "pointsTo": "venlu"
@@ -3393,14 +3393,14 @@
     {
       "name": "cvtoslvl",
       "description": "SYSTEM LEVEL INDICATORS The presence of certain hardware functions is indicated within the SCCB (mapped by macro IHASCCB, pointed to by CVTSCPIN and/or ECVTSCPIN). The presence of other hardware functions can be found within CVT field CVTFLAGS2.",
-      "offset": 1514,
+      "offset": 1258,
       "length": 16,
       "type": "hex"
     },
     {
       "name": "cvtoslv0",
       "description": "BYTE 0 OF CVTOSLVL",
-      "offset": 1514,
+      "offset": 1258,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -3474,7 +3474,7 @@
     {
       "name": "cvtoslv1",
       "description": "BYTE 1 OF CVTOSLVL",
-      "offset": 1515,
+      "offset": 1259,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -3593,7 +3593,7 @@
     {
       "name": "cvtoslv2",
       "description": "BYTE 2 OF CVTOSLVL",
-      "offset": 1516,
+      "offset": 1260,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -3732,7 +3732,7 @@
     {
       "name": "cvtoslv3",
       "description": "BYTE 3 OF CVTOSLVL",
-      "offset": 1517,
+      "offset": 1261,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -3856,7 +3856,7 @@
     {
       "name": "cvtoslv4",
       "description": "BYTE 4 OF CVTOSLVL",
-      "offset": 1518,
+      "offset": 1262,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -3910,7 +3910,7 @@
     {
       "name": "cvtoslv5",
       "description": "BYTE 5 OF CVTOSLVL",
-      "offset": 1519,
+      "offset": 1263,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -4044,7 +4044,7 @@
     {
       "name": "cvtoslv6",
       "description": "BYTE 6 OF CVTOSLVL",
-      "offset": 1520,
+      "offset": 1264,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -4178,14 +4178,14 @@
     {
       "name": "cvtoslv7",
       "description": "BYTE 7 OF CVTOSLVL",
-      "offset": 1521,
+      "offset": 1265,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtoslv8",
       "description": "BYTE 8 OF CVTOSLVL",
-      "offset": 1522,
+      "offset": 1266,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -4234,56 +4234,56 @@
     {
       "name": "cvtoslv9",
       "description": "BYTE 9 OF CVTOSLVL",
-      "offset": 1523,
+      "offset": 1267,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtoslva",
       "description": "BYTE 10 OF CVTOSLVL",
-      "offset": 1524,
+      "offset": 1268,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtoslvb",
       "description": "BYTE 11 OF CVTOSLVL",
-      "offset": 1525,
+      "offset": 1269,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtoslvc",
       "description": "BYTE 12 OF CVTOSLVL",
-      "offset": 1526,
+      "offset": 1270,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtoslvd",
       "description": "BYTE 13 OF CVTOSLVL",
-      "offset": 1527,
+      "offset": 1271,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtoslve",
       "description": "BYTE 14 OF CVTOSLVL",
-      "offset": 1528,
+      "offset": 1272,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtoslvf",
       "description": "BYTE 15 OF CVTOSLVL OS/VS2 - VIRTUAL STORAGE ADDRESS EXTENSION ADDRESS OF EXTENSION IS IN CVTSMEXT NOTE- ALL STARTING ADDRESSES POINT TO FIRST BYTE IN STORAGE AREA.  ALL ENDING ADDRESSES POINT TO LAST BYTE WITHIN STORAGE AREA (NOT BEYOND STORAGE AREA).",
-      "offset": 1529,
+      "offset": 1273,
       "length": 1,
       "type": "hex"
     },
     {
       "name": "cvtbldls",
       "description": "RESERVED - WAS STARTING ADDRESS OF BLDL LIST.  MUST BE ZERO NOW.",
-      "offset": 1530,
+      "offset": 1274,
       "length": 4,
       "type": "address",
       "pointsTo": "mlpa"
@@ -4291,7 +4291,7 @@
     {
       "name": "cvtbldle",
       "description": "RESERVED - WAS ENDING ADDRESS OF BLDL LIST.  MUST BE ZERO NOW.",
-      "offset": 1534,
+      "offset": 1278,
       "length": 4,
       "type": "address",
       "pointsTo": "mlpa"
@@ -4299,7 +4299,7 @@
     {
       "name": "cvtmlpas",
       "description": "STARTING VIRTUAL ADDRESS OF MLPA.",
-      "offset": 1538,
+      "offset": 1282,
       "length": 4,
       "type": "address",
       "pointsTo": "mlpa"
@@ -4307,7 +4307,7 @@
     {
       "name": "cvtmlpae",
       "description": "ENDING VIRTUAL ADDRESS OF MLPA.",
-      "offset": 1542,
+      "offset": 1286,
       "length": 4,
       "type": "address",
       "pointsTo": "mlpa"
@@ -4315,7 +4315,7 @@
     {
       "name": "cvtflpas",
       "description": "STARTING VIRTUAL ADDRESS OF FLPA.",
-      "offset": 1546,
+      "offset": 1290,
       "length": 4,
       "type": "address",
       "pointsTo": "flpa"
@@ -4323,7 +4323,7 @@
     {
       "name": "cvtflpae",
       "description": "ENDING VIRTUAL ADDRESS OF FLPA.",
-      "offset": 1550,
+      "offset": 1294,
       "length": 4,
       "type": "address",
       "pointsTo": "flpa"
@@ -4331,7 +4331,7 @@
     {
       "name": "cvtplpas",
       "description": "STARTING VIRTUAL ADDRESS OF PLPA.",
-      "offset": 1554,
+      "offset": 1298,
       "length": 4,
       "type": "address",
       "pointsTo": "plpa"
@@ -4339,7 +4339,7 @@
     {
       "name": "cvtplpae",
       "description": "ENDING VIRTUAL ADDRESS OF PLPA.",
-      "offset": 1558,
+      "offset": 1302,
       "length": 4,
       "type": "address",
       "pointsTo": "plpa"
@@ -4347,91 +4347,91 @@
     {
       "name": "cvtrwns",
       "description": "STARTING VIRTUAL ADDRESS OF READ-WRITE NUCLEUS.     (MDCXXX)",
-      "offset": 1562,
+      "offset": 1306,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtrwne",
       "description": "ENDING VIRTUAL ADDRESS OF READ-WRITE NUCLEUS.     (MDCXXX)",
-      "offset": 1566,
+      "offset": 1310,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtrons",
       "description": "STARTING VIRTUAL ADDRESS OF READ-ONLY NUCLEUS.      (MDCXXX)",
-      "offset": 1570,
+      "offset": 1314,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtrone",
       "description": "ENDING VIRTUAL ADDRESS OF READ-ONLY NUCLEUS.      (MDCXXX)",
-      "offset": 1574,
+      "offset": 1318,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvterwns",
       "description": "STARTING EXTENDED ADDRESS READ/WRITE NUCLEUS.",
-      "offset": 1578,
+      "offset": 1322,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvterwne",
       "description": "ENDING EXTENDED ADDRESS READ/WRITE NUCLEUS.",
-      "offset": 1582,
+      "offset": 1326,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvteplps",
       "description": "Starting virtual address of extended PLPA. This is an interface for accessing the LPAT only.",
-      "offset": 1586,
+      "offset": 1330,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvteplpe",
       "description": "ENDING VIRTUAL ADDRESS OF EXTENDED PLPA.",
-      "offset": 1590,
+      "offset": 1334,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvteflps",
       "description": "STARTING VIRTUAL ADDRESS OF EXTENDED FLPA.",
-      "offset": 1594,
+      "offset": 1338,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvteflpe",
       "description": "ENDING VIRTUAL ADDRESS OF EXTENDED FLPA.",
-      "offset": 1598,
+      "offset": 1342,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtemlps",
       "description": "STARTING VIRTUAL ADDRESS OF EXTENDED MLPA.",
-      "offset": 1602,
+      "offset": 1346,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtemlpe",
       "description": "ENDING VIRTUAL ADDRESS OF EXTENDED MLPA.",
-      "offset": 1606,
+      "offset": 1350,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtfachn",
       "description": "ADDRESS OF CHAIN OF DCB FIELD AREAS (ISAM).",
-      "offset": 1610,
+      "offset": 1354,
       "length": 4,
       "type": "address",
       "pointsTo": "chain"
@@ -4439,28 +4439,28 @@
     {
       "name": "cvt1r004",
       "description": "RESERVED",
-      "offset": 1614,
+      "offset": 1358,
       "length": 8,
       "type": "hex"
     },
     {
       "name": "cvt2r000",
       "description": "RESERVED",
-      "offset": 1622,
+      "offset": 1366,
       "length": 4,
       "type": "hex"
     },
     {
       "name": "cvtnucls",
       "description": "IDENTIFICATION OF THE NUCLEUS MEMBER NAME",
-      "offset": 1626,
+      "offset": 1370,
       "length": 1,
       "type": "string"
     },
     {
       "name": "cvtflgbt",
       "description": "Flag byte. This byte is an interface only for bits CVTUNDzVM (CVTUNDVM), CVTzPDT CVTUNDAltVM, CVTzPDT & CVTVMENV",
-      "offset": 1627,
+      "offset": 1371,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -4514,14 +4514,14 @@
     {
       "name": "cvtiocid",
       "description": "EBCDIC IDENTIFIER OF THE ACTIVE I/O CONFIGURATION SPECIFIED BY THE OPERATOR",
-      "offset": 1628,
+      "offset": 1372,
       "length": 2,
       "type": "hex"
     },
     {
       "name": "cvtdebvr",
       "description": "ADDRESS OF BRANCH ENTRY POINT OF DEB VALIDITY CHECK ROUTINE (ICB380)",
-      "offset": 1630,
+      "offset": 1374,
       "length": 4,
       "type": "address",
       "pointsTo": "branch"
@@ -4529,7 +4529,7 @@
     {
       "name": "cvtcvaf",
       "description": "POINTER TO THE CVAF TABLE, WHICH CONTAINS THE CVAF BRANCH ENTRY ADDRESS AND NEXT VIB ADDRESS.",
-      "offset": 1634,
+      "offset": 1378,
       "length": 4,
       "type": "address",
       "pointsTo": "csa"
@@ -4537,7 +4537,7 @@
     {
       "name": "cvtmmvt",
       "description": "ADDRESS OF THE MEDIA MANAGER VECTOR TABLE",
-      "offset": 1638,
+      "offset": 1382,
       "length": 4,
       "type": "address",
       "pointsTo": "the"
@@ -4545,7 +4545,7 @@
     {
       "name": "cvtncvp",
       "description": "ADDRESS OF CSA BUFFER POOL - USED BY NETWORK MANAGEMENT FACILITY (NMF)",
-      "offset": 1642,
+      "offset": 1386,
       "length": 4,
       "type": "address",
       "pointsTo": "csa"
@@ -4553,21 +4553,21 @@
     {
       "name": "cvtqid",
       "description": "SAME AS CVTQIDA BELOW",
-      "offset": 1646,
+      "offset": 1390,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtqida",
       "description": "ADDRESS OF QUEUE IDENTIFICATION (QID) TABLE PREFIX",
-      "offset": 1647,
+      "offset": 1391,
       "length": 3,
       "type": "hex"
     },
     {
       "name": "cvtoltep",
       "description": "POINTER TO CONTROL BLOCK CREATED BY SVC 59 TO POINT TO PSEUDO-DEB'S",
-      "offset": 1650,
+      "offset": 1394,
       "length": 4,
       "type": "address",
       "pointsTo": "control"
@@ -4575,7 +4575,7 @@
     {
       "name": "cvt2r020",
       "description": "RESERVED",
-      "offset": 1654,
+      "offset": 1398,
       "length": 4,
       "type": "bitstring",
       "bitmasks": {
@@ -4589,21 +4589,21 @@
     {
       "name": "cvtavvt",
       "description": "ADDRESS OF AVM CONTROL BLOCK OWNERSHIP: AVM SERIALIZATION: CS",
-      "offset": 1658,
+      "offset": 1402,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtccvt",
       "description": "ADDRESS OF CRYPTOGRAPHIC FACILITY CVT",
-      "offset": 1659,
+      "offset": 1403,
       "length": 4,
       "type": "address"
     },
     {
       "name": "cvtskta",
       "description": "ADDRESS OF STORAGE KEY TABLE (VM HANDSHAKING)  (OS/VS1)",
-      "offset": 1662,
+      "offset": 1406,
       "length": 4,
       "type": "address",
       "pointsTo": "storage"
@@ -4611,7 +4611,7 @@
     {
       "name": "cvticb",
       "description": "ADDRESS OF MASS STORAGE SYSTEM (MSS) CONTROL BLOCK",
-      "offset": 1666,
+      "offset": 1410,
       "length": 4,
       "type": "address",
       "pointsTo": "mass"
@@ -4619,7 +4619,7 @@
     {
       "name": "cvtfbyt1",
       "description": "FLAG BYTE",
-      "offset": 1670,
+      "offset": 1414,
       "length": 1,
       "type": "bitstring",
       "bitmasks": {
@@ -4633,7 +4633,7 @@
     {
       "name": "cvt2r035",
       "description": "RESERVED CVTLDTO contains the offset value needed to adjust the TOD value to the local date and time of day.  It is similar to CVTTZ except that CVTLDTO is a doubleword value. CVTLDTOL and CVTTZ contain the same value.",
-      "offset": 1671,
+      "offset": 1415,
       "length": 3,
       "type": "bitstring",
       "bitmasks": {
@@ -4647,14 +4647,14 @@
     {
       "name": "cvtldto",
       "description": "LOCAL TIME/DATE OFFSET",
-      "offset": 1674,
+      "offset": 1418,
       "length": 8,
       "type": "hex"
     },
     {
       "name": "cvtldtol",
       "description": "HIGH WORD",
-      "offset": 1674,
+      "offset": 1418,
       "length": 4,
       "type": "hex",
       "pointsTo": "vtam"
@@ -4662,7 +4662,7 @@
     {
       "name": "cvtldtor",
       "description": "LOW WORD",
-      "offset": 1678,
+      "offset": 1422,
       "length": 4,
       "type": "hex",
       "pointsTo": "vtam"
@@ -4670,7 +4670,7 @@
     {
       "name": "cvtatcvt",
       "description": "POINTER TO VTAM'S CVT",
-      "offset": 1682,
+      "offset": 1426,
       "length": 4,
       "type": "address",
       "pointsTo": "vtam"
@@ -4678,49 +4678,49 @@
     {
       "name": "cvt2r044",
       "description": "RESERVED",
-      "offset": 1686,
+      "offset": 1430,
       "length": 4,
       "type": "hex"
     },
     {
       "name": "cvtbclmt",
       "description": "NUMBER OF 130-BYTE RECORDS SET ASIDE FOR BROADCAST MESSAGES",
-      "offset": 1690,
+      "offset": 1434,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvt2r04c",
       "description": "RESERVED",
-      "offset": 1694,
+      "offset": 1438,
       "length": 4,
       "type": "signed-integer"
     },
     {
       "name": "cvtlso",
       "description": "LEAP SECOND OFFSET IN TOD FORMAT",
-      "offset": 1698,
+      "offset": 1442,
       "length": 8,
       "type": "hex"
     },
     {
       "name": "cvtlsoh",
       "description": "HIGH WORD",
-      "offset": 1698,
+      "offset": 1442,
       "length": 4,
       "type": "hex"
     },
     {
       "name": "cvtlsol",
       "description": "LOW WORD",
-      "offset": 1702,
+      "offset": 1446,
       "length": 4,
       "type": "hex"
     },
     {
       "name": "cvt2r058",
       "description": "RESERVED",
-      "offset": 1706,
+      "offset": 1450,
       "length": 44,
       "type": "hex"
     }

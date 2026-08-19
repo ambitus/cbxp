@@ -64,10 +64,10 @@ ControlBlock::ControlBlock(
   for (auto it = control_block_map["controlBlock"].begin();
        it != control_block_map["controlBlock"].end(); ++it) {
     std::string name = (*it)["name"].get<std::string>();
-    size_t offset    = (*it)["offset"].get<int>();
+    ptrdiff_t offset = (*it)["offset"].get<ptrdiff_t>();
     size_t length    = (*it)["length"].get<int>();
-    if (offset + length > max_offset_) {
-      max_offset_ = offset + length;
+    if (offset + static_cast<ptrdiff_t>(length) > max_offset_) {
+      max_offset_ = offset + static_cast<ptrdiff_t>(length);
     }
     std::string pointsTo = "";
     if ((*it).contains("pointsTo")) {

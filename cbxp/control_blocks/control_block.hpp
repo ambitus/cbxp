@@ -12,7 +12,7 @@ enum FieldType { STRING, SIGNED_INT, UNSIGNED_INT, HEX, ADDRESS, BITSTRING };
 
 typedef struct {
   std::string name;
-  size_t offset;
+  ptrdiff_t offset;
   size_t length;
   FieldType type;
   std::string pointsTo;
@@ -36,7 +36,7 @@ class ControlBlock {
   std::vector<std::string> includables_   = {};
   std::vector<std::string> pointed_to_by_ = {};
   size_t control_block_length_            = 0;
-  size_t max_offset_                      = 0;
+  ptrdiff_t max_offset_                   = 0;
   void* fixed_address_                    = nullptr;
   static FieldType stringToType(const std::string& type_str);
 
@@ -55,7 +55,7 @@ class ControlBlock {
   const std::vector<std::string>& getPointedToBy() const {
     return pointed_to_by_;
   }
-  size_t getMaxOffset() const { return max_offset_; }
+  ptrdiff_t getMaxOffset() const { return max_offset_; }
   const void* getFixedAddress() const { return fixed_address_; }
   explicit ControlBlock(
       const nlohmann::json_schema::json_validator& cbxp_schema_validator,

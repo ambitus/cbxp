@@ -278,7 +278,7 @@ bool ExplorerOptionsMap::matchFilter(nlohmann::json& control_block_json) {
 }
 
 nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
-                                               size_t offset) {
+                                               ptrdiff_t offset) {
   offset += field_data.offset;
   ExplorerOptionsMap::checkDataLength(offset);
   nlohmann::json field_json;
@@ -366,7 +366,7 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
   return field_json;
 }
 
-void ExplorerOptionsMap::checkDataLength(const size_t offset) const {
+void ExplorerOptionsMap::checkDataLength(const ptrdiff_t offset) const {
   if (skip_buffer_length_check_) {
     // Data length check is only done when formatting
     // user provided control block data.
@@ -374,12 +374,17 @@ void ExplorerOptionsMap::checkDataLength(const size_t offset) const {
     // control block data from live memory.
     return;
   }
+  // Negative offsets are valid (e.g. CVT fields before the nominal base
+  // pointer) and are always within range; no buffer length check needed.
+  if (offset < 0) {
+    return;
+  }
   Logger::getInstance().debug(
       "Checking if specified buffer (" + std::to_string(buffer_length_) +
       " bytes) too small to contain the '" + control_block_->getName() +
       "' control block (requires at least " + std::to_string(offset) +
       " bytes)...");
-  if (buffer_length_ < offset) {
+  if (static_cast<size_t>(offset) > buffer_length_) {
     throw DataLengthError();
   }
 }
@@ -410,11 +415,9 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
         ExplorerOptionsMap::findControlBlockPointer(next_control_block);
     std::string count_field        = "";
     std::string pointer_field_name = "";
-    size_t offset = 0, field_length = 4;
+    ptrdiff_t offset               = 0;
+    size_t field_length            = 4;
     for (const auto& [field_name, field_data] : next_control_block_map) {
-      // Somehow this is very wrong, i'll need to look at this later
-      Logger::getInstance().debug("Field Name: " + field_name +
-                                  ", Points To: " + field_data.pointsTo);
       if (field_data.pointsTo.empty() ||
           field_data.pointsTo != control_block->getName()) {
         continue;
@@ -423,11 +426,6 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
       field_length       = field_data.length;
       count_field        = field_data.count;
       pointer_field_name = field_name;
-      Logger::getInstance().debug(
-          "storing '" + next_control_block->getName() + "' field '" +
-          pointer_field_name + "' at offset '" + std::to_string(offset) +
-          "' with length '" + std::to_string(field_length) + "' and count '" +
-          count_field + "' for control block tree...");
       break;
     }
     for (const auto& next : next_vector) {
@@ -475,7 +473,8 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
   for (const auto& [field_name, field_data] : control_block_->getMap()) {
     nlohmann::json field_json = {};
     if (control_block_->getName() == "psa" &&
-        field_data.offset >= control_block_->getMaxOffset() / 2) {
+        field_data.offset >= control_block_->getMaxOffset() / 2 &&
+        field_data.offset >= 0) {
       // Half of the PSA is fetch protected, so we can't actually get the "back
       // half" of it
       continue;

@@ -25,11 +25,11 @@ class ExplorerOptionsMap {
   bool compare(const nlohmann::json& json_value,
                const std::string& filter_value, const std::string& operation);
   bool matchFilter(nlohmann::json& control_block_json);
-  void checkDataLength(const size_t offset) const;
+  void checkDataLength(const ptrdiff_t offset) const;
   const std::vector<const void*> findControlBlockPointer(
       std::optional<ControlBlock> control_block) const;
   nlohmann::json fieldToJson(control_block_field_t field_data,
-                             size_t offset = 0);
+                             ptrdiff_t offset = 0);
   nlohmann::json parseFields();
   std::unordered_map<std::string, cbxp_options_t> options_map_;
   std::unordered_map<std::string, std::vector<cbxp_filter_t>> current_filters_;
