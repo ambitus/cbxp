@@ -29,6 +29,9 @@ FieldType ControlBlock::stringToType(const std::string& type_str) {
   if (type_str == "bitstring") {
     return BITSTRING;
   }
+  if (type_str == "triplet") {
+    return HEX;
+  }
   return UNSIGNED_INT;
 }
 
@@ -43,6 +46,13 @@ ControlBlock::ControlBlock(
       control_block_map["storageAttributes"]["key"].get<uint8_t>();
   for (auto it = control_block_map["storageAttributes"]["subpools"].begin();
        it != control_block_map["storageAttributes"]["subpools"].end(); ++it) {
+    // Subpool entries may be integers or strings (e.g. "nucleus"); skip
+    // strings.
+    if (!(*it).is_number_integer()) {
+      storage_attributes_.is_common    = true;
+      storage_attributes_.is_protected = false;
+      continue;
+    }
     unsigned char subpool        = (*it).get<uint8_t>();
     const zos::SubpoolInfo* info = zos::subpool_info_for(subpool);
     if (info == nullptr) {
@@ -61,33 +71,36 @@ ControlBlock::ControlBlock(
     pointed_to_by_.push_back(pointed_to_by);
   }
 
-  for (auto it = control_block_map["controlBlock"].begin();
-       it != control_block_map["controlBlock"].end(); ++it) {
-    std::string name = (*it)["name"].get<std::string>();
-    ptrdiff_t offset = (*it)["offset"].get<ptrdiff_t>();
-    size_t length    = (*it)["length"].get<int>();
-    if (offset + static_cast<ptrdiff_t>(length) > max_offset_) {
-      max_offset_ = offset + static_cast<ptrdiff_t>(length);
+  for (auto section_it = control_block_map["sections"].begin();
+       section_it != control_block_map["sections"].end(); ++section_it) {
+    for (auto it = (*section_it)["fields"].begin();
+         it != (*section_it)["fields"].end(); ++it) {
+      std::string name = (*it)["name"].get<std::string>();
+      ptrdiff_t offset = (*it)["offset"].get<ptrdiff_t>();
+      size_t length    = (*it)["length"].get<int>();
+      if (offset + static_cast<ptrdiff_t>(length) > max_offset_) {
+        max_offset_ = offset + static_cast<ptrdiff_t>(length);
+      }
+      std::string pointsTo = "";
+      if ((*it).contains("pointsTo")) {
+        // Also build inclusion MAP
+        pointsTo = (*it)["pointsTo"].get<std::string>();
+        includables_.push_back(pointsTo);
+      }
+      std::string type_str = (*it)["type"].get<std::string>();
+      FieldType type       = ControlBlock::stringToType(type_str);
+      bool repeated        = false;
+      std::string count    = "";
+      if ((*it).contains("repeated")) {
+        repeated = (*it)["repeated"].get<bool>();
+      }
+      if (repeated and (*it).contains("count")) {
+        count = (*it)["count"].get<std::string>();
+      }
+      control_block_field_t field = {name,     offset,   length, type,
+                                     pointsTo, repeated, count};
+      control_block_map_[name]    = field;
     }
-    std::string pointsTo = "";
-    if ((*it).contains("pointsTo")) {
-      // Also build inclusion MAP
-      pointsTo = (*it)["pointsTo"].get<std::string>();
-      includables_.push_back(pointsTo);
-    }
-    std::string type_str = (*it)["type"].get<std::string>();
-    FieldType type       = ControlBlock::stringToType(type_str);
-    bool repeated        = false;
-    std::string count    = "";
-    if ((*it).contains("repeated")) {
-      repeated = (*it)["repeated"].get<bool>();
-    }
-    if (repeated and (*it).contains("count")) {
-      count = (*it)["count"].get<std::string>();
-    }
-    control_block_field_t field = {name,     offset,   length, type,
-                                   pointsTo, repeated, count};
-    control_block_map_[name]    = field;
   }
 }
 }  // namespace CBXP

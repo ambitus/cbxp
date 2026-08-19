@@ -3,1657 +3,1723 @@
   "name": "ascb",
   "commonName": "ADDRESS SPACE CONTROL BLOCK",
   "macroId": "ihaascb",
-  "description": "Contain information and pointers needed for        */ %GOTO ASCBL2;  /*",
+  "description": "Contain information and pointers needed for Address Space Control.  The ASCB is non-swappable.",
+  "type": "control-block",
   "aliases": [],
-  "pointedToBy": [],
+  "pointedToBy": [
+    "assb",
+    "asvt"
+  ],
   "storageAttributes": {
     "subpools": [
       245
     ],
     "key": 0,
-    "residency": "Below 16M"
+    "residency": 24
   },
-  "controlBlock": [
+  "sections": [
     {
-      "name": "ascbegin",
-      "description": "BEGINNING OF ASCB",
-      "offset": 0,
-      "length": 8,
-      "type": "hex"
-    },
-    {
-      "name": "ascbascb",
-      "description": "ACRONYM IN EBCDIC -ASCB-",
-      "offset": 0,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbfwdp",
-      "description": "ADDRESS OF NEXT ASCB ON ASCB READY QUEUE",
-      "offset": 4,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbbwdp",
-      "description": "ADDRESS OF PREVIOUS ASCB ON ASCB READY QUEUE",
-      "offset": 8,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbltcs",
-      "description": "TCB and preemptable-class SRB Local lock suspend service queue. Serialization: ASCB CML promotion WEB lock.",
-      "offset": 12,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbdiag010",
-      "description": "IBM use only",
-      "offset": 16,
-      "length": 8,
-      "type": "hex"
-    },
-    {
-      "name": "ascbsupc_prezos12",
-      "description": "SUPERVISOR CELL FIELD",
-      "offset": 16,
-      "length": 8,
-      "type": "hex"
-    },
-    {
-      "name": "ascbsvrb_prezos12",
-      "description": "SVRB POOL ADDRESS.",
-      "offset": 16,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbsync_prezos12",
-      "description": "COUNT USED TO SYNCHRONIZE SVRB POOL.-",
-      "offset": 20,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbiosp",
-      "description": "POINTER TO IOS PURGE INTERFACE CONTROL BLOCK (IPIB)",
-      "offset": 24,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbwqlk",
-      "description": "WEB QUEUE LOCK WORD SERIALIZATION: COMPARE AND SWAP OWNERSHIP: SUPERVISOR CONTROL",
-      "offset": 28,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbr01c",
-      "description": "RESERVED, MUST BE ZERO",
-      "offset": 28,
-      "length": 2,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascburrq_prezos11": {
-          "description": "SYSEVENT USER READY REQUIRED SERIALIZATION: WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL Not set as of z/OS 1.11",
+      "name": "ascb",
+      "description": "",
+      "fields": [
+        {
+          "name": "ASCBEGIN",
+          "description": "BEGINNING OF ASCB",
+          "offset": 0,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBASCB",
+          "description": "ACRONYM IN EBCDIC -ASCB-",
+          "offset": 0,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "ASCBFWDP",
+          "description": "ADDRESS OF NEXT ASCB ON ASCB READY QUEUE",
+          "offset": 4,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBBWDP",
+          "description": "ADDRESS OF PREVIOUS ASCB ON ASCB READY QUEUE",
           "offset": 8,
-          "length": 1
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBLTCS",
+          "description": "TCB and preemptable-class SRB Local lock suspend service queue. Serialization: ASCB CML promotion WEB lock.",
+          "offset": 12,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "ios"
+        },
+        {
+          "name": "ASCBDiag010",
+          "description": "IBM use only",
+          "offset": 16,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSUPC_PREZOS12",
+          "description": "SUPERVISOR CELL FIELD",
+          "offset": 16,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSVRB_PREZOS12",
+          "description": "SVRB POOL ADDRESS.",
+          "offset": 16,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "ios"
+        },
+        {
+          "name": "ASCBSYNC_PREZOS12",
+          "description": "COUNT USED TO SYNCHRONIZE SVRB POOL.-",
+          "offset": 20,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBIOSP",
+          "description": "POINTER TO IOS PURGE INTERFACE CONTROL BLOCK (IPIB)",
+          "offset": 24,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "ios"
+        },
+        {
+          "name": "ASCBWQLK",
+          "description": "WEB QUEUE LOCK WORD SERIALIZATION: COMPARE AND SWAP OWNERSHIP: SUPERVISOR CONTROL",
+          "offset": 28,
+          "length": 4,
+          "type": "hex"
+        },
+        {
+          "name": "ASCBR01C",
+          "description": "RESERVED, MUST BE ZERO",
+          "offset": 28,
+          "length": 2,
+          "type": "hex"
+        },
+        {
+          "name": "ASCBWQID",
+          "description": "LOGICAL CPU ID OF THE PROCESSOR HOLDING THE WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL",
+          "offset": 30,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCB_Job_Step_SeqNum",
+          "description": "Sequence number incremented at job step change, when ASSB and ASCB time and counts fields are reset. Used to sequence resets of the time and count fields",
+          "offset": 32,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSAWQ_PREZOS11",
+          "description": "ADDRESS OF ADDRESS SPACE SRB WEB QUEUE SERIALIZATION: WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL Not set as of z/OS 1.11",
+          "offset": 32,
+          "length": 4,
+          "type": "address",
+          "equates": [
+            {
+              "name": "ASCBURRQ_PREZOS11",
+              "value": "X'80'",
+              "description": "SYSEVENT USER READY REQUIRED SERIALIZATION: WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL Not set as of z/OS 1.11"
+            }
+          ]
+        },
+        {
+          "name": "ASCBASN",
+          "description": "SAME AS ASCBASID",
+          "offset": 36,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBASID",
+          "description": "ADDRESS SPACE IDENTIFIER FOR THE ASCB",
+          "offset": 36,
+          "length": 2,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBDiag026",
+          "description": "IBM use only",
+          "offset": 38,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "ASCBSRMFlags",
+          "description": "SRM flags Ownership: SRM Serialization: SRMLOCK",
+          "offset": 39,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBVCMOverRide": {
+              "description": "This bit indicates that this address space should not follow the standard SRM management in an VCM=on environment. Instead of trying to assign the work this address space to the same affinity node for cache efficiency concerns, assign this work to any affinity node, ignore any cache concerns. Ownership: SRM",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBBrokenUp": {
+              "description": "This bit indicates that this address space has been broken up by SRM. Ownership: SRM",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBVCMGivePreemption": {
+              "description": "This bit indicates that this address space should get full preemption. Ownership: SRM",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBVCMGiveSigpAny": {
+              "description": "This bit indicates that this address space can SIGP any waiting CPUs to process its work. Ownership: SRM",
+              "offset": 3,
+              "length": 1
+            },
+            "AscbInEligHonorPriority": {
+              "description": "When on, specialty engine eligible work in this address space will not be offloaded to CPs for help processing. Ownership: SRM",
+              "offset": 4,
+              "length": 1
+            },
+            "AscbSRMFlagsDiag": {
+              "description": "Diagnostic data for IBM use only",
+              "offset": 5,
+              "length": 2
+            }
+          }
+        },
+        {
+          "name": "ASCBLL5",
+          "description": "FLAGS. SERIALIZATION - LOCAL LOCK",
+          "offset": 40,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBS3S": {
+              "description": "STAGE II EXIT EFECTOR HAS SCHEDULED AN RQE OR IQE AND STAGE III EXIT EFFECTOR SHOULD BE INVOKED",
+              "offset": 2,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBHLHI",
+          "description": "INDICATION OF SUSPEND LOCKS HELD AT TASK SUSPENSION",
+          "offset": 41,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBDPH",
+          "description": "HALFWORD DISPATCHING PRIORITY",
+          "offset": 42,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBDPHI",
+          "description": "HIGH ORDER BYTE OF HALFWORD DISPATCHING PRIORITY",
+          "offset": 42,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBDP",
+          "description": "DISPATCHING PRIORITY RANGE FROM 0-255",
+          "offset": 43,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBTCBE",
+          "description": "Count of ready tcbs in the space that are in an enclave. Ownership:  Task Management Serialization: Compare and Swap and WEB Lock of TCB for which this count is being manipulated.",
+          "offset": 44,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBLDA",
+          "description": "POINTER TO LOCAL DATA AREA PART OF LSQA FOR VSM",
+          "offset": 48,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "local"
+        },
+        {
+          "name": "ASCBRSMF",
+          "description": "RSM ADDRESS SPACE FLAGS",
+          "offset": 52,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCB2LPU": {
+              "description": "SECOND LEVEL PREFERRED USER.  THIS OFFSET FIXED BY ARCHITECTURE.",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCB1LPU": {
+              "description": "FIRST LEVEL PREFERRED USER",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBN2LP": {
+              "description": "SRM IN SYSEVENT TRANSWAP SHOULD NOT SET ASCB2LPU BIT - HOWEVER IT MAY ALREADY BE ON AND WILL STAY ON",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBVEQR": {
+              "description": "V=R ADDRESS SPACE",
+              "offset": 3,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBFLG3",
+          "description": "Flags needing no serialization. byte is a programming interface only for bit ASCBzCX",
+          "offset": 53,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBCNIP": {
+              "description": "Address space created during NIP",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBREUS": {
+              "description": "This is a reusable ASID. It may be given out only to a reusable ASID requestor",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBM881": {
+              "description": "This address space went through IEEMB881",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBSingleStepStartedTask": {
+              "description": "This address space is a single step started task",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBzCX": {
+              "description": "This address space is a zCX address space",
+              "offset": 4,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBR036",
+          "description": "Reserved as of z/OS 1.11",
+          "offset": 54,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBHASI_PREZOS11",
+          "description": "Local lock owning ASID. Not set as of z/OS 1.11",
+          "offset": 54,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBCSCB",
+          "description": "ADDRESS OF CSCB",
+          "offset": 56,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "cscb"
+        },
+        {
+          "name": "ASCBTSB",
+          "description": "ADDRESS OF TSB",
+          "offset": 60,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "tsb"
+        },
+        {
+          "name": "ASCBEJST",
+          "description": "Accumulated job step CPU time. Non-enclave TCB time only. Unsigned 64-bit binary number",
+          "offset": 64,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBEWST",
+          "description": "TIME OF DAY WHENEVER I-STREAM IS SWITCHED FROM A MEMORY",
+          "offset": 72,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBJSTL",
+          "description": "CPU TIME LIMIT FOR THE JOB STEP UNSIGNED 32 BIT BINARY NUMBER",
+          "offset": 80,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBECB",
+          "description": "RCT'S WORK ECB",
+          "offset": 84,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBUBET",
+          "description": "TIME STAMP WHEN USER BECOMES READY",
+          "offset": 88,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBTLCH",
+          "description": "CHAIN FIELD FOR TIME LIMIT EXCEEDED QUEUE",
+          "offset": 92,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBDUMP",
+          "description": "SVC DUMP TASK TCB ADDRESS",
+          "offset": 96,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBFW1",
+          "description": "FULL-WORD LABEL TO BE USED FOR COMPARE AND SWAP FOR ANY BIT IN THIS WORD",
+          "offset": 100,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBAFFN",
+          "description": "CPU AFFINITY INDICATOR",
+          "offset": 100,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBRCTF",
+          "description": "FLAGS FOR RCT SERIALIZED BY COMPARE AND SWAP",
+          "offset": 102,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBTMNO": {
+              "description": "MEMORY IS BEING QUIESCED, IS QUIESCED, OR IS BEING RESTORED",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBFRS": {
+              "description": "RESTORE REQUEST",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBFQU": {
+              "description": "QUIESCE REQUEST",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBJSTE": {
+              "description": "JOB STEP TIME EXCEEDED. NOT USED BY RCT",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBWAIT": {
+              "description": "LONG WAIT INDICATOR",
+              "offset": 4,
+              "length": 1
+            },
+            "ASCBOUT": {
+              "description": "ADDRESS SPACE CONSIDERED SWAPPED OUT",
+              "offset": 5,
+              "length": 1
+            },
+            "ASCBTMLW": {
+              "description": "MEMORY IS IN A LONG WAIT",
+              "offset": 6,
+              "length": 1
+            },
+            "ASCBTOFF": {
+              "description": "MEMORY SHOULD NOT BE CHECKED FOR JOB STEP TIMING. NOT USED BY RCT",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBFLG1",
+          "description": "FLAG FIELD",
+          "offset": 103,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBLSAS": {
+              "description": "ADDRESS SPACE IS LOGICALLY SWAPPED  - OUT                                 - SERIALIZATION - WHEN SETTING, CPU   - LOCK, AND THE SWAP INTERSECT        - - WHEN RESETTING,     - NONE REQUIRED",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBDSTK": {
+              "description": "SRM REQUIRES A TIME STAMP TO DETERMINE WHEN THE ADDRESS SPACE GOES INTO LONG WAIT.  ASCBEWST WILL BE UPDATED WHEN THIS BIT IS ON. NOTE:  If this bit moves position the bit constant ASCBDSTZ must also be changed.",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBDSTZ": {
+              "description": "Bit constant for bit position ASCBDSTK.  PL/X cannot map bit positions in generated code, so this bit constant allows PL/X to set the bit in generated assembler.",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBTERM": {
+              "description": "ADDRESS SPACE TERMINATING NORMALLY",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBABNT": {
+              "description": "ADDRESS SPACE TERMINATING ABNORMALLY",
+              "offset": 4,
+              "length": 1
+            },
+            "ASCBMEMP": {
+              "description": "Memory Termination PURGEDQ flag Serialization: none",
+              "offset": 5,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBTMCH",
+          "description": "TERMINATION QUEUE CHAIN",
+          "offset": 104,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBASXB",
+          "description": "POINTER TO ADDRESS SPACE EXTENSION CONTROL BLOCK (ASXB)",
+          "offset": 108,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBFW2",
+          "description": "FULLWORD LABEL TO ADDRESS BITS IN THIS WORD",
+          "offset": 112,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSWCT",
+          "description": "NUMBER OF TIMES MEMORY ENTERS SHORT WAIT",
+          "offset": 112,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBDSP1",
+          "description": "NONDISPATCHABILITY FLAGS. SERIALIZATION - GLOBAL INTERSECT.",
+          "offset": 114,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBSSND": {
+              "description": "SYSTEM SET NONDISPATCHABLE AND THIS ASCB IS NOT EXEMPT",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBFAIL": {
+              "description": "A FAILURE HAS OCCURRED WITHIN THE ADDRESS SPACE. THE MEMORY IS NONDISPATCHABLE",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBSNQS": {
+              "description": "STATUS STOP NON-QUIESCABLE LEVEL SRB'S",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBSSSS": {
+              "description": "STATUS STOP SRB SUMMARY",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBSTND": {
+              "description": "TCB'S NONDISPATCHABLE",
+              "offset": 4,
+              "length": 1
+            },
+            "ASCBUWND": {
+              "description": "STATUS SET UNLOCKED WORKUNITS NONDISPATCHABLE.",
+              "offset": 5,
+              "length": 1
+            },
+            "ASCBNOQ": {
+              "description": "ASCB NOT ON SWAPPED IN QUEUE",
+              "offset": 6,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBFLG2",
+          "description": "FLAG BYTE. SERIALIZATION - GLOBAL INTERSECT",
+          "offset": 115,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBXMPT": {
+              "description": "ASCB EXEMPT FROM SYSTEM NONDISPATCHABLE",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBPXMT": {
+              "description": "ASCB PERMANENTLY EXEMPT FROM SYSTEM NONDISPATCHABLE",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBCEXT": {
+              "description": "CANCEL TIMER EXTENSION BECAUSE EOT PROCESSING IS STARTED FOR THE JOB STEP TCB",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBS2S": {
+              "description": "FOR LOCK MANAGER, ENTRY MADE TO STAGE II EXIT EFFECTOR WITHOUT CORRESPONDING ENTRY TO STAGE III EXIT EFFECTOR",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBNCML": {
+              "description": "ASCB NOT ELIGIBLE FOR CML LOCK REQUESTS",
+              "offset": 4,
+              "length": 1
+            },
+            "ASCBNOMT": {
+              "description": "ADDRESS SPACE MUST NOT BE MEMTERMED UNLESS A DAT ERROR HAS OCCURRED. IF A DAT ERROR HAS OCCURRED, ACTION IS CONTROLLED BY ASCBNOMD. OWNERSHIP - SCHEDULER",
+              "offset": 5,
+              "length": 1
+            },
+            "ASCBNOMD": {
+              "description": "IF ON,ADDRESS SPACE CANNOT BE MEMTERMED ON A DAT ERROR. IF OFF, PROCESS MEMTERM ON A DAT ERROR. OWNERSHIP - SCHEDULER",
+              "offset": 6,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBSCNT",
+          "description": "FULLWORD LABEL FOR COMPARE AND SWAP (CS)",
+          "offset": 116,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSRBS",
+          "description": "COUNT OF SRB'S SUSPENDED IN THIS MEMORY",
+          "offset": 118,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBLLWQ",
+          "description": "ADDRESS SPACE LOCAL LOCK SUSPEND SERVICE WEB QUEUE SERIALIZATION: WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL",
+          "offset": 120,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "region"
+        },
+        {
+          "name": "ASCBRCTP",
+          "description": "POINTER TO REGION CONTROL TASK (RCT) TCB",
+          "offset": 124,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "region"
+        },
+        {
+          "name": "ASCBLKGP",
+          "description": "LOCK GROUP",
+          "offset": 128,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBLOCK",
+          "description": "LOCAL LOCK.  THIS OFFSET FIXED BY ARCHITECTURE.",
+          "offset": 128,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBLSWQ",
+          "description": "ADDRESS SPACE LOCAL LOCK WEB SUSPEND QUEUE THIS OFFSET FIXED BY ARCHITECTURE. SERIALIZATION: CDS WITH ASCBLOCK OWNERSHIP: SUPERVISOR CONTROL",
+          "offset": 132,
+          "length": 4,
+          "type": "address",
+          "equates": [
+            {
+              "name": "ASCBS3NL",
+              "value": "X'80'",
+              "description": "THE LOCAL LOCK IS NEEDED BY THE STAGE 3 EXIT EFFECTOR TO QUEUE ASYNCHRONOUS EXITS           E SERIALIZATION: CDS WITH ASCBLOCK OWNERSHIP: SUPERVISOR CONTROL"
+            },
+            {
+              "name": "ASCBLTCL",
+              "value": "X'01'",
+              "description": "THE LOCAL LOCK IS NEEDED BY SOME TCB or preemptable-class SRB WHEN SET IN BIT 31 OF ASCBLSWQ."
+            }
+          ]
+        },
+        {
+          "name": "ASCBQECB",
+          "description": "QUIESCE ECB",
+          "offset": 136,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBMECB",
+          "description": "MEMORY CREATE/DELETE ECB",
+          "offset": 140,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBOUCB",
+          "description": "SYSTEM RESOURCES MANAGER (SRM) USER CONTROL BLOCK POINTER",
+          "offset": 144,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBOUXB",
+          "description": "SYSTEM RESOURCES MANAGER (SRM) USER EXTENSION BLOCK POINTER",
+          "offset": 148,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBFW2A",
+          "description": "FULLWORD LABEL TO ADDRESS BITS IN THIS WORD. SERIALIZATION - CS.",
+          "offset": 152,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBFMCT",
+          "description": "RESERVED. ALLOCATED PAGE FRAME COUNT NOW RESIDES IN THE RAX (MAPPING MACRO IARRAX).",
+          "offset": 152,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBLEVL",
+          "description": "LEVEL NUMBER OF ASCB",
+          "offset": 154,
+          "length": 1,
+          "type": "bitstring",
+          "equates": [
+            {
+              "name": "ASCBVS00",
+              "value": "X'00'",
+              "description": "HBB2102 (NOT IN BASE)"
+            }
+          ],
+          "bitmasks": {
+            "ASCBVS01": {
+              "description": "ascbvs01",
+              "offset": 7,
+              "length": 1
+            },
+            "ASCBVS02": {
+              "description": "ascbvs02",
+              "offset": 6,
+              "length": 1
+            },
+            "ASCBVS03": {
+              "description": "ascbvs03",
+              "offset": 6,
+              "length": 2
+            },
+            "ASCBVERS": {
+              "description": "LEVEL OF THIS MAPPING",
+              "offset": 6,
+              "length": 2
+            }
+          }
+        },
+        {
+          "name": "ASCBFL2A",
+          "description": "FLAG BYTE.",
+          "offset": 155,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBNOPR": {
+              "description": "NO PREEMPTION FLAG 1=DO NOT SIGP ANOTHER PROCESSOR TO EXECUTE READY WORK IN THIS SPACE 0=DO SIGP ANOTHER PROCESSOR OWNERSHIP:     SRM SERIALIZATION: CS ON ASCBFW2A",
+              "offset": 0,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBHREQ_PREZOS11",
+          "description": "Local lock requestor address Not set as of z/OS 1.11",
+          "offset": 156,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBEJST_Disps",
+          "description": "Count of task dispatches. Incremented and cache aligned with ASCBEJST. SERIALIZATION - CS. OWNERSHIP - SUPERVISOR.",
+          "offset": 156,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBIQEA",
+          "description": "POINTER TO IQE FOR ATCAM ASYNCHRONOUS PROCESSING",
+          "offset": 160,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "iqe"
+        },
+        {
+          "name": "ASCBRTMC",
+          "description": "ANCHOR FOR SQA SDWA QUEUE",
+          "offset": 164,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "jobname"
+        },
+        {
+          "name": "ASCBMCC",
+          "description": "USED TO HOLD A MEMORY TERMINATION COMPLETION CODE ON ABNORMAL MEMORY TERMINATION",
+          "offset": 168,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "ASCBJBNI",
+          "description": "POINTER TO JOBNAME FIELD FOR INITIATED PROGRAMS OR ZERO",
+          "offset": 172,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "jobname",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBJBNS",
+          "description": "POINTER TO JOBNAME FIELD FOR START/MOUNT/LOGON OR ZERO",
+          "offset": 176,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "jobname",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBSRQ",
+          "description": "DISPATCHER SERIALIZATION REQUIRED",
+          "offset": 180,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSRQ1",
+          "description": "FIRST BYTE OF ASCBSRQ",
+          "offset": 180,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBDSG4": {
+              "description": "SIGNAL WAITING PROCESSORS WHEN INTERSECT IS RESET",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBDFLT": {
+              "description": "DEFAULT LOCAL INTERSECT",
+              "offset": 1,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBSRQ2",
+          "description": "SECOND BYTE OF ASCBSRQ",
+          "offset": 181,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBDSG3": {
+              "description": "SIGNAL WAITING PROCESSORS WHEN INTERSECT IS RESET",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBSRM1": {
+              "description": "SYSTEM RESOURCE MANAGER (SRM) INTERSECTING",
+              "offset": 6,
+              "length": 1
+            },
+            "ASCBQVER": {
+              "description": "QUEUE VERIFICATION INTERSECTING",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBSRQ3",
+          "description": "THIRD BYTE OF ASCBSRQ",
+          "offset": 182,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBDSG2": {
+              "description": "SIGNAL WAITING PROCESSORS WHEN INTERSECT IS RESET",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBRCTI": {
+              "description": "REGION CONTROL TASK (RCT) INTERSECTING",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBTCBV": {
+              "description": "TCB VERIFICATION INTERSECTING",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBACHA": {
+              "description": "ASCB CHAP INTERSECTING",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBMTER": {
+              "description": "MEMORY TERMINATION INTERSECTING",
+              "offset": 5,
+              "length": 1
+            },
+            "ASCBMINI": {
+              "description": "MEMORY INITIALIZATION INTERSECTING",
+              "offset": 6,
+              "length": 1
+            },
+            "ASCBCBVE": {
+              "description": "CONTROL BLOCK VERIFICATION INTERSECTING",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBSRQ4",
+          "description": "FOURTH BYTE OF ASCBSRQ",
+          "offset": 183,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBDSG1": {
+              "description": "SIGNAL WAITING PROCESSORS WHEN INTERSECT IS RESET",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBDETA": {
+              "description": "DETACH INTERSECTING",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBATTA": {
+              "description": "ATTACH INTERSECTING",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBRTM2": {
+              "description": "RTM2 INTERSECTING",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBRTM1": {
+              "description": "RTM1 INTERSECTING",
+              "offset": 4,
+              "length": 1
+            },
+            "ASCBCHAP": {
+              "description": "CHAP INTERSECTING",
+              "offset": 5,
+              "length": 1
+            },
+            "ASCBSTAT": {
+              "description": "STATUS INTERSECTING",
+              "offset": 6,
+              "length": 1
+            },
+            "ASCBPURD": {
+              "description": "PURGEDQ INTERSECTING",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBVGTT",
+          "description": "ADDRESS OF VSAM GLOBAL TERMINATION TABLE (VGTT)",
+          "offset": 184,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "vsam"
+        },
+        {
+          "name": "ASCBPCTT",
+          "description": "ADDRESS OF PRIVATE CATALOG TERMINATION TABLE (PCTT)",
+          "offset": 188,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "private"
+        },
+        {
+          "name": "ASCBSSRB",
+          "description": "COUNT OF STATUS STOP SRB'S",
+          "offset": 192,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSMCT",
+          "description": "NUMBER OF OUTSTANDING STEP MUST COMPLETE REQUESTS IN ADDRESS SPACE",
+          "offset": 194,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSRBM",
+          "description": "MODEL PSW BYTE 0 USED BY SRB DISPATCHER",
+          "offset": 195,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBPER": {
+              "description": "PER BIT IN ASCBSRBM - ALSO USED TO SHOW PER STATUS FOR THE ADDRESS SPACE",
+              "offset": 1,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBSWTL",
+          "description": "STEP WAIT TIME LIMIT",
+          "offset": 196,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSRBT",
+          "description": "ACCUMULATED SRB TIME",
+          "offset": 200,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBLTCB",
+          "description": "TCB and preemptable-class SRB Local lock suspend queue. Serialization: Adding, CS. Deleting, ASCB CML promotion WEB lock and CS.",
+          "offset": 208,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBLTCN",
+          "description": "Count of TCB and preemptable- class SRB (local and CML) requestors needing this local lock. Serialization: CS",
+          "offset": 212,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBTCBS",
+          "description": "NUMBER OF READY TCB'S. THE ACTUAL NUMBER OF READY TCBS IS ASCBTCBS-ASCBLSQT. SERIALIZATION: CS OWNERSHIP: TASK MANAGEMENT",
+          "offset": 216,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBLSQT",
+          "description": "NUMBER OF TCBS ON A LOCAL LOCK SUSPEND QUEUE. SERIALIZATION: CS OWNERSHIP: TASK MANAGEMENT",
+          "offset": 220,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBWPRB",
+          "description": "ADDRESS OF WAIT POST REQUEST BLOCK",
+          "offset": 224,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "wait"
+        },
+        {
+          "name": "ASCBSRDP",
+          "description": "SYSTEM RESOURCE MANAGER (SRM) DISPATCHING PRIORITY",
+          "offset": 228,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBNDP",
+          "description": "NEW DISPATCHING PRIORITY",
+          "offset": 228,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBTNDP",
+          "description": "NEW TIME SLICE DISPATCHING PRIORITY",
+          "offset": 229,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBNTSG",
+          "description": "NEW TIME SLICE GROUP",
+          "offset": 230,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBIODP",
+          "description": "I/O PRIORITY",
+          "offset": 231,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBLOCI",
+          "description": "LOCK IMAGE, ADDRESS OF ASCB HOLDING THIS ASCB'S LOCAL LOCK AS A CML LOCK. SERIALIZATION - LOCAL LOCK. OWNERSHIP - SUPERVISOR.",
+          "offset": 232,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "ascb"
+        },
+        {
+          "name": "ASCBCMLW",
+          "description": "ADDRESS OF THE WEB REPRESENTING THE WORKUNIT THAT IS HOLDING THIS ASCB'S LOCAL LOCK AS A CML OR LOCAL LOCK. SERIALIZATION - LOCAL LOCK. OWNERSHIP - SUPERVISOR CONTROL",
+          "offset": 236,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBCMLC_PREZOS12",
+          "description": "COUNT OF CML LOCKS HELD BY THIS ADDRESS SPACE.",
+          "offset": 240,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSRBT_Disps",
+          "description": "Count of SRB dispatches. Incremented and cache aligned with ASCBSRBT. SERIALIZATION - CS. OWNERSHIP - SUPERVISOR.",
+          "offset": 240,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSSOM",
+          "description": "SPACE SWITCH EVENT OWNER MASK. SERIALIZATION - CS. OWNERSHIP - SUPERVISOR.",
+          "offset": 244,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSSO1",
+          "description": "SPACE SWITCH EVENT OWNER MASK BYTES 1 - 3.",
+          "offset": 244,
+          "length": 3,
+          "type": "hex"
+        },
+        {
+          "name": "ASCBSSO4",
+          "description": "SPACE SWITCH EVENT OWNER MASK BYTE 4.",
+          "offset": 247,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBSSSP": {
+              "description": "SLIP/PER REQUESTED NOTIFICATION ON SPACE SWITCH EVENTS.",
+              "offset": 6,
+              "length": 1
+            },
+            "ASCBSSJS": {
+              "description": "JOB STEP TERMINATION REQUESTED SPACE SWITCH EVENTS FOR BREAKING LATENT ADDRESSING BINDS",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBASTE",
+          "description": "VIRTUAL ADDRESS OF ADDRESS SPACE SECOND TABLE ENTRY (ASTE). SERIALIZATION - N/A. OWNERSHIP - SUPERVISOR.",
+          "offset": 248,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBLTOV",
+          "description": "VIRTUAL ADDRESS OF THE LINKAGE TABLE ORIGIN. (LOCATED IN PC/AUTH ADDRESS SPACE   LSQA). SERIALIZATION - PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
+          "offset": 252,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBATOV",
+          "description": "VIRTUAL ADDRESS OF AUTHORIZATION TABLE (LOCATED IN PC/AUTH ADDRESS SPACE LSQA). SERIALIZATION: PC/AUTH, ADDRESS SPACE LOCAL LOCK. OWNERSHIP: XM SERVICES",
+          "offset": 256,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBETC",
+          "description": "NUMBER OF ENTRY TABLES CURRENTLY OWNED BY THIS ADDRESS SPACE. SERIALIZATION - PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
+          "offset": 260,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBETCN",
+          "description": "NUMBER OF CONNECTIONS TO ENTRY TABLES IN THIS ADDRESS SPACE CONTAINING ANY SPACE SWITCH ENTRIES. SERIALIZATION - PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
+          "offset": 262,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBLXR",
+          "description": "NUMBER OF LINKAGE INDEXES RESERVED BY THIS ADDRESS SPACE. SERIALIZATION - PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
+          "offset": 264,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBAXR",
+          "description": "NUMBER OF AUTHORIZATION INDEXES RESERVED BY THIS ADDRESS SPACE. SERIALIZATION - PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
+          "offset": 266,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBSTKH",
+          "description": "ADDRESS OF LOCAL STACK POOL HEADER FOR PCLINK SERVICE. SERIALIZATION - N/A. OWNERSHIP - XM SERVICES.",
+          "offset": 268,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "local"
+        },
+        {
+          "name": "ASCBCSWD",
+          "description": "CS-serialized word cleared at step term / start",
+          "offset": 272,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBCSW0",
+          "description": "Byte 0",
+          "offset": 272,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "ASCBCSW1",
+          "description": "Byte 1",
+          "offset": 273,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "ASCBCSW2",
+          "description": "Byte 2, Ser: CS",
+          "offset": 274,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBZKF": {
+              "description": "ascbzkf",
+              "offset": 0,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBCSW3",
+          "description": "Byte 3, Ser: CS",
+          "offset": 275,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBZU": {
+              "description": "ascbzu",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBZF": {
+              "description": "ascbzf",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBZN": {
+              "description": "ascbzn",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBZM": {
+              "description": "ascbzm",
+              "offset": 5,
+              "length": 1
+            },
+            "ASCBZS": {
+              "description": "ascbzs",
+              "offset": 6,
+              "length": 1
+            },
+            "ASCBZC": {
+              "description": "Checked.",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBR114",
+          "description": "Reserved.",
+          "offset": 276,
+          "length": 4,
+          "type": "hex"
+        },
+        {
+          "name": "AscbJafbAddr",
+          "description": "Address of the JAFB",
+          "offset": 280,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBXTCB",
+          "description": "ADDRESS OF THE JOB STEP TASK TCB WHICH OWNS THE CROSS MEMORY RESOURCES IN THIS ADDRESS SPACE. SERIALIZATION - LOCAL LOCK. OWNERSHIP - SUPERVISOR.",
+          "offset": 284,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBFW3",
+          "description": "Fullword label to address bits in this word. Serialization - CS. This word is a programming interface only for bits ASCBSDBF, ASCBNOFT, ASCBPO1M, ASCBP1M0",
+          "offset": 288,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBCS1",
+          "description": "FIRST BYTE OF COMPARE AND SWAP FLAGS.",
+          "offset": 288,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBXMET": {
+              "description": "IF ONE, THE ADDRESS SPACE IS NON-REUSABLE BECAUSE OF CROSS MEMORY CONNECTIONS TO IT.  THIS CONDITION MAY NOT BE PERMANENT. SERIALIZATION - CS AND PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBXMEC": {
+              "description": "CROSS MEMORY ENTRY TABLES CONTAINING SPACE SWITCH ENTRIES HAVE BEEN CREATED BY THIS ADDRESS SPACE. SERIALIZATION - CS AND PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBXMPA": {
+              "description": "IF ONE, THE ADDRESS SPACE IS PERMANENTLY NON-REUSABLE BECAUSE OF INCOMPLETE TERMINATION PROCESSING OF PC/AUTH RESOURCE MANAGER. SERIALIZATION - CS AND PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBXMLK": {
+              "description": "IF ONE, THE ADDRESS SPACE IS PERMANENTLY NON-REUSABLE BECAUSE OF A CML BIND. SERIALIZATION - CS AND PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBPERS": {
+              "description": "COMMUNICATION BIT FOR SLIP/PER SRB ROUTINES. IF 1, THE LOCAL SRB ROUTINE WILL ACTIVATE PER FOR THE SPECIFIED ADDRESS SPACE/JOB/CROSS MEMORY REFERENCES. IF 0, THE LOCAL SRB ROUTINE WILL DEACTIVATE PER FOR THE ADDRESS SPACE. SERIALIZATION - CS AND SLIP SERIALIZATION WORD, SHDRSEQ.",
+              "offset": 4,
+              "length": 1
+            },
+            "ASCBDTER": {
+              "description": "A DAT ERROR HAS OCCURRED FOR THIS ADDRESS SPACE. SERIALIZATION - CS. OWNERSHIP - RTM.",
+              "offset": 5,
+              "length": 1
+            },
+            "ASCBPERO": {
+              "description": "PER PROCESSING NEEDS TO BE DONE WHEN ADDRESS SPACE IS SWAPPED IN. SERIALIZATION - CS. OWNERSHIP - SLIP.",
+              "offset": 6,
+              "length": 1
+            },
+            "ASCBSWOP": {
+              "description": "ADDRESS SPACE IS SWAPPED OUT WITH RESPECT TO PER PROCESSING BEING DONE. SERIALIZATION - CS. OWNERSHIP - RCT.",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBCS2",
+          "description": "SECOND BYTE OF COMPARE AND SWAP FLAGS.",
+          "offset": 289,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBSAS": {
+              "description": "INDICATES THAT STORAGE ALTERATION SELECTION (PER 2) IS ON FOR EITHER A DATA SPACE ASSOCIATED WITH THE ADDRESS SPACE, OR THE ADDRESS SPACE ITSELF.",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBSMGR": {
+              "description": "This space is or has been associated with the session manager",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBDTIN": {
+              "description": "This space is or has been associated with ISPF",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBXMNR": {
+              "description": "The address space is permanently non-reusable because of cross memory connections to a system LX. Serialization - CS and PC/AUTH address space Local lock. Ownership - XM services",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBSDBF": {
+              "description": "A work unit in this address space has set CVTSDBF bit 0 to 1. If this address space is memtermed when this bit is on, the system will reset CVTSDBF. ASCBSDBF must be set on only by the work unit that has just set CVTSDBF bit 0 to 1. ASCBSDBF must be reset just prior to resetting CVTSDBF. ASCBSDBF must be set in the home address space. The SVC Dump request must properly indicate BUFFER=YES. Serialization: CS",
+              "offset": 4,
+              "length": 1
+            },
+            "ASCBNOFT": {
+              "description": "Set this to exempt all tasks in this address space from being affected by the FORCE TCB command. Serialization: CS",
+              "offset": 5,
+              "length": 1
+            },
+            "ASCBPO1M": {
+              "description": "Set this to indicate that the RMODE 31 portion of program objects is to be backed by 1M pages (when available). The bit is reset at jobstep start. It applies only to modules loaded into private storage. Serialization: CS",
+              "offset": 6,
+              "length": 1
+            },
+            "ASCBP1M0": {
+              "description": "Set this to indicate that the RMODE 31 portion of program objects is to be backed by 1M pages (when available), but only when the module will be placed into SP252. The bit is reset at jobstep start. It applies only to modules loaded into private storage. Do not also set ASCBPO1M. Serialization: CS",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBCS3",
+          "description": "3rd byte of CS flags",
+          "offset": 290,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBXMSO": {
+              "description": "This address space has owned a XM table with a space-switch PC",
+              "offset": 0,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBCS4",
+          "description": "4th byte of CS flags",
+          "offset": 291,
+          "length": 1,
+          "type": "unsigned-integer"
+        },
+        {
+          "name": "ASCBGXL",
+          "description": "ADDRESS OF GLOBALLY LOADED MODULE EXTENT INFORMATION CONTROL BLOCK. SERIALIZATION - LOCAL LOCK. OWNERSHIP - CONTENTS SUPERVISION",
+          "offset": 292,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "globally"
+        },
+        {
+          "name": "ASCBEATT",
+          "description": "EXPENDED AND ACCOUNTED TASK TIME. SERIALIZATION - N/A. OWNERSHIP - SCHEDULER.",
+          "offset": 296,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBINTS",
+          "description": "JOB SELECTION TIME STAMP. SERIALIZATION - N/A. OWNERSHIP - SCHEDULER.",
+          "offset": 304,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBFW4",
+          "description": "FULLWORD LABEL TO ADDRESS BITS IN THIS WORD. SERIALIZATION - LOCAL LOCK.",
+          "offset": 312,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBLL1",
+          "description": "FIRST BYTE OF FLAGS. SERIALIZATION - LOCAL LOCK.",
+          "offset": 312,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBSSPC": {
+              "description": "STATUS STOP TASKS PENDING A CML LOCK RELEASE.",
+              "offset": 0,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBLL2",
+          "description": "SECOND BYTE OF FLAGS. SERIALIZATION - LOCAL LOCK.",
+          "offset": 313,
+          "length": 1,
+          "type": "unsigned-integer"
+        },
+        {
+          "name": "ASCBLL3",
+          "description": "THIRD BYTE OF FLAGS. SERIALIZATION - LOCAL LOCK.",
+          "offset": 314,
+          "length": 1,
+          "type": "unsigned-integer"
+        },
+        {
+          "name": "ASCBLL4",
+          "description": "FOURTH BYTE OF FLAGS. SERIALIZATION - LOCAL LOCK.",
+          "offset": 315,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBNRLL": {
+              "description": "No release of Local Lock OK. Set only after obtaining LL.",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBTYP1": {
+              "description": "TYPE 1 SVC HAS CONTROL.  THIS OFFSET FIXED BY ARCHITECTURE.",
+              "offset": 6,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBRCMS",
+          "description": "ADDRESS OF THE REQUESTED CMS CLASS LOCK FOR WHICH THE LOCAL LOCK HOLDER IS SUSPENDED. SERIALIZATION - LOCAL LOCK. OWNERSHIP - SUPERVISOR.",
+          "offset": 316,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBIOSC",
+          "description": "I/O SERVICE MEASURE. SERIALIZATION - CS. UPDATED BY JES2,JES3,SMF. READ BY RMF,SMF,SRM.",
+          "offset": 320,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBPKML",
+          "description": "PKM OF LAST TASK DISPATCHED IN THIS ADDRESS SPACE. SERIALIZATION - NONE. OWNERSHIP - DISPATCHER.",
+          "offset": 324,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0000"
+            }
+          ]
+        },
+        {
+          "name": "ASCBXCNT",
+          "description": "EXCP COUNT FIELD. SERIALIZATION - LOCAL LOCK. OWNERSHIP - EXCP.",
+          "offset": 326,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBNSQA",
+          "description": "ADDRESS OF THE SQA RESIDENT NSSA CHAIN. SERIALIZATION - DISPATCHER LOCK. OWNERSHIP - DISPATCHER.",
+          "offset": 328,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBASM",
+          "description": "ADDRESS OF THE ASM HEADER. SERIALIZATION - NONE. OWNERSHIP - ASM.",
+          "offset": 332,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBASSB",
+          "description": "POINTER TO ADDRESS SPACE SECONDARY BLOCK (ASSB).",
+          "offset": 336,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBTCME",
+          "description": "POINTER TO TCXTB. OWNERSHIP - TCAM.",
+          "offset": 340,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "tcxtb"
+        },
+        {
+          "name": "ASCBGQIR",
+          "description": "ISGQSCAN INFORMATION ROUTINE ADDRESS. SERIALIZATION  - COMPARE AND SWAP. OWNERSHIP - GRS",
+          "offset": 344,
+          "length": 4,
+          "type": "address",
+          "bitmasks": {
+            "ASCBGQAB": {
+              "description": "ISGQSCAN INFORMATION ROUTINE ABENDED FLAG. IF ON, ISGQSCAN INFORMATION ROUTINE UNEXPECTEDLY ABENDED.",
+              "offset": 24,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBGQI3",
+          "description": "BYTE 3 OF ASCBGQIR",
+          "offset": 347,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBGQDS": {
+              "description": "ISGQSCAN INFORMATION ROUTINE DISABLED FLAG. IF ON, ISGQSCAN WILL NOT INVOKE THE ISGQSCAN INFORMATION ROUTINE.",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "ASCBLSQE",
+          "description": "Number of Enclave TCBs that are on a Local Lock Suspend Queue. Ownership:  Task Management Serialization:  Compare and Swap",
+          "offset": 348,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBIOSX",
+          "description": "I/O service measure extended. This is like ASCBIOSC but it is extended to 8 bytes, so its value continuestto grow past the 4GB ASCBIOSC maximum capacity. Serialization - CSG.",
+          "offset": 352,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBR168",
+          "description": "RESERVED.",
+          "offset": 360,
+          "length": 2,
+          "type": "hex"
+        },
+        {
+          "name": "ASCBSVCN",
+          "description": "SVC Number for type-1 SVC Serialization - local lock",
+          "offset": 362,
+          "length": 2,
+          "type": "hex"
+        },
+        {
+          "name": "ASCBRSME",
+          "description": "POINTER TO RSM ADDRESS SPACE BLOCK EXTENSION. SERIALIZATION: RSMAD LOCK OWNERSHIP: RSM",
+          "offset": 364,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "rsm",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBAVM",
+          "description": "AVAILABILITY MANAGER ADDRESS SPACE RELATED DATA. SERIALIZATION: CS. OWNERSHIP: AVM.",
+          "offset": 368,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBAVM1",
+          "description": "FIRST BYTE OF ASCBAVM. RESERVED.",
+          "offset": 368,
+          "length": 1,
+          "type": "unsigned-integer"
+        },
+        {
+          "name": "ASCBAVM2",
+          "description": "SECOND BYTE OF ASCBAVM. RESERVED.",
+          "offset": 369,
+          "length": 1,
+          "type": "unsigned-integer"
+        },
+        {
+          "name": "ASCBAGEN",
+          "description": "AVM ASID REUSE GENERATION NUMBER.",
+          "offset": 370,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBARC",
+          "description": "REASON CODE ON MEMTERM. SERIALIZATION - N/A. OWNERSHIP - RTM.",
+          "offset": 372,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASCBRSM",
+          "description": "ADDRESS OF RSM'S CONTROL BLOCK HEADER.",
+          "offset": 376,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASCBRSMA",
+          "description": "ADDRESS OF RSM'S CONTROL BLOCK HEADER.",
+          "offset": 376,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "rsm"
+        },
+        {
+          "name": "ASCBDCTI",
+          "description": "ACCUMULATED CHANNEL CONNECT TIME INCURRED BY THIS MEMORY",
+          "offset": 380,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBEND",
+          "description": "END OF ASCB",
+          "offset": 384,
+          "length": 8,
+          "type": "signed-integer"
         }
-      }
-    },
-    {
-      "name": "ascbwqid",
-      "description": "LOGICAL CPU ID OF THE PROCESSOR HOLDING THE WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL",
-      "offset": 30,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascb_job_step_seqnum",
-      "description": "Sequence number incremented at job step change, when ASSB and ASCB time and counts fields are reset. Used to sequence resets of the time and count fields",
-      "offset": 32,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbsawq_prezos11",
-      "description": "ADDRESS OF ADDRESS SPACE SRB WEB QUEUE SERIALIZATION: WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL Not set as of z/OS 1.11",
-      "offset": 32,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbasn",
-      "description": "SAME AS ASCBASID",
-      "offset": 36,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbasid",
-      "description": "ADDRESS SPACE IDENTIFIER FOR THE ASCB",
-      "offset": 36,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbdiag026",
-      "description": "IBM use only",
-      "offset": 38,
-      "length": 1,
-      "type": "hex"
-    },
-    {
-      "name": "ascbsrmflags",
-      "description": "SRM flags Ownership: SRM Serialization: SRMLOCK",
-      "offset": 39,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbvcmoverride": {
-          "description": "This bit indicates that this address space should not follow the standard SRM management in an VCM=on environment. Instead of trying to assign the work this address space to the same affinity node for cache efficiency concerns, assign this work to any affinity node, ignore any cache concerns. Ownership: SRM",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbbrokenup": {
-          "description": "This bit indicates that this address space has been broken up by SRM. Ownership: SRM",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbvcmgivepreemption": {
-          "description": "This bit indicates that this address space should get full preemption. Ownership: SRM",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbvcmgivesigpany": {
-          "description": "This bit indicates that this address space can SIGP any waiting CPUs to process its work. Ownership: SRM",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbinelighonorpriority": {
-          "description": "When on, specialty engine eligible work in this address space will not be offloaded to CPs for help processing. Ownership: SRM",
-          "offset": 4,
-          "length": 1
-        },
-        "ascbsrmflagsdiag": {
-          "description": "Diagnostic data for IBM use only",
-          "offset": 5,
-          "length": 2
-        }
-      }
-    },
-    {
-      "name": "ascbll5",
-      "description": "FLAGS. SERIALIZATION - LOCAL LOCK",
-      "offset": 40,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbs3s": {
-          "description": "STAGE II EXIT EFECTOR HAS SCHEDULED AN RQE OR IQE AND STAGE III EXIT EFFECTOR SHOULD BE INVOKED",
-          "offset": 2,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbhlhi",
-      "description": "INDICATION OF SUSPEND LOCKS HELD AT TASK SUSPENSION",
-      "offset": 41,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbdph",
-      "description": "HALFWORD DISPATCHING PRIORITY",
-      "offset": 45,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbdphi",
-      "description": "HIGH ORDER BYTE OF HALFWORD DISPATCHING PRIORITY",
-      "offset": 45,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbdp",
-      "description": "DISPATCHING PRIORITY RANGE FROM 0-255",
-      "offset": 47,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbtcbe",
-      "description": "Count of ready tcbs in the space that are in an enclave. Ownership:  Task Management Serialization: Compare and Swap and WEB Lock of TCB for which this count is being manipulated.",
-      "offset": 51,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascblda",
-      "description": "POINTER TO LOCAL DATA AREA PART OF LSQA FOR VSM",
-      "offset": 55,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbrsmf",
-      "description": "RSM ADDRESS SPACE FLAGS",
-      "offset": 59,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascb2lpu": {
-          "description": "SECOND LEVEL PREFERRED USER.  THIS OFFSET FIXED BY ARCHITECTURE.",
-          "offset": 0,
-          "length": 1
-        },
-        "ascb1lpu": {
-          "description": "FIRST LEVEL PREFERRED USER",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbn2lp": {
-          "description": "SRM IN SYSEVENT TRANSWAP SHOULD NOT SET ASCB2LPU BIT - HOWEVER IT MAY ALREADY BE ON AND WILL STAY ON",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbveqr": {
-          "description": "V=R ADDRESS SPACE",
-          "offset": 3,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbflg3",
-      "description": "Flags needing no serialization.",
-      "offset": 60,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbcnip": {
-          "description": "Address space created during NIP",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbreus": {
-          "description": "This is a reusable ASID. It may be given out only to a reusable ASID requestor",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbm881": {
-          "description": "This address space went through IEEMB881",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbsinglestepstartedtask": {
-          "description": "This address space is a single step started task",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbzcx": {
-          "description": "This address space is a zCX address space",
-          "offset": 4,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbr036",
-      "description": "Reserved as of z/OS 1.11",
-      "offset": 61,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbhasi_prezos11",
-      "description": "Local lock owning ASID. Not set as of z/OS 1.11",
-      "offset": 61,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbcscb",
-      "description": "ADDRESS OF CSCB",
-      "offset": 63,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbtsb",
-      "description": "ADDRESS OF TSB",
-      "offset": 67,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbejst",
-      "description": "Accumulated job step CPU time. Non-enclave TCB time only. Unsigned 64-bit binary number",
-      "offset": 71,
-      "length": 8,
-      "type": "hex"
-    },
-    {
-      "name": "ascbewst",
-      "description": "TIME OF DAY WHENEVER I-STREAM IS SWITCHED FROM A MEMORY",
-      "offset": 79,
-      "length": 8,
-      "type": "hex"
-    },
-    {
-      "name": "ascbjstl",
-      "description": "CPU TIME LIMIT FOR THE JOB STEP UNSIGNED 32 BIT BINARY NUMBER",
-      "offset": 87,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbecb",
-      "description": "RCT'S WORK ECB",
-      "offset": 91,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbubet",
-      "description": "TIME STAMP WHEN USER BECOMES READY",
-      "offset": 95,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbtlch",
-      "description": "CHAIN FIELD FOR TIME LIMIT EXCEEDED QUEUE",
-      "offset": 99,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbdump",
-      "description": "SVC DUMP TASK TCB ADDRESS",
-      "offset": 103,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbfw1",
-      "description": "FULL-WORD LABEL TO BE USED FOR COMPARE AND SWAP FOR ANY BIT IN THIS WORD",
-      "offset": 107,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbaffn",
-      "description": "CPU AFFINITY INDICATOR",
-      "offset": 107,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbrctf",
-      "description": "FLAGS FOR RCT SERIALIZED BY COMPARE AND SWAP",
-      "offset": 109,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbtmno": {
-          "description": "MEMORY IS BEING QUIESCED, IS QUIESCED, OR IS BEING RESTORED",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbfrs": {
-          "description": "RESTORE REQUEST",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbfqu": {
-          "description": "QUIESCE REQUEST",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbjste": {
-          "description": "JOB STEP TIME EXCEEDED. NOT USED BY RCT",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbwait": {
-          "description": "LONG WAIT INDICATOR",
-          "offset": 4,
-          "length": 1
-        },
-        "ascbout": {
-          "description": "ADDRESS SPACE CONSIDERED SWAPPED OUT",
-          "offset": 5,
-          "length": 1
-        },
-        "ascbtmlw": {
-          "description": "MEMORY IS IN A LONG WAIT",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbtoff": {
-          "description": "MEMORY SHOULD NOT BE CHECKED FOR JOB STEP TIMING. NOT USED BY RCT",
-          "offset": 7,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbflg1",
-      "description": "FLAG FIELD",
-      "offset": 110,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascblsas": {
-          "description": "ADDRESS SPACE IS LOGICALLY SWAPPED  -",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbdstk": {
-          "description": "SRM REQUIRES A TIME STAMP TO DETERMINE WHEN THE ADDRESS SPACE GOES INTO LONG WAIT.  ASCBEWST WILL BE UPDATED WHEN THIS BIT IS ON. NOTE:  If this bit moves position the bit constant ASCBDSTZ must also be changed.",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbdstz": {
-          "description": "Bit constant for bit position ASCBDSTK.  PL/X cannot map bit positions in generated code, so this bit constant allows PL/X to set the bit in generated assembler.",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbterm": {
-          "description": "ADDRESS SPACE TERMINATING NORMALLY",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbabnt": {
-          "description": "ADDRESS SPACE TERMINATING ABNORMALLY",
-          "offset": 4,
-          "length": 1
-        },
-        "ascbmemp": {
-          "description": "Memory Termination PURGEDQ flag Serialization: none",
-          "offset": 5,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbtmch",
-      "description": "TERMINATION QUEUE CHAIN",
-      "offset": 111,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbasxb",
-      "description": "POINTER TO ADDRESS SPACE EXTENSION CONTROL BLOCK (ASXB)",
-      "offset": 115,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbfw2",
-      "description": "FULLWORD LABEL TO ADDRESS BITS IN THIS WORD",
-      "offset": 119,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbswct",
-      "description": "NUMBER OF TIMES MEMORY ENTERS SHORT WAIT",
-      "offset": 119,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbdsp1",
-      "description": "NONDISPATCHABILITY FLAGS. SERIALIZATION - GLOBAL INTERSECT.",
-      "offset": 121,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbssnd": {
-          "description": "SYSTEM SET NONDISPATCHABLE AND THIS ASCB IS NOT EXEMPT",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbfail": {
-          "description": "A FAILURE HAS OCCURRED WITHIN THE ADDRESS SPACE. THE MEMORY IS NONDISPATCHABLE",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbsnqs": {
-          "description": "STATUS STOP NON-QUIESCABLE LEVEL SRB'S",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbssss": {
-          "description": "STATUS STOP SRB SUMMARY",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbstnd": {
-          "description": "TCB'S NONDISPATCHABLE",
-          "offset": 4,
-          "length": 1
-        },
-        "ascbuwnd": {
-          "description": "STATUS SET UNLOCKED WORKUNITS NONDISPATCHABLE.",
-          "offset": 5,
-          "length": 1
-        },
-        "ascbnoq": {
-          "description": "ASCB NOT ON SWAPPED IN QUEUE",
-          "offset": 6,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbflg2",
-      "description": "FLAG BYTE. SERIALIZATION - GLOBAL INTERSECT",
-      "offset": 122,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbxmpt": {
-          "description": "ASCB EXEMPT FROM SYSTEM NONDISPATCHABLE",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbpxmt": {
-          "description": "ASCB PERMANENTLY EXEMPT FROM SYSTEM NONDISPATCHABLE",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbcext": {
-          "description": "CANCEL TIMER EXTENSION BECAUSE EOT PROCESSING IS STARTED FOR THE JOB STEP TCB",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbs2s": {
-          "description": "FOR LOCK MANAGER, ENTRY MADE TO STAGE II EXIT EFFECTOR WITHOUT CORRESPONDING ENTRY TO STAGE III EXIT EFFECTOR",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbncml": {
-          "description": "ASCB NOT ELIGIBLE FOR CML LOCK REQUESTS",
-          "offset": 4,
-          "length": 1
-        },
-        "ascbnomt": {
-          "description": "ADDRESS SPACE MUST NOT BE MEMTERMED UNLESS A DAT ERROR HAS OCCURRED. IF A DAT ERROR HAS OCCURRED, ACTION IS CONTROLLED BY ASCBNOMD. OWNERSHIP - SCHEDULER",
-          "offset": 5,
-          "length": 1
-        },
-        "ascbnomd": {
-          "description": "IF ON,ADDRESS SPACE CANNOT BE MEMTERMED ON A DAT ERROR. IF OFF, PROCESS MEMTERM ON A DAT ERROR. OWNERSHIP - SCHEDULER",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbs3nl": {
-          "description": "THE LOCAL LOCK IS NEEDED BY THE STAGE 3 EXIT EFFECTOR TO QUEUE ASYNCHRONOUS EXITS           E SERIALIZATION: CDS WITH ASCBLOCK OWNERSHIP: SUPERVISOR CONTROL",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbltcl": {
-          "description": "THE LOCAL LOCK IS NEEDED BY SOME TCB or preemptable-class SRB WHEN SET IN BIT 31 OF ASCBLSWQ.",
-          "offset": 7,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbscnt",
-      "description": "FULLWORD LABEL FOR COMPARE AND SWAP (CS)",
-      "offset": 123,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbsrbs",
-      "description": "COUNT OF SRB'S SUSPENDED IN THIS MEMORY",
-      "offset": 123,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbllwq",
-      "description": "ADDRESS SPACE LOCAL LOCK SUSPEND SERVICE WEB QUEUE SERIALIZATION: WEB QUEUE LOCK OWNERSHIP: SUPERVISOR CONTROL",
-      "offset": 125,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbrctp",
-      "description": "POINTER TO REGION CONTROL TASK (RCT) TCB",
-      "offset": 127,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascblkgp",
-      "description": "LOCK GROUP",
-      "offset": 131,
-      "length": 8,
-      "type": "hex"
-    },
-    {
-      "name": "ascblock",
-      "description": "LOCAL LOCK.  THIS OFFSET FIXED BY ARCHITECTURE.",
-      "offset": 131,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascblswq",
-      "description": "ADDRESS SPACE LOCAL LOCK WEB SUSPEND QUEUE THIS OFFSET FIXED BY ARCHITECTURE. SERIALIZATION: CDS WITH ASCBLOCK OWNERSHIP: SUPERVISOR CONTROL",
-      "offset": 135,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbqecb",
-      "description": "QUIESCE ECB",
-      "offset": 139,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbmecb",
-      "description": "MEMORY CREATE/DELETE ECB",
-      "offset": 143,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascboucb",
-      "description": "SYSTEM RESOURCES MANAGER (SRM) USER CONTROL BLOCK POINTER",
-      "offset": 147,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbouxb",
-      "description": "SYSTEM RESOURCES MANAGER (SRM) USER EXTENSION BLOCK POINTER",
-      "offset": 151,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbfw2a",
-      "description": "FULLWORD LABEL TO ADDRESS BITS IN THIS WORD. SERIALIZATION - CS.",
-      "offset": 155,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbfmct",
-      "description": "RESERVED. ALLOCATED PAGE FRAME COUNT NOW RESIDES IN THE RAX (MAPPING MACRO IARRAX).",
-      "offset": 155,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascblevl",
-      "description": "LEVEL NUMBER OF ASCB",
-      "offset": 157,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbvs01": {
-          "description": "",
-          "offset": 7,
-          "length": 1
-        },
-        "ascbvs02": {
-          "description": "",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbvs03": {
-          "description": "",
-          "offset": 6,
-          "length": 2
-        },
-        "ascbvers": {
-          "description": "LEVEL OF THIS MAPPING",
-          "offset": 6,
-          "length": 2
-        }
-      }
-    },
-    {
-      "name": "ascbfl2a",
-      "description": "FLAG BYTE.",
-      "offset": 158,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbnopr": {
-          "description": "NO PREEMPTION FLAG 1=DO NOT SIGP ANOTHER PROCESSOR TO EXECUTE READY WORK IN THIS SPACE 0=DO SIGP ANOTHER PROCESSOR OWNERSHIP:     SRM SERIALIZATION: CS ON ASCBFW2A",
-          "offset": 0,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbhreq_prezos11",
-      "description": "Local lock requestor address Not set as of z/OS 1.11",
-      "offset": 159,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbejst_disps",
-      "description": "Count of task dispatches. Incremented and cache aligned with ASCBEJST. SERIALIZATION - CS. OWNERSHIP - SUPERVISOR.",
-      "offset": 159,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbiqea",
-      "description": "POINTER TO IQE FOR ATCAM ASYNCHRONOUS PROCESSING",
-      "offset": 163,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbrtmc",
-      "description": "ANCHOR FOR SQA SDWA QUEUE",
-      "offset": 167,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbmcc",
-      "description": "USED TO HOLD A MEMORY TERMINATION COMPLETION CODE ON ABNORMAL MEMORY TERMINATION",
-      "offset": 171,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbjbni",
-      "description": "POINTER TO JOBNAME FIELD FOR INITIATED PROGRAMS OR ZERO",
-      "offset": 175,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbjbns",
-      "description": "POINTER TO JOBNAME FIELD FOR START/MOUNT/LOGON OR ZERO",
-      "offset": 179,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbsrq",
-      "description": "DISPATCHER SERIALIZATION REQUIRED",
-      "offset": 183,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbsrq1",
-      "description": "FIRST BYTE OF ASCBSRQ",
-      "offset": 183,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbdsg4": {
-          "description": "SIGNAL WAITING PROCESSORS WHEN INTERSECT IS RESET",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbdflt": {
-          "description": "DEFAULT LOCAL INTERSECT",
-          "offset": 1,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbsrq2",
-      "description": "SECOND BYTE OF ASCBSRQ",
-      "offset": 184,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbdsg3": {
-          "description": "SIGNAL WAITING PROCESSORS WHEN INTERSECT IS RESET",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbsrm1": {
-          "description": "SYSTEM RESOURCE MANAGER (SRM) INTERSECTING",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbqver": {
-          "description": "QUEUE VERIFICATION INTERSECTING",
-          "offset": 7,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbsrq3",
-      "description": "THIRD BYTE OF ASCBSRQ",
-      "offset": 185,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbdsg2": {
-          "description": "SIGNAL WAITING PROCESSORS WHEN INTERSECT IS RESET",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbrcti": {
-          "description": "REGION CONTROL TASK (RCT) INTERSECTING",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbtcbv": {
-          "description": "TCB VERIFICATION INTERSECTING",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbacha": {
-          "description": "ASCB CHAP INTERSECTING",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbmter": {
-          "description": "MEMORY TERMINATION INTERSECTING",
-          "offset": 5,
-          "length": 1
-        },
-        "ascbmini": {
-          "description": "MEMORY INITIALIZATION INTERSECTING",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbcbve": {
-          "description": "CONTROL BLOCK VERIFICATION INTERSECTING",
-          "offset": 7,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbsrq4",
-      "description": "FOURTH BYTE OF ASCBSRQ",
-      "offset": 186,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbdsg1": {
-          "description": "SIGNAL WAITING PROCESSORS WHEN INTERSECT IS RESET",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbdeta": {
-          "description": "DETACH INTERSECTING",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbatta": {
-          "description": "ATTACH INTERSECTING",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbrtm2": {
-          "description": "RTM2 INTERSECTING",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbrtm1": {
-          "description": "RTM1 INTERSECTING",
-          "offset": 4,
-          "length": 1
-        },
-        "ascbchap": {
-          "description": "CHAP INTERSECTING",
-          "offset": 5,
-          "length": 1
-        },
-        "ascbstat": {
-          "description": "STATUS INTERSECTING",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbpurd": {
-          "description": "PURGEDQ INTERSECTING",
-          "offset": 7,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbvgtt",
-      "description": "ADDRESS OF VSAM GLOBAL TERMINATION TABLE (VGTT)",
-      "offset": 187,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbpctt",
-      "description": "ADDRESS OF PRIVATE CATALOG TERMINATION TABLE (PCTT)",
-      "offset": 191,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbssrb",
-      "description": "COUNT OF STATUS STOP SRB'S",
-      "offset": 195,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbsmct",
-      "description": "NUMBER OF OUTSTANDING STEP MUST COMPLETE REQUESTS IN ADDRESS SPACE",
-      "offset": 197,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbsrbm",
-      "description": "MODEL PSW BYTE 0 USED BY SRB DISPATCHER",
-      "offset": 201,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbper": {
-          "description": "PER BIT IN ASCBSRBM - ALSO USED TO SHOW PER STATUS FOR THE ADDRESS SPACE",
-          "offset": 1,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbswtl",
-      "description": "STEP WAIT TIME LIMIT",
-      "offset": 202,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbsrbt",
-      "description": "ACCUMULATED SRB TIME",
-      "offset": 206,
-      "length": 8,
-      "type": "hex"
-    },
-    {
-      "name": "ascbltcb",
-      "description": "TCB and preemptable-class SRB Local lock suspend queue. Serialization: Adding, CS. Deleting, ASCB CML promotion WEB lock and CS.",
-      "offset": 214,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbltcn",
-      "description": "Count of TCB and preemptable- class SRB (local and CML) requestors needing this local lock. Serialization: CS",
-      "offset": 218,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbtcbs",
-      "description": "NUMBER OF READY TCB'S. THE ACTUAL NUMBER OF READY TCBS IS ASCBTCBS-ASCBLSQT. SERIALIZATION: CS OWNERSHIP: TASK MANAGEMENT",
-      "offset": 222,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascblsqt",
-      "description": "NUMBER OF TCBS ON A LOCAL LOCK SUSPEND QUEUE. SERIALIZATION: CS OWNERSHIP: TASK MANAGEMENT",
-      "offset": 226,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbwprb",
-      "description": "ADDRESS OF WAIT POST REQUEST BLOCK",
-      "offset": 230,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbsrdp",
-      "description": "SYSTEM RESOURCE MANAGER (SRM) DISPATCHING PRIORITY",
-      "offset": 234,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbndp",
-      "description": "NEW DISPATCHING PRIORITY",
-      "offset": 234,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbtndp",
-      "description": "NEW TIME SLICE DISPATCHING PRIORITY",
-      "offset": 238,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbntsg",
-      "description": "NEW TIME SLICE GROUP",
-      "offset": 242,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbiodp",
-      "description": "I/O PRIORITY",
-      "offset": 246,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbloci",
-      "description": "LOCK IMAGE, ADDRESS OF ASCB HOLDING THIS ASCB'S LOCAL LOCK AS A CML LOCK. SERIALIZATION - LOCAL LOCK. OWNERSHIP - SUPERVISOR.",
-      "offset": 250,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbcmlw",
-      "description": "ADDRESS OF THE WEB REPRESENTING THE WORKUNIT THAT IS HOLDING THIS ASCB'S LOCAL LOCK AS A CML OR LOCAL LOCK. SERIALIZATION - LOCAL LOCK. OWNERSHIP - SUPERVISOR CONTROL",
-      "offset": 254,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbcmlc_prezos12",
-      "description": "COUNT OF CML LOCKS HELD BY THIS ADDRESS SPACE.",
-      "offset": 258,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbsrbt_disps",
-      "description": "Count of SRB dispatches. Incremented and cache aligned with ASCBSRBT. SERIALIZATION - CS. OWNERSHIP - SUPERVISOR.",
-      "offset": 258,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbssom",
-      "description": "SPACE SWITCH EVENT OWNER MASK. SERIALIZATION - CS. OWNERSHIP - SUPERVISOR.",
-      "offset": 262,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbsso1",
-      "description": "SPACE SWITCH EVENT OWNER MASK BYTES 1 - 3.",
-      "offset": 262,
-      "length": 3,
-      "type": "hex"
-    },
-    {
-      "name": "ascbsso4",
-      "description": "SPACE SWITCH EVENT OWNER MASK BYTE 4.",
-      "offset": 265,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbsssp": {
-          "description": "SLIP/PER REQUESTED NOTIFICATION ON SPACE SWITCH EVENTS.",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbssjs": {
-          "description": "JOB STEP TERMINATION REQUESTED SPACE SWITCH EVENTS FOR BREAKING LATENT ADDRESSING BINDS",
-          "offset": 7,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbaste",
-      "description": "VIRTUAL ADDRESS OF ADDRESS SPACE SECOND TABLE ENTRY (ASTE). SERIALIZATION - N/A. OWNERSHIP - SUPERVISOR.",
-      "offset": 266,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbltov",
-      "description": "VIRTUAL ADDRESS OF THE LINKAGE TABLE ORIGIN. (LOCATED IN PC/AUTH ADDRESS SPACE   LSQA). SERIALIZATION - PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
-      "offset": 270,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbatov",
-      "description": "VIRTUAL ADDRESS OF AUTHORIZATION TABLE (LOCATED IN PC/AUTH ADDRESS SPACE LSQA). SERIALIZATION: PC/AUTH, ADDRESS SPACE LOCAL LOCK. OWNERSHIP: XM SERVICES",
-      "offset": 274,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbetc",
-      "description": "NUMBER OF ENTRY TABLES CURRENTLY OWNED BY THIS ADDRESS SPACE. SERIALIZATION - PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
-      "offset": 278,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbetcn",
-      "description": "NUMBER OF CONNECTIONS TO ENTRY TABLES IN THIS ADDRESS SPACE CONTAINING ANY SPACE SWITCH ENTRIES. SERIALIZATION - PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
-      "offset": 280,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascblxr",
-      "description": "NUMBER OF LINKAGE INDEXES RESERVED BY THIS ADDRESS SPACE. SERIALIZATION - PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
-      "offset": 282,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbaxr",
-      "description": "NUMBER OF AUTHORIZATION INDEXES RESERVED BY THIS ADDRESS SPACE. SERIALIZATION - PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
-      "offset": 284,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbstkh",
-      "description": "ADDRESS OF LOCAL STACK POOL HEADER FOR PCLINK SERVICE. SERIALIZATION - N/A. OWNERSHIP - XM SERVICES.",
-      "offset": 286,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbcswd",
-      "description": "CS-serialized word cleared at step term / start",
-      "offset": 290,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbcsw0",
-      "description": "Byte 0",
-      "offset": 290,
-      "length": 1,
-      "type": "hex"
-    },
-    {
-      "name": "ascbcsw1",
-      "description": "Byte 1",
-      "offset": 291,
-      "length": 1,
-      "type": "hex"
-    },
-    {
-      "name": "ascbcsw2",
-      "description": "Byte 2, Ser: CS",
-      "offset": 292,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbzkf": {
-          "description": "",
-          "offset": 0,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbcsw3",
-      "description": "Byte 3, Ser: CS",
-      "offset": 293,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbzu": {
-          "description": "",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbzf": {
-          "description": "",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbzn": {
-          "description": "",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbzm": {
-          "description": "",
-          "offset": 5,
-          "length": 1
-        },
-        "ascbzs": {
-          "description": "",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbzc": {
-          "description": "Checked.",
-          "offset": 7,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbr114",
-      "description": "Reserved.",
-      "offset": 294,
-      "length": 4,
-      "type": "hex"
-    },
-    {
-      "name": "ascbjafbaddr",
-      "description": "Address of the JAFB",
-      "offset": 298,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbxtcb",
-      "description": "ADDRESS OF THE JOB STEP TASK TCB WHICH OWNS THE CROSS MEMORY RESOURCES IN THIS ADDRESS SPACE. SERIALIZATION - LOCAL LOCK. OWNERSHIP - SUPERVISOR.",
-      "offset": 302,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbfw3",
-      "description": "Fullword label to address bits in this word. Serialization - CS. This word is a programming interface only for bits ASCBSDBF, ASCBNOFT, ASCBPO1M, ASCBP1M0",
-      "offset": 306,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbcs1",
-      "description": "FIRST BYTE OF COMPARE AND SWAP FLAGS.",
-      "offset": 306,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbxmet": {
-          "description": "IF ONE, THE ADDRESS SPACE IS NON-REUSABLE BECAUSE OF CROSS MEMORY CONNECTIONS TO IT.  THIS CONDITION MAY NOT BE PERMANENT. SERIALIZATION - CS AND PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbxmec": {
-          "description": "CROSS MEMORY ENTRY TABLES CONTAINING SPACE SWITCH ENTRIES HAVE BEEN CREATED BY THIS ADDRESS SPACE. SERIALIZATION - CS AND PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbxmpa": {
-          "description": "IF ONE, THE ADDRESS SPACE IS PERMANENTLY NON-REUSABLE BECAUSE OF INCOMPLETE TERMINATION PROCESSING OF PC/AUTH RESOURCE MANAGER. SERIALIZATION - CS AND PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbxmlk": {
-          "description": "IF ONE, THE ADDRESS SPACE IS PERMANENTLY NON-REUSABLE BECAUSE OF A CML BIND. SERIALIZATION - CS AND PC/AUTH ADDRESS SPACE LOCAL LOCK. OWNERSHIP - XM SERVICES.",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbpers": {
-          "description": "COMMUNICATION BIT FOR SLIP/PER SRB ROUTINES. IF 1, THE LOCAL SRB ROUTINE WILL ACTIVATE PER FOR THE SPECIFIED ADDRESS SPACE/JOB/CROSS MEMORY REFERENCES. IF 0, THE LOCAL SRB ROUTINE WILL DEACTIVATE PER FOR THE ADDRESS SPACE. SERIALIZATION - CS AND SLIP SERIALIZATION WORD, SHDRSEQ.",
-          "offset": 4,
-          "length": 1
-        },
-        "ascbdter": {
-          "description": "A DAT ERROR HAS OCCURRED FOR THIS ADDRESS SPACE. SERIALIZATION - CS. OWNERSHIP - RTM.",
-          "offset": 5,
-          "length": 1
-        },
-        "ascbpero": {
-          "description": "PER PROCESSING NEEDS TO BE DONE WHEN ADDRESS SPACE IS SWAPPED IN. SERIALIZATION - CS. OWNERSHIP - SLIP.",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbswop": {
-          "description": "ADDRESS SPACE IS SWAPPED OUT WITH RESPECT TO PER PROCESSING BEING DONE. SERIALIZATION - CS. OWNERSHIP - RCT.",
-          "offset": 7,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbcs2",
-      "description": "SECOND BYTE OF COMPARE AND SWAP FLAGS.",
-      "offset": 307,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbsas": {
-          "description": "INDICATES THAT STORAGE ALTERATION SELECTION (PER 2) IS ON FOR EITHER A DATA SPACE ASSOCIATED WITH THE ADDRESS SPACE, OR THE ADDRESS SPACE ITSELF.",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbsmgr": {
-          "description": "This space is or has been associated with the session manager",
-          "offset": 1,
-          "length": 1
-        },
-        "ascbdtin": {
-          "description": "This space is or has been associated with ISPF",
-          "offset": 2,
-          "length": 1
-        },
-        "ascbxmnr": {
-          "description": "The address space is permanently non-reusable because of cross memory connections to a system LX. Serialization - CS and PC/AUTH address space Local lock. Ownership - XM services",
-          "offset": 3,
-          "length": 1
-        },
-        "ascbsdbf": {
-          "description": "A work unit in this address space has set CVTSDBF bit 0 to 1. If this address space is memtermed when this bit is on, the system will reset CVTSDBF. ASCBSDBF must be set on only by the work unit that has just set CVTSDBF bit 0 to 1. ASCBSDBF must be reset just prior to resetting CVTSDBF. ASCBSDBF must be set in the home address space. The SVC Dump request must properly indicate BUFFER=YES. Serialization: CS",
-          "offset": 4,
-          "length": 1
-        },
-        "ascbnoft": {
-          "description": "Set this to exempt all tasks in this address space from being affected by the FORCE TCB command. Serialization: CS",
-          "offset": 5,
-          "length": 1
-        },
-        "ascbpo1m": {
-          "description": "Set this to indicate that the RMODE 31 portion of program objects is to be backed by 1M pages (when available). The bit is reset at jobstep start. It applies only to modules loaded into private storage. Serialization: CS",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbp1m0": {
-          "description": "Set this to indicate that the RMODE 31 portion of program objects is to be backed by 1M pages (when available), but only when the module will be placed into SP252. The bit is reset at jobstep start. It applies only to modules loaded into private storage. Do not also set ASCBPO1M. Serialization: CS",
-          "offset": 7,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbcs3",
-      "description": "3rd byte of CS flags",
-      "offset": 308,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbxmso": {
-          "description": "This address space has owned a XM table with a space-switch PC",
-          "offset": 0,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbcs4",
-      "description": "4th byte of CS flags",
-      "offset": 309,
-      "length": 1,
-      "type": "bitstring"
-    },
-    {
-      "name": "ascbgxl",
-      "description": "ADDRESS OF GLOBALLY LOADED MODULE EXTENT INFORMATION CONTROL BLOCK. SERIALIZATION - LOCAL LOCK. OWNERSHIP - CONTENTS SUPERVISION",
-      "offset": 310,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbeatt",
-      "description": "EXPENDED AND ACCOUNTED TASK TIME. SERIALIZATION - N/A. OWNERSHIP - SCHEDULER.",
-      "offset": 314,
-      "length": 8,
-      "type": "hex"
-    },
-    {
-      "name": "ascbints",
-      "description": "JOB SELECTION TIME STAMP. SERIALIZATION - N/A. OWNERSHIP - SCHEDULER.",
-      "offset": 322,
-      "length": 8,
-      "type": "hex"
-    },
-    {
-      "name": "ascbfw4",
-      "description": "FULLWORD LABEL TO ADDRESS BITS IN THIS WORD. SERIALIZATION - LOCAL LOCK.",
-      "offset": 330,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbll1",
-      "description": "FIRST BYTE OF FLAGS. SERIALIZATION - LOCAL LOCK.",
-      "offset": 330,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbsspc": {
-          "description": "STATUS STOP TASKS PENDING A CML LOCK RELEASE.",
-          "offset": 0,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbll2",
-      "description": "SECOND BYTE OF FLAGS. SERIALIZATION - LOCAL LOCK.",
-      "offset": 331,
-      "length": 1,
-      "type": "bitstring"
-    },
-    {
-      "name": "ascbll3",
-      "description": "THIRD BYTE OF FLAGS. SERIALIZATION - LOCAL LOCK.",
-      "offset": 332,
-      "length": 1,
-      "type": "bitstring"
-    },
-    {
-      "name": "ascbll4",
-      "description": "FOURTH BYTE OF FLAGS. SERIALIZATION - LOCAL LOCK.",
-      "offset": 333,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbnrll": {
-          "description": "No release of Local Lock OK. Set only after obtaining LL.",
-          "offset": 0,
-          "length": 1
-        },
-        "ascbtyp1": {
-          "description": "TYPE 1 SVC HAS CONTROL.  THIS OFFSET FIXED BY ARCHITECTURE.",
-          "offset": 6,
-          "length": 1
-        },
-        "ascbgqab": {
-          "description": "ISGQSCAN INFORMATION ROUTINE ABENDED FLAG. IF ON, ISGQSCAN INFORMATION ROUTINE UNEXPECTEDLY ABENDED.",
-          "offset": 0,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascbrcms",
-      "description": "ADDRESS OF THE REQUESTED CMS CLASS LOCK FOR WHICH THE LOCAL LOCK HOLDER IS SUSPENDED. SERIALIZATION - LOCAL LOCK. OWNERSHIP - SUPERVISOR.",
-      "offset": 334,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbiosc",
-      "description": "I/O SERVICE MEASURE. SERIALIZATION - CS. UPDATED BY JES2,JES3,SMF. READ BY RMF,SMF,SRM.",
-      "offset": 338,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbpkml",
-      "description": "PKM OF LAST TASK DISPATCHED IN THIS ADDRESS SPACE. SERIALIZATION - NONE. OWNERSHIP - DISPATCHER.",
-      "offset": 342,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbxcnt",
-      "description": "EXCP COUNT FIELD. SERIALIZATION - LOCAL LOCK. OWNERSHIP - EXCP.",
-      "offset": 344,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbnsqa",
-      "description": "ADDRESS OF THE SQA RESIDENT NSSA CHAIN. SERIALIZATION - DISPATCHER LOCK. OWNERSHIP - DISPATCHER.",
-      "offset": 346,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbasm",
-      "description": "ADDRESS OF THE ASM HEADER. SERIALIZATION - NONE. OWNERSHIP - ASM.",
-      "offset": 350,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbassb",
-      "description": "POINTER TO ADDRESS SPACE SECONDARY BLOCK (ASSB).",
-      "offset": 354,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbtcme",
-      "description": "POINTER TO TCXTB. OWNERSHIP - TCAM.",
-      "offset": 358,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbgqir",
-      "description": "ISGQSCAN INFORMATION ROUTINE ADDRESS. SERIALIZATION  - COMPARE AND SWAP. OWNERSHIP - GRS",
-      "offset": 362,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbgqi3",
-      "description": "BYTE 3 OF ASCBGQIR",
-      "offset": 362,
-      "length": 1,
-      "type": "bitstring",
-      "bitmasks": {
-        "ascbgqds": {
-          "description": "ISGQSCAN INFORMATION ROUTINE DISABLED FLAG. IF ON, ISGQSCAN WILL NOT INVOKE THE ISGQSCAN INFORMATION ROUTINE.",
-          "offset": 7,
-          "length": 1
-        }
-      }
-    },
-    {
-      "name": "ascblsqe",
-      "description": "Number of Enclave TCBs that are on a Local Lock Suspend Queue. Ownership:  Task Management Serialization:  Compare and Swap",
-      "offset": 363,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbiosx",
-      "description": "I/O service measure extended. This is like ASCBIOSC but it is extended to 8 bytes, so its value continuestto grow past the 4GB ASCBIOSC maximum capacity. Serialization - CSG.",
-      "offset": 366,
-      "length": 8,
-      "type": "hex"
-    },
-    {
-      "name": "ascbr168",
-      "description": "RESERVED.",
-      "offset": 374,
-      "length": 2,
-      "type": "hex"
-    },
-    {
-      "name": "ascbsvcn",
-      "description": "SVC Number for type-1 SVC Serialization - local lock",
-      "offset": 376,
-      "length": 2,
-      "type": "hex"
-    },
-    {
-      "name": "ascbrsme",
-      "description": "POINTER TO RSM ADDRESS SPACE BLOCK EXTENSION. SERIALIZATION: RSMAD LOCK OWNERSHIP: RSM",
-      "offset": 378,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbavm",
-      "description": "AVAILABILITY MANAGER ADDRESS SPACE RELATED DATA. SERIALIZATION: CS. OWNERSHIP: AVM.",
-      "offset": 382,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbavm1",
-      "description": "FIRST BYTE OF ASCBAVM. RESERVED.",
-      "offset": 382,
-      "length": 1,
-      "type": "bitstring"
-    },
-    {
-      "name": "ascbavm2",
-      "description": "SECOND BYTE OF ASCBAVM. RESERVED.",
-      "offset": 383,
-      "length": 1,
-      "type": "bitstring"
-    },
-    {
-      "name": "ascbagen",
-      "description": "AVM ASID REUSE GENERATION NUMBER.",
-      "offset": 384,
-      "length": 2,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbarc",
-      "description": "REASON CODE ON MEMTERM. SERIALIZATION - N/A. OWNERSHIP - RTM.",
-      "offset": 386,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbrsm",
-      "description": "ADDRESS OF RSM'S CONTROL BLOCK HEADER.",
-      "offset": 390,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbrsma",
-      "description": "ADDRESS OF RSM'S CONTROL BLOCK HEADER.",
-      "offset": 390,
-      "length": 4,
-      "type": "address"
-    },
-    {
-      "name": "ascbdcti",
-      "description": "ACCUMULATED CHANNEL CONNECT TIME INCURRED BY THIS MEMORY",
-      "offset": 394,
-      "length": 4,
-      "type": "signed-integer"
-    },
-    {
-      "name": "ascbend",
-      "description": "END OF ASCB",
-      "offset": 398,
-      "length": 8,
-      "type": "hex"
+      ]
     }
   ]
 }
