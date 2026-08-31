@@ -1578,6 +1578,7 @@
           "offset": 336,
           "length": 4,
           "type": "address",
+          "pointsTo": "assb",
           "programmingInterface": true
         },
         {
