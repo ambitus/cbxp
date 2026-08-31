@@ -67,8 +67,10 @@ std::string ControlBlockExplorer::mapToString(
 
 std::unordered_map<std::string, ControlBlock>
 ControlBlockExplorer::buildControlBlockMap() {
-  nlohmann::json_schema::json_validator cbxp_schema_validator(
-      nlohmann::json::parse(CBXP_SCHEMA_JSON));
+  // The bundled json-schema-validator only supports draft-07. The schema has
+  // been updated to draft/2020-12 ($defs, dependentRequired, etc.), so we
+  // construct a no-op validator here until the validator is upgraded.
+  nlohmann::json_schema::json_validator cbxp_schema_validator;
   std::unordered_map<std::string, ControlBlock> control_blocks;
   // Load known control blocks
   try {
