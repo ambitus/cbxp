@@ -536,10 +536,16 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
     return control_block_data;
   } else if (p_control_blocks.size() == 1) {
     p_control_block_ = p_control_blocks[0];
-    Logger::getInstance().debug(control_block_name + " hex dump:");
-    int dump_length = control_block_name == "psa"
-                          ? control_block_->getMaxOffset() / 2
-                          : control_block_->getMaxOffset();
+    int dump_length  = control_block_name == "psa"
+                           ? control_block_->getMaxOffset() / 2
+                           : control_block_->getMaxOffset();
+    Logger::getInstance().debug(control_block_name + " hex dump: address=" +
+                                [&]() {
+                                  std::ostringstream oss;
+                                  oss << p_control_block_;
+                                  return oss.str();
+                                }() +
+                                " length=" + std::to_string(dump_length));
     Logger::getInstance().hexDump(
         reinterpret_cast<const char*>(p_control_block_), dump_length,
         control_block_name == "psa");
@@ -552,7 +558,14 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
     control_block_data[control_block_name + "s"] = {};
     for (const auto& p_control_block : p_control_blocks) {
       p_control_block_ = p_control_block;
-      Logger::getInstance().debug(control_block_->getName() + " hex dump:");
+      Logger::getInstance().debug(
+          control_block_->getName() + " hex dump: address=" +
+          [&]() {
+            std::ostringstream oss;
+            oss << p_control_block_;
+            return oss.str();
+          }() +
+          " length=" + std::to_string(control_block_->getMaxOffset()));
       Logger::getInstance().hexDump(
           reinterpret_cast<const char*>(p_control_block_),
           control_block_->getMaxOffset());
