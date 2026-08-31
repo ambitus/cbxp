@@ -473,7 +473,7 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
   for (const auto& [field_name, field_data] : control_block_->getMap()) {
     nlohmann::json field_json = {};
     if (control_block_->getName() == "psa" &&
-        field_data.offset >= control_block_->getMaxOffset() / 2 &&
+        field_data.offset >= (control_block_->getMaxOffset() - 8) / 2 &&
         field_data.offset >= 0) {
       // Half of the PSA is fetch protected, so we can't actually get the "back
       // half" of it
@@ -537,7 +537,7 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
   } else if (p_control_blocks.size() == 1) {
     p_control_block_ = p_control_blocks[0];
     int dump_length  = control_block_name == "psa"
-                           ? control_block_->getMaxOffset() / 2
+                           ? (control_block_->getMaxOffset() - 8) / 2
                            : control_block_->getMaxOffset();
     Logger::getInstance().debug(control_block_name + " hex dump: address=" +
                                 [&]() {
