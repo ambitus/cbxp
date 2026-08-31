@@ -14,12 +14,6 @@
 
 namespace CBXP {
 
-bool ControlBlockExplorer::control_blocks_init_failed_ = false;
-
-std::unordered_map<std::string, ControlBlock>
-    ControlBlockExplorer::control_blocks_ =
-        ControlBlockExplorer::buildControlBlockMap();
-
 std::unordered_map<std::string, ControlBlock>
 ControlBlockExplorer::loadCustomControlBlocks(
     const nlohmann::json_schema::json_validator& cbxp_schema_validator,
@@ -65,57 +59,67 @@ std::string ControlBlockExplorer::mapToString(
   return map_as_string;
 }
 
-std::unordered_map<std::string, ControlBlock>
-ControlBlockExplorer::buildControlBlockMap() {
+const std::unordered_map<std::string, ControlBlock>&
+ControlBlockExplorer::getControlBlocks() {
   // The bundled json-schema-validator only supports draft-07. The schema has
   // been updated to draft/2020-12 ($defs, dependentRequired, etc.), so we
   // construct a no-op validator here until the validator is upgraded.
   nlohmann::json_schema::json_validator cbxp_schema_validator;
-  std::unordered_map<std::string, ControlBlock> control_blocks;
-  // Load known control blocks
-  try {
-    control_blocks = {
-        { "psa",
-         ControlBlock(cbxp_schema_validator,  nlohmann::json::parse(PSA_JSON))},
-        { "cvt",
-         ControlBlock(cbxp_schema_validator,  nlohmann::json::parse(CVT_JSON))},
-        {"ecvt",
-         ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ECVT_JSON))},
-        {"asvt",
-         ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASVT_JSON))},
-        {"ascb",
-         ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASCB_JSON))},
-        {"assb",
-         ControlBlock(cbxp_schema_validator, nlohmann::json::parse(ASSB_JSON))},
-        //{"oucb", ControlBlock(cbxp_schema_validator, OUCB_JSON)},
-        //{"ldax", ControlBlock(cbxp_schema_validator, LDAX_JSON)},
-    };
-  } catch (const std::exception& e) {
-    control_blocks_init_failed_ = true;
-    return {};
-  }
 
-  // Load custom control blocks
-  std::string env_p(std::getenv("CBXPPATH"));
-  if (env_p.empty()) {
-    return control_blocks;
-  }
-  // Logic for loading custom control block mappings, overwriting any that were
-  // already loaded with custom mappings as well.
-  std::filesystem::path cbxp_path(env_p);
-  for (const auto& path : cbxp_path) {
-    std::unordered_map<std::string, ControlBlock> custom_control_blocks =
-        ControlBlockExplorer::loadCustomControlBlocks(cbxp_schema_validator,
-                                                      path);
-    if (!custom_control_blocks.empty()) {
-      Logger::getInstance().debug(
-          "Added the following custom control blocks from path '" +
-          path.string() +
-          "': " + ControlBlockExplorer::mapToString(custom_control_blocks));
-      custom_control_blocks.insert(control_blocks.begin(),
-                                   control_blocks.end());
+  // Magic static: initialized on first call, after main() and the logger are
+  // ready, so any parse/construction errors are visible in debug output.
+  static std::unordered_map<std::string, ControlBlock> control_blocks = [&]() {
+    std::unordered_map<std::string, ControlBlock> map;
+    try {
+      map = {
+          { "psa", ControlBlock(cbxp_schema_validator,
+           nlohmann::json::parse(PSA_JSON)) },
+          { "cvt", ControlBlock(cbxp_schema_validator,
+           nlohmann::json::parse(CVT_JSON)) },
+          {"ecvt", ControlBlock(cbxp_schema_validator,
+           nlohmann::json::parse(ECVT_JSON))},
+          {"asvt", ControlBlock(cbxp_schema_validator,
+           nlohmann::json::parse(ASVT_JSON))},
+          {"ascb", ControlBlock(cbxp_schema_validator,
+           nlohmann::json::parse(ASCB_JSON))},
+          {"assb", ControlBlock(cbxp_schema_validator,
+           nlohmann::json::parse(ASSB_JSON))},
+          //{"oucb", ControlBlock(cbxp_schema_validator, OUCB_JSON)},
+          //{"ldax", ControlBlock(cbxp_schema_validator, LDAX_JSON)},
+      };
+    } catch (const std::exception& e) {
+      Logger::getInstance().debug("Initialization of JSON mappings failed: " +
+                                  std::string(e.what()));
+      return map;
     }
-  }
+
+    // Load custom control blocks
+    const char* cbxp_path_env = std::getenv("CBXPPATH");
+    if (cbxp_path_env == nullptr) {
+      return map;
+    }
+    std::string env_p(cbxp_path_env);
+    if (env_p.empty()) {
+      return map;
+    }
+    // Logic for loading custom control block mappings, overwriting any that
+    // were already loaded with custom mappings as well.
+    std::filesystem::path cbxp_path(env_p);
+    for (const auto& path : cbxp_path) {
+      std::unordered_map<std::string, ControlBlock> custom_control_blocks =
+          ControlBlockExplorer::loadCustomControlBlocks(cbxp_schema_validator,
+                                                        path);
+      if (!custom_control_blocks.empty()) {
+        Logger::getInstance().debug(
+            "Added the following custom control blocks from path '" +
+            path.string() +
+            "': " + ControlBlockExplorer::mapToString(custom_control_blocks));
+        custom_control_blocks.insert(map.begin(), map.end());
+      }
+    }
+    return map;
+  }();
+
   return control_blocks;
 }
 
@@ -191,14 +195,13 @@ void ControlBlockExplorer::processControlBlock(
   nlohmann::json control_block_json = {};
 
   try {
-    if (control_blocks_init_failed_) {
-      Logger::getInstance().debug(
-          "Static initialization of JSON mappings failed.");
+    const auto& control_blocks = ControlBlockExplorer::getControlBlocks();
+    if (control_blocks.empty()) {
       throw CbxpJsonError();
     }
-    if (control_blocks_.find(control_block_name) != control_blocks_.end()) {
+    if (control_blocks.find(control_block_name) != control_blocks.end()) {
       ExplorerOptionsMap explorer_options =
-          ExplorerOptionsMap(cbxp_options_, control_block_name, control_blocks_,
+          ExplorerOptionsMap(cbxp_options_, control_block_name, control_blocks,
                              p_control_block_, control_block_data_length_);
       control_block_json = explorer_options.getControlBlockData();
     } else {

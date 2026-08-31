@@ -18,14 +18,13 @@ class ControlBlockExplorer {
   size_t control_block_data_length_    = 0;
   std::string control_block_operation_ = "";
 
-  static bool control_blocks_init_failed_;
-  static std::unordered_map<std::string, ControlBlock> control_blocks_;
   static std::string mapToString(
       const std::unordered_map<std::string, ControlBlock>& map);
   static std::unordered_map<std::string, ControlBlock> loadCustomControlBlocks(
       const nlohmann::json_schema::json_validator& cbxp_schema_validator,
       std::filesystem::path path);
-  static std::unordered_map<std::string, ControlBlock> buildControlBlockMap();
+  static const std::unordered_map<std::string, ControlBlock>&
+  getControlBlocks();
   static std::vector<std::string> createOptionsList(
       const std::string& comma_separated_string);
 
