@@ -66,8 +66,7 @@
               "type": "hex",
               "value": "00"
             }
-          ],
-          "pointsTo": "cvt"
+          ]
         },
         {
           "name": "FLCICCW2",
@@ -135,7 +134,6 @@
               "value": "00"
             }
           ],
-          "pointsTo": "cvt",
           "aliases": [
             "PIOPSW"
           ]
@@ -152,7 +150,6 @@
               "value": "00"
             }
           ],
-          "pointsTo": "cvt",
           "aliases": [
             "MCOPSW"
           ]
@@ -169,7 +166,6 @@
               "value": "00"
             }
           ],
-          "pointsTo": "cvt",
           "aliases": [
             "IOOPSW"
           ]
@@ -2752,14 +2748,14 @@
           "description": "RECOVERY STACK VECTOR TABLE",
           "offset": 896,
           "length": 64,
-          "type": "string"
+          "type": "hex"
         },
         {
           "name": "PSARSVTE",
           "description": "RECOVERY STACK VECTOR TABLE",
           "offset": 896,
           "length": 64,
-          "type": "string"
+          "type": "hex"
         },
         {
           "name": "PSACSTK",
