@@ -37,13 +37,16 @@ FieldType ControlBlock::stringToType(const std::string& type_str) {
 
 ControlBlock::ControlBlock(
     const nlohmann::json_schema::json_validator& cbxp_schema_validator,
-    const nlohmann::json& control_block_map) {
-  cbxp_schema_validator.validate(control_block_map);
+    const nlohmann::json& control_block_map)
+    : storage_attributes_{true, false,
+                          control_block_map["storageAttributes"]["key"]
+                              .get<uint8_t>()},
+      control_block_name_(control_block_map["name"].get<std::string>()) {
+  // Schema validation is temporarily disabled until the bundled
+  // json-schema-validator is upgraded to support draft/2020-12.
+  // cbxp_schema_validator.validate(control_block_map);
+  (void)cbxp_schema_validator;
 
-  control_block_length_ = 0;
-  control_block_name_   = control_block_map["name"].get<std::string>();
-  storage_attributes_.key =
-      control_block_map["storageAttributes"]["key"].get<uint8_t>();
   for (auto it = control_block_map["storageAttributes"]["subpools"].begin();
        it != control_block_map["storageAttributes"]["subpools"].end(); ++it) {
     // Subpool entries may be integers or strings (e.g. "nucleus"); skip
