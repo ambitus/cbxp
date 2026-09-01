@@ -494,6 +494,7 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
     control_block_data.merge_patch(field_json);
   }
   for (const auto& [field_name, field_data] : repeated_fields) {
+    nlohmann::json field_json    = {};
     field_json[field_name + "s"] = {};
     // Transform the string in place
     std::transform(field_data.count.begin(), field_data.count.end(),
@@ -506,6 +507,7 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
       field_json[field_name + "s"].push_back(
           ExplorerOptionsMap::fieldToJson(field_data, (i * field_data.length)));
     }
+    control_block_data.merge_patch(field_json);
   }
   return control_block_data;
 }
