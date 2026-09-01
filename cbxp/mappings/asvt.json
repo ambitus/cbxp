@@ -6,7 +6,7 @@
   "description": "",
   "type": "control-block",
   "aliases": [],
-  "pointedToBy": [],
+  "pointedToBy": ["cvt"],
   "storageAttributes": {
     "subpools": [
       245
