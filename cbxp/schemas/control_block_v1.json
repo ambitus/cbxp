@@ -1,0 +1,529 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Control Block",
+  "description": "CBXP Control Block Schema",
+  "type": "object",
+  "$defs": {
+    "initItem": {
+      "description": "A single initialization entry for a control block field",
+      "type": "object",
+      "oneOf": [
+        {
+          "description": "Hex literal initialization (DC XL<n>'...')",
+          "properties": {
+            "type": {
+              "const": "hex"
+            },
+            "value": {
+              "description": "Hex string without surrounding quotes (e.g. '040E0000')",
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]+$"
+            }
+          },
+          "required": [
+            "type",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "String literal initialization (DC CL<n>'...')",
+          "properties": {
+            "type": {
+              "const": "string"
+            },
+            "value": {
+              "description": "Character string value as-is (e.g. '038 ')",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "Address initialization (DC A(...), DC V(...), DC A(X'80000000'+SYM))",
+          "properties": {
+            "type": {
+              "const": "address"
+            },
+            "value": {
+              "description": "Symbol name (e.g. 'IEAVRSTR')",
+              "type": "string",
+              "minLength": 1
+            },
+            "bitmask": {
+              "description": "Optional ORed bitmask applied to the address (e.g. '80000000')",
+              "type": "string",
+              "pattern": "^[0-9A-Fa-f]+$"
+            },
+            "wideExternal": {
+              "description": "True when the address was declared with WXTRN (wide external reference)",
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "type",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "description": "Machine instruction initialization (e.g. SVC 3, BR 14)",
+          "properties": {
+            "type": {
+              "const": "instruction"
+            },
+            "value": {
+              "description": "The assembler instruction mnemonic and operands (e.g. 'SVC   3')",
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "type",
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "initArray": {
+      "description": "Ordered list of initialization data items that together fill the field",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/initItem"
+      }
+    },
+    "equatesArray": {
+      "description": "Standalone EQU constants attached to a field that cannot be represented as bitmasks",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "value"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "bitmasksDef": {
+      "description": "Bit definitions within a field, or the name of another field whose bitmask definitions to reuse",
+      "oneOf": [
+        {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z][a-zA-Z0-9_]*$": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "description": "Description of what this bit or bit field represents",
+                  "type": "string"
+                },
+                "offset": {
+                  "description": "Bit offset within the field (0-based from MSB/leftmost bit)",
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "length": {
+                  "description": "Number of bits (typically 1 for single bit flags)",
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "description",
+                "offset",
+                "length"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "string",
+          "minLength": 1
+        }
+      ]
+    },
+    "fieldCommonProps": {
+      "description": "Common properties shared by all field variants",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the control block field",
+          "type": "string",
+          "minLength": 1
+        },
+        "aliases": {
+          "description": "Alternative names for this field",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "description": {
+          "description": "Control block field description",
+          "type": "string"
+        },
+        "offset": {
+          "description": "Decimal offset to the control block field",
+          "type": "integer"
+        },
+        "length": {
+          "description": "Decimal length of the control block field",
+          "type": "integer"
+        },
+        "repeated": {
+          "description": "Whether this field is a repeated array entry (prototype). Must be used together with 'count'.",
+          "type": "boolean",
+          "const": true
+        },
+        "count": {
+          "description": "Name of the field in this control block whose value gives the number of repetitions. Must be used together with 'repeated'.",
+          "type": "string",
+          "minLength": 1
+        },
+        "alignBefore": {
+          "description": "Alignment boundary in bytes that was explicitly enforced before this field in the original source via an unnamed DS 0D (8), DS 0F (4), or DS 0H (2) directive.",
+          "type": "integer"
+        },
+        "programmingInterface": {
+          "description": "True when this field is documented as a Programming Interface (PI).",
+          "type": "boolean",
+          "const": true
+        },
+        "equates": {
+          "description": "Standalone EQU constants attached to this field (cannot be represented as bitmasks).",
+          "$ref": "#/$defs/equatesArray"
+        },
+        "boundary": {
+          "description": "Memory alignment boundary in bytes",
+          "type": "integer",
+          "enum": [1, 2, 4, 8]
+        }
+      }
+    },
+    "field": {
+      "description": "A single control block field",
+      "type": "object",
+      "oneOf": [
+        {
+          "description": "Standard field (string, integer, hex, bitstring)",
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "description": { "type": "string" },
+            "offset": { "type": "integer" },
+            "length": { "type": "integer" },
+            "type": {
+              "description": "Control block field type",
+              "enum": [
+                "string",
+                "signed-integer",
+                "unsigned-integer",
+                "hex",
+                "address"
+              ]
+            },
+            "init": { "$ref": "#/$defs/initArray" },
+            "repeated": { "type": "boolean", "const": true },
+            "count": { "type": "string", "minLength": 1 },
+            "alignBefore": { "type": "integer" },
+            "programmingInterface": { "type": "boolean", "const": true },
+            "equates": { "$ref": "#/$defs/equatesArray" },
+            "bitmasks": { "$ref": "#/$defs/bitmasksDef" },
+            "boundary": { "type": "integer", "enum": [1, 2, 4, 8] },
+            "children": {
+              "description": "Child fields nested within this container/structure field",
+              "type": "array",
+              "items": { "$ref": "#/$defs/field" }
+            }
+          },
+          "required": ["name", "offset", "length", "type"],
+          "dependentRequired": {
+            "repeated": ["count"],
+            "count": ["repeated"]
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Pointer/hex field that points to another control block",
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "description": { "type": "string" },
+            "offset": { "type": "integer" },
+            "length": { "enum": [4, 8] },
+            "type": { "const": "hex" },
+            "pointsTo": {
+              "description": "Control block that this field points to",
+              "type": "string",
+              "minLength": 1
+            },
+            "init": { "$ref": "#/$defs/initArray" },
+            "repeated": { "type": "boolean", "const": true },
+            "count": { "type": "string", "minLength": 1 },
+            "alignBefore": { "type": "integer" },
+            "programmingInterface": { "type": "boolean", "const": true },
+            "equates": { "$ref": "#/$defs/equatesArray" },
+            "boundary": { "type": "integer", "enum": [1, 2, 4, 8] }
+          },
+          "required": ["name", "offset", "length", "type", "pointsTo"],
+          "dependentRequired": {
+            "repeated": ["count"],
+            "count": ["repeated"]
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Address pointer field that points to another control block",
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "description": { "type": "string" },
+            "offset": { "type": "integer" },
+            "length": { "enum": [4, 8] },
+            "type": { "const": "address" },
+            "pointsTo": {
+              "description": "Control block that this field points to",
+              "type": "string",
+              "minLength": 1
+            },
+            "init": { "$ref": "#/$defs/initArray" },
+            "repeated": { "type": "boolean", "const": true },
+            "count": { "type": "string", "minLength": 1 },
+            "alignBefore": { "type": "integer" },
+            "programmingInterface": { "type": "boolean", "const": true },
+            "equates": { "$ref": "#/$defs/equatesArray" },
+            "boundary": { "type": "integer", "enum": [1, 2, 4, 8] }
+          },
+          "required": ["name", "offset", "length", "type", "pointsTo"],
+          "dependentRequired": {
+            "repeated": ["count"],
+            "count": ["repeated"]
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Bitstring field with bitmask definitions",
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "description": { "type": "string" },
+            "offset": { "type": "integer" },
+            "length": { "type": "integer" },
+            "type": { "const": "bitstring" },
+            "init": { "$ref": "#/$defs/initArray" },
+            "repeated": { "type": "boolean", "const": true },
+            "count": { "type": "string", "minLength": 1 },
+            "bitmasks": { "$ref": "#/$defs/bitmasksDef" },
+            "alignBefore": { "type": "integer" },
+            "programmingInterface": { "type": "boolean", "const": true },
+            "equates": { "$ref": "#/$defs/equatesArray" },
+            "boundary": { "type": "integer", "enum": [1, 2, 4, 8] }
+          },
+          "required": ["name", "offset", "length", "type"],
+          "dependentRequired": {
+            "repeated": ["count"],
+            "count": ["repeated"]
+          },
+          "additionalProperties": false
+        },
+        {
+          "description": "Triplet field: a container for three child fields representing an SMF triplet (offset, length, count). The triplet type enforces exactly 3 children at fixed relative offsets within the 8-byte parent.",
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "description": { "type": "string" },
+            "offset": { "type": "integer" },
+            "length": { "type": "integer", "const": 8 },
+            "type": { "const": "triplet" },
+            "children": {
+              "description": "Exactly 3 child fields: offset (4 bytes), length (2 bytes), count (2 bytes)",
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": { "$ref": "#/$defs/field" }
+            }
+          },
+          "required": ["name", "offset", "length", "type", "children"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "section": {
+      "description": "A single DSECT or logical grouping of fields within a control block",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "DSECT/section name (lowercase)",
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "description": "Optional section description",
+          "type": "string"
+        },
+        "equ": {
+          "description": "Optional length equate expression (e.g. '*-SECTIONNAME'). Captures length EQU directives like 'SMF98SDS_Len EQU *-SMF98SDS'.",
+          "type": "string"
+        },
+        "fields": {
+          "description": "List of fields in this section",
+          "type": "array",
+          "items": { "$ref": "#/$defs/field" }
+        }
+      },
+      "required": ["name", "fields"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "version": {
+      "description": "CBXP control block schema version",
+      "const": 1
+    },
+    "type": {
+      "description": "Mapping category: 'smf-record' for SMF record layouts, 'control-block' for z/OS control blocks",
+      "type": "string",
+      "enum": ["smf-record", "control-block"]
+    },
+    "name": {
+      "description": "Control block name",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8
+    },
+    "commonName": {
+      "description": "Full control block name",
+      "type": "string",
+      "minLength": 1
+    },
+    "macroId": {
+      "description": "Macro invocation name (e.g. ihapsa for the IHAPSA macro)",
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "description": "Control block description",
+      "type": "string"
+    },
+    "aliases": {
+      "description": "Alternative names for this control block (ACRONYM, EYE-CATCHER, DSECT name, etc.)",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 8
+      }
+    },
+    "pointedToBy": {
+      "description": "List of control blocks that points to this control block",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "storageAttributes": {
+      "description": "Storage attributes for this control block",
+      "type": "object",
+      "properties": {
+        "subpools": {
+          "description": "Subpool numbers this control block resides in. An empty array indicates 'ANY' or unknown subpool. Numeric subpools are integers (0-255); ambiguous named values (e.g. 'Nucleus') are strings.",
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              },
+              {
+                "type": "string",
+                "minLength": 1
+              }
+            ]
+          }
+        },
+        "key": {
+          "description": "Storage key (0-8)",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "residency": {
+          "description": "RMODE of this control block: 24 = below 16M line (RMODE24), 31 = below 2G bar (RMODE31), 64 = above 2G bar (RMODE64), null = any/unknown (RMODEANY).",
+          "oneOf": [
+            {
+              "type": "integer",
+              "enum": [
+                24,
+                31,
+                64
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "subpools",
+        "key",
+        "residency"
+      ],
+      "additionalProperties": false
+    },
+    "constants": {
+      "description": "Named constants declared with DCL ... Constant(...)",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "description": "Constant name", "type": "string", "minLength": 1 },
+          "value": { "description": "Constant value (numeric or string)", "oneOf": [{"type": "number"}, {"type": "string"}] },
+          "length": { "description": "Optional explicit length for character constants", "type": "integer", "minimum": 1 },
+          "description": { "description": "Optional constant description", "type": "string" }
+        },
+        "required": ["name", "value"],
+        "additionalProperties": false
+      }
+    },
+    "sections": {
+      "description": "List of DSECTs/sections that make up this control block. Single-DSECT control blocks have one entry; multi-DSECT structures (e.g. SMF records) have multiple entries.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/section" }
+    }
+  },
+  "required": [
+    "version",
+    "name",
+    "commonName",
+    "pointedToBy",
+    "sections"
+  ],
+  "additionalProperties": false
+}

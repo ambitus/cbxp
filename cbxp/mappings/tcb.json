@@ -1,0 +1,1622 @@
+{
+  "version": 1,
+  "name": "stcb",
+  "commonName": "Secondary Task Control Block (TCB)",
+  "macroId": "ihastcb",
+  "description": "The secondary task control block (STCB) allows task-related information to be kept above 16 megabytes.",
+  "type": "control-block",
+  "aliases": [
+    "tcb"
+  ],
+  "pointedToBy": [
+    "psa"
+  ],
+  "storageAttributes": {
+    "subpools": [
+      253
+    ],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "stcb",
+      "description": "",
+      "fields": [
+        {
+          "name": "STCBEGIN",
+          "description": "BEGINNING OF STCB",
+          "offset": 0,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBSTCB",
+          "description": "ACRONYM IN EBCDIC -STCB-",
+          "offset": 0,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCBRACP",
+          "description": "POINTER TO RACF DATA FOR THIS TASK. OWNERSHIP: RACF. SERIALIZATION: NONE.",
+          "offset": 4,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "racf"
+        },
+        {
+          "name": "STCBDIVF",
+          "description": "POINTER TO 1ST DOA (DIV OBJECT ACCESS CONTROL BLOCK) FOR TCB. OWNERSHIP: DIV. SERIALIZATION: CML LOCK.",
+          "offset": 8,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBDIVL",
+          "description": "POINTER TO LAST DOA FOR TCB. OWNERSHIP: DIV. SERIALIZATION: CML LOCK.",
+          "offset": 12,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBAFNS",
+          "description": "ORIGINAL CPU AFFINITY SAVE AREA USED TO SAVE TCBAFFN",
+          "offset": 16,
+          "length": 2,
+          "type": "bitstring"
+        },
+        {
+          "name": "STCBCTSC",
+          "description": "Number of consecutive dispatches remaining for this task",
+          "offset": 18,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBESSA",
+          "description": "Address of ESSA",
+          "offset": 20,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "essa"
+        },
+        {
+          "name": "STCBR018",
+          "description": "Reserved",
+          "offset": 24,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "STCBFLG1",
+          "description": "FLAG BYTE OWNERSHIP: SUPERVISOR CONTROL SERIALIZATION: TASK MODE IS TCBACTIV SRB MODE IS LOCAL LOCK",
+          "offset": 25,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBPIQ": {
+              "description": "INDICATES TO STAGE 3 EXIT EFFECTOR THAT IRB QUEUEING IS PROHIBITED. USE ONLY FOR ASYMMETRIC FEATURE PROCESSING.",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBSST": {
+              "description": "Indicates that the task is a Subspace task.",
+              "offset": 3,
+              "length": 1
+            },
+            "STCBCLUP": {
+              "description": "Cleanup only                  991006",
+              "offset": 4,
+              "length": 1
+            },
+            "STCBNTRM": {
+              "description": "Name Token cleanup complete for this CMRO task",
+              "offset": 5,
+              "length": 1
+            },
+            "STCBJAC": {
+              "description": "Job action",
+              "offset": 6,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "STCBR01A",
+          "description": "Reserved",
+          "offset": 26,
+          "length": 2,
+          "type": "hex"
+        },
+        {
+          "name": "STCBCMP",
+          "description": "Task completion code. STCBCMP is valid ONLY after its owning TCB has terminated.  It may contain different information than TCBCMP because TCBCMP may be altered to provide an Initiator-specific final jobstep status. Ownership: RTM",
+          "offset": 28,
+          "length": 4,
+          "type": "bitstring",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBCMPF",
+          "description": "When TcbEndingAbnormally is off, as of HBB7780 contains byte 4 of 64-bit GPR 15 when the last program to run in this task returned normally to the system. Otherwise, 'undefined'.",
+          "offset": 28,
+          "length": 1,
+          "type": "unsigned-integer"
+        },
+        {
+          "name": "STCBCMPC",
+          "description": "When TcbEndingAbnormally is on, contains the completion code for which this task abnormally terminated.  The first 12 bits contain the system completion code or the last 12 bits contain the user completion code. When TCBEndingAbnormally is off, contains bytes 5-7 of 64-bit GPR 15 when the last program to run in this task returned normally to",
+          "offset": 29,
+          "length": 3,
+          "type": "bitstring"
+        },
+        {
+          "name": "STCBALOV",
+          "description": "WORK UNIT ACCESS LIST VIRTUAL ADDRESS. OWNERSHIP: PC/AUTH. SERIALIZATION: TCBACTIV.",
+          "offset": 32,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBALD",
+          "description": "WORK UNIT ACCESS LIST DESIGNATOR. BITS 1-24 WITH SEVEN ZEROES APPENDED ON THE RIGHT FORM THE 31-BIT REAL ADDRESS OF THE WORKUNIT'S ACCESS LIST. BITS 25-31 REPRESENT THE NUMBER OF 128 BYTE ACCESS LISTS, MINUS ONE. OWNERSHIP: PC/AUTH. SERIALIZATION: TCBACTIV.",
+          "offset": 36,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBDUCV",
+          "description": "VIRTUAL ADDRESS OF THE DUCT. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: TCBACTIV.",
+          "offset": 40,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBR02C",
+          "description": "Reserved. Was STCBDUCR",
+          "offset": 44,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBARS",
+          "description": "ACCESS REGISTER SAVEAREA. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: DISABLEMENT.",
+          "offset": 48,
+          "length": 64,
+          "type": "hex"
+        },
+        {
+          "name": "STCBAR0",
+          "description": "ACCESS REGISTER 0 SAVE AREA.",
+          "offset": 48,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR1",
+          "description": "ACCESS REGISTER 1 SAVE AREA.",
+          "offset": 52,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR2",
+          "description": "ACCESS REGISTER 2 SAVE AREA.",
+          "offset": 56,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR3",
+          "description": "ACCESS REGISTER 3 SAVE AREA.",
+          "offset": 60,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR4",
+          "description": "ACCESS REGISTER 4 SAVE AREA.",
+          "offset": 64,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR5",
+          "description": "ACCESS REGISTER 5 SAVE AREA.",
+          "offset": 68,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR6",
+          "description": "ACCESS REGISTER 6 SAVE AREA.",
+          "offset": 72,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR7",
+          "description": "ACCESS REGISTER 7 SAVE AREA.",
+          "offset": 76,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR8",
+          "description": "ACCESS REGISTER 8 SAVE AREA.",
+          "offset": 80,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR9",
+          "description": "ACCESS REGISTER 9 SAVE AREA.",
+          "offset": 84,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR10",
+          "description": "ACCESS REGISTER 10 SAVE AREA.",
+          "offset": 88,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR11",
+          "description": "ACCESS REGISTER 11 SAVE AREA.",
+          "offset": 92,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR12",
+          "description": "ACCESS REGISTER 12 SAVE AREA.",
+          "offset": 96,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR13",
+          "description": "ACCESS REGISTER 13 SAVE AREA.",
+          "offset": 100,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR14",
+          "description": "ACCESS REGISTER 14 SAVE AREA.",
+          "offset": 104,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBAR15",
+          "description": "ACCESS REGISTER 15 SAVE AREA.",
+          "offset": 108,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBLSSD",
+          "description": "VIRTUAL ADDRESS OF THE LSSD FOR THE TASK. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: LOCAL LOCK.",
+          "offset": 112,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBLSDP",
+          "description": "LINKAGE STACK ENTRY DESCRIPTOR (LSED) POINTER. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: DISABLEMENT.",
+          "offset": 116,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBRME",
+          "description": "TASK RELATED RESOURCE MANAGER QUEUE POINTERS. OWNERSHIP: RTM. SERIALIZATION: LOCAL LOCK.",
+          "offset": 120,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBRMEF",
+          "description": "POINTER TO HEAD OF TASK RELATED RESOURCE MANAGER QUEUE.",
+          "offset": 120,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "head"
+        },
+        {
+          "name": "STCBRMEL",
+          "description": "POINTER TO TAIL OF TASK RELATED RESOURCE MANAGER QUEUE.",
+          "offset": 124,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "tail"
+        },
+        {
+          "name": "STCBESTK",
+          "description": "VIRTUAL ADDRESS OF THE LINKAGE STACK ENTRY DESCRIPTOR (LSED) REPRESENTING AN EMPTY LINKAGE STACK. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: N/A.",
+          "offset": 128,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBFLG2",
+          "description": "FLAG BYTE OWNERSHIP: RTM,CSV. SERIALIZATION: LOCAL LOCK.",
+          "offset": 132,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBRMET": {
+              "description": "IF ON, INDICATES TASK IS IN TERMINATION AND NO FURTHER RESOURCE MANAGER REQUESTS WILL BE HONORED.",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBINRT": {
+              "description": "The task is processing within RTLS. An IRB must not issue a CSVRTLS request.",
+              "offset": 1,
+              "length": 1
+            },
+            "STCBPROP": {
+              "description": "ATTACH is propagating the PKM.",
+              "offset": 2,
+              "length": 1
+            },
+            "STCBRMAT": {
+              "description": "Resource Manager abnormal termination has begun",
+              "offset": 4,
+              "length": 1
+            },
+            "STCBRMNS": {
+              "description": "Resource Manager encountered \"no storage\" after abnormal termination has begun",
+              "offset": 5,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBFLG3",
+          "description": "FLAG BYTE OWNERSHIP: RTM. SERIALIZATION: TCBACTIV",
+          "offset": 133,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBNCNL": {
+              "description": "TASK IS NOT SUBJECT TO CANCEL OR DETACH.",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBNOAB": {
+              "description": "NCNL EXTENSION",
+              "offset": 1,
+              "length": 1
+            },
+            "STCBRTNC": {
+              "description": "ABTERMS OF THIS TASK ARE TO BE DEFERRED WHILE RTM2 PROCESSING IS ACTIVE",
+              "offset": 2,
+              "length": 1
+            },
+            "STCBEOM": {
+              "description": "TASK IS CALLING END OF MEMORY RESOURCE MANAGERS",
+              "offset": 3,
+              "length": 1
+            },
+            "STCBNUAT": {
+              "description": "No unauthorized attaches",
+              "offset": 4,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "STCBNSTP",
+          "description": "COUNT OF REQUESTS TO IGNORE SRB TO TASK PERCOLATIONS OWNERSHIP: RTM. SERIALIZATION: TCBACTIV",
+          "offset": 134,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBTLSD",
+          "description": "ADDRESS OF TASK RELATED LSSD FOR THE LINKAGE STACK FROM DREF STORAGE",
+          "offset": 136,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBTLSP",
+          "description": "ADDRESS OF TASK RELATED INITIAL LSED FOR THE LINKAGE STACK FROM DREF STORAGE",
+          "offset": 140,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBTTKN",
+          "description": "TTOKEN FOR THIS TASK OWNERSHIP: SUPERVISOR CONTROL SERIALIZATION: LOCAL LOCK This is an interface, and does not require serialized access, for the following cases only: 1.Your task (TCB address is in PSATOLD) 2.Any ancestor task. Note that when your task is part of the jobstep program task",
+          "offset": 144,
+          "length": 16,
+          "type": "string",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBALOC",
+          "description": "POINTER TO DYNAMIC STORAGE BUFFER OWNERSHIP: ALLOCATION SERIALIZATION: NONE",
+          "offset": 160,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "dynamic"
+        },
+        {
+          "name": "STCBR0A4",
+          "description": "RESERVED.",
+          "offset": 164,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "STCBCRYP",
+          "description": "Crypto flags. Ownership: ICSF Serialization: none",
+          "offset": 165,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBUICS": {
+              "description": "This task is using ICSF Crypto services.",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBCRNQ": {
+              "description": "This task is using ICSF key data set serialization.",
+              "offset": 1,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "STCBTAFA",
+          "description": "Transient feature affinity. SERIALIZATION: TCBACTIV OWNERSHIP: SUPERVISOR CONTROL",
+          "offset": 166,
+          "length": 2,
+          "type": "hex"
+        },
+        {
+          "name": "STCBTHTN",
+          "description": "Task Hash Table next STCB address",
+          "offset": 168,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBMIOC",
+          "description": "Count of currently outstanding MM I/Os per TCB Ownership: Media Manager Serialization: CS",
+          "offset": 172,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBMEMC",
+          "description": "Count of XCF members under this task. OWNERSHIP: XCF. SERIALIZATION: Compare-and-Swap.",
+          "offset": 176,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBXCFF",
+          "description": "XCF FLAG. OWNERSHIP: XCF. SERIALIZATION: TCBACTIV.",
+          "offset": 180,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBSUSM": {
+              "description": "Bit flag for use by XCF.",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBXCF_ISSERVER": {
+              "description": "Bit flag for use by XCF.",
+              "offset": 1,
+              "length": 1
+            },
+            "STCBXCF_ISRECEIVER": {
+              "description": "Bit flag for use by XCF.",
+              "offset": 2,
+              "length": 1
+            },
+            "STCBXCF_ISSENDER": {
+              "description": "Bit flag for use by XCF.",
+              "offset": 3,
+              "length": 1
+            },
+            "STCBXCF_ISFAILED": {
+              "description": "Bit flag for use by XCF.",
+              "offset": 4,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "STCBFLG4",
+          "description": "Flag byte 4.",
+          "offset": 181,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBENFL": {
+              "description": "If on, indicates task issued ENF listen request. Ownership: ENF. Serialization: None.",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBVSMM": {
+              "description": "If on, indicates task has a buffered IEA705I message Ownership: VSM. Serialization: None.",
+              "offset": 1,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "STCBFLG5",
+          "description": "Flag byte 5.",
+          "offset": 182,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBUNCK": {
+              "description": "If on, user requests no checkpoint. Ownership: Scheduler/Allocation. Serialization: None.",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBENCK": {
+              "description": "If on, checkpoint not honored due to environmental constraints. Ownership: Scheduler/Allocation. Serialization: None.",
+              "offset": 1,
+              "length": 1
+            },
+            "STCBOPTC": {
+              "description": "If on, indicates task is running under control of the OpenMVS Ptrace debugger. Ownership: OpenMVS. Serialization: Compare-and-Swap",
+              "offset": 2,
+              "length": 1
+            },
+            "STCBJSST": {
+              "description": "If on, this is the jobstep program task of a single step started task Ownership: Scheduler. Serialization: None.",
+              "offset": 3,
+              "length": 1
+            },
+            "STCBNOAE": {
+              "description": "If on, no AEs should be built for this task Ownership: Scheduler. Serialization: None.",
+              "offset": 4,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "STCBFLG6",
+          "description": "Flag byte 6. Serialization: None",
+          "offset": 183,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBSATF": {
+              "description": "If on, indicates that RACF should check TCBNCTL in this TCB rather than finding the jobstep TCB when performing program protection.",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBFCAP": {
+              "description": "If on, this task passed the resource check Ownership: IOS Serialization: TCBACTIV",
+              "offset": 1,
+              "length": 1
+            },
+            "STCBFCPP": {
+              "description": "If on, this task performed the resource check Ownership: IOS Serialization: TCBACTIV",
+              "offset": 2,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBDFTS",
+          "description": "ADDRESS OF THE DFP-SMSX STRUCTURE FOR THE TASK. OWNERSHIP: DFP. SERIALIZATION: NONE",
+          "offset": 184,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBJSAB",
+          "description": "ADDRESS OF JOB SCHEDULER ADDRESS SPACE BLOCK. OWNERSHIP: CONTROLLING JOB SCHEDULER. SERIALIZATION: SEE MACRO IAZXJSAB.",
+          "offset": 188,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBTTCB",
+          "description": "TCPIP STCB Extension Ownership: TCPIP Serialization: Compare and Swap when this task is activated as a TCPIP client",
+          "offset": 192,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBRGSV",
+          "description": "Registration Services Indicators Ownership: Registration Services Serialization: RegServ Lock.",
+          "offset": 196,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBRGS1",
+          "description": "First Byte of Indicators",
+          "offset": 196,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBRGRM": {
+              "description": "Task has registered as one or more resource managers.",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBRGEM": {
+              "description": "Task has registered as one or more exit managers.",
+              "offset": 1,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "STCBRGS2",
+          "description": "Unused but reserved by CRG",
+          "offset": 197,
+          "length": 3,
+          "type": "hex"
+        },
+        {
+          "name": "STCBNTTP",
+          "description": "Address of task level Name/Token header. Ownership: Supervisor Control. Serialization: Local lock.",
+          "offset": 200,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBCON#",
+          "description": "NUMBER OF IXLCONNS IN EFFECT FOR THIS TASK. OWNERSHIP: SYSTEM LOCK MANAGER. SERIALIZATION: TCBACTIV.",
+          "offset": 204,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBRCTS",
+          "description": "REFERENCE PATTERN COUNTS. OWNERSHIP: RSM. SERIALIZATION: RSMAD LOCK FOR THE ADDRESS SPACE OF THE TASK.",
+          "offset": 208,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBARCT",
+          "description": "NUMBER OF REFERENCE PATTERNS SPECIFIED FOR ADDRESS SPACE VIRTUAL STORAGE.",
+          "offset": 208,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBDRCT",
+          "description": "NUMBER OF REFERENCE PATTERNS SPECIFIED FOR DATA SPACE VIRTUAL STORAGE.",
+          "offset": 210,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBDFP",
+          "description": "RESERVED FOR USE BY DFP. OWNERSHIP: DFP. SERIALIZATION: LOCAL LOCK.",
+          "offset": 212,
+          "length": 4,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBOAM": {
+              "description": "TASK IS A USER OF OAM RESOURCES.",
+              "offset": 24,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "STCBOTCB",
+          "description": "Address of OpenMVS Task Control Block. Ownership: OpenMVS. Serialization: Local lock.",
+          "offset": 216,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "openmvs",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBCDXH",
+          "description": "ADDRESS OF THE JOB PACK QUEUE CDE EXTENSIONS HASH TABLE. OWNERSHIP: CONTENTS SUPERVISOR (CSV) SERIALIZATION: LOCAL LOCK.",
+          "offset": 220,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBSJST",
+          "description": "ADDRESS OF THE LOCAL STORAGE OBTAINED BY THE SJF CONTROL MODULE. OWNERSHIP: SCHEDULER JCL FACILITY. SERIALIZATION: NONE.",
+          "offset": 224,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBATAD",
+          "description": "Address of the ATTACH SVC in the routine which created this task. If the low bit is on, SVC 2A was issued from a program above 2G and STCBATAD contains the low half of the address",
+          "offset": 228,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBWEB",
+          "description": "Address of task's WEB. SERIALIZATION: Disablement. OWNERSHIP: Task Management.",
+          "offset": 232,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBSEQN",
+          "description": "RB Sequence Number Counter. Ownership: Supervisor Control. Serialization: Compare-and-Swap.",
+          "offset": 236,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBXCNT",
+          "description": "Count of currently outstanding EXCPs per TCB. Ownership: EXCP. Serialization: Local lock.",
+          "offset": 240,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBCONS",
+          "description": "Console Flag. Ownership: Consoles. Serialization: None.",
+          "offset": 242,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBWTO": {
+              "description": "Jobstep TCB issued a WTO",
+              "offset": 0,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "STCBFLG7",
+          "description": "Flag byte 7.",
+          "offset": 243,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "STCBPECB",
+          "description": "ECB used internally by RTM processing during task termination. Ownership: RTM. Serialization: Local lock.",
+          "offset": 244,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBIXGL",
+          "description": "Pointer to SLC task related information. Ownership: System Logger. Serialization: Local lock.",
+          "offset": 248,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "slc"
+        },
+        {
+          "name": "STCBDETA",
+          "description": "Address of Task being Detached by this Task. Ownership: Detach Serialization: Local Lock",
+          "offset": 252,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBPQUE",
+          "description": "Address of the next Task that requires Parallel Detach protection Ownership: RTM Serialization: Local Lock",
+          "offset": 256,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBCNZL",
+          "description": "Count of Console resources held by this Task Ownership: Consoles Serialization: Compare and Swap",
+          "offset": 260,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCBSTSB",
+          "description": "Address of the STSB (IWMSTSB). Ownership: WLM Serialization: WLMQ lock.",
+          "offset": 264,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBEUTK",
+          "description": "Execution unit token for this task Ownership: WLM",
+          "offset": 268,
+          "length": 8,
+          "type": "string"
+        },
+        {
+          "name": "STCBENCR",
+          "description": "Address of the root task in the current attach chain.  NOTE:  This field is only valid if this task's WEBTYPE=WEBTETCB. Ownership: Supervisor Serialization: TCBACTIV (executing under task in module IEAVJOIN.)",
+          "offset": 276,
+          "length": 4,
+          "type": "address",
+          "equates": [
+            {
+              "name": "STCBENJS",
+              "value": "X'80'",
+              "description": "Join with subtasks. NOTE: This field is valid only for the root TCB when that TCB's WEBTYPE is WEBTETCB. Ownership: Supervisor Serialization: TCBACTIV (executing under task in module IEAVJOIN or IEAVLEAV.)"
+            }
+          ]
+        },
+        {
+          "name": "STCBENCC",
+          "description": "Count of subtasks that have joined the root task's enclave via attach.  NOTE:  This field is only valid for the root tcb (STCBENCR). Also, it is only valid if the root tcb's WEBTYPE is WEBTETCB. Ownership: Supervisor Serialization:  Enclave queue lock.",
+          "offset": 280,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBDB2",
+          "description": "Token used by DB/2. Serialization: TCBACTIV",
+          "offset": 284,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "purge",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBVFRB",
+          "description": "Vector facility RB",
+          "offset": 288,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "purge"
+        },
+        {
+          "name": "STCBPMOM",
+          "description": "Address of purge-only Mother Task Ownership: RTM Serialization: local lock",
+          "offset": 292,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "purge"
+        },
+        {
+          "name": "STCBOFLG",
+          "description": "Openedition flags",
+          "offset": 296,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCBBCBA",
+          "description": "Address of SOMObjects data structure Ownership: SOMObjects for OS/390 Serialization: CS",
+          "offset": 300,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBFLCS",
+          "description": "CS-serialized flags",
+          "offset": 304,
+          "length": 4,
+          "type": "hex"
+        },
+        {
+          "name": "STCBFLC0",
+          "description": "Byte 0 of CS-serialized flags",
+          "offset": 304,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBTRST": {
+              "description": "RACF program control trust",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBNTRS": {
+              "description": "RACF program control non-trust",
+              "offset": 1,
+              "length": 1
+            },
+            "STCBPSEN": {
+              "description": "Copy of RCVTPSEN at the time the task was attached. Valid only for jobstep task",
+              "offset": 2,
+              "length": 1
+            },
+            "STCBPSBA": {
+              "description": "RACF basic program security",
+              "offset": 3,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBFLC1",
+          "description": "Byte 1 of CS-serialized flags",
+          "offset": 305,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "STCBFLC2",
+          "description": "Byte 2 of CS-serialized flags",
+          "offset": 306,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "STCBFLC3",
+          "description": "Byte 3 of CS-serialized flags",
+          "offset": 307,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "STCBVREQ",
+          "description": "State of outstanding VTAM requests for this task. Ownership: VTAM Serialization: Modified only by VTAM requests running under this task.",
+          "offset": 308,
+          "length": 4,
+          "type": "hex",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBAFPR",
+          "description": "FP save area: 1,3,5,7-15,FPCR",
+          "offset": 312,
+          "length": 100,
+          "type": "string",
+          "equates": [
+            {
+              "name": "STCBFPCR",
+              "value": "STCBAFPR+96",
+              "description": "+96         FPCR"
+            }
+          ]
+        },
+        {
+          "name": "STCBFPFL",
+          "description": "FP Flags Serialization: TCBACTIV",
+          "offset": 412,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "STCBBFP": {
+              "description": "Extended FP saving rqd",
+              "offset": 0,
+              "length": 1
+            },
+            "STCBRI": {
+              "description": "RI authorized",
+              "offset": 1,
+              "length": 1
+            },
+            "STCBNS64": {
+              "description": "Used by ESPIE processing to tell the dispatcher not to save the upper halves of the GPRs",
+              "offset": 2,
+              "length": 1
+            },
+            "STCBVSS": {
+              "description": "Vector status saving is active. This bit is in the same byte as STCBBFP so that the dispatcher can check both with one test",
+              "offset": 3,
+              "length": 1
+            },
+            "STCBGSF": {
+              "description": "GSF active for this task",
+              "offset": 5,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBIPKF",
+          "description": "Initial PKF. This is used to deal with propagating PKM. If you change TCBPKF, you should change STCBIPKF to match if you want PKM propagation.",
+          "offset": 413,
+          "length": 1,
+          "type": "hex",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBIPKM",
+          "description": "Initial PKM. This is used to deal with propagating PKM. If you change TCBPKF, you should change STCBIPKM to match if you want PKM propagation.",
+          "offset": 414,
+          "length": 2,
+          "type": "hex",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBG64H",
+          "description": "High halves of 64-bit GPRs",
+          "offset": 416,
+          "length": 64,
+          "type": "hex"
+        },
+        {
+          "name": "STCB_TTIME",
+          "description": "Aligned copy of TCBTTIME",
+          "offset": 480,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCB_TTIME_ON_zCBP",
+          "description": "zCBP TCB time",
+          "offset": 488,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_TTIME_ON_IFA",
+          "description": "IFA TCB time",
+          "offset": 488,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_TTIME_ON_CP",
+          "description": "Standard CP TCB time",
+          "offset": 496,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBALC",
+          "description": "Allocation field",
+          "offset": 504,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBUSER",
+          "description": "User field. Owner: target module of the ATTACH. Must be set only by that module or a module in its component",
+          "offset": 508,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBOTCA",
+          "description": "Address of OTCB Alternate Anchor For Cleanup Ownership: USS Serialization: run under this task.",
+          "offset": 512,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "otcb"
+        },
+        {
+          "name": "STCBLAA",
+          "description": "Address of LE Library Anchor Area",
+          "offset": 516,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "le",
+          "programmingInterface": true
+        },
+        {
+          "name": "STCBSCA",
+          "description": "SPIE/ESPIE-related fields",
+          "offset": 520,
+          "length": 528,
+          "type": "string"
+        },
+        {
+          "name": "STCBPIE",
+          "description": "Address of PIE control block",
+          "offset": 520,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "pie"
+        },
+        {
+          "name": "STCBPMSK",
+          "description": "Program Mask at time of SPIE initiation. Restored at SPIE nullification.",
+          "offset": 524,
+          "length": 1,
+          "type": "string"
+        },
+        {
+          "name": "STCBFLG8",
+          "description": "ESPIE flags",
+          "offset": 525,
+          "length": 1,
+          "type": "string",
+          "equates": [
+            {
+              "name": "STCBTYPE",
+              "value": "X'80'",
+              "description": "If 1 then an ESPIE exit is in control. If 0 then a SPIE exit is in control. This bit is only meaningful if PIENOPI is set to 1"
+            },
+            {
+              "name": "STCBLESR",
+              "value": "X'40'",
+              "description": "If 1 then the ESPIE SRB should call LE"
+            }
+          ]
+        },
+        {
+          "name": "STCBSPOV",
+          "description": "Count of SPIE/ESPIE overrides Ownership: RTM Serialization: Run under this task or have it set non-dispatchable",
+          "offset": 526,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBPRMS",
+          "description": "PC-FLIHs SRB parms",
+          "offset": 528,
+          "length": 16,
+          "type": "string"
+        },
+        {
+          "name": "STCBRBP",
+          "description": "Address of RB which had the program interrupt",
+          "offset": 528,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "rb"
+        },
+        {
+          "name": "STCBILCP",
+          "description": "ILC and interrupt code from the program interrupt",
+          "offset": 532,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCBILC",
+          "description": "Instruction length code",
+          "offset": 533,
+          "length": 1,
+          "type": "string"
+        },
+        {
+          "name": "STCBINTC",
+          "description": "Program Interrupt Code",
+          "offset": 534,
+          "length": 2,
+          "type": "string"
+        },
+        {
+          "name": "STCBPPSW",
+          "description": "PSW at program interrupt",
+          "offset": 536,
+          "length": 8,
+          "type": "string"
+        },
+        {
+          "name": "STCBRPP",
+          "description": "Recovery PIE PICA address",
+          "offset": 544,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBFRPQ",
+          "description": "Free RPP queue header",
+          "offset": 548,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBLSCR",
+          "description": "Linkage Stack control register at time of error for ESPIE",
+          "offset": 552,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBSARS",
+          "description": "Access Registers at time of error for ESPIE",
+          "offset": 556,
+          "length": 64,
+          "type": "string"
+        },
+        {
+          "name": "STCBWORK",
+          "description": "Work area used during ESPIE",
+          "offset": 620,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCBPPIE",
+          "description": "Address of public storage EPIE or zero.",
+          "offset": 624,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "public"
+        },
+        {
+          "name": "STCBCPIE",
+          "description": "PIE being used by the current SPIE/ESPIE exit (if any)",
+          "offset": 628,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBS64H",
+          "description": "64-bit GPR high halves for ESPIE",
+          "offset": 632,
+          "length": 64,
+          "type": "string"
+        },
+        {
+          "name": "STCBS64",
+          "description": "Entire 64-bit GPRs for ESPIE",
+          "offset": 696,
+          "length": 128,
+          "type": "string"
+        },
+        {
+          "name": "STCBTPIN",
+          "description": "UCB PIN count for this TCB. Ownership: IOS",
+          "offset": 824,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBR33C",
+          "description": "Reserved",
+          "offset": 828,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCBTIMI",
+          "description": "Cumulative time at last SMF Ownership: SMF Serialization: Local lock",
+          "offset": 832,
+          "length": 8,
+          "type": "string"
+        },
+        {
+          "name": "STCBTSI",
+          "description": "",
+          "offset": 840,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBR34C",
+          "description": "Reserved",
+          "offset": 844,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCB_TTIME_ON_zCBP_Normalized",
+          "description": "zCBP TCB time normalized",
+          "offset": 848,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBDCR8",
+          "description": "REAL ADDRESS OF THE DUCT. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: TCBACTIV.",
+          "offset": 856,
+          "length": 8,
+          "type": "address"
+        },
+        {
+          "name": "STCBDCRH",
+          "description": "High half",
+          "offset": 856,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCBDCRL",
+          "description": "Low half",
+          "offset": 860,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBABAT",
+          "description": "Attach-by-address (ASAMIABA) target",
+          "offset": 864,
+          "length": 8,
+          "type": "string"
+        },
+        {
+          "name": "STCBR368",
+          "description": "Reserved",
+          "offset": 872,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCBXRCT",
+          "description": "XES request count Serialization: compare and swap Ownership: XES",
+          "offset": 876,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBSBEA",
+          "description": "Breaking Event Address for ESPIE",
+          "offset": 880,
+          "length": 8,
+          "type": "string"
+        },
+        {
+          "name": "STCBSC64",
+          "description": "Entire 64-bit Control Regs for ESPIE",
+          "offset": 888,
+          "length": 128,
+          "type": "string"
+        },
+        {
+          "name": "STCBPTR2",
+          "description": "TEA AR number for ESPIE",
+          "offset": 1016,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "STCBR3FD",
+          "description": "Reserved",
+          "offset": 1017,
+          "length": 3,
+          "type": "hex"
+        },
+        {
+          "name": "STCBPVAD",
+          "description": "TEA (32-bit) for ESPIE",
+          "offset": 1020,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBDXC",
+          "description": "Data exception code when PIC 7",
+          "offset": 1023,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "STCBPV64",
+          "description": "TEA (64-bit) for ESPIE",
+          "offset": 1024,
+          "length": 8,
+          "type": "string"
+        },
+        {
+          "name": "STCBOLCP",
+          "description": "Copy of original STCBILCP",
+          "offset": 1032,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCBOILC",
+          "description": "Original ILC",
+          "offset": 1033,
+          "length": 1,
+          "type": "string"
+        },
+        {
+          "name": "STCBOPIC",
+          "description": "Original PIC",
+          "offset": 1034,
+          "length": 2,
+          "type": "string",
+          "equates": [
+            {
+              "name": "STCBOPTX",
+              "value": "X'02'",
+              "description": "PI within TX"
+            }
+          ]
+        },
+        {
+          "name": "STCBR40C",
+          "description": "Reserved for SCA expansion",
+          "offset": 1036,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "STCB_TTIME_ON_zIIP",
+          "description": "zIIP TCB time",
+          "offset": 1040,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_TTIME_ON_SUP",
+          "description": "SUP TCB time",
+          "offset": 1040,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_TTIME_zCBP_ON_CP",
+          "description": "zCBP ON CP TCB TIME",
+          "offset": 1048,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_TTIME_IFA_ON_CP",
+          "description": "IFA ON CP TCB TIME",
+          "offset": 1048,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_TTIME_zIIP_ON_CP",
+          "description": "zIIP on CP TCB time. When zAAPzIIP=YES is in effect, zAAP-eligible work running on a CP is included.",
+          "offset": 1056,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_TTIME_SUP_ON_CP",
+          "description": "SUP on CP TCB time. When zAAPzIIP=YES is in effect, zAAP-eligible work running on a CP is included.",
+          "offset": 1056,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBGTCB",
+          "description": "Address of GTCB (mapped by ISGYGTCB) Ownership:GRS Serialization: Compare and swap",
+          "offset": 1064,
+          "length": 8,
+          "type": "address",
+          "pointsTo": "gtcb"
+        },
+        {
+          "name": "STCBHP1",
+          "description": "Pointer to Heap Pool 1 structure supporting macro IARST64 for common storage. Ownership: RSM. Serialization: CSG",
+          "offset": 1072,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBCPHA",
+          "description": "Pointer to authorized cell pool block supporting macros IARST64 and IARCP64 OWNERSHIP: RSM. SERIALIZATION: Local Lock",
+          "offset": 1080,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_HIS_Area",
+          "description": "HIS data",
+          "offset": 1088,
+          "length": 8,
+          "type": "hex"
+        },
+        {
+          "name": "STCB_HIS_TCB@",
+          "description": "Address of this TCB.  Note TCBs are really 24 bit pointers, so the first byte is used as flags",
+          "offset": 1088,
+          "length": 4,
+          "type": "address",
+          "equates": [
+            {
+              "name": "STCB_HIS_IS_Wait",
+              "value": "X'80'",
+              "description": "This bit is on when a wait has been dispatched"
+            },
+            {
+              "name": "STCB_HIS_ZS",
+              "value": "X'40'"
+            }
+          ]
+        },
+        {
+          "name": "STCB_HIS_HomeAsid",
+          "description": "Home ASID where the TCB is scheduled to run",
+          "offset": 1092,
+          "length": 2,
+          "type": "signed-integer",
+          "equates": [
+            {
+              "name": "STCB_HIS_IS_SRB",
+              "value": "X'80'",
+              "description": "This bit is on when the HIS data is for an SRB.  Note this bit will never be on, but it is documented here to indicate what it means"
+            }
+          ]
+        },
+        {
+          "name": "STCB_HIS_Token",
+          "description": "A token used to identify when the same TCB is being redispatched or this TCB is being reused to dispatch a different unit of work",
+          "offset": 1094,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCBDSPC",
+          "description": "TCB thread dispatch count",
+          "offset": 1096,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_MinIntCount",
+          "description": "TCB minor interrupt count",
+          "offset": 1100,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_MajIntCount",
+          "description": "TCB major interrupt count",
+          "offset": 1104,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "STCB_JES_Symbol_Table_Addr",
+          "description": "JES symbol table address. Owner: JES Serialization: Local Lock",
+          "offset": 1108,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBPPSW16",
+          "description": "SPIE/ESPIE 16-byte PSW",
+          "offset": 1112,
+          "length": 16,
+          "type": "string"
+        },
+        {
+          "name": "STCBSTXG64",
+          "description": "When TX, this contains the 64-bit GRs that resulted from the program-interrupt-caused transaction abort",
+          "offset": 1128,
+          "length": 128,
+          "type": "string"
+        },
+        {
+          "name": "STCBSTXPSW16",
+          "description": "When TX, this contains the 16-byte PSW that resulted from the program-interrupt-caused transaction abort",
+          "offset": 1256,
+          "length": 16,
+          "type": "string"
+        },
+        {
+          "name": "STCBRICCB",
+          "description": "",
+          "offset": 1272,
+          "length": 64,
+          "type": "string"
+        },
+        {
+          "name": "STCBABAA",
+          "description": "Pointer-defined target address for ATTACHX with ByAddress=xxx",
+          "offset": 1336,
+          "length": 8,
+          "type": "address"
+        },
+        {
+          "name": "STCBUALV",
+          "description": "",
+          "offset": 1344,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBUALD",
+          "description": "",
+          "offset": 1348,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "STCBEND",
+          "description": "END OF STCB.",
+          "offset": 1352,
+          "length": 8,
+          "type": "signed-integer"
+        }
+      ]
+    }
+  ]
+}

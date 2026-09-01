@@ -1,0 +1,174 @@
+{
+  "version": 1,
+  "name": "asvt",
+  "commonName": "ASVT",
+  "macroId": "ihaasvt",
+  "description": "",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": ["cvt"],
+  "storageAttributes": {
+    "subpools": [
+      245
+    ],
+    "key": 0,
+    "residency": 24
+  },
+  "sections": [
+    {
+      "name": "asvt",
+      "description": "",
+      "fields": [
+        {
+          "name": "ASVTPRFX",
+          "description": "Reserved for future expansion",
+          "offset": 0,
+          "length": 464,
+          "type": "string"
+        },
+        {
+          "name": "ASVTBEGN",
+          "description": "BEGINNING OF ASVT",
+          "offset": 464,
+          "length": 4,
+          "type": "hex",
+          "alignBefore": 8
+        },
+        {
+          "name": "AsvtHWMAsid",
+          "description": "Highest ASID used since IPL",
+          "offset": 464,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "AsvtCurHighAsid",
+          "description": "Highest ASID currently used",
+          "offset": 468,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASVTREUA",
+          "description": "ADDRESS OF ASVTREUS BITS",
+          "offset": 472,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "asvtreus"
+        },
+        {
+          "name": "ASVTRAVL",
+          "description": "ADDRESS OF FIRST AVAILABLE REUSABLE ASID SLOT",
+          "offset": 476,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "ASVTAAV",
+          "description": "NUMBER OF FREE SLOTS ON THE ASVT AVAILABLE QUEUE.",
+          "offset": 480,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASVTAST",
+          "description": "NUMBER OF FREE SLOTS ON THE START/SASI QUEUE.",
+          "offset": 484,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASVTANR",
+          "description": "NUMBER OF FREE SLOTS ON THE NON-REUSABLE REPLACEMENT QUEUE.",
+          "offset": 488,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASVTSTRT",
+          "description": "ORIGINAL SIZE OF START/SASI QUEUE.",
+          "offset": 492,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASVTNONR",
+          "description": "ORIGINAL SIZE OF NON-REUSABLE REPLACEMENT QUEUE.",
+          "offset": 496,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASVTMAXI",
+          "description": "ORIGINAL MAX USERS COUNT AS INPUT TO IEAVNP09. OWNERSHIP - SUPERVISOR CONTROL SERIALIZATION - NIP RIM PROCESS",
+          "offset": 500,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASVTASVT",
+          "description": "ACRONYM IN EBCDIC -ASVT-",
+          "offset": 512,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "ASVTMAXU",
+          "description": "MAXIMUM NUMBER OF ADDRESS SPACES",
+          "offset": 516,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASVTMDSC",
+          "description": "MAXUSER DEFICIT SLOT COUNT. ASVTMDSC = ASVTMAXI - ASVTAAV - NUMBER OF ACTIVE A.S. INCREMENTED WHEN WE TRY TO TAKE A REPLACEMENT SLOT BUT THERE AREN'T ANY. DECREMENTED WHEN NON-ZERO AND A NONREUSEABLE ASID BECOMES REUSEABLE AND WE ADD A SLOT TO THE MAXUSER POOL WHEN AN ADDRESS SPACE BECOMES REUSEABLE.",
+          "offset": 520,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "ASVTFRST",
+          "description": "ADDRESS OF FIRST AVAILABLE ASVT ENTRY",
+          "offset": 524,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "ascb",
+          "equates": [
+            {
+              "name": "ASVTAVAI",
+              "value": "X'80'",
+              "description": "BIT ONE IF ASID IS AVAILABLE AND ZERO IF ASID IS ASSIGNED"
+            }
+          ]
+        },
+        {
+          "name": "ASVTENTY",
+          "description": "ENTRY FOR EACH POSSIBLE ASID. IF ADDRESS SPACE ASSIGNED, ENTRY CONTAINS ADDRESS OF ASCB. IF NOT ASSIGNED, ENTRY CONTAINS EITHER ADDRESS OF NEXT AVAILABLE ASID OR ZEROS WITH HIGH-ORDER BIT ON IF LAST ENTRY. IF THE ADDRESS SPACE IS MARKED NON-REUSABLE, THE ENTRY CONTAINS THE ADDRESS OF MASTER'S ASVT ENTRY WITH THE HIGH BIT ON.",
+          "offset": 528,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "ascb",
+          "equates": [
+            {
+              "name": "ASVTAVAL",
+              "value": "X'80'",
+              "description": "BIT ONE IF ASID IS AVAILABLE AND ZERO IF ASID IS ASSIGNED"
+            },
+            {
+              "name": "ASVTLEN",
+              "value": "ASVTEND-ASVT",
+              "description": "ASVT -      LENGTH OF ASVT INCLUDING RESERVED FIELDS"
+            },
+            {
+              "name": "ASVTULEN",
+              "value": "ASVTEND-ASVTBEGN",
+              "description": "ASVTBEGN -  LENGTH OF USED FIELDS IN ASVT"
+            }
+          ],
+          "repeated": true,
+          "count": "asvtmaxu"
+        }
+      ]
+    }
+  ]
+}
