@@ -2,6 +2,8 @@
 
 #include <fnmatch.h>
 
+#include <algorithm>
+#include <cctype>
 #include <nlohmann/json.hpp>
 #include <sstream>
 
@@ -470,6 +472,7 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
 
 nlohmann::json ExplorerOptionsMap::parseFields() {
   nlohmann::json control_block_data = {};
+  std::unordered_map<std::string, control_block_field_t> repeated_fields;
   for (const auto& [field_name, field_data] : control_block_->getMap()) {
     nlohmann::json field_json = {};
     if (control_block_->getName() == "psa" &&
@@ -483,16 +486,26 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
                                 "' at offset '" +
                                 std::to_string(field_data.offset) + "'");
     if (field_data.repeated) {
-      field_json[field_name + "s"] = {};
-      size_t count = control_block_data[field_data.count].get<uint8_t>();
-      for (int i = 1; i <= count; i++) {
-        field_json[field_name + "s"].push_back(ExplorerOptionsMap::fieldToJson(
-            field_data, (i * field_data.length)));
-      }
+      repeated_fields[field_name] = field_data;
+      continue;
     } else {
       field_json[field_name] = ExplorerOptionsMap::fieldToJson(field_data);
     }
     control_block_data.merge_patch(field_json);
+  }
+  for (const auto& [field_name, field_data] : repeated_fields) {
+    field_json[field_name + "s"] = {};
+    // Transform the string in place
+    std::transform(field_data.count.begin(), field_data.count.end(),
+                   field_data.count.begin(),
+                   [](unsigned char c) { return std::toupper(c); });
+    size_t count = control_block_data[field_data.count].get<uint8_t>();
+    Logger::getInstance().debug("Looping through '" + std::to_string(count) +
+                                "' '" + field_name + "'s");
+    for (int i = 1; i <= count; i++) {
+      field_json[field_name + "s"].push_back(
+          ExplorerOptionsMap::fieldToJson(field_data, (i * field_data.length)));
+    }
   }
   return control_block_data;
 }
