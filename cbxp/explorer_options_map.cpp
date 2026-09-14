@@ -496,11 +496,11 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
   for (const auto& [field_name, field_data] : repeated_fields) {
     nlohmann::json field_json    = {};
     field_json[field_name + "s"] = {};
-    // Transform the string in place
-    std::transform(field_data.count.begin(), field_data.count.end(),
-                   field_data.count.begin(),
+    // Upper-case the count key for JSON lookup
+    std::string count_key = field_data.count;
+    std::transform(count_key.begin(), count_key.end(), count_key.begin(),
                    [](unsigned char c) { return std::toupper(c); });
-    size_t count = control_block_data[field_data.count].get<uint8_t>();
+    size_t count = control_block_data[count_key].get<uint8_t>();
     Logger::getInstance().debug("Looping through '" + std::to_string(count) +
                                 "' '" + field_name + "'s");
     for (int i = 1; i <= count; i++) {

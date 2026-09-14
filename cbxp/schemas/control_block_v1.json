@@ -351,7 +351,7 @@
           "additionalProperties": false
         },
         {
-          "description": "Triplet field: a container for three child fields representing an SMF triplet (offset, length, count). The triplet type enforces exactly 3 children at fixed relative offsets within the 8-byte parent.",
+          "description": "Triplet field: a container for three child fields representing a triplet (offset, length, count). The triplet type enforces exactly 3 children at fixed relative offsets within the 8-byte parent.",
           "properties": {
             "name": { "type": "string", "minLength": 1 },
             "description": { "type": "string" },
@@ -385,7 +385,7 @@
           "type": "string"
         },
         "equ": {
-          "description": "Optional length equate expression (e.g. '*-SECTIONNAME'). Captures length EQU directives like 'SMF98SDS_Len EQU *-SMF98SDS'.",
+          "description": "Optional length equate expression (e.g. '*-SECTIONNAME'). Captures length EQU directives like 'XXXXXXDS_Len EQU *-XXXXXXDS'.",
           "type": "string"
         },
         "fields": {
@@ -404,9 +404,9 @@
       "const": 1
     },
     "type": {
-      "description": "Mapping category: 'smf-record' for SMF record layouts, 'control-block' for z/OS control blocks",
+      "description": "Mapping category: 'control-block' for z/OS control blocks",
       "type": "string",
-      "enum": ["smf-record", "control-block"]
+      "enum": ["control-block"]
     },
     "name": {
       "description": "Control block name",
@@ -512,7 +512,7 @@
       }
     },
     "sections": {
-      "description": "List of DSECTs/sections that make up this control block. Single-DSECT control blocks have one entry; multi-DSECT structures (e.g. SMF records) have multiple entries.",
+      "description": "List of DSECTs/sections that make up this control block. Single-DSECT control blocks have one entry; multi-DSECT structures have multiple entries.",
       "type": "array",
       "minItems": 1,
       "items": { "$ref": "#/$defs/section" }
