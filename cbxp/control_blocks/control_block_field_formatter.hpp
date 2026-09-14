@@ -37,6 +37,7 @@ class ControlBlockFieldFormatter {
     return oss.str();
   }
   template <typename T>
+  // cppcheck-suppress unusedFunction
   static const std::string getBitmap(const void* p_field) {
     std::ostringstream oss;
     oss << std::bitset<sizeof(T) * 8>{
@@ -47,22 +48,6 @@ class ControlBlockFieldFormatter {
   static const std::string getBitmap(T field) {
     std::ostringstream oss;
     oss << std::bitset<sizeof(T) * 8>{field};
-    return oss.str();
-  }
-  static const std::string getPswSmall(const unsigned char* p_field) {
-    std::ostringstream oss;
-    oss << getBitmap<uint32_t>(p_field);
-    oss << " | ";
-    oss << getHex<uint32_t>(p_field + 4);
-    return oss.str();
-  }
-  // Do we plan on using this???
-  // cppcheck-suppress unusedFunction
-  static const std::string getPswBig(const unsigned char* p_field) {
-    std::ostringstream oss;
-    oss << getBitmap<uint64_t>(p_field);
-    oss << " | ";
-    oss << getHex<uint64_t>(p_field + 8);
     return oss.str();
   }
 };

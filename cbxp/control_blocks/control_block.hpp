@@ -1,62 +1,65 @@
 #ifndef __CONTROL_BLOCK_H_
 #define __CONTROL_BLOCK_H_
 
+#include <nlohmann/json-schema.hpp>
 #include <nlohmann/json.hpp>
 
 #include "control_block_field_formatter.hpp"
 
 namespace CBXP {
 
-typedef struct {
-  std::string operation;
-  std::string value;
-} cbxp_filter_t;
+enum FieldType { STRING, SIGNED_INT, UNSIGNED_INT, HEX, ADDRESS, BITSTRING };
 
 typedef struct {
-  std::vector<std::string> include_patterns;
-  std::vector<std::string> filters;
-  bool skip_buffer_length_check;
-} cbxp_options_t;
+  std::string name;
+  ptrdiff_t offset;
+  size_t length;
+  FieldType type;
+  std::string pointsTo;
+  bool repeated;
+  std::string count;
+} control_block_field_t;
+
+typedef struct {
+  bool is_common;
+  bool is_protected;
+  unsigned char key;
+} storage_attributes_t;
 
 class ControlBlock {
  private:
-  const std::string control_block_name_;
-  const std::vector<std::string> includables_;
-  size_t control_block_length_ = 0;
-  void createIncludeLists(const std::vector<std::string>& includes);
-  void processDoubleAsteriskInclude();
-  void processAsteriskInclude();
-  void processExplicitInclude(std::string& include);
-  void createFilterLists(const std::vector<std::string>& filters);
-  void addCurrentFilter(const std::string& filter);
-  bool compare(const nlohmann::json& json_value,
-               const std::string& filter_value, const std::string& operation);
-
- protected:
-  ControlBlockFieldFormatter formatter_;
-  std::unordered_map<std::string, cbxp_options_t> options_map_;
-  std::unordered_map<std::string, std::vector<cbxp_filter_t>> current_filters_;
-  void createOptionsMap(const std::vector<std::string>& includes,
-                        const std::vector<std::string>& filters);
-  bool matchFilter(nlohmann::json& control_block_json);
-  bool skip_buffer_length_check_ = false;
+  std::unordered_map<std::string, control_block_field_t> control_block_map_ =
+      {};
+  storage_attributes_t storage_attributes_ = {
+      true, false, 8};  // actually establish these values as this is finalized
+  std::string control_block_name_;
+  std::vector<std::string> includables_   = {};
+  std::vector<std::string> pointed_to_by_ = {};
+  size_t control_block_length_            = 0;
+  ptrdiff_t max_offset_                   = 0;
+  void* fixed_address_                    = nullptr;
+  static FieldType stringToType(const std::string& type_str);
 
  public:
-  void checkDataLength(const size_t buffer_length) const;
-  virtual nlohmann::json get(const void* p_control_block = nullptr,
-                             const size_t buffer_length  = 0) = 0;
-  explicit ControlBlock(const std::string& name,
-                        const std::vector<std::string>& includables,
-                        const cbxp_options_t& cbxp_options,
-                        size_t control_block_length)
-      : control_block_name_(name),
-        includables_(includables),
-        control_block_length_(control_block_length),
-        skip_buffer_length_check_(cbxp_options.skip_buffer_length_check) {
-    ControlBlock::createOptionsMap(cbxp_options.include_patterns,
-                                   cbxp_options.filters);
+  ControlBlockFieldFormatter formatter_;
+  const std::unordered_map<std::string, control_block_field_t>& getMap() const {
+    return control_block_map_;
   }
-  virtual ~ControlBlock() = default;
+  const storage_attributes_t& getStorageAttributes() const {
+    return storage_attributes_;
+  }
+  const std::string& getName() const { return control_block_name_; }
+  const std::vector<std::string>& getIncludables() const {
+    return includables_;
+  }
+  const std::vector<std::string>& getPointedToBy() const {
+    return pointed_to_by_;
+  }
+  ptrdiff_t getMaxOffset() const { return max_offset_; }
+  const void* getFixedAddress() const { return fixed_address_; }
+  explicit ControlBlock(
+      const nlohmann::json_schema::json_validator& cbxp_schema_validator,
+      const nlohmann::json& control_block_map);
 };
 
 }  // namespace CBXP
