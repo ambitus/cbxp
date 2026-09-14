@@ -132,7 +132,6 @@
           "offset": 524,
           "length": 4,
           "type": "address",
-          "pointsTo": "ascb",
           "equates": [
             {
               "name": "ASVTAVAI",
