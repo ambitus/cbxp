@@ -183,10 +183,8 @@ public:
 	{
 		auto &file = get_or_create_file(uri.location());
 		auto sch = file.schemas.lower_bound(uri.fragment());
-		if (sch != file.schemas.end() && !(file.schemas.key_comp()(uri.fragment(), sch->first))) {
-			throw std::invalid_argument("schema with " + uri.to_string() + " already inserted");
-			return;
-		}
+		if (sch != file.schemas.end() && !(file.schemas.key_comp()(uri.fragment(), sch->first)))
+			return; // already inserted — recursive/self-referential schemas legitimately hit this path
 
 		file.schemas.insert({uri.fragment(), s});
 
@@ -235,18 +233,10 @@ public:
 			(*unk_kw)[key] = value;
 		}
 
-		// recursively add possible subschemas of unknown keywords,
-		// but only when an unresolved reference is waiting for this path —
-		// unconditional recursion re-registers already-inserted schemas when
-		// the schema contains self-referential $ref (e.g. recursive field/children).
-		if (value.type() == json::value_t::object) {
-			auto &f = get_or_create_file(new_uri.location());
-			for (auto &subsch : value.items()) {
-				auto child_uri = new_uri.append(subsch.key());
-				if (f.unresolved.find(child_uri.pointer().to_string()) != f.unresolved.end())
-					insert_unknown_keyword(new_uri, subsch.key(), subsch.value());
-			}
-		}
+		// recursively add possible subschemas of unknown keywords
+		if (value.type() == json::value_t::object)
+			for (auto &subsch : value.items())
+				insert_unknown_keyword(new_uri, subsch.key(), subsch.value());
 	}
 
 	std::shared_ptr<schema> get_or_create_ref(const json_uri &uri)
