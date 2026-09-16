@@ -179,12 +179,15 @@ public:
 	format_checker &format_check() { return format_check_; }
 	content_checker &content_check() { return content_check_; }
 
-	void insert(const json_uri &uri, const std::shared_ptr<schema> &s)
+	// Returns the schema that ended up registered for this URI.
+	// If the URI was already registered, returns the existing schema so callers
+	// can use the already-correct object rather than a newly-built duplicate.
+	std::shared_ptr<schema> insert(const json_uri &uri, const std::shared_ptr<schema> &s)
 	{
 		auto &file = get_or_create_file(uri.location());
 		auto sch = file.schemas.lower_bound(uri.fragment());
 		if (sch != file.schemas.end() && !(file.schemas.key_comp()(uri.fragment(), sch->first)))
-			return; // already inserted — recursive/self-referential schemas legitimately hit this path
+			return sch->second; // already inserted — return the existing (correct) schema
 
 		file.schemas.insert({uri.fragment(), s});
 
@@ -194,6 +197,7 @@ public:
 			unresolved->second->set_target(s);
 			file.unresolved.erase(unresolved);
 		}
+		return s;
 	}
 
 	void insert_unknown_keyword(const json_uri &uri, const std::string &key, json &value)
@@ -233,8 +237,12 @@ public:
 			(*unk_kw)[key] = value;
 		}
 
-		// recursively add possible subschemas of unknown keywords
-		if (value.type() == json::value_t::object)
+		// recursively add possible subschemas of unknown keywords.
+		// Do NOT recurse into $defs or definitions — those are registered
+		// as complete schemas by findDefinitions() and must not be partially
+		// processed here (the JSON is mutated in-place as keys are erased,
+		// so a partial pass via insert_unknown_keyword corrupts the def).
+		if (value.type() == json::value_t::object && key != "$defs" && key != "definitions")
 			for (auto &subsch : value.items())
 				insert_unknown_keyword(new_uri, subsch.key(), subsch.value());
 	}
@@ -1428,7 +1436,11 @@ std::shared_ptr<schema> schema::make(json &schema,
 	}
 
 	for (auto &uri : uris) { // for all URIs this schema is referenced by
-		root->insert(uri, sch);
+		// insert() returns the schema that is actually registered for this URI.
+		// When a duplicate is detected (recursive/self-referential schemas),
+		// it returns the first-registered (correct) schema instead of the
+		// newly-built one, so we replace sch to ensure all URIs point to the same object.
+		sch = root->insert(uri, sch);
 
 		if (schema.type() == json::value_t::object)
 			for (auto &u : schema.items())
