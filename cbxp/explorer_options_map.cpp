@@ -502,7 +502,9 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
       }() +
       ": entering repeated-fields loop with " +
       std::to_string(repeated_fields.size()) +
-      " repeated field(s), current JSON=" + control_block_data.dump());
+      " repeated field(s), current JSON=" +
+      control_block_data.dump(-1, ' ', false,
+                              nlohmann::json::error_handler_t::replace));
   for (const auto& [field_name, field_data] : repeated_fields) {
     nlohmann::json field_json    = {};
     field_json[field_name + "s"] = {};
@@ -510,12 +512,13 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
     std::string count_key = field_data.count;
     std::transform(count_key.begin(), count_key.end(), count_key.begin(),
                    [](unsigned char c) { return std::toupper(c); });
-    Logger::getInstance().debug("Repeated field '" + field_name +
-                                "': count_key='" + count_key +
-                                "', raw JSON value=" +
-                                (control_block_data.contains(count_key)
-                                     ? control_block_data[count_key].dump()
-                                     : "<missing>"));
+    Logger::getInstance().debug(
+        "Repeated field '" + field_name + "': count_key='" + count_key +
+        "', raw JSON value=" +
+        (control_block_data.contains(count_key)
+             ? control_block_data[count_key].dump(
+                   -1, ' ', false, nlohmann::json::error_handler_t::replace)
+             : "<missing>"));
     size_t count = control_block_data[count_key].get<uint8_t>();
     Logger::getInstance().debug("Repeated field '" + field_name +
                                 "': count_key='" + count_key +
