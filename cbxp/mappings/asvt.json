@@ -165,6 +165,7 @@
             }
           ],
           "repeated": true,
+          "ignoreMask": "80",
           "count": "asvtmaxu"
         }
       ]

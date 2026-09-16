@@ -204,6 +204,12 @@
           "type": "string",
           "minLength": 1
         },
+        "ignoreMask": {
+          "description": "Hex bitmask indicating which bit(s) mark a repeated entry as invalid/ignored. Only valid on fields with 'repeated: true'. Default '00' means no entries are ignored.",
+          "type": "string",
+          "pattern": "^[0-9A-Fa-f]+$",
+          "default": "00"
+        },
         "alignBefore": {
           "description": "Alignment boundary in bytes that was explicitly enforced before this field in the original source via an unnamed DS 0D (8), DS 0F (4), or DS 0H (2) directive.",
           "type": "integer"
@@ -249,6 +255,7 @@
             "init": { "$ref": "#/$defs/initArray" },
             "repeated": { "type": "boolean", "const": true },
             "count": { "type": "string", "minLength": 1 },
+            "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
             "equates": { "$ref": "#/$defs/equatesArray" },
@@ -263,7 +270,8 @@
           "required": ["name", "offset", "length", "type"],
           "dependentRequired": {
             "repeated": ["count"],
-            "count": ["repeated"]
+            "count": ["repeated"],
+            "ignoreMask": ["repeated"]
           },
           "additionalProperties": false
         },
@@ -284,6 +292,7 @@
             "init": { "$ref": "#/$defs/initArray" },
             "repeated": { "type": "boolean", "const": true },
             "count": { "type": "string", "minLength": 1 },
+            "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
             "equates": { "$ref": "#/$defs/equatesArray" },
@@ -292,7 +301,8 @@
           "required": ["name", "offset", "length", "type", "pointsTo"],
           "dependentRequired": {
             "repeated": ["count"],
-            "count": ["repeated"]
+            "count": ["repeated"],
+            "ignoreMask": ["repeated"]
           },
           "additionalProperties": false
         },
@@ -313,6 +323,7 @@
             "init": { "$ref": "#/$defs/initArray" },
             "repeated": { "type": "boolean", "const": true },
             "count": { "type": "string", "minLength": 1 },
+            "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
             "equates": { "$ref": "#/$defs/equatesArray" },
@@ -321,7 +332,8 @@
           "required": ["name", "offset", "length", "type", "pointsTo"],
           "dependentRequired": {
             "repeated": ["count"],
-            "count": ["repeated"]
+            "count": ["repeated"],
+            "ignoreMask": ["repeated"]
           },
           "additionalProperties": false
         },
@@ -337,6 +349,7 @@
             "init": { "$ref": "#/$defs/initArray" },
             "repeated": { "type": "boolean", "const": true },
             "count": { "type": "string", "minLength": 1 },
+            "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
             "bitmasks": { "$ref": "#/$defs/bitmasksDef" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
@@ -346,7 +359,8 @@
           "required": ["name", "offset", "length", "type"],
           "dependentRequired": {
             "repeated": ["count"],
-            "count": ["repeated"]
+            "count": ["repeated"],
+            "ignoreMask": ["repeated"]
           },
           "additionalProperties": false
         },

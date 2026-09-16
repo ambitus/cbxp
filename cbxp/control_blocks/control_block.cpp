@@ -42,10 +42,7 @@ ControlBlock::ControlBlock(
                           control_block_map["storageAttributes"]["key"]
                               .get<uint8_t>()},
       control_block_name_(control_block_map["name"].get<std::string>()) {
-  // Schema validation is temporarily disabled until the bundled
-  // json-schema-validator is upgraded to support draft/2020-12.
-  // cbxp_schema_validator.validate(control_block_map);
-  (void)cbxp_schema_validator;
+  cbxp_schema_validator.validate(control_block_map);
 
   for (auto it = control_block_map["storageAttributes"]["subpools"].begin();
        it != control_block_map["storageAttributes"]["subpools"].end(); ++it) {

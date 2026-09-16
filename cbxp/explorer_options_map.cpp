@@ -493,6 +493,16 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
     }
     control_block_data.merge_patch(field_json);
   }
+  Logger::getInstance().debug(
+      "parseFields '" + control_block_->getName() + "' at " +
+      [&]() {
+        std::ostringstream oss;
+        oss << p_control_block_;
+        return oss.str();
+      }() +
+      ": entering repeated-fields loop with " +
+      std::to_string(repeated_fields.size()) +
+      " repeated field(s), current JSON=" + control_block_data.dump());
   for (const auto& [field_name, field_data] : repeated_fields) {
     nlohmann::json field_json    = {};
     field_json[field_name + "s"] = {};
@@ -500,10 +510,21 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
     std::string count_key = field_data.count;
     std::transform(count_key.begin(), count_key.end(), count_key.begin(),
                    [](unsigned char c) { return std::toupper(c); });
+    Logger::getInstance().debug("Repeated field '" + field_name +
+                                "': count_key='" + count_key +
+                                "', raw JSON value=" +
+                                (control_block_data.contains(count_key)
+                                     ? control_block_data[count_key].dump()
+                                     : "<missing>"));
     size_t count = control_block_data[count_key].get<uint8_t>();
-    Logger::getInstance().debug("Looping through '" + std::to_string(count) +
-                                "' '" + field_name + "'s");
-    for (int i = 1; i <= count; i++) {
+    Logger::getInstance().debug("Repeated field '" + field_name +
+                                "': count_key='" + count_key +
+                                "', count=" + std::to_string(count));
+    for (size_t i = 0; i < count; i++) {
+      Logger::getInstance().debug(
+          "  [" + field_name + "] iteration " + std::to_string(i) + "/" +
+          std::to_string(count) +
+          ", offset=" + std::to_string(i * field_data.length));
       field_json[field_name + "s"].push_back(
           ExplorerOptionsMap::fieldToJson(field_data, (i * field_data.length)));
     }
