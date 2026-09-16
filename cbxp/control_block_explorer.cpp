@@ -61,9 +61,11 @@ std::string ControlBlockExplorer::mapToString(
 
 const std::unordered_map<std::string, ControlBlock>&
 ControlBlockExplorer::getControlBlocks() {
+  // Schema validation is temporarily disabled due to a known crash in the
+  // bundled json-schema-validator when processing self-referential $defs
+  // (field -> children -> items -> $ref: #/$defs/field). Re-enable once
+  // the library's insert() duplicate-URI handling is patched and rebuilt.
   nlohmann::json_schema::json_validator cbxp_schema_validator;
-  cbxp_schema_validator.set_root_schema(
-      nlohmann::json::parse(CBXP_SCHEMA_JSON));
 
   // Magic static: initialized on first call, after main() and the logger are
   // ready, so any parse/construction errors are visible in debug output.
