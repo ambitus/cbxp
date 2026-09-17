@@ -18,6 +18,7 @@ typedef struct {
   std::string pointsTo;
   bool repeated;
   std::string count;
+  std::string ignoreMask;
 } control_block_field_t;
 
 typedef struct {

@@ -439,9 +439,19 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
                                   "' for control block tree...");
       size_t count = 1;
       if (!count_field.empty()) {
-        count = *(reinterpret_cast<const size_t*>(
-            static_cast<const char*>(next) +
-            next_control_block_map[count_field].offset));
+        const control_block_field_t& count_f =
+            next_control_block_map[count_field];
+        if (count_f.length == 8) {
+          count = *(reinterpret_cast<const uint64_t*>(
+              static_cast<const char*>(next) + count_f.offset));
+        } else {
+          count = *(reinterpret_cast<const uint32_t*>(
+              static_cast<const char*>(next) + count_f.offset));
+        }
+        Logger::getInstance().debug("Repeated pointer field '" +
+                                    pointer_field_name + "' count_field='" +
+                                    count_field +
+                                    "' count=" + std::to_string(count));
       }
       for (size_t i = 0; i < count; i++) {
         // Then we iterate through the "next" control blocks
@@ -456,6 +466,28 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
           // distinct
           resolved = reinterpret_cast<const void* __ptr32>(
               *reinterpret_cast<const uint32_t*>(base));
+        }
+        // Skip entries masked by ignoreMask (e.g. ASVTENTY high-bit =
+        // available/non-reusable)
+        if (!next_control_block_map[pointer_field_name].ignoreMask.empty()) {
+          uint32_t raw_val = *reinterpret_cast<const uint32_t*>(base);
+          uint32_t mask =
+              static_cast<uint32_t>(std::stoull(
+                  next_control_block_map[pointer_field_name].ignoreMask,
+                  nullptr, 16))
+              << 24;
+          if (raw_val & mask) {
+            Logger::getInstance().debug(
+                "Skipping '" + control_block->getName() + "' entry at index " +
+                std::to_string(i) + " — ignoreMask bit set (raw=0x" +
+                [&]() {
+                  std::ostringstream oss;
+                  oss << std::hex << raw_val;
+                  return oss.str();
+                }() +
+                ")");
+            continue;
+          }
         }
         Logger::getInstance().debug("Resolved '" + control_block->getName() +
                                     "' pointer to address " + [&]() {
@@ -519,7 +551,7 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
              ? control_block_data[count_key].dump(
                    -1, ' ', false, nlohmann::json::error_handler_t::replace)
              : "<missing>"));
-    size_t count = control_block_data[count_key].get<uint8_t>();
+    size_t count = control_block_data[count_key].get<size_t>();
     Logger::getInstance().debug("Repeated field '" + field_name +
                                 "': count_key='" + count_key +
                                 "', count=" + std::to_string(count));

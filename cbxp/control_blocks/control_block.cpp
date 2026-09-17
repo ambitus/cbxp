@@ -87,18 +87,22 @@ ControlBlock::ControlBlock(
         pointsTo = (*it)["pointsTo"].get<std::string>();
         includables_.push_back(pointsTo);
       }
-      std::string type_str = (*it)["type"].get<std::string>();
-      FieldType type       = ControlBlock::stringToType(type_str);
-      bool repeated        = false;
-      std::string count    = "";
+      std::string type_str    = (*it)["type"].get<std::string>();
+      FieldType type          = ControlBlock::stringToType(type_str);
+      bool repeated           = false;
+      std::string count       = "";
+      std::string ignore_mask = "";
       if ((*it).contains("repeated")) {
         repeated = (*it)["repeated"].get<bool>();
       }
       if (repeated and (*it).contains("count")) {
         count = (*it)["count"].get<std::string>();
       }
+      if (repeated and (*it).contains("ignoreMask")) {
+        ignore_mask = (*it)["ignoreMask"].get<std::string>();
+      }
       control_block_field_t field = {name,     offset,   length, type,
-                                     pointsTo, repeated, count};
+                                     pointsTo, repeated, count,  ignore_mask};
       control_block_map_[name]    = field;
     }
   }
