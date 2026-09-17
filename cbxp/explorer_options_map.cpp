@@ -439,8 +439,14 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
                                   "' for control block tree...");
       size_t count = 1;
       if (!count_field.empty()) {
+        // Field names in the map are stored as-parsed from JSON (uppercase by
+        // convention), but the "count" attribute value may be lowercase — match
+        // the same normalisation that parseFields() applies.
+        std::string count_key = count_field;
+        std::transform(count_key.begin(), count_key.end(), count_key.begin(),
+                       [](unsigned char c) { return std::toupper(c); });
         const control_block_field_t& count_f =
-            next_control_block_map[count_field];
+            next_control_block_map[count_key];
         if (count_f.length == 8) {
           count = *(reinterpret_cast<const uint64_t*>(
               static_cast<const char*>(next) + count_f.offset));
@@ -448,10 +454,9 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
           count = *(reinterpret_cast<const uint32_t*>(
               static_cast<const char*>(next) + count_f.offset));
         }
-        Logger::getInstance().debug("Repeated pointer field '" +
-                                    pointer_field_name + "' count_field='" +
-                                    count_field +
-                                    "' count=" + std::to_string(count));
+        Logger::getInstance().debug(
+            "Repeated pointer field '" + pointer_field_name +
+            "' count_field='" + count_key + "' count=" + std::to_string(count));
       }
       for (size_t i = 0; i < count; i++) {
         // Then we iterate through the "next" control blocks
