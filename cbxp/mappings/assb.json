@@ -2235,7 +2235,8 @@
           "description": "END OF ASSB.",
           "offset": 2496,
           "length": 8,
-          "type": "signed-integer"
+          "type": "signed-integer",
+          "endOfControlBlock": true
         }
       ]
     }

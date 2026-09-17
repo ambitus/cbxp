@@ -1614,7 +1614,8 @@
           "description": "END OF STCB.",
           "offset": 1352,
           "length": 8,
-          "type": "signed-integer"
+          "type": "signed-integer",
+          "endOfControlBlock": true
         }
       ]
     }

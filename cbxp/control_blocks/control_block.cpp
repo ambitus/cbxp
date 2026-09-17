@@ -75,10 +75,15 @@ ControlBlock::ControlBlock(
        section_it != control_block_map["sections"].end(); ++section_it) {
     for (auto it = (*section_it)["fields"].begin();
          it != (*section_it)["fields"].end(); ++it) {
-      std::string name = (*it)["name"].get<std::string>();
-      ptrdiff_t offset = (*it)["offset"].get<ptrdiff_t>();
-      size_t length    = (*it)["length"].get<int>();
-      if (offset + static_cast<ptrdiff_t>(length) > max_offset_) {
+      std::string name          = (*it)["name"].get<std::string>();
+      ptrdiff_t offset          = (*it)["offset"].get<ptrdiff_t>();
+      size_t length             = (*it)["length"].get<int>();
+      bool end_of_control_block = (*it).contains("endOfControlBlock") &&
+                                  (*it)["endOfControlBlock"].get<bool>();
+      // endOfControlBlock fields mark the boundary address only — do not
+      // count their length toward the control block size.
+      if (!end_of_control_block &&
+          offset + static_cast<ptrdiff_t>(length) > max_offset_) {
         max_offset_ = offset + static_cast<ptrdiff_t>(length);
       }
       std::string pointsTo = "";
@@ -101,8 +106,9 @@ ControlBlock::ControlBlock(
       if (repeated and (*it).contains("ignoreMask")) {
         ignore_mask = (*it)["ignoreMask"].get<std::string>();
       }
-      control_block_field_t field = {name,     offset,   length, type,
-                                     pointsTo, repeated, count,  ignore_mask};
+      control_block_field_t field = {name,  offset,      length,
+                                     type,  pointsTo,    repeated,
+                                     count, ignore_mask, end_of_control_block};
       control_block_map_[name]    = field;
     }
   }

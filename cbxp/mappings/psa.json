@@ -6087,7 +6087,8 @@
           "description": "END OF PSA",
           "offset": 4096,
           "length": 8,
-          "type": "signed-integer"
+          "type": "signed-integer",
+          "endOfControlBlock": true
         }
       ]
     }

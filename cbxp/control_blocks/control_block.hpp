@@ -19,6 +19,7 @@ typedef struct {
   bool repeated;
   std::string count;
   std::string ignoreMask;
+  bool endOfControlBlock;
 } control_block_field_t;
 
 typedef struct {

@@ -1716,8 +1716,9 @@
           "name": "ASCBEND",
           "description": "END OF ASCB",
           "offset": 384,
-          "length": 0,
-          "type": "signed-integer"
+          "length": 8,
+          "type": "signed-integer",
+          "endOfControlBlock": true
         }
       ]
     }

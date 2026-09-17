@@ -512,6 +512,9 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
   std::unordered_map<std::string, control_block_field_t> repeated_fields;
   for (const auto& [field_name, field_data] : control_block_->getMap()) {
     nlohmann::json field_json = {};
+    if (field_data.endOfControlBlock) {
+      continue;
+    }
     if (control_block_->getName() == "psa" &&
         field_data.offset >= (control_block_->getMaxOffset() - 8) / 2 &&
         field_data.offset >= 0) {

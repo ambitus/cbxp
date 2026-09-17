@@ -258,6 +258,7 @@
             "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
+            "endOfControlBlock": { "type": "boolean", "const": true },
             "equates": { "$ref": "#/definitions/equatesArray" },
             "bitmasks": { "$ref": "#/definitions/bitmasksDef" },
             "boundary": { "type": "integer", "enum": [1, 2, 4, 8] },
@@ -295,6 +296,7 @@
             "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
+            "endOfControlBlock": { "type": "boolean", "const": true },
             "equates": { "$ref": "#/definitions/equatesArray" },
             "boundary": { "type": "integer", "enum": [1, 2, 4, 8] }
           },
@@ -326,6 +328,7 @@
             "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
+            "endOfControlBlock": { "type": "boolean", "const": true },
             "equates": { "$ref": "#/definitions/equatesArray" },
             "boundary": { "type": "integer", "enum": [1, 2, 4, 8] }
           },
@@ -353,6 +356,7 @@
             "bitmasks": { "$ref": "#/definitions/bitmasksDef" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
+            "endOfControlBlock": { "type": "boolean", "const": true },
             "equates": { "$ref": "#/definitions/equatesArray" },
             "boundary": { "type": "integer", "enum": [1, 2, 4, 8] }
           },
