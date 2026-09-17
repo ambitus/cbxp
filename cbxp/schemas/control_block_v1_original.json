@@ -1,9 +1,9 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Control Block",
   "description": "CBXP Control Block Schema",
   "type": "object",
-  "definitions": {
+  "$defs": {
     "initItem": {
       "description": "A single initialization entry for a control block field",
       "type": "object",
@@ -96,7 +96,7 @@
       "type": "array",
       "minItems": 1,
       "items": {
-        "$ref": "#/definitions/initItem"
+        "$ref": "#/$defs/initItem"
       }
     },
     "equatesArray": {
@@ -221,7 +221,7 @@
         },
         "equates": {
           "description": "Standalone EQU constants attached to this field (cannot be represented as bitmasks).",
-          "$ref": "#/definitions/equatesArray"
+          "$ref": "#/$defs/equatesArray"
         },
         "boundary": {
           "description": "Memory alignment boundary in bytes",
@@ -252,23 +252,23 @@
                 "address"
               ]
             },
-            "init": { "$ref": "#/definitions/initArray" },
+            "init": { "$ref": "#/$defs/initArray" },
             "repeated": { "type": "boolean", "const": true },
             "count": { "type": "string", "minLength": 1 },
             "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
-            "equates": { "$ref": "#/definitions/equatesArray" },
-            "bitmasks": { "$ref": "#/definitions/bitmasksDef" },
+            "equates": { "$ref": "#/$defs/equatesArray" },
+            "bitmasks": { "$ref": "#/$defs/bitmasksDef" },
             "boundary": { "type": "integer", "enum": [1, 2, 4, 8] },
             "children": {
               "description": "Child fields nested within this container/structure field",
               "type": "array",
-              "items": { "$ref": "#/definitions/field" }
+              "items": { "$ref": "#/$defs/field" }
             }
           },
           "required": ["name", "offset", "length", "type"],
-          "dependencies": {
+          "dependentRequired": {
             "repeated": ["count"],
             "count": ["repeated"],
             "ignoreMask": ["repeated"]
@@ -289,17 +289,17 @@
               "type": "string",
               "minLength": 1
             },
-            "init": { "$ref": "#/definitions/initArray" },
+            "init": { "$ref": "#/$defs/initArray" },
             "repeated": { "type": "boolean", "const": true },
             "count": { "type": "string", "minLength": 1 },
             "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
-            "equates": { "$ref": "#/definitions/equatesArray" },
+            "equates": { "$ref": "#/$defs/equatesArray" },
             "boundary": { "type": "integer", "enum": [1, 2, 4, 8] }
           },
           "required": ["name", "offset", "length", "type", "pointsTo"],
-          "dependencies": {
+          "dependentRequired": {
             "repeated": ["count"],
             "count": ["repeated"],
             "ignoreMask": ["repeated"]
@@ -320,17 +320,17 @@
               "type": "string",
               "minLength": 1
             },
-            "init": { "$ref": "#/definitions/initArray" },
+            "init": { "$ref": "#/$defs/initArray" },
             "repeated": { "type": "boolean", "const": true },
             "count": { "type": "string", "minLength": 1 },
             "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
-            "equates": { "$ref": "#/definitions/equatesArray" },
+            "equates": { "$ref": "#/$defs/equatesArray" },
             "boundary": { "type": "integer", "enum": [1, 2, 4, 8] }
           },
           "required": ["name", "offset", "length", "type", "pointsTo"],
-          "dependencies": {
+          "dependentRequired": {
             "repeated": ["count"],
             "count": ["repeated"],
             "ignoreMask": ["repeated"]
@@ -346,18 +346,18 @@
             "offset": { "type": "integer" },
             "length": { "type": "integer" },
             "type": { "const": "bitstring" },
-            "init": { "$ref": "#/definitions/initArray" },
+            "init": { "$ref": "#/$defs/initArray" },
             "repeated": { "type": "boolean", "const": true },
             "count": { "type": "string", "minLength": 1 },
             "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
-            "bitmasks": { "$ref": "#/definitions/bitmasksDef" },
+            "bitmasks": { "$ref": "#/$defs/bitmasksDef" },
             "alignBefore": { "type": "integer" },
             "programmingInterface": { "type": "boolean", "const": true },
-            "equates": { "$ref": "#/definitions/equatesArray" },
+            "equates": { "$ref": "#/$defs/equatesArray" },
             "boundary": { "type": "integer", "enum": [1, 2, 4, 8] }
           },
           "required": ["name", "offset", "length", "type"],
-          "dependencies": {
+          "dependentRequired": {
             "repeated": ["count"],
             "count": ["repeated"],
             "ignoreMask": ["repeated"]
@@ -377,7 +377,7 @@
               "type": "array",
               "minItems": 3,
               "maxItems": 3,
-              "items": { "$ref": "#/definitions/field" }
+              "items": { "$ref": "#/$defs/field" }
             }
           },
           "required": ["name", "offset", "length", "type", "children"],
@@ -405,7 +405,7 @@
         "fields": {
           "description": "List of fields in this section",
           "type": "array",
-          "items": { "$ref": "#/definitions/field" }
+          "items": { "$ref": "#/$defs/field" }
         }
       },
       "required": ["name", "fields"],
@@ -529,7 +529,7 @@
       "description": "List of DSECTs/sections that make up this control block. Single-DSECT control blocks have one entry; multi-DSECT structures have multiple entries.",
       "type": "array",
       "minItems": 1,
-      "items": { "$ref": "#/definitions/section" }
+      "items": { "$ref": "#/$defs/section" }
     }
   },
   "required": [
