@@ -6,7 +6,7 @@
   "description": "Allows address space related information to be maintained above 16 megabytes.",
   "type": "control-block",
   "aliases": [],
-  "pointedToBy": [],
+  "pointedToBy": ["ascb"],
   "storageAttributes": {
     "subpools": [
       245
