@@ -1,4 +1,22 @@
 # =============================================================================
+# GoogleTest Suite for C/C++ Interface
+# =============================================================================
+find_package(GTest)
+
+if(GTest_FOUND)
+    add_executable(test_cbxp test_cbxp.cpp)
+    target_link_libraries(test_cbxp PRIVATE libcbxp GTest::gtest GTest::gtest_main)
+    target_include_directories(test_cbxp PRIVATE
+        ${CMAKE_SOURCE_DIR}/cbxp
+        ${CMAKE_SOURCE_DIR}/externals
+    )
+    target_compile_options(test_cbxp PRIVATE ${COMPILE_OPTIONS})
+    target_link_options(test_cbxp PRIVATE ${LINK_OPTIONS})
+
+    add_test(NAME cbxp.gtest COMMAND test_cbxp)
+endif()
+
+# =============================================================================
 # CTest suite
 #
 # Conventions used:
