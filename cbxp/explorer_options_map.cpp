@@ -361,10 +361,14 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
       p_control_block = reinterpret_cast<const void* __ptr32>(
           control_block_->formatter_.uint<uint32_t>(raw));
     }
-    field_json =
+    nlohmann::json nested =
         ExplorerOptionsMap(options_map_[control_block_name], control_block_name,
                            control_blocks_, p_control_block, 0)
             .getControlBlockData(true);
+    nlohmann::json combined;
+    combined["value"]            = field_json;
+    combined[control_block_name] = nested[control_block_name];
+    field_json                   = combined;
   }
   return field_json;
 }
