@@ -353,12 +353,13 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
       options_map_.find(field_data.pointsTo) != options_map_.end()) {
     std::string control_block_name = field_data.pointsTo;
     const void* p_control_block;
+    const char* raw = static_cast<const char*>(p_control_block_) + offset;
     if (field_data.length == 8) {
-      p_control_block =
-          reinterpret_cast<const void*>(field_json.get<uint64_t>());
+      p_control_block = reinterpret_cast<const void*>(
+          control_block_->formatter_.uint<uint64_t>(raw));
     } else {
-      p_control_block =
-          reinterpret_cast<const void* __ptr32>(field_json.get<uint32_t>());
+      p_control_block = reinterpret_cast<const void* __ptr32>(
+          control_block_->formatter_.uint<uint32_t>(raw));
     }
     field_json =
         ExplorerOptionsMap(options_map_[control_block_name], control_block_name,
