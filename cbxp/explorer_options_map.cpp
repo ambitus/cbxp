@@ -39,6 +39,11 @@ void ExplorerOptionsMap::processDoubleAsteriskInclude() {
   // Any existing entries in the hash map are redundant, so clear them
   options_map_.clear();
   for (const std::string& includable : control_block_->getIncludables()) {
+    if (control_blocks_.find(includable) == control_blocks_.end()) {
+      Logger::getInstance().debug("Skipping '" + includable +
+                                  "' — not a loaded control block");
+      continue;
+    }
     // Build a map of all control_block_details_.includables but with "**" at
     // the next level
     Logger::getInstance().debug(
@@ -51,6 +56,11 @@ void ExplorerOptionsMap::processDoubleAsteriskInclude() {
 void ExplorerOptionsMap::processAsteriskInclude() {
   if (options_map_.empty()) {
     for (const std::string& includable : control_block_->getIncludables()) {
+      if (control_blocks_.find(includable) == control_blocks_.end()) {
+        Logger::getInstance().debug("Skipping '" + includable +
+                                    "' — not a loaded control block");
+        continue;
+      }
       // Build a map of all control_block_details_.includables
       Logger::getInstance().debug("Initializing include list for the '" +
                                   includable + "' control block...");
@@ -58,6 +68,11 @@ void ExplorerOptionsMap::processAsteriskInclude() {
     }
   }
   for (const std::string& includable : control_block_->getIncludables()) {
+    if (control_blocks_.find(includable) == control_blocks_.end()) {
+      Logger::getInstance().debug("Skipping '" + includable +
+                                  "' — not a loaded control block");
+      continue;
+    }
     if (options_map_.find(includable) != options_map_.end()) {
       Logger::getInstance().debug("Include list already exists for the '" +
                                   includable + "' control block");
@@ -88,6 +103,11 @@ void ExplorerOptionsMap::processExplicitInclude(std::string& include) {
         "'" + include +
         "' is not a known child control block that can be included with the '" +
         control_block_->getName() + "' control block");
+    throw IncludeError();
+  }
+  if (control_blocks_.find(include) == control_blocks_.end()) {
+    Logger::getInstance().debug("'" + include +
+                                "' is not a loaded control block");
     throw IncludeError();
   }
   if (options_map_.find(include) == options_map_.end()) {
