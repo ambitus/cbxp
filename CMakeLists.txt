@@ -41,6 +41,7 @@ file(
     GLOB CBXP_SRC_LIB
     "cbxp/*.cpp"
     "cbxp/control_blocks/*.cpp"
+    "externals/json-schema-validator/*.cpp"
 )
 
 file(
@@ -63,6 +64,55 @@ file(
 # ============================================================================
 # Build '/lib/libcbxp.a'
 # ============================================================================
+# ============================================================================
+# Generate schema header from cbxp/schemas/control_block_v1.json
+# ============================================================================
+set(CBXP_SCHEMAS_GENERATED_DIR "${CMAKE_BINARY_DIR}/cbxp/schemas")
+file(MAKE_DIRECTORY "${CBXP_SCHEMAS_GENERATED_DIR}")
+
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cbxp/schemas/control_block_v1.json" CBXP_SCHEMA_JSON)
+
+file(WRITE "${CBXP_SCHEMAS_GENERATED_DIR}/control_block_v1.hpp"
+"#ifndef CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n\
+#define CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n\
+\n\
+#define CBXP_SCHEMA_JSON R\"JSON(${CBXP_SCHEMA_JSON})JSON\"\n\
+\n\
+#endif // CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
+)
+
+# ============================================================================
+# Generate mapping headers from JSON files in cbxp/mappings/
+# ============================================================================
+set(CBXP_MAPPINGS_GENERATED_DIR "${CMAKE_BINARY_DIR}/cbxp/mappings")
+file(MAKE_DIRECTORY "${CBXP_MAPPINGS_GENERATED_DIR}")
+
+file(GLOB CBXP_MAPPING_JSON_FILES "${CMAKE_CURRENT_SOURCE_DIR}/cbxp/mappings/*.json")
+
+set(CBXP_MAPPING_FORCED_INCLUDES "")
+
+foreach(MAPPING_JSON_FILE ${CBXP_MAPPING_JSON_FILES})
+    get_filename_component(MAPPING_NAME "${MAPPING_JSON_FILE}" NAME_WE)
+    string(TOUPPER "${MAPPING_NAME}" MAPPING_NAME_UPPER)
+
+    file(READ "${MAPPING_JSON_FILE}" MAPPING_JSON)
+
+    set(MAPPING_GUARD "${MAPPING_NAME_UPPER}_JSON_HPP")
+    set(MAPPING_MACRO "${MAPPING_NAME_UPPER}_JSON")
+    set(MAPPING_HEADER_PATH "${CBXP_MAPPINGS_GENERATED_DIR}/${MAPPING_NAME}.hpp")
+
+    file(WRITE "${MAPPING_HEADER_PATH}"
+"#ifndef ${MAPPING_GUARD}\n\
+#define ${MAPPING_GUARD}\n\
+\n\
+#define ${MAPPING_MACRO} R\"JSON(${MAPPING_JSON})JSON\"\n\
+\n\
+#endif // ${MAPPING_GUARD}\n"
+    )
+
+    list(APPEND CBXP_MAPPING_FORCED_INCLUDES "--include=${MAPPING_HEADER_PATH}")
+endforeach()
+
 add_library(libcbxp STATIC ${CBXP_SRC_LIB})
 set_target_properties(libcbxp PROPERTIES OUTPUT_NAME "cbxp")
 
@@ -70,11 +120,17 @@ target_include_directories(
     libcbxp PUBLIC
     cbxp
     cbxp/control_blocks
-    externals
+    externals/json
+    externals/json-schema-validator
     /usr/include/zos
 )
 
-target_compile_options(libcbxp PUBLIC ${COMPILE_OPTIONS})
+target_compile_options(
+    libcbxp PUBLIC
+    ${COMPILE_OPTIONS}
+    "--include=${CBXP_SCHEMAS_GENERATED_DIR}/control_block_v1.hpp"
+    ${CBXP_MAPPING_FORCED_INCLUDES}
+)
 target_link_options(libcbxp PUBLIC ${LINK_OPTIONS})
 
 # ============================================================================
