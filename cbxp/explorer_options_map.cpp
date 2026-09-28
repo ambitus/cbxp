@@ -365,10 +365,7 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
         ExplorerOptionsMap(options_map_[control_block_name], control_block_name,
                            control_blocks_, p_control_block, 0)
             .getControlBlockData(true);
-    nlohmann::json combined;
-    combined["value"]            = field_json;
-    combined[control_block_name] = nested[control_block_name];
-    field_json                   = combined;
+    field_json = nested[control_block_name];
   }
   return field_json;
 }
@@ -609,6 +606,15 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
                                   "cannot guarantee accuracy.");
       throw CbxpReachBlockError();
     }
+  }
+  if (p_control_block_ != nullptr && recursive == true) {
+    // Pointer already resolved by the caller (fieldToJson); parse directly.
+    nlohmann::json single_control_block_json =
+        ExplorerOptionsMap::parseFields();
+    if (ExplorerOptionsMap::matchFilter(single_control_block_json)) {
+      control_block_data[control_block_name] = single_control_block_json;
+    }
+    return control_block_data;
   }
   if (p_control_block_ == nullptr && recursive == false) {
     p_control_blocks =
