@@ -889,7 +889,7 @@
           "description": "Jobname for the Initiated Program that is associated with this Address Space. If the first byte is x'00', none is associated. OWNERSHIP: Initiator. SERIALIZATION: None.",
           "offset": 336,
           "length": 8,
-          "type": "signed-integer",
+          "type": "string",
           "programmingInterface": true
         },
         {
@@ -897,7 +897,7 @@
           "description": "Jobname for the START/MOUNT/ LOGON that is associated with this Address Space. If the first byte is x'00', none is associated. OWNERSHIP: Console Services. SERIALIZATION: None.",
           "offset": 344,
           "length": 8,
-          "type": "signed-integer",
+          "type": "string",
           "programmingInterface": true
         },
         {
