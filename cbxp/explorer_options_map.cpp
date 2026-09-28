@@ -35,22 +35,43 @@ void ExplorerOptionsMap::createIncludeLists(
       control_block_->getName() + "' control block have been created");
 }
 
-void ExplorerOptionsMap::processDoubleAsteriskInclude() {
-  // Any existing entries in the hash map are redundant, so clear them
-  options_map_.clear();
-  for (const std::string& includable : control_block_->getIncludables()) {
-    if (control_blocks_.find(includable) == control_blocks_.end()) {
+std::unordered_map<std::string, std::unordered_map<std::string, cbxp_options_t>>
+    ExplorerOptionsMap::double_asterisk_cache_ = {};
+
+const std::unordered_map<std::string, cbxp_options_t>&
+ExplorerOptionsMap::getDoubleAsteriskMap(
+    const ControlBlock& cb,
+    const std::unordered_map<std::string, ControlBlock>& all_cbs) {
+  const std::string& cb_name = cb.getName();
+  auto it                    = double_asterisk_cache_.find(cb_name);
+  if (it != double_asterisk_cache_.end()) {
+    Logger::getInstance().debug("Using cached '**' options map for '" +
+                                cb_name + "'");
+    return it->second;
+  }
+
+  Logger::getInstance().debug("Building and caching '**' options map for '" +
+                              cb_name + "'");
+  std::unordered_map<std::string, cbxp_options_t> built_map;
+  for (const std::string& includable : cb.getIncludables()) {
+    if (all_cbs.find(includable) == all_cbs.end()) {
       Logger::getInstance().debug("Skipping '" + includable +
                                   "' — not a loaded control block");
       continue;
     }
-    // Build a map of all control_block_details_.includables but with "**" at
-    // the next level
     Logger::getInstance().debug(
         "Initializing and adding '**' to the include list for the '" +
         includable + "' control block...");
-    options_map_[includable].include_patterns = {"**"};
+    built_map[includable].include_patterns = {"**"};
   }
+
+  auto [inserted_it, _] =
+      double_asterisk_cache_.emplace(cb_name, std::move(built_map));
+  return inserted_it->second;
+}
+
+void ExplorerOptionsMap::processDoubleAsteriskInclude() {
+  options_map_ = getDoubleAsteriskMap(*control_block_, control_blocks_);
 }
 
 void ExplorerOptionsMap::processAsteriskInclude() {

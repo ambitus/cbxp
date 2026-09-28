@@ -16,6 +16,14 @@ typedef struct {
 
 class ExplorerOptionsMap {
  private:
+  static std::unordered_map<std::string,
+                            std::unordered_map<std::string, cbxp_options_t>>
+      double_asterisk_cache_;
+  static const std::unordered_map<std::string, cbxp_options_t>&
+  getDoubleAsteriskMap(
+      const ControlBlock& cb,
+      const std::unordered_map<std::string, ControlBlock>& all_cbs);
+
   void createIncludeLists(const std::vector<std::string>& includes);
   void processDoubleAsteriskInclude();
   void processAsteriskInclude();
