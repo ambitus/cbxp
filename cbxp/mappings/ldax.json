@@ -1,0 +1,230 @@
+{
+  "version": 1,
+  "name": "ldax",
+  "commonName": "VSM Local Data Area Extension",
+  "macroId": "ihaldax",
+  "description": "The LDAX (Local Data Area Extension) contains information about address space related virtual storage. Owned by Virtual Storage Manager (SC1CH). Size: X'0080' bytes (128 bytes). Created by IEAMSWCB and IEAVEMRQ.",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [
+    "assb"
+  ],
+  "storageAttributes": {
+    "subpools": [],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "ldax",
+      "description": "",
+      "fields": [
+        {
+          "name": "LDAX_HEADER",
+          "description": "Header area (eye-catcher + version)",
+          "offset": 0,
+          "length": 8,
+          "type": "string"
+        },
+        {
+          "name": "LDAX_ID",
+          "description": "Eye-catcher ID - 'LDAX'",
+          "offset": 0,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "LDAX_VERSION",
+          "description": "Version byte",
+          "offset": 4,
+          "length": 1,
+          "type": "bitstring"
+        },
+        {
+          "name": "LDAX_LDAASCB",
+          "description": "Address of ASCB for this address space",
+          "offset": 8,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "ascb"
+        },
+        {
+          "name": "LDAX_LDASTRTA",
+          "description": "Low address of Region (below 16M)",
+          "offset": 12,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_LDASIZA",
+          "description": "Size of Region (below 16M)",
+          "offset": 16,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_LDAESTRA",
+          "description": "Low address of extended Region (above 16M)",
+          "offset": 20,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_LDAESIZA",
+          "description": "Size of extended Region (above 16M)",
+          "offset": 24,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_LDACRGTP",
+          "description": "Current high address of PRIVATE AREA Region (below 16M)",
+          "offset": 28,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_LDAERGTP",
+          "description": "Current high address of EXTENDED PRIVATE AREA Region (above 16M)",
+          "offset": 32,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_LDALIMIT",
+          "description": "Below 16M V=V Region limit value",
+          "offset": 36,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_LDAVVRG",
+          "description": "Below 16M V=V Region high value",
+          "offset": 40,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_LDAELIM",
+          "description": "Above 16M V=V Region limit value",
+          "offset": 44,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_LDAEVVRG",
+          "description": "Above 16M V=V Region high value",
+          "offset": 48,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_LDALOAL",
+          "description": "Below 16M USER Region alloc value",
+          "offset": 52,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_LDAHIAL",
+          "description": "Below 16M AUTH Region alloc value",
+          "offset": 56,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_LDAELOAL",
+          "description": "Above 16M USER Region alloc value",
+          "offset": 60,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_LDAEHIAL",
+          "description": "Above 16M AUTH Region alloc value",
+          "offset": 64,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_TCTVALUS",
+          "description": "TCT water marks (overlays LDAX_TCTHWM through LDAX_TCTELWM)",
+          "offset": 68,
+          "length": 16,
+          "type": "hex"
+        },
+        {
+          "name": "LDAX_TCTHWM",
+          "description": "Below 16M max virtual storage in SWA and LSQA",
+          "offset": 68,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_TCTLWM",
+          "description": "Below 16M max virtual storage in user subpools",
+          "offset": 72,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_TCTEHWM",
+          "description": "Above 16M max virtual storage in SWA and LSQA",
+          "offset": 76,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_TCTELWM",
+          "description": "Above 16M max virtual storage in user subpools",
+          "offset": 80,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_CURHIGHBOT",
+          "description": "Below 16M current bottom of AUTH area",
+          "offset": 84,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_CUREHIGHBOT",
+          "description": "Above 16M current bottom of extended AUTH area",
+          "offset": 88,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_LDASMAD",
+          "description": "Storage Management Area address",
+          "offset": 92,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_LDASMSZ",
+          "description": "Storage Management Size",
+          "offset": 96,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "LDAX_OBTAINSHOMESPACE",
+          "description": "Monotonically increasing count of GETMAIN or STORAGE OBTAIN requests in the home space. Serialized by AGSI. Not programming interface.",
+          "offset": 104,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "LDAX_END",
+          "description": "End of LDAX / reserved",
+          "offset": 128,
+          "length": 1,
+          "type": "hex",
+          "endOfControlBlock": true
+        }
+      ]
+    }
+  ]
+}

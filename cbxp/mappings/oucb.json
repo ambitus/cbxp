@@ -1,0 +1,1390 @@
+{
+  "version": 1,
+  "name": "oucb",
+  "commonName": "Resources Manager User Control Block",
+  "macroId": "iraoucb",
+  "description": "The OUCB describes the status of the associated memory (user) to the system resources manager. It contains resource usage information needed to decide when to swap-in the memory. The OUCB is positioned on transitional system resources manager chains to indicate actions to be taken for that memory. Owned by Systems Resource Manager (SC1CX). Subpool 245, ESQA, key 0, above 16M line. Size: 2048 bytes (X'800'). Created by IRAEVMEM and IRARMERR.",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [
+    "ascb"
+  ],
+  "storageAttributes": {
+    "subpools": [245],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "oucb",
+      "description": "First 256 bytes of OUCB (first two cache lines)",
+      "fields": [
+        {
+          "name": "OUCBNAME",
+          "description": "Block identification eye-catcher - 'OUCB'",
+          "offset": 0,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "OUCBFWD",
+          "description": "Swap chain forward pointer",
+          "offset": 4,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "oucb"
+        },
+        {
+          "name": "OUCBBCK",
+          "description": "Swap chain backward pointer",
+          "offset": 8,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "oucb"
+        },
+        {
+          "name": "OUCBTMA",
+          "description": "Time of last analysis",
+          "offset": 12,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBQFL",
+          "description": "Swappability transition flags",
+          "offset": 16,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBGOO": {
+              "description": "Address space is being swapped out or logically swapped",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBGOI": {
+              "description": "Transitioning into core",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBGOB": {
+              "description": "Transitioning between states",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBQSFL": {
+              "description": "QSCEFL recursion flag",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBOFF": {
+              "description": "Requesting enter wait state",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBOUT": {
+              "description": "Requesting enter out state",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBLSW": {
+              "description": "Logically swapped",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBDLYB": {
+              "description": "Delayed by RTO on out queue",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBSFL",
+          "description": "Swapout continuation flags",
+          "offset": 17,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBNSW": {
+              "description": "Non-swappable status",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBCTI": {
+              "description": "CTL inhibits quiesce",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBBIB": {
+              "description": "Bring in for cancel",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBINV": {
+              "description": "OUCB is invalid",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBNSWI": {
+              "description": "Prevent swap in",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBPVL": {
+              "description": "Privileged program running",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBENQ": {
+              "description": "ENQ resident status",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBSCN": {
+              "description": "Swap chain termination mark",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBYFL",
+          "description": "User type flags",
+          "offset": 18,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBPSTE": {
+              "description": "Post error",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBSTT": {
+              "description": "START created user",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBLOG": {
+              "description": "Logon created user",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBMNT": {
+              "description": "Mount created user",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBRSFL": {
+              "description": "Restore fail",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBAXS": {
+              "description": "Aux shortage forced swap",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBDTA": {
+              "description": "Data accumulation impacted",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBFXS": {
+              "description": "Fixed storage forced swap",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBAFL",
+          "description": "Algorithm status flags",
+          "offset": 19,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBIRSW": {
+              "description": "RealSwap in pending",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBAPG": {
+              "description": "APG algorithm applicable",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBREPT": {
+              "description": "RPGNs are present",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBENQI": {
+              "description": "OUCBENQ was on at some point during the policy adjustment interval (goal mode only)",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBJSR": {
+              "description": "JobSelect received",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBMXS": {
+              "description": "Memory pool shortage forced swap",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBNWT": {
+              "description": "MSO detected nonswappable wait",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBASW": {
+              "description": "Authorized for dontswap",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBTFL",
+          "description": "Transaction status flags",
+          "offset": 20,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBATR": {
+              "description": "Transaction in existence",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBSTR": {
+              "description": "Transaction start pending",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBNTR": {
+              "description": "Transaction stop pending",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBRTR": {
+              "description": "Transaction resume pending",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBPCH": {
+              "description": "Performance group period change pending",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBMAR": {
+              "description": "Activity recording subtract flag",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBINP": {
+              "description": "Initiator attach pending",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBINC": {
+              "description": "Initiator attach current",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBEFL",
+          "description": "Event status flags",
+          "offset": 21,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBLWT": {
+              "description": "Long wait status",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBQSFLP2": {
+              "description": "QSCEFL swap-out phase 2",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBQSC": {
+              "description": "QSCECMP event processed",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBMWT": {
+              "description": "MSO detected wait status",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBASSTATUS",
+          "description": "Address space status flags",
+          "offset": 22,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBASINIT": {
+              "description": "Address space initialization done",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBASTERM": {
+              "description": "Address space termination started",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBASSINIT": {
+              "description": "Address space step initialization done",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBASSTERM": {
+              "description": "Address space step termination done",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBASRSV4": {
+              "description": "Reserved",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBASRSV5": {
+              "description": "Reserved",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBASRSV6": {
+              "description": "Reserved",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBASRSV7": {
+              "description": "Reserved",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBUFL",
+          "description": "User type flags",
+          "offset": 23,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBJSFS": {
+              "description": "Job select delayed",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBJSAS": {
+              "description": "Job select delayed (alternate)",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBNSWDP": {
+              "description": "NSW address space currently non-dispatchable",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBTSWP": {
+              "description": "TransSwap in progress",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBTSWC": {
+              "description": "TransSwap complete",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBSI": {
+              "description": "Storage isolation control active",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBENQR": {
+              "description": "OUCBENQ on during RA interval",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBSIFX": {
+              "description": "Fixed target working set size for GRS storage isolation",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBLFL",
+          "description": "Algorithm status flags",
+          "offset": 24,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBEAS": {
+              "description": "Early address space that has not been through InitAtt yet",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBQSRV": {
+              "description": "Space was managed as a server when it was quiesced",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBRQSC": {
+              "description": "Quiesced by reset command",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBFWA": {
+              "description": "Fast workload acceptance application",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBTET": {
+              "description": "TransSwap expiration timer",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBREDP": {
+              "description": "Reduced preemption required",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBPRF": {
+              "description": "Previous resource failure",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBSTGI": {
+              "description": "Address space has been recognized initializing storage",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBRFL",
+          "description": "More user flags",
+          "offset": 25,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBCSFS": {
+              "description": "Swap in fail defer bit - user on wait queue",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBCSFM": {
+              "description": "Swap in message required",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBEASI": {
+              "description": "Early address space",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBHIDP": {
+              "description": "Early address space needs high priority",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBBJOB": {
+              "description": "Address space is running a batch job",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBSTFX": {
+              "description": "Fixed below frames are stealable indicator",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBDFSW": {
+              "description": "Swap in fail special processing - real thresholds raised on behalf of the address space's primary working set",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBLLSW": {
+              "description": "Last swap was logical",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBNDP",
+          "description": "New ASCB dispatching priority",
+          "offset": 26,
+          "length": 1,
+          "type": "bitstring"
+        },
+        {
+          "name": "OUCBTNDP",
+          "description": "New TS dispatching priority",
+          "offset": 27,
+          "length": 1,
+          "type": "bitstring"
+        },
+        {
+          "name": "OUCBMFL",
+          "description": "Miscellaneous flags",
+          "offset": 28,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBSBT": {
+              "description": "Stole below threshold",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBAFAP": {
+              "description": "Auxiliary swap-in frame allocation is pending for primary working set (MCVCAPWS was raised)",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBDFS2": {
+              "description": "Thresholds raised by secondary working set size",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBMGSW": {
+              "description": "Selected for migration swap (ESA mode only, do not use in z/OS)",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBDISC": {
+              "description": "Frames are included in the logical swap discretionary count (ESA mode only, do not use in z/OS)",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBASAP": {
+              "description": "Secondary working set allocation pending",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBMPUR": {
+              "description": "Selected for migration purge (ESA mode only, do not use in z/OS)",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBACNT": {
+              "description": "Account number specified on job",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBIAC",
+          "description": "Initiator attach count",
+          "offset": 29,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBRSV1",
+          "description": "Reserved",
+          "offset": 30,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "OUCBPGP",
+          "description": "Current WPGP offset in WPGD; goal mode: period number",
+          "offset": 31,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBWMG",
+          "description": "WPGD offset in WPGD table. Not programming interface.",
+          "offset": 32,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBWSCI",
+          "description": "Goal mode: service class index",
+          "offset": 32,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBWRCI",
+          "description": "Goal mode: report class index",
+          "offset": 34,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBMFL2",
+          "description": "More miscellaneous flags, serialized by SRM lock",
+          "offset": 36,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBVFMG": {
+              "description": "Message issued on behalf of address space swapped out due to vector wait",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBMGIN": {
+              "description": "SRM has requested that RSM inhibit migration of DREF pages (ESA mode only)",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBAFPD": {
+              "description": "Auxiliary swap-in frame allocation is pending for swap-in of DREF pages (MCVCAPWS was raised)",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBDFDR": {
+              "description": "Real thresholds were raised on behalf of the DREF pages in the address space",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBDFDE": {
+              "description": "Expanded storage thresholds were raised on behalf of the DREF pages (ESA mode only)",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBMIGP": {
+              "description": "MIGPURGE indicator: address space has been returned to RSM for this instance of MIGPURGE (ESA mode only)",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBRPT1": {
+              "description": "First time of entry into RPT - Raise Processor Threshold (ESA mode only)",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBERST": {
+              "description": "Eligible for restart flag",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBMFL3",
+          "description": "More miscellaneous flags",
+          "offset": 37,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBAPPC": {
+              "description": "APPC transaction program",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBPMON": {
+              "description": "This address space is being monitored",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBVALV": {
+              "description": "Working set management recommendation value is valid",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBOMVS": {
+              "description": "OpenMVS transaction program",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBTBMN": {
+              "description": "Address space is to be monitored when enough data has been gathered about it",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBSTTA": {
+              "description": "OUCBWKTM for this address space has been added to the system transaction time in the workload activity reporting table for the period",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBGWRK": {
+              "description": "Initiator started using GETWORK interface",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBINIT": {
+              "description": "Started task is an initiator",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBDMO",
+          "description": "Offset into domain table; valid only in compatibility mode",
+          "offset": 38,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBDMN",
+          "description": "Domain number",
+          "offset": 40,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBSRC",
+          "description": "Swap out reason code",
+          "offset": 41,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBSWC",
+          "description": "Transaction swap count",
+          "offset": 42,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBASCB",
+          "description": "ASCB address. Not programming interface.",
+          "offset": 44,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "ascb"
+        },
+        {
+          "name": "OUCBPAGP",
+          "description": "Pointer to the APAG for this address space. Not programming interface.",
+          "offset": 48,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "OUCBTMW",
+          "description": "WLM interval start time",
+          "offset": 52,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBWMS",
+          "description": "Interval service accumulator",
+          "offset": 56,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBCPU",
+          "description": "Interval CPU service accumulator",
+          "offset": 60,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBIOC",
+          "description": "Deprecated (interval I/O service no longer accumulated)",
+          "offset": 64,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBMSO",
+          "description": "Deprecated (interval MSO service no longer accumulated)",
+          "offset": 68,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBTMS",
+          "description": "Time of last swap action",
+          "offset": 72,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBTMO",
+          "description": "Transaction start time",
+          "offset": 76,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBDRFR",
+          "description": "Count of DREF pages in real storage; updated from values returned from RSM IARXCNTF routine",
+          "offset": 80,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBACT",
+          "description": "Action queue forward pointer. Not programming interface.",
+          "offset": 84,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "oucb"
+        },
+        {
+          "name": "OUCBCSW",
+          "description": "Compare and swap field",
+          "offset": 88,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBACN",
+          "description": "Deferred action flags (2-byte array at offset 0x58)",
+          "offset": 88,
+          "length": 1,
+          "type": "bitstring"
+        },
+        {
+          "name": "OUCBCFL",
+          "description": "Multiprocess condition flags",
+          "offset": 90,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBRDY": {
+              "description": "UserRdy event received",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBRSM": {
+              "description": "RSM service outstanding",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBESSS": {
+              "description": "Suspended for swapout to extended (ESA mode only)",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBESSW": {
+              "description": "Has been or will be swapped to extended (ESA mode only)",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBASSW": {
+              "description": "Has been or will be swapped to auxiliary",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBCSMF": {
+              "description": "SMF needs to be notified that the address space is swapped in",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBSHBN": {
+              "description": "Server history block needed",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBHITR": {
+              "description": "HIT has run since UserRdy",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBCSBT",
+          "description": "Compare and swap bits",
+          "offset": 91,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBTRM": {
+              "description": "Terminal wait status",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBOWT": {
+              "description": "Output terminal wait",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBCIM": {
+              "description": "Composite input message",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBPSTR": {
+              "description": "If post error, recover",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBSTA": {
+              "description": "Swap turn around",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBQSS": {
+              "description": "QSCEST event processed",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBOIW": {
+              "description": "A detected wait should be treated as an OpenMVS input wait",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBOOW": {
+              "description": "An OpenMVS output wait condition is present",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBCMRV",
+          "description": "Composite recommendation value",
+          "offset": 92,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBWMRL",
+          "description": "Workload recommendation value saved at swap-out",
+          "offset": 96,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBVAL",
+          "description": "Working set management recommendation value",
+          "offset": 100,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBPFL",
+          "description": "Processing flags",
+          "offset": 102,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBFTDN": {
+              "description": "Trimming has been completed for this address space",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBPSD": {
+              "description": "This address space is a direct physical swap",
+              "offset": 1,
+              "length": 1
+            },
+            "OUCBDPSW": {
+              "description": "Delayed physical swap",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBSRP": {
+              "description": "Steal recently referenced pages on the next steal attempt from the address space",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBPTDN": {
+              "description": "Preliminary trimming has been completed for this address space",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBFTDNNOSWAP": {
+              "description": "Trimming has been completed for this address space - no swapping will be done",
+              "offset": 5,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBACTL",
+          "description": "Length of storage allocated to save accounting data",
+          "offset": 103,
+          "length": 1,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBIOCL",
+          "description": "Deprecated (I/O service no longer accumulated)",
+          "offset": 104,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBDSPC",
+          "description": "Current dispatching control",
+          "offset": 112,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBMTW": {
+              "description": "Current control is MTW",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBTS": {
+              "description": "Current control is time slicing",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBTSC3": {
+              "description": "Workarea for TS",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBTSC4": {
+              "description": "Workarea for TS",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBTSC5": {
+              "description": "Workarea for TS",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBTSC6": {
+              "description": "Workarea for TS",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBTSC7": {
+              "description": "Workarea for TS",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBDSPN",
+          "description": "New dispatching control",
+          "offset": 113,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "OUCBNMTW": {
+              "description": "New control is MTW",
+              "offset": 0,
+              "length": 1
+            },
+            "OUCBNTS": {
+              "description": "New control is time slicing",
+              "offset": 2,
+              "length": 1
+            },
+            "OUCBTSN3": {
+              "description": "Workarea for TS",
+              "offset": 3,
+              "length": 1
+            },
+            "OUCBTSN4": {
+              "description": "Workarea for TS",
+              "offset": 4,
+              "length": 1
+            },
+            "OUCBTSN5": {
+              "description": "Workarea for TS",
+              "offset": 5,
+              "length": 1
+            },
+            "OUCBTSN6": {
+              "description": "Workarea for TS",
+              "offset": 6,
+              "length": 1
+            },
+            "OUCBTSN7": {
+              "description": "Workarea for TS",
+              "offset": 7,
+              "length": 1
+            }
+          }
+        },
+        {
+          "name": "OUCBNTSP",
+          "description": "Number of additional TransSwaps pending",
+          "offset": 114,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBPSS",
+          "description": "CPU page seconds",
+          "offset": 116,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBPST",
+          "description": "Time of last working set change",
+          "offset": 124,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBRCT",
+          "description": "Interval RCT service accumulator",
+          "offset": 128,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBIIT",
+          "description": "Interval I/O interrupt service accumulator",
+          "offset": 132,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBNDS",
+          "description": "Number of outstanding DontSwaps",
+          "offset": 136,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBNTSG",
+          "description": "New time slice group number",
+          "offset": 138,
+          "length": 1,
+          "type": "bitstring"
+        },
+        {
+          "name": "OUCBRSV2",
+          "description": "Reserved",
+          "offset": 139,
+          "length": 1,
+          "type": "hex"
+        },
+        {
+          "name": "OUCBTME",
+          "description": "Last response time",
+          "offset": 140,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBTML",
+          "description": "Time of last termwait",
+          "offset": 144,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBDWMS",
+          "description": "Interval domain service accumulator",
+          "offset": 148,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBSRB",
+          "description": "Interval SRB service accumulator",
+          "offset": 152,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBTWSS",
+          "description": "Target working set size",
+          "offset": 156,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBTMP",
+          "description": "Performance group period start time",
+          "offset": 160,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBDLYT",
+          "description": "RTO delay end time",
+          "offset": 164,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBHST",
+          "description": "Interval Hiperspace service accumulator",
+          "offset": 168,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBCFS",
+          "description": "Accumulated sample of RAXFMCT for determining average central storage",
+          "offset": 172,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBSUBN",
+          "description": "Subsystem name used by SMF and for workload activity reporting. Not programming interface.",
+          "offset": 176,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "OUCBRPG",
+          "description": "Reset performance group number",
+          "offset": 180,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBSPG",
+          "description": "Specified performance group number",
+          "offset": 182,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBNPG",
+          "description": "New performance group number",
+          "offset": 184,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBSRPG",
+          "description": "Subsystem RPGN",
+          "offset": 186,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBNRPG",
+          "description": "Transaction name RPGN",
+          "offset": 188,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBURPG",
+          "description": "User ID RPGN",
+          "offset": 190,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBCRPG",
+          "description": "Transaction class RPGN",
+          "offset": 192,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBARPG",
+          "description": "Account number RPGN",
+          "offset": 194,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBDRFP",
+          "description": "Count of DREF pages in processor storage (ESA mode only, do not use in z/OS)",
+          "offset": 196,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBTRXN",
+          "description": "Transaction name",
+          "offset": 200,
+          "length": 8,
+          "type": "string"
+        },
+        {
+          "name": "OUCBUSRD",
+          "description": "User ID",
+          "offset": 208,
+          "length": 8,
+          "type": "string"
+        },
+        {
+          "name": "OUCBCLS",
+          "description": "Transaction class name",
+          "offset": 216,
+          "length": 8,
+          "type": "string"
+        },
+        {
+          "name": "OUCBTRS",
+          "description": "Accumulated transaction service",
+          "offset": 224,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBTRR",
+          "description": "Transaction residency time accumulator",
+          "offset": 228,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBACTP",
+          "description": "Pointer to accounting info (mapped by IRAACNT); OUCBACNT bit should be interrogated before referencing the accounting data. Not programming interface.",
+          "offset": 232,
+          "length": 4,
+          "type": "address"
+        },
+        {
+          "name": "OUCBSWSS",
+          "description": "Secondary working set size",
+          "offset": 236,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBPSUM",
+          "description": "Base value for page-in count",
+          "offset": 240,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBFIXB",
+          "description": "Count of below frames needed for fixed/LSQA pages",
+          "offset": 244,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBAPLV",
+          "description": "APPC optimization level",
+          "offset": 246,
+          "length": 1,
+          "type": "bitstring"
+        },
+        {
+          "name": "OUCBESAP",
+          "description": "Individual expanded storage access policy, goal mode only (ESA mode only)",
+          "offset": 247,
+          "length": 1,
+          "type": "bitstring"
+        },
+        {
+          "name": "OUCBRST",
+          "description": "Page residency time in 1024 microsecond units",
+          "offset": 248,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "OUCBEND",
+          "description": "End of OUCB",
+          "offset": 3072,
+          "length": 8,
+          "type": "hex",
+          "endOfControlBlock": true
+        }
+      ]
+    }
+  ]
+}
