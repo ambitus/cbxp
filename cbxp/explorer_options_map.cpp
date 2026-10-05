@@ -508,12 +508,11 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
                                   "' for control block tree...");
       size_t count = 1;
       if (!count_field.empty()) {
-        // Field names in the map are stored as-parsed from JSON (uppercase by
-        // convention), but the "count" attribute value may be lowercase — match
-        // the same normalisation that parseFields() applies.
+        // Lower-case the count key to match the normalised JSON keys written
+        // by parseFields().
         std::string count_key = count_field;
         std::transform(count_key.begin(), count_key.end(), count_key.begin(),
-                       [](unsigned char c) { return std::toupper(c); });
+                       [](unsigned char c) { return std::tolower(c); });
         const control_block_field_t& count_f =
             next_control_block_map[count_key];
         if (count_f.length == 8) {
@@ -591,14 +590,21 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
       // half" of it
       continue;
     }
-    Logger::getInstance().debug("Loading field '" + field_name +
+    // Normalise field names to lower-case in the output JSON so that filter
+    // key matching and count key lookup are case-insensitive.
+    std::string lower_field_name = field_name;
+    std::transform(lower_field_name.begin(), lower_field_name.end(),
+                   lower_field_name.begin(),
+                   [](unsigned char c) { return std::tolower(c); });
+    Logger::getInstance().debug("Loading field '" + lower_field_name +
                                 "' at offset '" +
                                 std::to_string(field_data.offset) + "'");
     if (field_data.repeated) {
-      repeated_fields[field_name] = field_data;
+      repeated_fields[lower_field_name] = field_data;
       continue;
     } else {
-      field_json[field_name] = ExplorerOptionsMap::fieldToJson(field_data);
+      field_json[lower_field_name] =
+          ExplorerOptionsMap::fieldToJson(field_data);
     }
     control_block_data.merge_patch(field_json);
   }
@@ -617,10 +623,10 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
   for (const auto& [field_name, field_data] : repeated_fields) {
     nlohmann::json field_json    = {};
     field_json[field_name + "s"] = {};
-    // Upper-case the count key for JSON lookup
+    // Lower-case the count key to match the normalised JSON keys above
     std::string count_key = field_data.count;
     std::transform(count_key.begin(), count_key.end(), count_key.begin(),
-                   [](unsigned char c) { return std::toupper(c); });
+                   [](unsigned char c) { return std::tolower(c); });
     Logger::getInstance().debug(
         "Repeated field '" + field_name + "': count_key='" + count_key +
         "', raw JSON value=" +
