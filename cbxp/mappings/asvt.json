@@ -110,7 +110,9 @@
           "description": "ACRONYM IN EBCDIC -ASVT-",
           "offset": 512,
           "length": 4,
-          "type": "string"
+          "type": "string",
+          "init": [{ "type": "string", "value": "ASVT" }],
+          "eyecatcher": true
         },
         {
           "name": "ASVTMAXU",

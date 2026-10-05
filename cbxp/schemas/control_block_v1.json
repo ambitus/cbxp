@@ -253,6 +253,8 @@
               ]
             },
             "init": { "$ref": "#/definitions/initArray" },
+            "eyecatcher": { "type": "boolean", "const": true,
+              "description": "When true, the field is the control block eyecatcher. The expected ASCII value must be supplied via init[0] (type: string)." },
             "repeated": { "type": "boolean", "const": true },
             "count": { "type": "string", "minLength": 1 },
             "ignoreMask": { "type": "string", "pattern": "^[0-9A-Fa-f]+$", "default": "00" },
@@ -272,7 +274,8 @@
           "dependencies": {
             "repeated": ["count"],
             "count": ["repeated"],
-            "ignoreMask": ["repeated"]
+            "ignoreMask": ["repeated"],
+            "eyecatcher": ["init"]
           },
           "additionalProperties": false
         },

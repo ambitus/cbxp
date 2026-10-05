@@ -494,12 +494,8 @@
           "offset": 96,
           "length": 4,
           "type": "string",
-          "init": [
-            {
-              "type": "string",
-              "value": " CVT"
-            }
-          ]
+          "init": [{ "type": "string", "value": " CVT" }],
+          "eyecatcher": true
         },
         {
           "name": "CVTCUCB",

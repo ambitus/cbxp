@@ -2,6 +2,7 @@
 
 #include <fnmatch.h>
 
+#include <algorithm>
 #include <nlohmann/json.hpp>
 
 #include "control_block_error.hpp"
@@ -105,6 +106,18 @@ ControlBlock::ControlBlock(
       }
       if (repeated and (*it).contains("ignoreMask")) {
         ignore_mask = (*it)["ignoreMask"].get<std::string>();
+      }
+      if ((*it).contains("eyecatcher") && (*it)["eyecatcher"].get<bool>() &&
+          (*it).contains("init")) {
+        const auto& init_arr = (*it)["init"];
+        auto str_item        = std::find_if(
+            init_arr.begin(), init_arr.end(), [](const nlohmann::json& item) {
+              return item["type"].get<std::string>() == "string";
+            });
+        if (str_item != init_arr.end()) {
+          eyecatcher_field_ = {offset, length,
+                               (*str_item)["value"].get<std::string>()};
+        }
       }
       control_block_field_t field = {name,  offset,      length,
                                      type,  pointsTo,    repeated,

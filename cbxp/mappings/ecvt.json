@@ -26,12 +26,8 @@
           "offset": 0,
           "length": 4,
           "type": "string",
-          "init": [
-            {
-              "type": "string",
-              "value": "ECVT"
-            }
-          ]
+          "init": [{ "type": "string", "value": "ECVT" }],
+          "eyecatcher": true
         },
         {
           "name": "ECVTCPLX",

@@ -31,7 +31,9 @@
           "description": "ACRONYM IN EBCDIC - ASSB.",
           "offset": 0,
           "length": 4,
-          "type": "string"
+          "type": "string",
+          "init": [{ "type": "string", "value": "ASSB" }],
+          "eyecatcher": true
         },
         {
           "name": "ASSBSMFL",

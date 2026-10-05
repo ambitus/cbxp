@@ -1167,12 +1167,8 @@
           "offset": 512,
           "length": 4,
           "type": "string",
-          "init": [
-            {
-              "type": "string",
-              "value": "PSA "
-            }
-          ]
+          "init": [{ "type": "string", "value": "PSA " }],
+          "eyecatcher": true
         },
         {
           "name": "PSACPUPA",

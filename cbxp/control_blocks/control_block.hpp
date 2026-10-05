@@ -23,6 +23,12 @@ typedef struct {
 } control_block_field_t;
 
 typedef struct {
+  ptrdiff_t offset;
+  size_t length;
+  std::string expected;  // ASCII string; empty means no validation
+} eyecatcher_field_t;
+
+typedef struct {
   bool is_common;
   bool is_protected;
   unsigned char key;
@@ -40,6 +46,7 @@ class ControlBlock {
   size_t control_block_length_            = 0;
   ptrdiff_t max_offset_                   = 0;
   void* fixed_address_                    = nullptr;
+  eyecatcher_field_t eyecatcher_field_    = {0, 0, ""};
   static FieldType stringToType(const std::string& type_str);
 
  public:
@@ -59,6 +66,9 @@ class ControlBlock {
   }
   ptrdiff_t getMaxOffset() const { return max_offset_; }
   const void* getFixedAddress() const { return fixed_address_; }
+  const eyecatcher_field_t& getEyecatcherField() const {
+    return eyecatcher_field_;
+  }
   explicit ControlBlock(
       const nlohmann::json_schema::json_validator& cbxp_schema_validator,
       const nlohmann::json& control_block_map);

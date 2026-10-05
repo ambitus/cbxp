@@ -411,6 +411,28 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
   return field_json;
 }
 
+bool ExplorerOptionsMap::eyecatcherMatches() const {
+  const eyecatcher_field_t& ec = control_block_->getEyecatcherField();
+  if (ec.expected.empty()) {
+    return true;
+  }
+  const char* raw = static_cast<const char*>(p_control_block_) + ec.offset;
+  std::string actual =
+      ControlBlockFieldFormatter::getString(raw, static_cast<int>(ec.length));
+  if (actual != ec.expected) {
+    Logger::getInstance().debug(
+        "Eyecatcher mismatch for '" + control_block_->getName() + "' at " +
+        [&]() {
+          std::ostringstream oss;
+          oss << p_control_block_;
+          return oss.str();
+        }() +
+        ": expected '" + ec.expected + "', got '" + actual + "' — skipping");
+    return false;
+  }
+  return true;
+}
+
 void ExplorerOptionsMap::checkDataLength(const ptrdiff_t offset) const {
   if (skip_buffer_length_check_) {
     // Data length check is only done when formatting
@@ -650,6 +672,9 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
   }
   if (p_control_block_ != nullptr && recursive == true) {
     // Pointer already resolved by the caller (fieldToJson); parse directly.
+    if (!ExplorerOptionsMap::eyecatcherMatches()) {
+      return control_block_data;
+    }
     nlohmann::json single_control_block_json =
         ExplorerOptionsMap::parseFields();
     if (ExplorerOptionsMap::matchFilter(single_control_block_json)) {
@@ -680,10 +705,12 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
     Logger::getInstance().hexDump(
         reinterpret_cast<const char*>(p_control_block_), dump_length,
         control_block_name == "psa");
-    nlohmann::json single_control_block_json =
-        ExplorerOptionsMap::parseFields();
-    if (ExplorerOptionsMap::matchFilter(single_control_block_json)) {
-      control_block_data[control_block_name] = single_control_block_json;
+    if (ExplorerOptionsMap::eyecatcherMatches()) {
+      nlohmann::json single_control_block_json =
+          ExplorerOptionsMap::parseFields();
+      if (ExplorerOptionsMap::matchFilter(single_control_block_json)) {
+        control_block_data[control_block_name] = single_control_block_json;
+      }
     }
   } else {
     control_block_data[control_block_name + "s"] = {};
@@ -700,6 +727,9 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
       Logger::getInstance().hexDump(
           reinterpret_cast<const char*>(p_control_block_),
           control_block_->getMaxOffset());
+      if (!ExplorerOptionsMap::eyecatcherMatches()) {
+        continue;
+      }
       nlohmann::json single_control_block_json =
           ExplorerOptionsMap::parseFields();
       if (ExplorerOptionsMap::matchFilter(single_control_block_json)) {

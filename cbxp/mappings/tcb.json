@@ -35,7 +35,9 @@
           "description": "ACRONYM IN EBCDIC -STCB-",
           "offset": 0,
           "length": 4,
-          "type": "string"
+          "type": "string",
+          "init": [{ "type": "string", "value": "STCB" }],
+          "eyecatcher": true
         },
         {
           "name": "STCBRACP",
