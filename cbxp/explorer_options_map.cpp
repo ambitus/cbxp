@@ -419,7 +419,11 @@ bool ExplorerOptionsMap::eyecatcherMatches() const {
   const char* raw = static_cast<const char*>(p_control_block_) + ec.offset;
   std::string actual =
       ControlBlockFieldFormatter::getString(raw, static_cast<int>(ec.length));
-  if (actual != ec.expected) {
+  // getString strips trailing whitespace; apply the same trim to the expected
+  // value so "PSA " and "PSA" compare equal.
+  std::string expected = ec.expected;
+  expected.erase(expected.find_last_not_of(" \t\0", std::string::npos, 3) + 1);
+  if (actual != expected) {
     Logger::getInstance().debug(
         "Eyecatcher mismatch for '" + control_block_->getName() + "' at " +
         [&]() {
@@ -427,7 +431,7 @@ bool ExplorerOptionsMap::eyecatcherMatches() const {
           oss << p_control_block_;
           return oss.str();
         }() +
-        ": expected '" + ec.expected + "', got '" + actual + "' — skipping");
+        ": expected '" + expected + "', got '" + actual + "' — skipping");
     return false;
   }
   return true;
