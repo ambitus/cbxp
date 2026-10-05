@@ -83,8 +83,10 @@ ControlBlockExplorer::getControlBlocks() {
            nlohmann::json::parse(ASCB_JSON))},
           {"assb", ControlBlock(cbxp_schema_validator,
            nlohmann::json::parse(ASSB_JSON))},
-          //{"oucb", ControlBlock(cbxp_schema_validator, OUCB_JSON)},
-          //{"ldax", ControlBlock(cbxp_schema_validator, LDAX_JSON)},
+          {"oucb", ControlBlock(cbxp_schema_validator,
+           nlohmann::json::parse(OUCB_JSON))},
+          {"ldax", ControlBlock(cbxp_schema_validator,
+           nlohmann::json::parse(LDAX_JSON))},
       };
     } catch (const std::exception& e) {
       Logger::getInstance().debug("Initialization of JSON mappings failed: " +

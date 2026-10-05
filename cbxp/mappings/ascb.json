@@ -701,7 +701,8 @@
           "offset": 144,
           "length": 4,
           "type": "address",
-          "programmingInterface": true
+          "programmingInterface": true,
+          "pointsTo": "oucb"
         },
         {
           "name": "ASCBOUXB",

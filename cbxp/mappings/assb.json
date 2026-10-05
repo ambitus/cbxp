@@ -510,7 +510,8 @@
           "offset": 176,
           "length": 8,
           "type": "address",
-          "programmingInterface": true
+          "programmingInterface": true,
+          "pointsTo": "ldax"
         },
         {
           "name": "ASSBLDXH",
