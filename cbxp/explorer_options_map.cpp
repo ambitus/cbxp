@@ -515,12 +515,17 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
                        [](unsigned char c) { return std::tolower(c); });
         const control_block_field_t& count_f =
             next_control_block_map[count_key];
-        if (count_f.length == 8) {
-          count = *(reinterpret_cast<const uint64_t*>(
-              static_cast<const char*>(next) + count_f.offset));
+        const char* count_ptr = static_cast<const char*>(next) + count_f.offset;
+        if (count_f.type == SIGNED_INT) {
+          int64_t signed_count =
+              (count_f.length == 8)
+                  ? *(reinterpret_cast<const int64_t*>(count_ptr))
+                  : *(reinterpret_cast<const int32_t*>(count_ptr));
+          count = (signed_count > 0) ? static_cast<size_t>(signed_count) : 0;
         } else {
-          count = *(reinterpret_cast<const uint32_t*>(
-              static_cast<const char*>(next) + count_f.offset));
+          count = (count_f.length == 8)
+                      ? *(reinterpret_cast<const uint64_t*>(count_ptr))
+                      : *(reinterpret_cast<const uint32_t*>(count_ptr));
         }
         Logger::getInstance().debug(
             "Repeated pointer field '" + pointer_field_name +
