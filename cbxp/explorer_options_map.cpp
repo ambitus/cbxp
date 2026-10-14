@@ -508,13 +508,8 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
                                   "' for control block tree...");
       size_t count = 1;
       if (!count_field.empty()) {
-        // Lower-case the count key to match the normalised JSON keys written
-        // by parseFields().
-        std::string count_key = count_field;
-        std::transform(count_key.begin(), count_key.end(), count_key.begin(),
-                       [](unsigned char c) { return std::tolower(c); });
         const control_block_field_t& count_f =
-            next_control_block_map[count_key];
+            next_control_block_map.at(count_field);
         const char* count_ptr = static_cast<const char*>(next) + count_f.offset;
         if (count_f.type == SIGNED_INT) {
           int64_t signed_count =
@@ -527,9 +522,10 @@ const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
                       ? *(reinterpret_cast<const uint64_t*>(count_ptr))
                       : *(reinterpret_cast<const uint32_t*>(count_ptr));
         }
-        Logger::getInstance().debug(
-            "Repeated pointer field '" + pointer_field_name +
-            "' count_field='" + count_key + "' count=" + std::to_string(count));
+        Logger::getInstance().debug("Repeated pointer field '" +
+                                    pointer_field_name + "' count_field='" +
+                                    count_field +
+                                    "' count=" + std::to_string(count));
       }
       for (size_t i = 0; i < count; i++) {
         // Then we iterate through the "next" control blocks
