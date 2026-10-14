@@ -283,6 +283,12 @@ bool ExplorerOptionsMap::compare(const nlohmann::json& json_value,
 bool ExplorerOptionsMap::matchFilter(nlohmann::json& control_block_json) {
   Logger::getInstance().debug("Applying filters to the '" +
                               control_block_->getName() + "' control block...");
+  if (child_filter_failed_) {
+    Logger::getInstance().debug(
+        "A child control block filter did not match for the '" +
+        control_block_->getName() + "' control block");
+    return false;
+  }
   if (current_filters_.empty()) {
     // If the filter map is empty then we want to return the control block
     Logger::getInstance().debug("No filters were provided for the '" +
@@ -406,6 +412,11 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
         ExplorerOptionsMap(options_map_[control_block_name], control_block_name,
                            control_blocks_, p_control_block, 0)
             .getControlBlockData(true);
+    if (!nested.contains(control_block_name)) {
+      // The child's filter rejected this entry; propagate the failure upward
+      // so the parent is also excluded from the output.
+      child_filter_failed_ = true;
+    }
     field_json = nested[control_block_name];
   }
   return field_json;

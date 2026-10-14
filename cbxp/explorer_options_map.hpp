@@ -43,6 +43,7 @@ class ExplorerOptionsMap {
   std::unordered_map<std::string, cbxp_options_t> options_map_;
   std::unordered_map<std::string, std::vector<cbxp_filter_t>> current_filters_;
   bool skip_buffer_length_check_ = false;
+  bool child_filter_failed_      = false;
   std::optional<ControlBlock> control_block_;
   const std::unordered_map<std::string, ControlBlock>& control_blocks_;
   const void* p_control_block_;
