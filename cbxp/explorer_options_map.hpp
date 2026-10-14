@@ -44,12 +44,14 @@ class ExplorerOptionsMap {
   std::unordered_map<std::string, std::vector<cbxp_filter_t>> current_filters_;
   bool skip_buffer_length_check_ = false;
   bool child_filter_failed_      = false;
+  bool filter_rejected_          = false;
   std::optional<ControlBlock> control_block_;
   const std::unordered_map<std::string, ControlBlock>& control_blocks_;
   const void* p_control_block_;
   const size_t buffer_length_;
 
  public:
+  bool wasFilterRejected() const { return filter_rejected_; }
   nlohmann::json getControlBlockData(const bool recursive = false);
   explicit ExplorerOptionsMap(
       const cbxp_options_t& cbxp_options, const std::string& control_block_name,

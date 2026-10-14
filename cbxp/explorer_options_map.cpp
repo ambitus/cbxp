@@ -408,13 +408,13 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
       p_control_block = reinterpret_cast<const void* __ptr32>(
           control_block_->formatter_.uint<uint32_t>(raw));
     }
-    nlohmann::json nested =
-        ExplorerOptionsMap(options_map_[control_block_name], control_block_name,
-                           control_blocks_, p_control_block, 0)
-            .getControlBlockData(true);
-    if (!nested.contains(control_block_name)) {
-      // The child's filter rejected this entry; propagate the failure upward
-      // so the parent is also excluded from the output.
+    ExplorerOptionsMap child_explorer(options_map_[control_block_name],
+                                      control_block_name, control_blocks_,
+                                      p_control_block, 0);
+    nlohmann::json nested = child_explorer.getControlBlockData(true);
+    if (child_explorer.wasFilterRejected()) {
+      // The child had valid data but its filter rejected it; propagate the
+      // failure so the parent is also excluded from the output.
       child_filter_failed_ = true;
     }
     field_json = nested[control_block_name];
@@ -703,6 +703,8 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
         ExplorerOptionsMap::parseFields();
     if (ExplorerOptionsMap::matchFilter(single_control_block_json)) {
       control_block_data[control_block_name] = single_control_block_json;
+    } else {
+      filter_rejected_ = true;
     }
     return control_block_data;
   }
