@@ -711,6 +711,10 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
   if (p_control_block_ == nullptr && recursive == false) {
     p_control_blocks =
         ExplorerOptionsMap::findControlBlockPointer(control_block_);
+  } else if (p_control_block_ != nullptr && recursive == false) {
+    // Format: the caller supplied the control block buffer, so there is
+    // nothing to locate in live memory.
+    p_control_blocks = {p_control_block_};
   }
   if (p_control_blocks.size() == 0) {
     Logger::getInstance().debug("No pointers found for '" + control_block_name +
@@ -721,6 +725,11 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
     int dump_length  = control_block_name == "psa"
                            ? (control_block_->getMaxOffset() - 8) / 2
                            : control_block_->getMaxOffset();
+    if (!skip_buffer_length_check_ &&
+        static_cast<size_t>(dump_length) > buffer_length_) {
+      // Never read past the end of a user-provided buffer
+      dump_length = static_cast<int>(buffer_length_);
+    }
     Logger::getInstance().debug(control_block_name + " hex dump: address=" +
                                 [&]() {
                                   std::ostringstream oss;

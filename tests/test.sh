@@ -130,7 +130,7 @@ run_with_expected_exit_code 255 ./dist/cbxp extract -i asvt.ascb psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -i ascb psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -i ecvt ascb
 run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt.ecvt -i cvt.ascb psa
-run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt.asvt.ascb -i ecvt psa
+run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt.asvt.ascb -i oucb psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -i cvt cvt
 run_with_expected_exit_code 255 ./dist/cbxp extract -i ldax psa
 run_with_expected_exit_code 255 ./dist/cbxp extract -i ldax cvt

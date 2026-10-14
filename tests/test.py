@@ -594,7 +594,8 @@ class TestCBXP(unittest.TestCase):
             self.assertIn("assbldax", entry["ascbassb"])
             self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
             self.assertEqual(
-                entry["ascbassb"]["assbldax"]["ldax_tcthwm"], 0,
+                entry["ascbassb"]["assbldax"]["ldax_tcthwm"],
+                0,
             )
 
     def test_cbxp_extract_null_filter_string(
@@ -656,12 +657,12 @@ class TestCBXP(unittest.TestCase):
             cbxp.extract("psa", includes=["cvt.ecvt", "cvt.ascb"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
 
-    def test_cbxp_extract_raises_cbxp_error_if_ecvt_is_included_with_the_psa(
+    def test_cbxp_extract_raises_cbxp_error_if_oucb_is_included_with_the_psa(
         self,
     ):
         # cvt.asvt.ascb is also included but is not error source
         with self.assertRaises(CBXPError) as e:
-            cbxp.extract("psa", includes=["ecvt", "cvt.asvt.ascb"])
+            cbxp.extract("psa", includes=["oucb", "cvt.asvt.ascb"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
 
     def test_cbxp_extract_raises_cbxp_error_if_cvt_is_included_with_the_cvt(self):
@@ -779,6 +780,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp.extract("ascb", includes=["ldax"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
+
     # ============================================================================
     # Format -- Basic Usage
     # ============================================================================
