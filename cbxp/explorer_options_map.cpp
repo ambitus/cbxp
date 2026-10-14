@@ -471,6 +471,20 @@ void ExplorerOptionsMap::checkDataLength(const ptrdiff_t offset) const {
   }
 }
 
+ptrdiff_t ExplorerOptionsMap::getReadableLength() const {
+  // Half of the PSA is fetch protected and never read, so only the front half
+  // counts toward its required length.
+  return control_block_->getName() == "psa"
+             ? (control_block_->getMaxOffset() - 8) / 2
+             : control_block_->getMaxOffset();
+}
+
+void ExplorerOptionsMap::checkControlBlockLength() const {
+  // Verify the whole control block fits in the user-provided buffer before
+  // anything (including the eyecatcher) is read from it.
+  ExplorerOptionsMap::checkDataLength(getReadableLength());
+}
+
 const std::vector<const void*> ExplorerOptionsMap::findControlBlockPointer(
     std::optional<ControlBlock> control_block) const {
   // We have to go exploring for the control block we want
@@ -722,14 +736,8 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
     return control_block_data;
   } else if (p_control_blocks.size() == 1) {
     p_control_block_ = p_control_blocks[0];
-    int dump_length  = control_block_name == "psa"
-                           ? (control_block_->getMaxOffset() - 8) / 2
-                           : control_block_->getMaxOffset();
-    if (!skip_buffer_length_check_ &&
-        static_cast<size_t>(dump_length) > buffer_length_) {
-      // Never read past the end of a user-provided buffer
-      dump_length = static_cast<int>(buffer_length_);
-    }
+    ExplorerOptionsMap::checkControlBlockLength();
+    int dump_length = static_cast<int>(getReadableLength());
     Logger::getInstance().debug(control_block_name + " hex dump: address=" +
                                 [&]() {
                                   std::ostringstream oss;

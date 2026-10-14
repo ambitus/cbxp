@@ -34,6 +34,8 @@ class ExplorerOptionsMap {
                const std::string& filter_value, const std::string& operation);
   bool matchFilter(nlohmann::json& control_block_json);
   void checkDataLength(const ptrdiff_t offset) const;
+  ptrdiff_t getReadableLength() const;
+  void checkControlBlockLength() const;
   bool eyecatcherMatches() const;
   const std::vector<const void*> findControlBlockPointer(
       std::optional<ControlBlock> control_block) const;
