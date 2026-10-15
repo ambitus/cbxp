@@ -408,15 +408,20 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
       p_control_block = reinterpret_cast<const void* __ptr32>(
           control_block_->formatter_.uint<uint32_t>(raw));
     }
-    if (!visited_->insert(p_control_block).second) {
-      Logger::getInstance().debug("Cycle detected: skipping already-visited '" +
+    auto cache_it = visited_->find(p_control_block);
+    if (cache_it != visited_->end()) {
+      Logger::getInstance().debug("Cache hit: reusing already-visited '" +
                                   control_block_name + "' at address " + [&]() {
                                     std::ostringstream oss;
                                     oss << p_control_block;
                                     return oss.str();
                                   }());
+      field_json = cache_it->second;
     } else {
-      auto child_explorer = std::make_unique<ExplorerOptionsMap>(
+      // Insert a null sentinel before recursing to break any genuine pointer
+      // cycle (e.g. OUCB forward/backward swap-chain).
+      (*visited_)[p_control_block] = nullptr;
+      auto child_explorer          = std::make_unique<ExplorerOptionsMap>(
           options_map_[control_block_name], control_block_name, control_blocks_,
           p_control_block, 0, visited_);
       nlohmann::json nested = child_explorer->getControlBlockData(true);
@@ -425,7 +430,8 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
         // failure so the parent is also excluded from the output.
         child_filter_failed_ = true;
       }
-      field_json = nested[control_block_name];
+      field_json                   = nested[control_block_name];
+      (*visited_)[p_control_block] = field_json;
     }
   }
   return field_json;
@@ -768,7 +774,6 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
     control_block_data[control_block_name + "s"] = {};
     for (const auto& p_control_block : p_control_blocks) {
       p_control_block_ = p_control_block;
-      visited_         = std::make_shared<std::unordered_set<const void*>>();
       Logger::getInstance().debug(
           control_block_->getName() + " hex dump: address=" +
           [&]() {
