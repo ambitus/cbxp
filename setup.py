@@ -11,14 +11,16 @@ from setuptools.command.build_ext import build_ext
 def generate_headers():
     """Generate .hpp headers from .json files, mirroring the CMake process."""
     # Schema header
-    schema_json = Path("cbxp/schemas/control_block_v1.json").read_text()
+    schema_json = (
+        Path("cbxp/schemas/control_block_v1.json").read_text().replace("\n", " ")
+    )
     Path("cbxp/schemas/control_block_v1.hpp").write_text(
         "#ifndef CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
         "#define CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
         "\n"
         f'#define CBXP_SCHEMA_JSON R"JSON({schema_json})JSON"\n'
         "\n"
-        "#endif // CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
+        "#endif // CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n",
     )
 
     # Mapping headers
@@ -26,14 +28,14 @@ def generate_headers():
         name = json_path.stem.upper()
         guard = f"{name}_JSON_HPP"
         macro = f"{name}_JSON"
-        mapping_json = json_path.read_text()
+        mapping_json = json_path.read_text().replace("\n", " ")
         json_path.with_suffix(".hpp").write_text(
             f"#ifndef {guard}\n"
             f"#define {guard}\n"
             "\n"
             f'#define {macro} R"JSON({mapping_json})JSON"\n'
             "\n"
-            f"#endif // {guard}\n"
+            f"#endif // {guard}\n",
         )
 
 
