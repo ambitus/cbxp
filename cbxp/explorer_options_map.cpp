@@ -768,6 +768,7 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
     control_block_data[control_block_name + "s"] = {};
     for (const auto& p_control_block : p_control_blocks) {
       p_control_block_ = p_control_block;
+      visited_         = std::make_shared<std::unordered_set<const void*>>();
       Logger::getInstance().debug(
           control_block_->getName() + " hex dump: address=" +
           [&]() {
