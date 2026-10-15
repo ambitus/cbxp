@@ -303,14 +303,21 @@ bool ExplorerOptionsMap::matchFilter(nlohmann::json& control_block_json) {
           control_block_->getName() + "' control block");
       throw FilterError();
     }
-    // cppcheck-suppress useStlAlgorithm
     for (const cbxp_filter_t& filter_data : filter_list) {
       // would require capturing structured bindings to use all_of or none_of
       Logger::getInstance().debug("Applying filter '" + filter_key +
                                   filter_data.operation + filter_data.value +
                                   "'...");
-      if (!ExplorerOptionsMap::compare(control_block_json[filter_key],
-                                       filter_data.value,
+      // If the field was replaced by an included child block, fall back
+      // transparently to the preserved raw pointer hex under "<key>_ptr".
+      const nlohmann::json& json_field = control_block_json[filter_key];
+      const std::string ptr_key        = filter_key + "_ptr";
+      const nlohmann::json& effective_value =
+          (json_field.is_object() || json_field.is_array()) &&
+                  control_block_json.contains(ptr_key)
+              ? control_block_json[ptr_key]
+              : json_field;
+      if (!ExplorerOptionsMap::compare(effective_value, filter_data.value,
                                        filter_data.operation)) {
         Logger::getInstance().debug("The filter '" + filter_key +
                                     filter_data.operation + filter_data.value +
@@ -646,8 +653,22 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
       repeated_fields[lower_field_name] = field_data;
       continue;
     } else {
-      field_json[lower_field_name] =
-          ExplorerOptionsMap::fieldToJson(field_data);
+      nlohmann::json resolved = ExplorerOptionsMap::fieldToJson(field_data);
+      if (resolved.is_object() || resolved.is_array()) {
+        // The pointer field was replaced by an included child block.
+        // Preserve the raw pointer hex under "<fieldname>_ptr" so that
+        // matchFilter can fall back to it transparently when the user
+        // filters on this field name.
+        const char* raw =
+            static_cast<const char*>(p_control_block_) + field_data.offset;
+        field_json[lower_field_name + "_ptr"] =
+            (field_data.length == 8)
+                ? nlohmann::json(
+                      control_block_->formatter_.getHex<uint64_t>(raw))
+                : nlohmann::json(
+                      control_block_->formatter_.getHex<uint32_t>(raw));
+      }
+      field_json[lower_field_name] = resolved;
     }
     control_block_data.merge_patch(field_json);
   }
