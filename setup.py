@@ -28,11 +28,8 @@ def main():
                 ),
                 include_dirs=(
                     glob("cbxp/**/")
-                    + [
-                        "cbxp",
-                        "externals",
-                        "/usr/include/zos",
-                    ]
+                    + glob("externals/*/")
+                    + ["cbxp", "/usr/include/zos"]
                 ),
                 extra_link_args=[
                     "-m64",
