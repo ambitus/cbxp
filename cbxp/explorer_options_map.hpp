@@ -1,7 +1,9 @@
 #ifndef __CONTROL_BLOCK_EXPLORER_OPTIONS_MAP_H_
 #define __CONTROL_BLOCK_EXPLORER_OPTIONS_MAP_H_
 
+#include <memory>
 #include <nlohmann/json.hpp>
+#include <unordered_set>
 
 #include "cbxp.h"
 #include "cbxp_types.hpp"
@@ -51,6 +53,10 @@ class ExplorerOptionsMap {
   const std::unordered_map<std::string, ControlBlock>& control_blocks_;
   const void* p_control_block_;
   const size_t buffer_length_;
+  // Shared across the entire recursive traversal so that a pointer already
+  // visited at any depth is not followed again, preventing cycles (e.g.
+  // OUCB->OUCB forward/backward swap-chain pointers with "**").
+  std::shared_ptr<std::unordered_set<const void*>> visited_;
 
  public:
   bool wasFilterRejected() const { return filter_rejected_; }
@@ -58,12 +64,16 @@ class ExplorerOptionsMap {
   explicit ExplorerOptionsMap(
       const cbxp_options_t& cbxp_options, const std::string& control_block_name,
       const std::unordered_map<std::string, ControlBlock>& control_blocks,
-      const void* p_control_block, const size_t buffer_length)
+      const void* p_control_block, const size_t buffer_length,
+      std::shared_ptr<std::unordered_set<const void*>> visited = nullptr)
       : skip_buffer_length_check_(cbxp_options.skip_buffer_length_check),
         control_block_(control_blocks.at(control_block_name)),
         control_blocks_(control_blocks),
         p_control_block_(p_control_block),
-        buffer_length_(buffer_length) {
+        buffer_length_(buffer_length),
+        visited_(visited
+                     ? std::move(visited)
+                     : std::make_shared<std::unordered_set<const void*>>()) {
     // createFilterLists depends on the construction of the "includes" portion
     // of the options_map_ structure and must be called after createIncludeLists
     ExplorerOptionsMap::createIncludeLists(cbxp_options.include_patterns);

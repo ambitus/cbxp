@@ -408,16 +408,25 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
       p_control_block = reinterpret_cast<const void* __ptr32>(
           control_block_->formatter_.uint<uint32_t>(raw));
     }
-    ExplorerOptionsMap child_explorer(options_map_[control_block_name],
-                                      control_block_name, control_blocks_,
-                                      p_control_block, 0);
-    nlohmann::json nested = child_explorer.getControlBlockData(true);
-    if (child_explorer.wasFilterRejected()) {
-      // The child had valid data but its filter rejected it; propagate the
-      // failure so the parent is also excluded from the output.
-      child_filter_failed_ = true;
+    if (!visited_->insert(p_control_block).second) {
+      Logger::getInstance().debug("Cycle detected: skipping already-visited '" +
+                                  control_block_name + "' at address " + [&]() {
+                                    std::ostringstream oss;
+                                    oss << p_control_block;
+                                    return oss.str();
+                                  }());
+    } else {
+      auto child_explorer = std::make_unique<ExplorerOptionsMap>(
+          options_map_[control_block_name], control_block_name, control_blocks_,
+          p_control_block, 0, visited_);
+      nlohmann::json nested = child_explorer->getControlBlockData(true);
+      if (child_explorer->wasFilterRejected()) {
+        // The child had valid data but its filter rejected it; propagate the
+        // failure so the parent is also excluded from the output.
+        child_filter_failed_ = true;
+      }
+      field_json = nested[control_block_name];
     }
-    field_json = nested[control_block_name];
   }
   return field_json;
 }
