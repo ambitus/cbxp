@@ -8,17 +8,27 @@ from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 
 
+def _escape_for_macro(text: str) -> str:
+    """Collapse whitespace and escape characters unsafe in a C string literal."""
+    return (
+        text.replace("\\", "\\\\")
+        .replace('"', '\\"')
+        .replace("\n", " ")
+        .replace("\r", "")
+    )
+
+
 def generate_headers():
     """Generate .hpp headers from .json files, mirroring the CMake process."""
     # Schema header
-    schema_json = (
-        Path("cbxp/schemas/control_block_v1.json").read_text().replace("\n", " ")
+    schema_json = _escape_for_macro(
+        Path("cbxp/schemas/control_block_v1.json").read_text(),
     )
     Path("cbxp/schemas/control_block_v1.hpp").write_text(
         "#ifndef CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
         "#define CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
         "\n"
-        f'#define CBXP_SCHEMA_JSON R"JSON({schema_json})JSON"\n'
+        f'#define CBXP_SCHEMA_JSON "{schema_json}"\n'
         "\n"
         "#endif // CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n",
     )
@@ -28,12 +38,12 @@ def generate_headers():
         name = json_path.stem.upper()
         guard = f"{name}_JSON_HPP"
         macro = f"{name}_JSON"
-        mapping_json = json_path.read_text().replace("\n", " ")
+        mapping_json = _escape_for_macro(json_path.read_text())
         json_path.with_suffix(".hpp").write_text(
             f"#ifndef {guard}\n"
             f"#define {guard}\n"
             "\n"
-            f'#define {macro} R"JSON({mapping_json})JSON"\n'
+            f'#define {macro} "{mapping_json}"\n'
             "\n"
             f"#endif // {guard}\n",
         )
