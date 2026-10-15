@@ -57,6 +57,7 @@ def main():
                         if file not in glob("cbxp/cli/*.cpp")
                     ]
                     + glob("cbxp/*.cpp")
+                    + glob("externals/json-schema-validator/*.cpp")
                     + ["cbxp/python/_cbxp.c"]
                 ),
                 include_dirs=(
