@@ -204,7 +204,13 @@ void ControlBlockExplorer::processControlBlock(
       ExplorerOptionsMap explorer_options =
           ExplorerOptionsMap(cbxp_options_, control_block_name, control_blocks,
                              p_control_block_, control_block_data_length_);
-      control_block_json = explorer_options.getControlBlockData();
+      nlohmann::json wrapped = explorer_options.getControlBlockData();
+      // getControlBlockData() always wraps its result under the control block
+      // name (or name+"s" for lists) so that recursive child lookups can key
+      // into it.  At the top level we want the unwrapped value directly.
+      if (!wrapped.empty()) {
+        control_block_json = wrapped.begin().value();
+      }
     } else {
       throw ControlBlockError();
     }
