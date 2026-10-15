@@ -707,8 +707,11 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
           "  [" + field_name + "] iteration " + std::to_string(i) + "/" +
           std::to_string(count) +
           ", offset=" + std::to_string(i * field_data.length));
-      field_json[field_name + "s"].push_back(
-          ExplorerOptionsMap::fieldToJson(field_data, (i * field_data.length)));
+      nlohmann::json repeated_field =
+          ExplorerOptionsMap::fieldToJson(field_data, (i * field_data.length));
+      if (!repeated_field.is_null()) {
+        field_json[field_name + "s"].push_back(repeated_field);
+      }
     }
     control_block_data.merge_patch(field_json);
   }
