@@ -415,7 +415,8 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
       p_control_block = reinterpret_cast<const void* __ptr32>(
           control_block_->formatter_.uint<uint32_t>(raw));
     }
-    auto cache_it = visited_->find(p_control_block);
+    auto visit_key = std::make_pair(p_control_block, control_block_name);
+    auto cache_it  = visited_->find(visit_key);
     if (cache_it != visited_->end()) {
       Logger::getInstance().debug("Cache hit: reusing already-visited '" +
                                   control_block_name + "' at address " + [&]() {
@@ -423,12 +424,18 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
                                     oss << p_control_block;
                                     return oss.str();
                                   }());
-      field_json = cache_it->second;
+      // A null entry is the in-progress sentinel placed before recursing to
+      // break cycles.  Leave field_json as the raw pointer hex already set
+      // above rather than propagating null — merge_patch(null) would silently
+      // delete the key from the parent JSON, losing the field entirely.
+      if (!cache_it->second.is_null()) {
+        field_json = cache_it->second;
+      }
     } else {
       // Insert a null sentinel before recursing to break any genuine pointer
       // cycle (e.g. OUCB forward/backward swap-chain).
-      (*visited_)[p_control_block] = nullptr;
-      auto child_explorer          = std::make_unique<ExplorerOptionsMap>(
+      (*visited_)[visit_key] = nullptr;
+      auto child_explorer    = std::make_unique<ExplorerOptionsMap>(
           options_map_[control_block_name], control_block_name, control_blocks_,
           p_control_block, 0, visited_);
       nlohmann::json nested = child_explorer->getControlBlockData(true);
@@ -437,8 +444,8 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
         // failure so the parent is also excluded from the output.
         child_filter_failed_ = true;
       }
-      field_json                   = nested[control_block_name];
-      (*visited_)[p_control_block] = field_json;
+      field_json             = nested[control_block_name];
+      (*visited_)[visit_key] = field_json;
     }
   }
   return field_json;

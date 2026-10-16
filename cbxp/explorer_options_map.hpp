@@ -4,6 +4,7 @@
 #include <memory>
 #include <nlohmann/json.hpp>
 #include <unordered_map>
+#include <utility>
 
 #include "cbxp.h"
 #include "cbxp_types.hpp"
@@ -53,13 +54,25 @@ class ExplorerOptionsMap {
   const std::unordered_map<std::string, ControlBlock>& control_blocks_;
   const void* p_control_block_;
   const size_t buffer_length_;
-  // Shared across the entire recursive traversal so that a pointer already
-  // visited at any depth is not followed again, preventing cycles (e.g.
+  // Shared across the entire recursive traversal so that a (address, type)
+  // pair already visited is not followed again, preventing cycles (e.g.
   // OUCB->OUCB forward/backward swap-chain pointers with "**").
   // The cached JSON is returned directly on repeat visits so shared targets
   // (e.g. two ASCBs pointing to the same ASSB) are populated correctly
-  // without re-traversing.
-  std::shared_ptr<std::unordered_map<const void*, nlohmann::json>> visited_;
+  // without re-traversing.  Keying by both address and control block name
+  // prevents false cache hits when two different control block types happen
+  // to reside at the same address.
+  struct PairHash {
+    std::size_t operator()(
+        const std::pair<const void*, std::string>& p) const noexcept {
+      std::size_t h1 = std::hash<const void*>{}(p.first);
+      std::size_t h2 = std::hash<std::string>{}(p.second);
+      return h1 ^ (h2 << 32 | h2 >> 32);
+    }
+  };
+  using VisitedMap = std::unordered_map<std::pair<const void*, std::string>,
+                                        nlohmann::json, PairHash>;
+  std::shared_ptr<VisitedMap> visited_;
 
  public:
   bool wasFilterRejected() const { return filter_rejected_; }
@@ -68,17 +81,14 @@ class ExplorerOptionsMap {
       const cbxp_options_t& cbxp_options, const std::string& control_block_name,
       const std::unordered_map<std::string, ControlBlock>& control_blocks,
       const void* p_control_block, const size_t buffer_length,
-      std::shared_ptr<std::unordered_map<const void*, nlohmann::json>> visited =
-          nullptr)
+      std::shared_ptr<VisitedMap> visited = nullptr)
       : skip_buffer_length_check_(cbxp_options.skip_buffer_length_check),
         control_block_(control_blocks.at(control_block_name)),
         control_blocks_(control_blocks),
         p_control_block_(p_control_block),
         buffer_length_(buffer_length),
-        visited_(visited
-                     ? std::move(visited)
-                     : std::make_shared<
-                           std::unordered_map<const void*, nlohmann::json>>()) {
+        visited_(visited ? std::move(visited)
+                         : std::make_shared<VisitedMap>()) {
     // createFilterLists depends on the construction of the "includes" portion
     // of the options_map_ structure and must be called after createIncludeLists
     ExplorerOptionsMap::createIncludeLists(cbxp_options.include_patterns);
