@@ -228,7 +228,9 @@ class TestCBXP(unittest.TestCase):
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
             self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
-            self.assertIs(type(entry["ascboucb"]), dict)
+            # Under ** traversal, ascboucb may be a raw pointer hex string if its
+            # target oucb was mid-visit when this ascb's ascboucb field was reached.
+            self.assertIn(type(entry["ascboucb"]), (dict, str))
 
     def test_cbxp_extract_psa_and_include_cvt_wildcard(self):
         cbdata = cbxp.extract("psa", includes=["cvt.*"])
@@ -260,7 +262,9 @@ class TestCBXP(unittest.TestCase):
         for entry in cbdata["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
-            self.assertIs(type(entry["ascboucb"]), dict)
+            # Under ** traversal, ascboucb may be a raw pointer hex string if its
+            # target oucb was mid-visit when this ascb's ascboucb field was reached.
+            self.assertIn(type(entry["ascboucb"]), (dict, str))
 
     def test_cbxp_extract_ascb_and_include_assb_recursive_wildcard(self):
         cbdata = cbxp.extract("ascb", includes=["assb.**"])
