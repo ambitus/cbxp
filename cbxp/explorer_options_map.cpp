@@ -791,6 +791,17 @@ nlohmann::json ExplorerOptionsMap::getControlBlockData(const bool recursive) {
   if (p_control_block_ == nullptr && recursive == false) {
     p_control_blocks =
         ExplorerOptionsMap::findControlBlockPointer(control_block_);
+    // Multiple pointedToBy paths can resolve to the same physical address
+    // (e.g. ECVT is pointed to by both CVT and PSA).  Deduplicate so that a
+    // singleton control block is not incorrectly returned as a list.
+    std::vector<const void*> unique_ptrs;
+    for (const void* p : p_control_blocks) {
+      if (std::find(unique_ptrs.begin(), unique_ptrs.end(), p) ==
+          unique_ptrs.end()) {
+        unique_ptrs.push_back(p);
+      }
+    }
+    p_control_blocks = std::move(unique_ptrs);
   } else if (p_control_block_ != nullptr && recursive == false) {
     // Format: the caller supplied the control block buffer, so there is
     // nothing to locate in live memory.
