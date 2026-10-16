@@ -425,11 +425,27 @@ nlohmann::json ExplorerOptionsMap::fieldToJson(control_block_field_t field_data,
                                     return oss.str();
                                   }());
       // A null entry is the in-progress sentinel placed before recursing to
-      // break cycles.  Leave field_json as the raw pointer hex already set
-      // above rather than propagating null — merge_patch(null) would silently
-      // delete the key from the parent JSON, losing the field entirely.
-      if (!cache_it->second.is_null()) {
+      // break cycles.  If the target has no further inclusions it is a leaf —
+      // it cannot re-enter the cycle, so recurse normally to get real data.
+      // If it does have inclusions, keep the raw pointer hex fallback so that
+      // merge_patch does not silently delete the key from the parent JSON.
+      if (cache_it->second.is_null() &&
+          !options_map_[control_block_name].include_patterns.empty()) {
+        // Leaf-or-cycle: target has inclusions and is mid-visit — fall back to
+        // the raw pointer hex that field_json already holds.
+      } else if (!cache_it->second.is_null()) {
         field_json = cache_it->second;
+      } else {
+        // Sentinel is set but the target has no inclusions — safe to re-visit.
+        auto child_explorer = std::make_unique<ExplorerOptionsMap>(
+            options_map_[control_block_name], control_block_name,
+            control_blocks_, p_control_block, 0, visited_);
+        nlohmann::json nested = child_explorer->getControlBlockData(true);
+        if (child_explorer->wasFilterRejected()) {
+          child_filter_failed_ = true;
+        }
+        field_json             = nested[control_block_name];
+        (*visited_)[visit_key] = field_json;
       }
     } else {
       // Insert a null sentinel before recursing to break any genuine pointer
