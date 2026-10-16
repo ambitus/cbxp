@@ -714,16 +714,8 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
           "  [" + field_name + "] iteration " + std::to_string(i) + "/" +
           std::to_string(count) +
           ", offset=" + std::to_string(i * field_data.length));
-      // Each repeated-field entry (e.g. one ASCB in the ASVT array) is an
-      // independent root.  Give it a fresh visited map so it builds its own
-      // complete sub-tree rather than hitting in-progress sentinels left by a
-      // sibling iteration.  Cycle-breaking within the sub-tree is handled by
-      // the null-sentinel insertion in the else-branch of fieldToJson.
-      auto saved_visited = visited_;
-      visited_           = std::make_shared<VisitedMap>();
       nlohmann::json repeated_field =
           ExplorerOptionsMap::fieldToJson(field_data, (i * field_data.length));
-      visited_ = saved_visited;
       if (!repeated_field.is_null()) {
         field_json[field_name + "s"].push_back(repeated_field);
       }
