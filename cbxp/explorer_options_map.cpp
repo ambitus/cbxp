@@ -714,13 +714,24 @@ nlohmann::json ExplorerOptionsMap::parseFields() {
           "  [" + field_name + "] iteration " + std::to_string(i) + "/" +
           std::to_string(count) +
           ", offset=" + std::to_string(i * field_data.length));
-      // Each repeated-field entry is an independent root (e.g. one ASCB in the
-      // ASVT array).  Give it a fresh visited map so it builds its own complete
-      // sub-tree (e.g. the full OUCB ring starting from this ASCB's OUCB)
-      // rather than hitting in-progress sentinels left over from a sibling
-      // iteration's traversal.
-      auto saved_visited = visited_;
-      visited_           = std::make_shared<VisitedMap>();
+      // Each repeated-field entry (e.g. one ASCB in the ASVT array) is an
+      // independent root.  Give it a fresh visited map so it builds its own
+      // complete sub-tree rather than hitting in-progress sentinels left by a
+      // sibling iteration.  Pre-seed the map with the entry's own pointer as a
+      // sentinel so back-pointers into the entry itself (e.g. oucbascb →
+      // ascb → ascboucb) are broken without re-entering the entry.
+      const char* entry_raw = static_cast<const char*>(p_control_block_) +
+                              field_data.offset + i * field_data.length;
+      const void* entry_ptr =
+          (field_data.length == 8)
+              ? reinterpret_cast<const void*>(
+                    control_block_->formatter_.uint<uint64_t>(entry_raw))
+              : reinterpret_cast<const void* __ptr32>(
+                    control_block_->formatter_.uint<uint32_t>(entry_raw));
+      auto fresh = std::make_shared<VisitedMap>();
+      (*fresh)[{entry_ptr, field_data.pointsTo}] = nullptr;
+      auto saved_visited                         = visited_;
+      visited_                                   = fresh;
       nlohmann::json repeated_field =
           ExplorerOptionsMap::fieldToJson(field_data, (i * field_data.length));
       visited_ = saved_visited;
