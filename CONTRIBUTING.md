@@ -76,7 +76,7 @@ If you fix a bug, open a GitHub pull request against the `dev` branch with the f
 
 ### Testing
 
-CBXP is tested using automated functional tests. Test cases for new functionality and bug fixes should be added to [`tests/test.py`](tests/test.py) and [`tests/test.sh`](tests/test.sh).
+CBXP is tested using automated functional tests. Test cases for new functionality and bug fixes should be added to [`tests/test.py`](tests/test.py) and [`tests/CMakeLists.txt`](tests/CMakeLists.txt).
 
 #### Python Interface Testing
 1. Add new test cases to [`tests/test.py`](tests/test.py).
@@ -98,7 +98,7 @@ CBXP is tested using automated functional tests. Test cases for new functionalit
    ```
 
 #### CLI Interface Testing
-1. Add new tests cases to [`tests/test.sh`](tests/test.sh).
+1. Add new test cases to [`tests/CMakeLists.txt`](tests/CMakeLists.txt) or as a shared fixture under `tests/fixtures/cbxppath/`.
 2. Run the test suite using `cmake` and `gmake`.
 
    ```shell

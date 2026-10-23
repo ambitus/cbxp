@@ -257,3 +257,22 @@ cbxp_test_fail(FormatErrorFileAndPipe
 # Format - Errors: Data Too Small
 # =============================================================================
 cbxp_test_fail(FormatErrorDataTooSmall        ${EXE} format -F ${SAMPLES}/ascb.bin psa)
+
+# =============================================================================
+# CBXPPATH Fixtures
+# =============================================================================
+file(GLOB FIXTURE_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cbxppath ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cbxppath/*)
+
+foreach(fixture_name IN LISTS FIXTURE_DIRS)
+    set(fixture_dir "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cbxppath/${fixture_name}")
+    if(IS_DIRECTORY "${fixture_dir}")
+        add_test(NAME cbxp.fixture.${fixture_name}
+            COMMAND ${CMAKE_COMMAND}
+                -DEXE=${EXE}
+                -DFIXTURE_DIR=${fixture_dir}
+                -DSAMPLES_DIR=${SAMPLES}
+                -P ${CMAKE_CURRENT_SOURCE_DIR}/run_fixture.cmake
+        )
+        set_property(TEST cbxp.fixture.${fixture_name} PROPERTY FIXTURES_REQUIRED cbxp.built)
+    endif()
+endforeach()

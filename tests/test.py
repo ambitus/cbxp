@@ -1015,7 +1015,7 @@ class TestCBXP(unittest.TestCase):
         )
 
     # ============================================================================
-    # CBXPPATH Fixtures (shared with test.sh)
+    # CBXPPATH Fixtures (shared with CMakeLists.txt)
     # ============================================================================
     @staticmethod
     def load_fixture_conf(fixture_dir: Path) -> dict[str, str]:
