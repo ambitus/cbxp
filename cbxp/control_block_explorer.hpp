@@ -4,17 +4,30 @@
 #include <nlohmann/json.hpp>
 
 #include "cbxp.h"
+#include "cbxp_types.hpp"
 #include "control_blocks/control_block.hpp"
+#include "traversal_engine.hpp"
 
 namespace CBXP {
 
 class ControlBlockExplorer {
  private:
+  cbxp_options_t cbxp_options_ = {{}, {}, false};
   cbxp_result_t* p_result_;
-  cbxp_options_t cbxp_options_         = {{}, {}, false};
   const void* p_control_block_         = nullptr;
   size_t control_block_data_length_    = 0;
   std::string control_block_operation_ = "";
+
+  static std::string mapToString(
+      const std::unordered_map<std::string, ControlBlock>& map);
+  static std::unordered_map<std::string, ControlBlock> loadCustomControlBlocks(
+      const nlohmann::json_schema::json_validator& cbxp_schema_validator,
+      const std::filesystem::path& path);
+  static std::vector<std::string> splitCbxpPath(const std::string& cbxp_path);
+  static void validateControlBlockReferences(
+      const std::unordered_map<std::string, ControlBlock>& control_blocks);
+  static const std::unordered_map<std::string, ControlBlock>&
+  getControlBlocks();
   static std::vector<std::string> createOptionsList(
       const std::string& comma_separated_string);
 

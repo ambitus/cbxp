@@ -1,11 +1,38 @@
+import json
+import os
+import shlex
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 
 from cbxp import CBXPError, CBXPFilter, CBXPFilterOperation, cbxp
 
+# Runs in a fresh interpreter because the control block mappings (including any
+# found through CBXPPATH) are loaded once per process.
+CBXPPATH_FIXTURE_SCRIPT = """
+import json
+import sys
+
+from cbxp import CBXPError, cbxp
+
+command, block, sample = sys.argv[1:4]
+try:
+    if command == "extract":
+        data = cbxp.extract(block)
+    else:
+        with open(sample, "rb") as sample_file:
+            data = cbxp.format(block, data=sample_file.read())
+    print(json.dumps({"ok": True, "data": data}))
+except CBXPError as e:
+    print(json.dumps({"ok": False, "rc": e.rc, "message": str(e)}))
+"""
+
 
 class TestCBXP(unittest.TestCase):
-    SAMPLE_DIR = Path(__file__).resolve().parent / "samples"
+    TEST_DIR = Path(__file__).resolve().parent
+    SAMPLE_DIR = TEST_DIR / "samples"
+    FIXTURE_DIR = TEST_DIR / "fixtures" / "cbxppath"
 
     # ============================================================================
     # Utility Functions
@@ -13,6 +40,13 @@ class TestCBXP(unittest.TestCase):
     @staticmethod
     def read_sample(filename: str) -> bytes:
         return (TestCBXP.SAMPLE_DIR / filename).read_bytes()
+
+    @staticmethod
+    def psa_data(length: int) -> bytes:
+        # Zeroed PSA buffer with the "PSA " eyecatcher (in EBCDIC) at offset 512
+        data = bytearray(length)
+        data[512:516] = "PSA ".encode("cp037")
+        return bytes(data)
 
     @staticmethod
     def get_cvtasmvt_values() -> tuple[int, str]:
@@ -87,15 +121,15 @@ class TestCBXP(unittest.TestCase):
         cbdata = cbxp.extract("cvt", includes=["asvt"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), str)
 
     def test_cbxp_extract_asvt_and_include_ascb(self):
         cbdata = cbxp.extract("asvt", includes=["ascb"])
         self.assertIs(type(cbdata), dict)
-        self.assertIs(type(cbdata["asvtenty"]), list)
-        for entry in cbdata["asvtenty"]:
+        self.assertIs(type(cbdata["asvtentys"]), list)
+        for entry in cbdata["asvtentys"]:
             self.assertIs(type(entry), dict)
 
     def test_cbxp_extract_ascb_and_include_assb(self):
@@ -115,8 +149,8 @@ class TestCBXP(unittest.TestCase):
     def test_cbxp_extract_asvt_and_include_ascb_assb_ldax(self):
         cbdata = cbxp.extract("asvt", includes=["ascb.assb.ldax"])
         self.assertIs(type(cbdata), dict)
-        self.assertIs(type(cbdata["asvtenty"]), list)
-        for entry in cbdata["asvtenty"]:
+        self.assertIs(type(cbdata["asvtentys"]), list)
+        for entry in cbdata["asvtentys"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
             self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
@@ -126,8 +160,8 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
             self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
@@ -158,16 +192,16 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
 
     def test_cbxp_extract_cvt_and_include_asvt_ascb(self):
         cbdata = cbxp.extract("cvt", includes=["asvt.ascb"])
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
 
     def test_cbxp_extract_cvt_and_include_ecvt_and_asvt(self):
@@ -175,8 +209,8 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtecvt"]), dict)
         self.assertIs(type(cbdata["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), str)
 
     def test_cbxp_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb(
@@ -187,8 +221,8 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
 
     def test_cbxp_extract_psa_and_include_ecvt_asvt_and_cvt_asvt_ascb_assb(
@@ -199,8 +233,8 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
 
@@ -212,8 +246,8 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascboucb"]), dict)
 
@@ -223,12 +257,14 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
             self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
-            self.assertIs(type(entry["ascboucb"]), dict)
+            # Under ** traversal, ascboucb may be a raw pointer hex string if its
+            # target oucb was mid-visit when this ascb's ascboucb field was reached.
+            self.assertIn(type(entry["ascboucb"]), (dict, str))
 
     def test_cbxp_extract_psa_and_include_cvt_wildcard(self):
         cbdata = cbxp.extract("psa", includes=["cvt.*"])
@@ -236,8 +272,8 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtecvt"]), dict)
         self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), str)
 
     def test_cbxp_extract_cvt_and_include_wildcard_and_asvt_wildcard(self):
@@ -245,8 +281,8 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtecvt"]), dict)
         self.assertIs(type(cbdata["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
 
     def test_cbxp_extract_cvt_and_include_wildcard_and_asvt_recursive_wildcard(
@@ -256,11 +292,13 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata), dict)
         self.assertIs(type(cbdata["cvtecvt"]), dict)
         self.assertIs(type(cbdata["cvtasvt"]), dict)
-        self.assertIs(type(cbdata["cvtasvt"]["asvtenty"]), list)
-        for entry in cbdata["cvtasvt"]["asvtenty"]:
+        self.assertIs(type(cbdata["cvtasvt"]["asvtentys"]), list)
+        for entry in cbdata["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
             self.assertIs(type(entry["ascbassb"]), dict)
-            self.assertIs(type(entry["ascboucb"]), dict)
+            # Under ** traversal, ascboucb may be a raw pointer hex string if its
+            # target oucb was mid-visit when this ascb's ascboucb field was reached.
+            self.assertIn(type(entry["ascboucb"]), (dict, str))
 
     def test_cbxp_extract_ascb_and_include_assb_recursive_wildcard(self):
         cbdata = cbxp.extract("ascb", includes=["assb.**"])
@@ -583,18 +621,19 @@ class TestCBXP(unittest.TestCase):
         self.assertIs(type(cbdata["flccvt"]), dict)
         self.assertIn("cvtasvt", cbdata["flccvt"])
         self.assertIs(type(cbdata["flccvt"]["cvtasvt"]), dict)
-        self.assertIn("asvtenty", cbdata["flccvt"]["cvtasvt"])
-        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), list)
+        self.assertIn("asvtentys", cbdata["flccvt"]["cvtasvt"])
+        self.assertIs(type(cbdata["flccvt"]["cvtasvt"]["asvtentys"]), list)
         # Verify at least one entry matches the filter
-        self.assertGreater(len(cbdata["flccvt"]["cvtasvt"]["asvtenty"]), 0)
-        for entry in cbdata["flccvt"]["cvtasvt"]["asvtenty"]:
+        self.assertGreater(len(cbdata["flccvt"]["cvtasvt"]["asvtentys"]), 0)
+        for entry in cbdata["flccvt"]["cvtasvt"]["asvtentys"]:
             self.assertIs(type(entry), dict)
             self.assertIn("ascbassb", entry)
             self.assertIs(type(entry["ascbassb"]), dict)
             self.assertIn("assbldax", entry["ascbassb"])
             self.assertIs(type(entry["ascbassb"]["assbldax"]), dict)
             self.assertEqual(
-                entry["ascbassb"]["assbldax"]["ldax_tcthwm"], 0,
+                entry["ascbassb"]["assbldax"]["ldax_tcthwm"],
+                0,
             )
 
     def test_cbxp_extract_null_filter_string(
@@ -656,12 +695,12 @@ class TestCBXP(unittest.TestCase):
             cbxp.extract("psa", includes=["cvt.ecvt", "cvt.ascb"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
 
-    def test_cbxp_extract_raises_cbxp_error_if_ecvt_is_included_with_the_psa(
+    def test_cbxp_extract_raises_cbxp_error_if_oucb_is_included_with_the_psa(
         self,
     ):
         # cvt.asvt.ascb is also included but is not error source
         with self.assertRaises(CBXPError) as e:
-            cbxp.extract("psa", includes=["ecvt", "cvt.asvt.ascb"])
+            cbxp.extract("psa", includes=["oucb", "cvt.asvt.ascb"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
 
     def test_cbxp_extract_raises_cbxp_error_if_cvt_is_included_with_the_cvt(self):
@@ -779,6 +818,7 @@ class TestCBXP(unittest.TestCase):
         with self.assertRaises(CBXPError) as e:
             cbxp.extract("ascb", includes=["ldax"])
         self.assertEqual("A bad include pattern was provided", str(e.exception))
+
     # ============================================================================
     # Format -- Basic Usage
     # ============================================================================
@@ -833,6 +873,213 @@ class TestCBXP(unittest.TestCase):
         self.assertEqual(
             "Data provided is not large enough for specified control block: psa",
             str(e.exception),
+        )
+
+    # ============================================================================
+    # Extract -- Output Shape
+    # ============================================================================
+    def test_cbxp_extract_repeated_field_is_a_list_named_with_a_trailing_s(self):
+        cbdata = cbxp.extract("asvt")
+        self.assertIs(type(cbdata["asvtentys"]), list)
+        self.assertNotIn("asvtenty", cbdata)
+        for entry in cbdata["asvtentys"]:
+            self.assertIs(type(entry), str)
+
+    def test_cbxp_extract_pointer_field_that_is_not_included_is_a_hex_string(self):
+        cbdata = cbxp.extract("cvt")
+        self.assertIs(type(cbdata["cvtasvt"]), str)
+        self.assertTrue(cbdata["cvtasvt"].startswith("0x"))
+        self.assertNotIn("cvtasvt_ptr", cbdata)
+
+    def test_cbxp_extract_included_pointer_field_keeps_the_raw_pointer_as_ptr_key(
+        self,
+    ):
+        raw_pointer = cbxp.extract("cvt")["cvtasvt"]
+        cbdata = cbxp.extract("cvt", includes=["asvt"])
+        self.assertIs(type(cbdata["cvtasvt"]), dict)
+        self.assertEqual(raw_pointer, cbdata["cvtasvt_ptr"])
+
+    # ============================================================================
+    # Extract -- Traversal
+    # ============================================================================
+    def test_cbxp_extract_oucb_and_include_recursive_wildcard_terminates(self):
+        cbdata = cbxp.extract("oucb", includes=["**"])
+        self.assertIs(type(cbdata), list)
+        for entry in cbdata:
+            self.assertIs(type(entry), dict)
+
+    def test_cbxp_extract_psa_and_include_recursive_wildcard_terminates(self):
+        cbdata = cbxp.extract("psa", includes=["**"])
+        self.assertIs(type(cbdata), dict)
+        self.assertIs(type(cbdata["flccvt"]), dict)
+
+    # ============================================================================
+    # Extract -- Filters on Included Control Blocks
+    # ============================================================================
+    def test_cbxp_extract_filter_on_included_pointer_field_matches_raw_pointer(
+        self,
+    ):
+        raw_pointer = cbxp.extract("cvt")["cvtasvt"]
+        cbdata = cbxp.extract(
+            "cvt",
+            includes=["asvt"],
+            filters=[CBXPFilter("cvtasvt", CBXPFilterOperation.EQUAL, raw_pointer)],
+        )
+        self.assertIs(type(cbdata), dict)
+        self.assertIs(type(cbdata["cvtasvt"]), dict)
+
+    def test_cbxp_extract_filter_on_included_pointer_field_without_match_is_none(
+        self,
+    ):
+        cbdata = cbxp.extract(
+            "cvt",
+            includes=["asvt"],
+            filters=[CBXPFilter("cvtasvt", CBXPFilterOperation.EQUAL, "0x00000001")],
+        )
+        self.assertIsNone(cbdata)
+
+    def test_cbxp_extract_child_filter_only_drops_the_non_matching_entries(self):
+        cbdata = cbxp.extract(
+            "asvt",
+            includes=["ascb"],
+            filters=[CBXPFilter("ascb.ascbasid", CBXPFilterOperation.EQUAL, 1)],
+        )
+        self.assertIs(type(cbdata["asvtentys"]), list)
+        self.assertGreater(len(cbdata["asvtentys"]), 0)
+        for entry in cbdata["asvtentys"]:
+            self.assertEqual(entry["ascbasid"], 1)
+
+    def test_cbxp_extract_child_filter_matching_no_entries_rejects_the_parent(self):
+        cbdata = cbxp.extract(
+            "asvt",
+            includes=["ascb"],
+            filters=[CBXPFilter("ascb.ascbasid", CBXPFilterOperation.EQUAL, 65000)],
+        )
+        self.assertIsNone(cbdata)
+
+    # ============================================================================
+    # Format -- Eyecatcher
+    # ============================================================================
+    def test_cbxp_format_returns_none_if_the_eyecatcher_does_not_match(self):
+        data = self.read_sample("ascb.bin")
+        cbdata = cbxp.format("ascb", data=b"\x00" * 4 + data[4:])
+        self.assertIsNone(cbdata)
+
+    def test_cbxp_format_ignores_trailing_spaces_in_the_expected_eyecatcher(self):
+        # The PSA eyecatcher is "PSA " and the formatted value has the trailing
+        # space trimmed.
+        cbdata = cbxp.format("psa", data=self.psa_data(self.PSA_READABLE_LENGTH))
+        self.assertEqual("PSA", cbdata["psapsa"])
+
+    # ============================================================================
+    # Format -- Buffer Length
+    # ============================================================================
+    # The back half of the PSA is fetch protected, so only (4096 - 8) / 2 bytes
+    # of it are required.
+    PSA_READABLE_LENGTH = 2044
+
+    def test_cbxp_format_psa_succeeds_with_exactly_the_readable_length(self):
+        cbdata = cbxp.format("psa", data=self.psa_data(self.PSA_READABLE_LENGTH))
+        self.assertIs(type(cbdata), dict)
+
+    def test_cbxp_format_psa_raises_cbxp_error_one_byte_below_the_readable_length(
+        self,
+    ):
+        with self.assertRaises(CBXPError) as e:
+            cbxp.format("psa", data=bytes(self.PSA_READABLE_LENGTH - 1))
+        self.assertEqual(
+            "Data provided is not large enough for specified control block: psa",
+            str(e.exception),
+        )
+
+    # ============================================================================
+    # Error Codes
+    # ============================================================================
+    def test_cbxp_error_messages_for_codes_5_through_8(self):
+        expected_messages = {
+            5: "A null data pointer was provided",
+            6: "Error with your CBXPPATH environment variable",
+            7: "Could not parse a JSON file",
+            8: "Cannot reach control block",
+        }
+        for return_code, message in expected_messages.items():
+            with self.subTest(return_code=return_code):
+                error = CBXPError(return_code, "psa")
+                self.assertEqual(return_code, error.rc)
+                self.assertEqual(message, str(error))
+
+    def test_cbxp_error_message_for_an_undefined_code_is_generic(self):
+        self.assertEqual(
+            "An unknown error occurred",
+            str(CBXPError(99, "psa")),
+        )
+
+    # ============================================================================
+    # CBXPPATH Fixtures (shared with CMakeLists.txt)
+    # ============================================================================
+    @staticmethod
+    def load_fixture_conf(fixture_dir: Path) -> dict[str, str]:
+        conf = {}
+        for line in (fixture_dir / "case.conf").read_text().splitlines():
+            if not line.strip() or line.startswith("#"):
+                continue
+            key, _, value = shlex.split(line)[0].partition("=")
+            conf[key] = value
+        return conf
+
+    def run_cbxppath_fixture(self, fixture_dir: Path):
+        conf = self.load_fixture_conf(fixture_dir)
+        env = {k: v for k, v in os.environ.items() if k != "CBXPPATH"}
+        if "CBXPPATH" in conf:
+            env["CBXPPATH"] = conf["CBXPPATH"].replace("@CASE@", str(fixture_dir))
+        result = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                CBXPPATH_FIXTURE_SCRIPT,
+                conf.get("COMMAND", "format"),
+                conf["BLOCK"],
+                str(self.SAMPLE_DIR / conf.get("SAMPLE", "")),
+            ],
+            env=env,
+            cwd=self.TEST_DIR.parent,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(0, result.returncode, result.stderr)
+        response = json.loads(result.stdout)
+        if conf["EXPECT"] == "ok":
+            self.assertTrue(response["ok"], response)
+            output = json.dumps(response["data"], sort_keys=True, separators=(",", ":"))
+            if "CONTAINS" in conf:
+                self.assertIn(conf["CONTAINS"], output)
+            if "NOT_CONTAINS" in conf:
+                self.assertNotIn(conf["NOT_CONTAINS"], output)
+            if "EXPECT_OUTPUT_FILE" in conf:
+                expected = json.loads(
+                    (fixture_dir / conf["EXPECT_OUTPUT_FILE"]).read_text(),
+                )
+                self.assertEqual(expected, response["data"])
+        else:
+            self.assertFalse(response["ok"], response)
+            self.assertEqual(int(conf["CODE"]), response["rc"])
+            self.assertEqual(conf["MESSAGE"], response["message"])
+
+
+def _make_cbxppath_fixture_test(fixture_dir: Path):
+    def test(self):
+        self.run_cbxppath_fixture(fixture_dir)
+
+    return test
+
+
+for _fixture_dir in sorted(TestCBXP.FIXTURE_DIR.iterdir()):
+    if _fixture_dir.is_dir():
+        setattr(
+            TestCBXP,
+            f"test_cbxppath_fixture_{_fixture_dir.name}",
+            _make_cbxppath_fixture_test(_fixture_dir),
         )
 
 
