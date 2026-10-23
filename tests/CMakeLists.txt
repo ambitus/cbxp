@@ -165,7 +165,7 @@ cbxp_test_fail(ExtractErrorIncludeAsvtAscbPsa         ${EXE} extract -i asvt.asc
 cbxp_test_fail(ExtractErrorIncludeAscbPsa             ${EXE} extract -i ascb psa)
 cbxp_test_fail(ExtractErrorIncludeEcvtAscb            ${EXE} extract -i ecvt ascb)
 cbxp_test_fail(ExtractErrorIncludeCvtEcvtCvtAscbPsa   ${EXE} extract -i cvt.ecvt -i cvt.ascb psa)
-cbxp_test_fail(ExtractErrorIncludeCvtAsvtAscbEcvtPsa  ${EXE} extract -i cvt.asvt.ascb -i ecvt psa)
+cbxp_test_fail(ExtractErrorIncludeCvtAsvtAscbLdaxPsa  ${EXE} extract -i cvt.asvt.ascb -i ldax psa)
 cbxp_test_fail(ExtractErrorIncludeCvtCvt              ${EXE} extract -i cvt cvt)
 cbxp_test_fail(ExtractErrorIncludeLdaxPsa             ${EXE} extract -i ldax psa)
 cbxp_test_fail(ExtractErrorIncludeLdaxCvt             ${EXE} extract -i ldax cvt)
