@@ -91,8 +91,11 @@ ControlBlock::ControlBlock(
                                   (*it)["endOfControlBlock"].get<bool>();
       // endOfControlBlock fields mark the boundary address only — do not
       // count their length toward the control block size.
-      if (!end_of_control_block &&
-          offset + static_cast<ptrdiff_t>(length) > max_offset_) {
+      if (end_of_control_block) {
+        if (offset > max_offset_) {
+          max_offset_ = offset;
+        }
+      } else if (offset + static_cast<ptrdiff_t>(length) > max_offset_) {
         max_offset_ = offset + static_cast<ptrdiff_t>(length);
       }
       std::string pointsTo = "";

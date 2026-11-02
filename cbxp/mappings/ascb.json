@@ -210,6 +210,14 @@
           "length": 4,
           "type": "signed-integer",
           "programmingInterface": true
+        },
+        {
+          "name": "ASCBEND",
+          "description": "END OF ASCB",
+          "offset": 384,
+          "length": 8,
+          "type": "signed-integer",
+          "endOfControlBlock": true
         }
       ]
     }

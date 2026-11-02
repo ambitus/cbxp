@@ -428,6 +428,14 @@
           "length": 8,
           "type": "signed-integer",
           "programmingInterface": true
+        },
+        {
+          "name": "ASSBEND",
+          "description": "END OF ASSB.",
+          "offset": 2496,
+          "length": 8,
+          "type": "signed-integer",
+          "endOfControlBlock": true
         }
       ]
     }
