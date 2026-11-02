@@ -44,8 +44,9 @@ class CBXPErrorCode(Enum):
     DATA_TOO_SMALL = 4
     NULL_DATA_POINTER = 5
     BAD_CBXP_PATH = 6
-    BAD_JSON_FILE = 7
-    CANT_REACH_BLOCK = 8
+    CANT_PARSE_JSON = 7
+    BAD_JSON_FILE = 8
+    CANT_REACH_BLOCK = 9
 
 
 class CBXPError(Exception):
@@ -73,8 +74,10 @@ class CBXPError(Exception):
                 message = "A null data pointer was provided"
             case CBXPErrorCode.BAD_CBXP_PATH.value:
                 message = "Error with your CBXPPATH environment variable"
-            case CBXPErrorCode.BAD_JSON_FILE.value:
+            case CBXPErrorCode.CANT_PARSE_JSON.value:
                 message = "Could not parse a JSON file"
+            case CBXPErrorCode.BAD_JSON_FILE.value:
+                message = "Could not validate a JSON file"
             case CBXPErrorCode.CANT_REACH_BLOCK.value:
                 message = "Cannot reach control block"
             case _:

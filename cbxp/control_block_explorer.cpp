@@ -32,8 +32,7 @@ ControlBlockExplorer::loadCustomControlBlocks(
     try {
       std::ifstream ifs(file.path());
       nlohmann::json json_data = nlohmann::json::parse(ifs);
-      // The ControlBlock constructor reads fields before it validates, so the
-      // mapping must be validated against the schema first.
+      // Validate before reading "name", as the schema guarantees it exists.
       cbxp_schema_validator.validate(json_data);
       // Control blocks are keyed by the "name" in the mapping, not the file
       // name.
@@ -44,10 +43,18 @@ ControlBlockExplorer::loadCustomControlBlocks(
                                 ControlBlock(cbxp_schema_validator, json_data));
     } catch (const CBXPError&) {
       throw;
-    } catch (const std::exception& e) {
-      Logger::getInstance().debug("Could not load '" + file.path().string() +
+    } catch (const nlohmann::json::parse_error& e) {
+      // The file is not well formed JSON at all.
+      Logger::getInstance().debug("Could not parse '" + file.path().string() +
                                   "': " + std::string(e.what()));
-      throw CbxpJsonError();
+      throw CbxpBadJsonError();
+    } catch (const std::exception& e) {
+      // The validator throws std::invalid_argument when the JSON does not
+      // conform to the schema.
+      Logger::getInstance().debug("Could not validate '" +
+                                  file.path().string() +
+                                  "': " + std::string(e.what()));
+      throw CbxpIncompatibleJsonError();
     }
   }
   return new_maps;
@@ -83,7 +90,7 @@ void ControlBlockExplorer::validateControlBlockReferences(
       Logger::getInstance().debug("The '" + name + "' control block is " +
                                   "pointed to by unknown control block '" +
                                   *unknown_parent + "'.");
-      throw CbxpJsonError();
+      throw CbxpIncompatibleJsonError();
     }
     for (const auto& [field_name, field] : control_block.getMap()) {
       if (!field.repeated) {
@@ -98,7 +105,7 @@ void ControlBlockExplorer::validateControlBlockReferences(
             "The repeated field '" + field_name + "' of the '" + name +
             "' control block has an unknown count field '" + field.count +
             "'.");
-        throw CbxpJsonError();
+        throw CbxpIncompatibleJsonError();
       }
     }
   }
@@ -266,7 +273,9 @@ void ControlBlockExplorer::processControlBlock(
   try {
     const auto& control_blocks = ControlBlockExplorer::getControlBlocks();
     if (control_blocks.empty()) {
-      throw CbxpJsonError();
+      // We would only have this if incompatible control blocks overwrote our
+      // core control blocks
+      throw CbxpIncompatibleJsonError();
     }
     if (control_blocks.find(control_block_name) != control_blocks.end()) {
       TraversalEngine engine(control_blocks,

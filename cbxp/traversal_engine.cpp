@@ -130,7 +130,7 @@ nlohmann::json TraversalEngine::run(const std::string& cb_name,
 // ---------------------------------------------------------------------------
 // Private
 
-bool TraversalEngine::isPsaProtectedAddress(const void* addr) {
+bool TraversalEngine::isGuardPageAddress(const void* addr) {
   // The z/OS PSA prefix area 0x7FFFF000–0x7FFFFFFF is fetch-protected and
   // will cause a 0C4 if read from a non-zero key.  Reject any pointer that
   // falls in this range before attempting any memory access.
@@ -148,14 +148,14 @@ void TraversalEngine::checkReachability(const ControlBlock& cb,
         "The '" + cb.getName() + "' control block is key '" +
         std::to_string(attr.key) +
         "' and fetch protected, so cbxp cannot access it.");
-    throw CbxpReachBlockError();
+    throw CbxpBlockUnreachableError();
   }
   if (!attr.is_common && !has_filters) {
     Logger::getInstance().debug(
         "The '" + cb.getName() +
         "' control block is not in common storage and there are no filters "
         "enabled, so cbxp cannot guarantee accuracy.");
-    throw CbxpReachBlockError();
+    throw CbxpBlockUnreachableError();
   }
 }
 
@@ -189,11 +189,6 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
     }
 
     for (const void* parent_addr : parent_addrs) {
-      Logger::getInstance().debug("Polling '" + parent_name + "' field '" +
-                                  pointer_field_name + "' at offset '" +
-                                  std::to_string(pointer_offset) +
-                                  "' for control block tree...");
-
       size_t count = 1;
       if (!count_field.empty()) {
         std::string count_key = count_field;
@@ -281,18 +276,18 @@ void TraversalEngine::drainQueue() {
     // and its address was read from a live parent field.
     auto visit_key = std::make_pair(node.address, node.cb_name);
 
-    // Only CbxpReachBlockError is handled per node: an inaccessible block
+    // Only CbxpBlockUnreachableError is handled per node: an inaccessible block
     // (protected storage, bad pointer from a peer-ASCB link like ASCBLOCI,
     // etc.) is recorded as null so the placeholder stays as raw hex.  Every
     // other CBXPError (bad include/filter, data too small, ...) propagates
     // out of run() to ControlBlockExplorer::processControlBlock, which
     // reports it to the caller as the return code.
     try {
-      if (isPsaProtectedAddress(node.address)) {
+      if (isGuardPageAddress(node.address)) {
         Logger::getInstance().debug("Skipping '" + node.cb_name +
                                     "' — address falls in PSA fetch-protected "
                                     "range 0x7FFFF000–0x7FFFFFFF");
-        throw CbxpReachBlockError();
+        throw CbxpBlockUnreachableError();
       }
       if (node.is_root) {
         checkReachability(cb, !node.options.filters.empty());
@@ -335,7 +330,7 @@ void TraversalEngine::drainQueue() {
         ctx_.visited[visit_key]        = result.json;
         ctx_.child_filtered[visit_key] = cb_node->childFilterMap();
       }
-    } catch (const CbxpReachBlockError& e) {
+    } catch (const CbxpBlockUnreachableError& e) {
       Logger::getInstance().debug(
           "Skipping '" + node.cb_name + "' at address " +
           addressToString(node.address) + " — error code " +

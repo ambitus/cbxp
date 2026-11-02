@@ -453,11 +453,14 @@ void CommandProcessor::run() {
     case CBXP::Error::BadCbxpPath:
       std::cerr << ERROR_BAD_CBXP_ENV_PATH_ << std::endl;
       throw CLIExitFailure();
-    case CBXP::Error::CantReachBlock:
+    case CBXP::Error::BlockUnreachable:
       std::cerr << ERROR_CANT_REACH_BLOCK_ << std::endl;
       throw CLIExitFailure();
+    case CBXP::Error::CantParseJson:
+      std::cerr << ERROR_PARSE_JSON_FILE_ << std::endl;
+      throw CLIExitFailure();
     case CBXP::Error::BadJsonFile:
-      std::cerr << ERROR_JSON_FILE_ << std::endl;
+      std::cerr << ERROR_VALIDATE_JSON_FILE_ << std::endl;
       throw CLIExitFailure();
     default:
       std::cerr << ERROR_UNKNOWN_ERROR_ << " " << control_block_name_

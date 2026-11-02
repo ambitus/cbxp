@@ -87,7 +87,7 @@ static constexpr SubpoolLocation CommCSAExt{O::Common, R::CSA, E::Extended};
 
 // ---------------------------------------------------------------------------
 // Map from subpool decimal number → SubpoolInfo.
-// Subpools 0–127 are handled as a range in subpool_info_for(); they are NOT
+// Subpools 0–127 are handled as a range in get_subpool_info(); they are NOT
 // stored individually here.
 // ---------------------------------------------------------------------------
 // clang-format off
@@ -191,7 +191,7 @@ inline const std::unordered_map<uint32_t, SubpoolInfo> kSubpoolMap = {
 // Primary lookup.  Handles the 0–127 range inline (all: Private Low Base,
 // fetch-protected).  Returns nullptr for any subpool not in the IBM table.
 // ---------------------------------------------------------------------------
-[[nodiscard]] inline const SubpoolInfo* subpool_info_for(uint32_t sp) noexcept {
+[[nodiscard]] inline const SubpoolInfo* get_subpool_info(uint32_t sp) noexcept {
   static constexpr SubpoolInfo k0to127{detail::PrivLowBase, true};
   if (sp <= 127) {
     return &k0to127;

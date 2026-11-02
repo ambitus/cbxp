@@ -41,7 +41,9 @@ class CommandProcessor {
   const std::string ERROR_BAD_CBXP_ENV_PATH_ =
       "Error with your CBXPPATH environment variable";
   const std::string ERROR_CANT_REACH_BLOCK_ = "Cannot reach control block";
-  const std::string ERROR_JSON_FILE_        = "Could not parse a JSON file";
+  const std::string ERROR_PARSE_JSON_FILE_  = "Could not parse a JSON file";
+  const std::string ERROR_VALIDATE_JSON_FILE_ =
+      "Could not validate a JSON file";
   // Format
   const std::string ERROR_OFFSET_MUST_BE_A_POSITIVE_INTEGER_ =
       "Offset must be a positive integer";

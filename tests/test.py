@@ -995,12 +995,13 @@ class TestCBXP(unittest.TestCase):
     # ============================================================================
     # Error Codes
     # ============================================================================
-    def test_cbxp_error_messages_for_codes_5_through_8(self):
+    def test_cbxp_error_messages_for_codes_5_through_9(self):
         expected_messages = {
             5: "A null data pointer was provided",
             6: "Error with your CBXPPATH environment variable",
             7: "Could not parse a JSON file",
-            8: "Cannot reach control block",
+            8: "Could not validate a JSON file",
+            9: "Cannot reach control block",
         }
         for return_code, message in expected_messages.items():
             with self.subTest(return_code=return_code):

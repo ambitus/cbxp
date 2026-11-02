@@ -164,7 +164,7 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
     }
   } catch (const std::exception&) {
     Logger::getInstance().debug("Unexpected error reading field.");
-    throw CbxpReachBlockError();
+    throw CbxpBlockUnreachableError();
   }
 
   // If this field points to a child that we should include, push the target
@@ -249,10 +249,6 @@ nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
     std::string lower_name = field_name;
     std::transform(lower_name.begin(), lower_name.end(), lower_name.begin(),
                    [](unsigned char c) { return std::tolower(c); });
-
-    Logger::getInstance().debug("Loading field '" + lower_name +
-                                "' at offset '" +
-                                std::to_string(field_data.offset) + "'");
 
     if (field_data.repeated) {
       repeated_fields[lower_name] = field_data;

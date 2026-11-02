@@ -3,14 +3,15 @@
 
 namespace CBXP {
 enum Error {
-  BadControlBlock = 1,
-  BadInclude      = 2,
-  BadFilter       = 3,
-  DataTooSmall    = 4,
-  NullDataPtr     = 5,
-  BadCbxpPath     = 6,
-  BadJsonFile     = 7,
-  CantReachBlock  = 8,
+  BadControlBlock  = 1,
+  BadInclude       = 2,
+  BadFilter        = 3,
+  DataTooSmall     = 4,
+  NullDataPtr      = 5,
+  BadCbxpPath      = 6,
+  CantParseJson    = 7,
+  BadJsonFile      = 8,
+  BlockUnreachable = 9,
 };
 
 class CBXPError : public std::exception {
@@ -47,14 +48,19 @@ class CbxpPathError : public CBXPError {
   CbxpPathError() : CBXPError(Error::BadCbxpPath) {}
 };
 
-class CbxpJsonError : public CBXPError {
+class CbxpBadJsonError : public CBXPError {
  public:
-  CbxpJsonError() : CBXPError(Error::BadJsonFile) {}
+  CbxpBadJsonError() : CBXPError(Error::CantParseJson) {}
 };
 
-class CbxpReachBlockError : public CBXPError {
+class CbxpIncompatibleJsonError : public CBXPError {
  public:
-  CbxpReachBlockError() : CBXPError(Error::CantReachBlock) {}
+  CbxpIncompatibleJsonError() : CBXPError(Error::BadJsonFile) {}
+};
+
+class CbxpBlockUnreachableError : public CBXPError {
+ public:
+  CbxpBlockUnreachableError() : CBXPError(Error::BlockUnreachable) {}
 };
 
 }  // namespace CBXP

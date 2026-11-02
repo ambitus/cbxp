@@ -38,12 +38,20 @@ FieldType ControlBlock::stringToType(const std::string& type_str) {
 
 ControlBlock::ControlBlock(
     const nlohmann::json_schema::json_validator& cbxp_schema_validator,
-    const nlohmann::json& control_block_map)
-    : storage_attributes_{true, false,
-                          control_block_map["storageAttributes"]["key"]
-                              .get<uint8_t>()},
-      control_block_name_(control_block_map["name"].get<std::string>()) {
-  cbxp_schema_validator.validate(control_block_map);
+    const nlohmann::json& control_block_map) {
+  // Validate before reading any attribute, as the schema guarantees the
+  // fields read below exist and have the right type.
+  try {
+    cbxp_schema_validator.validate(control_block_map);
+  } catch (const std::exception& e) {
+    Logger::getInstance().debug("Control block failed validation: " +
+                                std::string(e.what()));
+    throw CbxpIncompatibleJsonError();
+  }
+
+  storage_attributes_.key =
+      control_block_map["storageAttributes"]["key"].get<uint8_t>();
+  control_block_name_ = control_block_map["name"].get<std::string>();
 
   for (auto it = control_block_map["storageAttributes"]["subpools"].begin();
        it != control_block_map["storageAttributes"]["subpools"].end(); ++it) {
@@ -55,7 +63,7 @@ ControlBlock::ControlBlock(
       continue;
     }
     unsigned char subpool        = (*it).get<uint8_t>();
-    const zos::SubpoolInfo* info = zos::subpool_info_for(subpool);
+    const zos::SubpoolInfo* info = zos::get_subpool_info(subpool);
     if (info == nullptr) {
       // If subpool information isn't there, we try to get the control block
       storage_attributes_.is_common    = true;
