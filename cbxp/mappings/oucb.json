@@ -10,7 +10,9 @@
     "ascb"
   ],
   "storageAttributes": {
-    "subpools": [245],
+    "subpools": [
+      245
+    ],
     "key": 0,
     "residency": 31
   },
@@ -604,13 +606,6 @@
           "type": "signed-integer"
         },
         {
-          "name": "OUCBWMG",
-          "description": "WPGD offset in WPGD table. Not programming interface.",
-          "offset": 32,
-          "length": 4,
-          "type": "signed-integer"
-        },
-        {
           "name": "OUCBWSCI",
           "description": "Goal mode: service class index",
           "offset": 32,
@@ -751,21 +746,6 @@
           "type": "signed-integer"
         },
         {
-          "name": "OUCBASCB",
-          "description": "ASCB address. Not programming interface.",
-          "offset": 44,
-          "length": 4,
-          "type": "address",
-          "pointsTo": "ascb"
-        },
-        {
-          "name": "OUCBPAGP",
-          "description": "Pointer to the APAG for this address space. Not programming interface.",
-          "offset": 48,
-          "length": 4,
-          "type": "address"
-        },
-        {
           "name": "OUCBTMW",
           "description": "WLM interval start time",
           "offset": 52,
@@ -820,14 +800,6 @@
           "offset": 80,
           "length": 4,
           "type": "signed-integer"
-        },
-        {
-          "name": "OUCBACT",
-          "description": "Action queue forward pointer. Not programming interface.",
-          "offset": 84,
-          "length": 4,
-          "type": "address",
-          "pointsTo": "oucb"
         },
         {
           "name": "OUCBCSW",
@@ -1223,13 +1195,6 @@
           "type": "signed-integer"
         },
         {
-          "name": "OUCBSUBN",
-          "description": "Subsystem name used by SMF and for workload activity reporting. Not programming interface.",
-          "offset": 176,
-          "length": 4,
-          "type": "string"
-        },
-        {
           "name": "OUCBRPG",
           "description": "Reset performance group number",
           "offset": 180,
@@ -1326,13 +1291,6 @@
           "offset": 228,
           "length": 4,
           "type": "signed-integer"
-        },
-        {
-          "name": "OUCBACTP",
-          "description": "Pointer to accounting info (mapped by IRAACNT); OUCBACNT bit should be interrogated before referencing the accounting data. Not programming interface.",
-          "offset": 232,
-          "length": 4,
-          "type": "address"
         },
         {
           "name": "OUCBSWSS",

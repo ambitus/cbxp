@@ -210,13 +210,6 @@
           "type": "address"
         },
         {
-          "name": "LDAX_OBTAINSHOMESPACE",
-          "description": "Monotonically increasing count of GETMAIN or STORAGE OBTAIN requests in the home space. Serialized by AGSI. Not programming interface.",
-          "offset": 104,
-          "length": 8,
-          "type": "signed-integer"
-        },
-        {
           "name": "LDAX_END",
           "description": "End of LDAX / reserved",
           "offset": 128,
