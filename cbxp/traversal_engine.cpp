@@ -508,23 +508,24 @@ bool TraversalEngine::resolvePlaceholders(nlohmann::json& json,
       if (!child_filtered) {
         // Expand only under the owner (shallowest parent); any other
         // reference stays as a pointer placeholder.
-        auto owner_it           = owners.find(child_key);
-        auto it                 = ctx_.visited.find(child_key);
-        const char* skip_reason = nullptr;
-        if (owner_it == owners.end() || owner_it->second != node_key) {
-          skip_reason = "it is owned by a different parent";
-        } else if (it == ctx_.visited.end() || it->second.is_boolean() ||
-                   it->second.is_null()) {
-          skip_reason = "it is unreachable or was never parsed";
-        } else if (expanded.count(child_key) != 0) {
-          skip_reason = "it was already expanded";
-        }
-        if (skip_reason != nullptr) {
+        auto leaveAsPointer = [&](const std::string& reason) {
           Logger::getInstance().debug(
               "Leaving '" + child_name + "' at address " +
               addressToString(child_addr) + " as a pointer under " + node_desc +
-              ": " + skip_reason);
+              ": " + reason);
           return ChildState::Unavailable;
+        };
+        auto owner_it = owners.find(child_key);
+        if (owner_it == owners.end() || owner_it->second != node_key) {
+          return leaveAsPointer("it is owned by a different parent");
+        }
+        auto it = ctx_.visited.find(child_key);
+        if (it == ctx_.visited.end() || it->second.is_boolean() ||
+            it->second.is_null()) {
+          return leaveAsPointer("it is unreachable or was never parsed");
+        }
+        if (expanded.count(child_key) != 0) {
+          return leaveAsPointer("it was already expanded");
         }
         child_json = it->second;
         resolvePlaceholders(child_json, child_key, expanded, owners);
