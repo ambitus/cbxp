@@ -6,6 +6,7 @@
 
 #include "control_block_error.hpp"
 #include "control_block_node.hpp"
+#include "control_blocks/control_block_field_formatter.hpp"
 #include "guard_page.hpp"
 #include "include_resolver.hpp"
 #include "logger.hpp"
@@ -208,13 +209,13 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
         if (count_f.type == SIGNED_INT) {
           int64_t signed_count =
               (count_f.length == 8)
-                  ? *(reinterpret_cast<const int64_t*>(count_ptr))
-                  : *(reinterpret_cast<const int32_t*>(count_ptr));
+                  ? ControlBlockFieldFormatter::sint<int64_t>(count_ptr)
+                  : ControlBlockFieldFormatter::sint<int32_t>(count_ptr);
           count = (signed_count > 0) ? static_cast<size_t>(signed_count) : 0;
         } else {
           count = (count_f.length == 8)
-                      ? *(reinterpret_cast<const uint64_t*>(count_ptr))
-                      : *(reinterpret_cast<const uint32_t*>(count_ptr));
+                      ? ControlBlockFieldFormatter::uint<uint64_t>(count_ptr)
+                      : ControlBlockFieldFormatter::uint<uint32_t>(count_ptr);
         }
         Logger::getInstance().debug(
             "Repeated pointer field '" + pointer_field_name +
@@ -227,17 +228,17 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
         const void* resolved;
         if (pointer_length == 8) {
           resolved = reinterpret_cast<const void*>(
-              *reinterpret_cast<const uint64_t*>(base));
+              ControlBlockFieldFormatter::uint<uint64_t>(base));
         } else {
           resolved = reinterpret_cast<const void* __ptr32>(
-              *reinterpret_cast<const uint32_t*>(base));
+              ControlBlockFieldFormatter::uint<uint32_t>(base));
         }
 
         // Skip entries masked by ignoreMask.
         const auto& field_map = parent_cb.getMap();
         auto mask_it          = field_map.find(pointer_field_name);
         if (mask_it != field_map.end() && !mask_it->second.ignoreMask.empty()) {
-          uint32_t raw_val = *reinterpret_cast<const uint32_t*>(base);
+          uint32_t raw_val = ControlBlockFieldFormatter::uint<uint32_t>(base);
           uint32_t mask    = static_cast<uint32_t>(std::stoull(
                               mask_it->second.ignoreMask, nullptr, 16))
                           << 24;

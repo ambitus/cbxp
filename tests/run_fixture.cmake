@@ -5,6 +5,10 @@
 #   EXE         - Path to the cbxp executable
 #   FIXTURE_DIR - Absolute path to the fixture directory
 #   SAMPLES_DIR - Absolute path to the samples directory
+# case.conf keys: EXPECT, COMMAND, BLOCK, SAMPLE, CBXPPATH, CONTAINS,
+#   NOT_CONTAINS, EXPECT_OUTPUT_FILE, CODE, MESSAGE, plus
+#   DEBUG (any value: run with debug logging on) and
+#   LOG_CONTAINS (string the debug log must contain; needs DEBUG).
 # =============================================================================
 
 if(NOT EXE OR NOT FIXTURE_DIR OR NOT SAMPLES_DIR)
@@ -23,8 +27,10 @@ set(CBXPPATH "")
 set(BLOCK "")
 set(SAMPLE "")
 set(COMMAND "format")
+set(DEBUG "")
 set(CONTAINS "")
 set(NOT_CONTAINS "")
+set(LOG_CONTAINS "")
 set(EXPECT_OUTPUT_FILE "")
 set(MESSAGE "")
 set(CODE "")
@@ -68,10 +74,15 @@ else()
     unset(ENV{CBXPPATH})
 endif()
 
+set(DEBUG_FLAG "")
+if(NOT "${DEBUG}" STREQUAL "")
+    set(DEBUG_FLAG "-d")
+endif()
+
 if("${COMMAND}" STREQUAL "extract")
-    set(CMD "${EXE}" extract "${BLOCK}")
+    set(CMD "${EXE}" extract ${DEBUG_FLAG} "${BLOCK}")
 else()
-    set(CMD "${EXE}" format -F "${SAMPLES_DIR}/${SAMPLE}" "${BLOCK}")
+    set(CMD "${EXE}" format -F "${SAMPLES_DIR}/${SAMPLE}" ${DEBUG_FLAG} "${BLOCK}")
 endif()
 
 # 3. Execute process
@@ -99,6 +110,13 @@ if("${EXPECT}" STREQUAL "ok")
         string(FIND "${STDOUT_VAR}" "${NOT_CONTAINS}" FIND_POS)
         if(NOT FIND_POS EQUAL -1)
             message(FATAL_ERROR "Output unexpectedly contains string: ${NOT_CONTAINS}\nStdout: ${STDOUT_VAR}")
+        endif()
+    endif()
+
+    if(NOT "${LOG_CONTAINS}" STREQUAL "")
+        string(FIND "${STDOUT_VAR}" "${LOG_CONTAINS}" FIND_POS)
+        if(FIND_POS EQUAL -1)
+            message(FATAL_ERROR "Debug log does not contain expected string: ${LOG_CONTAINS}\nStdout: ${STDOUT_VAR}")
         endif()
     endif()
     

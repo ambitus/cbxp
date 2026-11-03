@@ -16,13 +16,14 @@ import sys
 
 from cbxp import CBXPError, cbxp
 
-command, block, sample = sys.argv[1:4]
+command, block, sample, debug = sys.argv[1:5]
+debug = debug == "1"
 try:
     if command == "extract":
-        data = cbxp.extract(block)
+        data = cbxp.extract(block, debug=debug)
     else:
         with open(sample, "rb") as sample_file:
-            data = cbxp.format(block, data=sample_file.read())
+            data = cbxp.format(block, data=sample_file.read(), debug=debug)
     print(json.dumps({"ok": True, "data": data}))
 except CBXPError as e:
     print(json.dumps({"ok": False, "rc": e.rc, "message": str(e)}))
@@ -1041,6 +1042,7 @@ class TestCBXP(unittest.TestCase):
                 conf.get("COMMAND", "format"),
                 conf["BLOCK"],
                 str(self.SAMPLE_DIR / conf.get("SAMPLE", "")),
+                "1" if "DEBUG" in conf else "0",
             ],
             env=env,
             cwd=self.TEST_DIR.parent,
@@ -1049,9 +1051,17 @@ class TestCBXP(unittest.TestCase):
             check=False,
         )
         self.assertEqual(0, result.returncode, result.stderr)
-        response = json.loads(result.stdout)
+        # With DEBUG the library also logs to stdout, through a different
+        # buffer than the script's print, so pick the result line by prefix
+        # instead of by position.
+        result_line = next(
+            line for line in result.stdout.splitlines() if line.startswith('{"ok":')
+        )
+        response = json.loads(result_line)
         if conf["EXPECT"] == "ok":
             self.assertTrue(response["ok"], response)
+            if "LOG_CONTAINS" in conf:
+                self.assertIn(conf["LOG_CONTAINS"], result.stdout)
             output = json.dumps(response["data"], sort_keys=True, separators=(",", ":"))
             if "CONTAINS" in conf:
                 self.assertIn(conf["CONTAINS"], output)

@@ -12,6 +12,8 @@
 #include <memory>
 #include <sstream>
 
+#include "safe_read.hpp"
+
 namespace CBXP {
 Logger::Logger() { debug_ = false; }
 
@@ -71,8 +73,15 @@ void Logger::hexDump(const char* p_buffer, int length,
     return;
   }
 
+  // Copy the storage once (guarded, so --debug cannot abend on an unreadable
+  // address); everything below reads from the copies, never from p_buffer.
+  auto raw_unique_ptr = std::make_unique<char[]>(length);
+  if (!safeCopy(raw_unique_ptr.get(), p_buffer, length)) {
+    std::cout << std::endl << "<unreadable storage>" << std::endl << std::endl;
+    return;
+  }
   auto decoded_unique_ptr = std::make_unique<char[]>(length);
-  std::memcpy(decoded_unique_ptr.get(), p_buffer, length);
+  std::memcpy(decoded_unique_ptr.get(), raw_unique_ptr.get(), length);
   __e2a_l(decoded_unique_ptr.get(), length);
 
   std::string hex_dump = "\n";
@@ -122,7 +131,7 @@ void Logger::hexDump(const char* p_buffer, int length,
       }
     }
     hex_stream << std::hex << std::setw(2) << std::setfill('0')
-               << (static_cast<int>(p_buffer[i]) & 0xff);
+               << (static_cast<int>(raw_unique_ptr.get()[i]) & 0xff);
     if (isatty(fileno(stdout))) {
       hex_stream << ansi_reset_;
     }

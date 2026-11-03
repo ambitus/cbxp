@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "name": "psa",
+  "commonName": "Test psa",
+  "macroId": "psa",
+  "description": "CBXPPATH test fixture",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [],
+  "storageAttributes": {
+    "subpools": [],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "psa",
+      "fields": [
+        {
+          "name": "PSAFLD",
+          "offset": 0,
+          "length": 4,
+          "type": "unsigned-integer"
+        },
+        {
+          "name": "PSAEND",
+          "offset": 4124,
+          "length": 4,
+          "type": "unsigned-integer"
+        }
+      ]
+    }
+  ]
+}
