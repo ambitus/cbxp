@@ -38,12 +38,11 @@ class ControlBlock {
  private:
   std::unordered_map<std::string, control_block_field_t> control_block_map_ =
       {};
-  storage_attributes_t storage_attributes_ = {
-      true, false, 8};  // actually establish these values as this is finalized
+  // Defaults; the constructor overrides them from the mapping and subpool.
+  storage_attributes_t storage_attributes_ = {true, false, 8};
   std::string control_block_name_;
   std::vector<std::string> includables_   = {};
   std::vector<std::string> pointed_to_by_ = {};
-  size_t control_block_length_            = 0;
   ptrdiff_t max_offset_                   = 0;
   void* fixed_address_                    = nullptr;
   eyecatcher_field_t eyecatcher_field_    = {0, 0, ""};

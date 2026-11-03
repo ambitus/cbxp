@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "control_block_error.hpp"
+#include "guard_page.hpp"
 #include "logger.hpp"
 
 namespace CBXP {
@@ -44,9 +45,8 @@ ControlBlockNode::ControlBlockNode(TraversalContext& ctx,
 
 NodeParseResult ControlBlockNode::parse() {
   NodeParseResult result;
-  result.filter_passed       = true;
-  result.child_filter_failed = false;
-  result.json                = nullptr;
+  result.filter_passed = true;
+  result.json          = nullptr;
 
   // Verify the whole block fits in the caller's buffer before reading anything;
   // no-op when skip_buffer_length_check is true (live memory).
@@ -56,9 +56,9 @@ NodeParseResult ControlBlockNode::parse() {
     return result;  // json stays null
   }
 
-  result.json = parseFields(result.child_filter_failed);
+  result.json = parseFields();
 
-  if (!filter_set_.match(result.json, result.child_filter_failed)) {
+  if (!filter_set_.match(result.json)) {
     result.filter_passed = false;
     Logger::getInstance().debug(
         "Filters rejected '" + cb_.getName() + "' at address " +
@@ -217,11 +217,10 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
 
     // Reject PSA fetch-protected addresses before enqueueing: the 0C4 fires
     // before any C++ catch, so a try/catch can't handle it.
-    const uintptr_t p = reinterpret_cast<uintptr_t>(child_addr);
-    if (p >= 0x7FFFF000u && p <= 0x7FFFFFFFu) {
-      Logger::getInstance().debug("Skipping enqueue of '" + child_name +
-                                  "' — address falls in PSA fetch-protected "
-                                  "range 0x7FFFF000–0x7FFFFFFF");
+    if (isGuardPageAddress(child_addr)) {
+      Logger::getInstance().debug(
+          "Skipping enqueue of '" + child_name +
+          "' — address falls in PSA fetch-protected range " + kGuardPageRange);
       return field_json;  // leave raw hex placeholder in place
     }
 
@@ -264,8 +263,7 @@ void ControlBlockNode::enqueuePendingChildren() {
   pending_children_.clear();
 }
 
-nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
-  child_filter_failed    = false;
+nlohmann::json ControlBlockNode::parseFields() {
   nlohmann::json cb_json = {};
   std::unordered_map<std::string, control_block_field_t> repeated_fields;
   size_t psa_fields_skipped = 0;
@@ -323,15 +321,12 @@ nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
                                 "': count_key='" + count_key +
                                 "', count=" + std::to_string(count));
 
-    const bool prior_child_filter_failed = child_filter_failed;
-    bool any_entry_kept                  = false;
-    bool any_entry_rejected              = false;
-    size_t entries_ignored               = 0;
+    size_t entries_ignored = 0;
 
     for (size_t i = 0; i < count; ++i) {
-      // Each entry is filtered on its own: fieldToJson only enqueues, so it is
-      // kept unless its child already resolved to null (rejected).  ignoreMask
-      // matches (e.g. unused slots) are dropped up front, not emitted/followed.
+      // ignoreMask matches (e.g. unused slots) are dropped up front, so they
+      // are neither emitted nor followed.  Child filters are applied later by
+      // TraversalEngine::resolvePlaceholders.
       if (!field_data.ignoreMask.empty() && !field_data.pointsTo.empty() &&
           child_options_.find(field_data.pointsTo) != child_options_.end()) {
         checkDataLength(field_data.offset +
@@ -352,7 +347,6 @@ nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
 
       if (!entry.is_null()) {
         field_json[field_name + "s"].push_back(entry);
-        any_entry_kept = true;
       }
     }
 
@@ -363,8 +357,6 @@ nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
           " entries (ignoreMask)");
     }
 
-    child_filter_failed =
-        prior_child_filter_failed || (any_entry_rejected && !any_entry_kept);
     cb_json.merge_patch(field_json);
   }
 

@@ -49,10 +49,6 @@ class TraversalEngine {
                            VisitKeySet& expanded,
                            const VisitKeyMap& owners) const;
 
-  // True if addr is in the PSA fetch-protected range 0x7FFFF000-0x7FFFFFFF,
-  // which would 0C4 before C++ exception handling can intervene.
-  static bool isGuardPageAddress(const void* addr);
-
   // Check storage-attribute reachability for the root control block.
   // Throws CbxpBlockUnreachableError if the block cannot be accessed.
   static void checkReachability(const ControlBlock& cb, bool has_filters);

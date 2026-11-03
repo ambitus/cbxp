@@ -6,6 +6,7 @@
 
 #include "control_block_error.hpp"
 #include "control_block_node.hpp"
+#include "guard_page.hpp"
 #include "include_resolver.hpp"
 #include "logger.hpp"
 
@@ -146,15 +147,6 @@ nlohmann::json TraversalEngine::run(const std::string& cb_name,
 
 // ---------------------------------------------------------------------------
 // Private
-
-bool TraversalEngine::isGuardPageAddress(const void* addr) {
-  // The PSA prefix area 0x7FFFF000-0x7FFFFFFF is fetch-protected (0C4 from a
-  // non-zero key), so reject pointers in it before any memory access.
-  const uintptr_t p  = reinterpret_cast<uintptr_t>(addr);
-  const uintptr_t lo = 0x7FFFF000u;
-  const uintptr_t hi = 0x7FFFFFFFu;
-  return (p >= lo && p <= hi);
-}
 
 void TraversalEngine::checkReachability(const ControlBlock& cb,
                                         bool has_filters) {
@@ -298,9 +290,10 @@ void TraversalEngine::traverse() {
     // the placeholder stays raw hex); other CBXPErrors propagate out of run().
     try {
       if (isGuardPageAddress(node.address)) {
-        Logger::getInstance().debug("Skipping '" + node.cb_name +
-                                    "' — address falls in PSA fetch-protected "
-                                    "range 0x7FFFF000–0x7FFFFFFF");
+        Logger::getInstance().debug(
+            "Skipping '" + node.cb_name +
+            "' — address falls in PSA fetch-protected range " +
+            kGuardPageRange);
         throw CbxpBlockUnreachableError();
       }
       if (node.is_root) {

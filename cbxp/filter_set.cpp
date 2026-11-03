@@ -116,11 +116,7 @@ bool FilterSet::compare(const nlohmann::json& json_value,
   return false;
 }
 
-bool FilterSet::match(const nlohmann::json& cb_json,
-                      bool child_filter_failed) const {
-  if (child_filter_failed) {
-    return false;
-  }
+bool FilterSet::match(const nlohmann::json& cb_json) const {
   if (filters_.empty()) {
     return true;
   }

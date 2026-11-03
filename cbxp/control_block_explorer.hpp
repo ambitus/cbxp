@@ -6,7 +6,6 @@
 #include "cbxp.h"
 #include "cbxp_types.hpp"
 #include "control_blocks/control_block.hpp"
-#include "traversal_engine.hpp"
 
 namespace CBXP {
 

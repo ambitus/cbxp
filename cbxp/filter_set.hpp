@@ -25,10 +25,7 @@ class FilterSet {
              const std::string& cb_name);
 
   // Returns true if `cb_json` satisfies every filter in this set.
-  // Returns false immediately if `child_filter_failed` is set.
-  bool match(const nlohmann::json& cb_json, bool child_filter_failed) const;
-
-  bool empty() const { return filters_.empty(); }
+  bool match(const nlohmann::json& cb_json) const;
 
  private:
   // field_name → list of (operation, value) pairs

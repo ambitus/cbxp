@@ -2,7 +2,6 @@
 #define __CBXP_CONTROL_BLOCK_NODE_H_
 
 #include <nlohmann/json.hpp>
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -21,9 +20,6 @@ struct NodeParseResult {
   // True when this node's own filter matched (or there were no filters).
   // False when the filter rejected the node.
   bool filter_passed;
-  // True if child-level filters rejected every entry; the engine then rejects
-  // the parent too.
-  bool child_filter_failed;
 };
 
 // Parses one control block at a known address; included pointer targets are
@@ -66,9 +62,8 @@ class ControlBlockNode {
   // Push pending_children_ onto ctx_.queue (skipping already-visited ones).
   void enqueuePendingChildren();
 
-  // Builds the JSON for this node's fields; child_filter_failed is set when a
-  // repeated pointer field's entries were all rejected by child filters.
-  nlohmann::json parseFields(bool& child_filter_failed);
+  // Builds the JSON for this node's fields.
+  nlohmann::json parseFields();
 };
 
 }  // namespace CBXP
