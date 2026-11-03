@@ -18,9 +18,8 @@ typedef struct {
 // Parses a filter-string list and evaluates them against a JSON object.
 class FilterSet {
  public:
-  // Parse `filters` into this FilterSet.  Filters targeting child control
-  // blocks (e.g. "ascb.field=value") are pushed into `child_options` keyed
-  // by child name so the caller can attach them to the right child options.
+  // Parses `filters`; those targeting child blocks ("ascb.field=value") go into
+  // `child_options` keyed by child name.
   void parse(const std::vector<std::string>& filters,
              std::unordered_map<std::string, cbxp_options_t>& child_options,
              const std::string& cb_name);

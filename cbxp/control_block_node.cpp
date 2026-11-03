@@ -10,6 +10,16 @@
 
 namespace CBXP {
 
+namespace {
+
+std::string addressToString(const void* addr) {
+  std::ostringstream oss;
+  oss << addr;
+  return oss.str();
+}
+
+}  // namespace
+
 ControlBlockNode::ControlBlockNode(TraversalContext& ctx,
                                    const cbxp_options_t& options,
                                    const std::string& cb_name,
@@ -38,9 +48,8 @@ NodeParseResult ControlBlockNode::parse() {
   result.child_filter_failed = false;
   result.json                = nullptr;
 
-  // Verify the entire control block fits in the caller-supplied buffer before
-  // reading anything (including the eyecatcher).  checkDataLength is a no-op
-  // when skip_buffer_length_check is true (extract / live-memory path).
+  // Verify the whole block fits in the caller's buffer before reading anything;
+  // no-op when skip_buffer_length_check is true (live memory).
   checkDataLength(getReadableLength());
 
   if (!eyecatcherMatches()) {
@@ -51,6 +60,10 @@ NodeParseResult ControlBlockNode::parse() {
 
   if (!filter_set_.match(result.json, result.child_filter_failed)) {
     result.filter_passed = false;
+    Logger::getInstance().debug(
+        "Filters rejected '" + cb_.getName() + "' at address " +
+        addressToString(address_) + ": discarding " +
+        std::to_string(pending_children_.size()) + " pending child(ren)");
     pending_children_.clear();  // rejected: do not load children
     return result;
   }
@@ -139,20 +152,36 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
       case UNSIGNED_INT:
         if (field.length == 8) {
           field_json = cb_.formatter_.uint<uint64_t>(base + offset);
+        } else if (field.length == 2) {
+          field_json = cb_.formatter_.uint<uint16_t>(base + offset);
+        } else if (field.length == 1) {
+          field_json = cb_.formatter_.uint<uint8_t>(base + offset);
         } else {
           field_json = cb_.formatter_.uint<uint32_t>(base + offset);
         }
         break;
       case SIGNED_INT:
         if (field.length == 8) {
-          field_json = *(reinterpret_cast<const int64_t*>(base + offset));
+          field_json = cb_.formatter_.sint<int64_t>(base + offset);
         } else if (field.length == 2) {
-          field_json = *(reinterpret_cast<const int16_t*>(base + offset));
+          field_json = cb_.formatter_.sint<int16_t>(base + offset);
+        } else if (field.length == 1) {
+          field_json = cb_.formatter_.sint<int8_t>(base + offset);
         } else {
-          field_json = *(reinterpret_cast<const int32_t*>(base + offset));
+          field_json = cb_.formatter_.sint<int32_t>(base + offset);
         }
         break;
       case BITSTRING:
+        if (field.length == 8) {
+          field_json = cb_.formatter_.getBitmap<uint64_t>(base + offset);
+        } else if (field.length == 2) {
+          field_json = cb_.formatter_.getBitmap<uint16_t>(base + offset);
+        } else if (field.length == 1) {
+          field_json = cb_.formatter_.getBitmap<uint8_t>(base + offset);
+        } else {
+          field_json = cb_.formatter_.getBitmap<uint32_t>(base + offset);
+        }
+        break;
       case HEX:
       case ADDRESS:
         if (field.length == 8) {
@@ -162,14 +191,17 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
         }
         break;
     }
-  } catch (const std::exception&) {
-    Logger::getInstance().debug("Unexpected error reading field.");
+  } catch (const std::exception& e) {
+    Logger::getInstance().debug(
+        "Unexpected error reading field '" + field.name + "' (type " +
+        std::to_string(static_cast<int>(field.type)) + ", offset " +
+        std::to_string(offset) + ") of '" + cb_.getName() + "' at address " +
+        addressToString(address_) + ": " + e.what());
     throw CbxpBlockUnreachableError();
   }
 
-  // If this field points to a child that we should include, push the target
-  // onto the BFS queue and return the raw pointer hex as a placeholder.
-  // The engine will replace placeholders after the queue drains.
+  // For an included child pointer field: enqueue the target and return the raw
+  // pointer hex as a placeholder, which the engine resolves after traversal.
   if (!field.pointsTo.empty() &&
       child_options_.find(field.pointsTo) != child_options_.end()) {
     const std::string& child_name = field.pointsTo;
@@ -183,9 +215,8 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
           cb_.formatter_.uint<uint32_t>(raw));
     }
 
-    // Reject addresses in the PSA fetch-protected range before enqueueing.
-    // A hardware 0C4 fires before any C++ catch can intervene, so this must
-    // be a pre-enqueue address check, not a try/catch.
+    // Reject PSA fetch-protected addresses before enqueueing: the 0C4 fires
+    // before any C++ catch, so a try/catch can't handle it.
     const uintptr_t p = reinterpret_cast<uintptr_t>(child_addr);
     if (p >= 0x7FFFF000u && p <= 0x7FFFFFFFu) {
       Logger::getInstance().debug("Skipping enqueue of '" + child_name +
@@ -194,9 +225,8 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
       return field_json;  // leave raw hex placeholder in place
     }
 
-    // Defer enqueueing until this node's own filters have been evaluated
-    // (see enqueuePendingChildren), so children of rejected nodes are never
-    // loaded.
+    // Defer enqueueing until this node's filters are evaluated, so children of
+    // rejected nodes are never loaded.
     pending_children_.push_back({child_addr, child_name,
                                  child_options_[child_name],
                                  /*is_root=*/false});
@@ -208,25 +238,28 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
 }
 
 void ControlBlockNode::enqueuePendingChildren() {
+  size_t enqueued = 0;
   for (const PendingNode& child : pending_children_) {
     auto visit_key       = std::make_pair(child.address, child.cb_name);
-    std::string addr_str = [&]() {
-      std::ostringstream oss;
-      oss << child.address;
-      return oss.str();
-    }();
+    std::string addr_str = addressToString(child.address);
     if (ctx_.visited.find(visit_key) == ctx_.visited.end()) {
-      // Mark as in-progress before enqueueing to prevent double-enqueue
-      // from two parent nodes at the same BFS level both reaching the
-      // same child address.
+      // Mark in-progress before enqueueing so two parents at the same BFS level
+      // can't double-enqueue the same child address.
       ctx_.visited[visit_key] = false;  // sentinel
       ctx_.queue.push(child);
+      ++enqueued;
       Logger::getInstance().debug("Enqueued '" + child.cb_name +
                                   "' at address " + addr_str);
     } else {
       Logger::getInstance().debug("Already visited/enqueued '" + child.cb_name +
                                   "' at address " + addr_str);
     }
+  }
+  if (!pending_children_.empty()) {
+    Logger::getInstance().debug(
+        "'" + cb_.getName() + "' at address " + addressToString(address_) +
+        ": enqueued " + std::to_string(enqueued) + " of " +
+        std::to_string(pending_children_.size()) + " pending child(ren)");
   }
   pending_children_.clear();
 }
@@ -235,6 +268,7 @@ nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
   child_filter_failed    = false;
   nlohmann::json cb_json = {};
   std::unordered_map<std::string, control_block_field_t> repeated_fields;
+  size_t psa_fields_skipped = 0;
 
   for (const auto& [field_name, field_data] : cb_.getMap()) {
     if (field_data.endOfControlBlock) {
@@ -243,6 +277,7 @@ nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
     if (cb_.getName() == "psa" &&
         field_data.offset >= (cb_.getMaxOffset() - 8) / 2 &&
         field_data.offset >= 0) {
+      ++psa_fields_skipped;
       continue;
     }
 
@@ -268,6 +303,12 @@ nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
     cb_json[lower_name] = resolved;
   }
 
+  if (psa_fields_skipped > 0) {
+    Logger::getInstance().debug("Skipped " +
+                                std::to_string(psa_fields_skipped) +
+                                " 'psa' field(s) beyond the readable range");
+  }
+
   // --- repeated fields ---
   for (const auto& [field_name, field_data] : repeated_fields) {
     nlohmann::json field_json    = {};
@@ -285,20 +326,12 @@ nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
     const bool prior_child_filter_failed = child_filter_failed;
     bool any_entry_kept                  = false;
     bool any_entry_rejected              = false;
+    size_t entries_ignored               = 0;
 
     for (size_t i = 0; i < count; ++i) {
-      // Each repeated entry is treated as its own mini-node for filter
-      // purposes.  We track whether this specific entry's child pointer
-      // was rejected so we can decide whether to keep the entry.
-      // We use a local flag and reset it between iterations.
-      // Note: fieldToJson only enqueues; actual child-filter rejection is
-      // determined by the engine after it processes the child node.  For
-      // repeated pointer fields we therefore take the conservative approach:
-      // if the child address was already visited and resolved to null (filter
-      // rejected), treat this entry as rejected; otherwise keep it.
-      // When the pointed-to control block is included, entries whose raw
-      // value matches ignoreMask (e.g. unassigned ASVT slots) are dropped
-      // before reading/enqueueing so they are neither emitted nor followed.
+      // Each entry is filtered on its own: fieldToJson only enqueues, so it is
+      // kept unless its child already resolved to null (rejected).  ignoreMask
+      // matches (e.g. unused slots) are dropped up front, not emitted/followed.
       if (!field_data.ignoreMask.empty() && !field_data.pointsTo.empty() &&
           child_options_.find(field_data.pointsTo) != child_options_.end()) {
         checkDataLength(field_data.offset +
@@ -309,6 +342,7 @@ nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
                                   field_data.ignoreMask, nullptr, 16))
                               << 24;
         if (cb_.formatter_.uint<uint32_t>(entry_raw) & mask) {
+          ++entries_ignored;
           continue;
         }
       }
@@ -320,6 +354,13 @@ nlohmann::json ControlBlockNode::parseFields(bool& child_filter_failed) {
         field_json[field_name + "s"].push_back(entry);
         any_entry_kept = true;
       }
+    }
+
+    if (entries_ignored > 0) {
+      Logger::getInstance().debug(
+          "Repeated field '" + field_name + "': ignored " +
+          std::to_string(entries_ignored) + " of " + std::to_string(count) +
+          " entries (ignoreMask)");
     }
 
     child_filter_failed =

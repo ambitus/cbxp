@@ -14,17 +14,15 @@ namespace CBXP {
 // Pure after construction: resolve() always returns the same result.
 class IncludeResolver {
  public:
-  // Returns the double-asterisk options map for `cb`, building and caching
-  // it on first call.  The cache is keyed by control-block name and is
-  // shared across all IncludeResolver instances for the process lifetime.
+  // Returns the cached double-asterisk options map for `cb`, built on first
+  // call; the cache is keyed by name and shared process-wide.
   static const std::unordered_map<std::string, cbxp_options_t>&
   getDoubleAsteriskMap(
       const ControlBlock& cb,
       const std::unordered_map<std::string, ControlBlock>& all_cbs);
 
-  // Parse `include_patterns` in the context of `cb` and return a map of
-  // child-control-block-name → cbxp_options_t for every child that should
-  // be followed.
+  // Parses `include_patterns` for `cb` and returns child-block-name ->
+  // cbxp_options_t for every child to follow.
   static std::unordered_map<std::string, cbxp_options_t> resolve(
       const std::vector<std::string>& include_patterns, const ControlBlock& cb,
       const std::unordered_map<std::string, ControlBlock>& all_cbs);

@@ -33,21 +33,19 @@ nlohmann::json TraversalEngine::run(const std::string& cb_name,
                                     const cbxp_options_t& options,
                                     const void* address, size_t buffer_length) {
   const ControlBlock& cb = ctx_.control_blocks.at(cb_name);
-  // Validate the include and filter options against the root control block
-  // before touching any storage, so a bad option is reported immediately
-  // rather than depending on when (or whether) the node is reached.  The
-  // constructor resolves includes and parses filters but reads no memory; it
-  // throws IncludeError / FilterError on invalid input.
-  // The node is kept and handed to drainQueue for each root, so the include
-  // and filter lists are built (and logged) only once.
+  // Validate include/filter options against the root block before reading
+  // storage; the node is kept so traverse() reuses its include/filter lists.
   const ControlBlockNode validator(ctx_, options, cb_name, /*address=*/nullptr,
                                    buffer_length);
+  Logger::getInstance().debug(
+      "Traversing '" + cb_name + "' (" +
+      (address == nullptr ? "extract" : "format") +
+      "): " + std::to_string(options.include_patterns.size()) +
+      " include pattern(s), " + std::to_string(options.filters.size()) +
+      " filter(s)");
 
-  // Reachability check applies when we are either extracting (address ==
-  // nullptr) or descending recursively into a child (the engine calls itself
-  // for child nodes via drainQueue, where address is always non-null — we
-  // skip the storage-attribute check in that case because the parent already
-  // passed it).
+  // Extract only (address == nullptr): child nodes skip this check because
+  // their parent already passed it.
   if (address == nullptr) {
     checkReachability(cb, !options.filters.empty());
   }
@@ -66,6 +64,11 @@ nlohmann::json TraversalEngine::run(const std::string& cb_name,
         unique_roots.push_back(p);
       }
     }
+    if (unique_roots.size() != roots.size()) {
+      Logger::getInstance().debug(
+          "Dropped " + std::to_string(roots.size() - unique_roots.size()) +
+          " duplicate root address(es) for '" + cb_name + "'");
+    }
     roots = std::move(unique_roots);
   }
 
@@ -74,10 +77,11 @@ nlohmann::json TraversalEngine::run(const std::string& cb_name,
                                 "' control block.");
     return {};
   }
+  Logger::getInstance().debug("Found " + std::to_string(roots.size()) +
+                              " root address(es) for '" + cb_name + "'");
 
-  // Seed the BFS queue with the root node(s).  Mark is_root=true so that
-  // drainQueue applies the full reachability check (including the
-  // no-filter-for-non-common-storage guard) only for these entries.
+  // Seed the queue with the roots; is_root=true makes traverse() apply the
+  // full reachability check (incl. the no-filter guard) to them only.
   for (const void* root_addr : roots) {
     auto visit_key = std::make_pair(root_addr, cb_name);
     // try_emplace is a no-op when the key already exists, so this
@@ -86,40 +90,53 @@ nlohmann::json TraversalEngine::run(const std::string& cb_name,
       ctx_.queue.push({root_addr, cb_name, options, /*is_root=*/true,
                        std::make_shared<ControlBlockNode>(
                            validator.withAddress(root_addr))});
+    } else {
+      Logger::getInstance().debug("Root '" + cb_name + "' at address " +
+                                  addressToString(root_addr) +
+                                  " already queued, skipping");
     }
   }
 
   // Process the queue until empty — this is the BFS loop.
-  drainQueue();
-
-  // Collect results for the root(s) and build the output JSON.
-  nlohmann::json output;
+  traverse();
 
   // Resolve placeholder hex strings to real child JSON.  A root is omitted
   // when it (or a filtered descendant) was rejected.
   auto resolveRoot = [&](const void* root_addr, nlohmann::json& resolved) {
     const VisitKey visit_key(root_addr, cb_name);
     const nlohmann::json& v = ctx_.visited.at(visit_key);
+    const std::string root_desc =
+        "Root '" + cb_name + "' at address " + addressToString(root_addr);
     if (v.is_null() || v.is_boolean()) {
+      Logger::getInstance().debug(
+          root_desc + " omitted: unreachable or rejected by filters");
       return false;
     }
     resolved = v;
     VisitKeySet expanded;
     const VisitKeyMap owners = computeOwners(visit_key);
-    return resolvePlaceholders(resolved, visit_key, expanded, owners);
+    const bool accepted =
+        resolvePlaceholders(resolved, visit_key, expanded, owners);
+    Logger::getInstance().debug(
+        root_desc + (accepted ? " included in output"
+                              : " omitted: rejected by child filters"));
+    return accepted;
   };
 
+  // A single root yields its object (null if rejected); multiple roots yield
+  // an array of the roots that were not rejected.
+  nlohmann::json output;
   if (roots.size() == 1) {
     nlohmann::json resolved;
     if (resolveRoot(roots[0], resolved)) {
-      output[cb_name] = resolved;
+      output = std::move(resolved);
     }
   } else {
-    output[cb_name + "s"] = nlohmann::json::array();
+    output = nlohmann::json::array();
     for (const void* root_addr : roots) {
       nlohmann::json resolved;
       if (resolveRoot(root_addr, resolved)) {
-        output[cb_name + "s"].push_back(resolved);
+        output.push_back(std::move(resolved));
       }
     }
   }
@@ -131,9 +148,8 @@ nlohmann::json TraversalEngine::run(const std::string& cb_name,
 // Private
 
 bool TraversalEngine::isGuardPageAddress(const void* addr) {
-  // The z/OS PSA prefix area 0x7FFFF000–0x7FFFFFFF is fetch-protected and
-  // will cause a 0C4 if read from a non-zero key.  Reject any pointer that
-  // falls in this range before attempting any memory access.
+  // The PSA prefix area 0x7FFFF000-0x7FFFFFFF is fetch-protected (0C4 from a
+  // non-zero key), so reject pointers in it before any memory access.
   const uintptr_t p  = reinterpret_cast<uintptr_t>(addr);
   const uintptr_t lo = 0x7FFFF000u;
   const uintptr_t hi = 0x7FFFFFFFu;
@@ -261,27 +277,25 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
   return result;
 }
 
-void TraversalEngine::drainQueue() {
+void TraversalEngine::traverse() {
+  size_t processed = 0;
   while (!ctx_.queue.empty()) {
     PendingNode node = ctx_.queue.front();
     ctx_.queue.pop();
+    ++processed;
+    Logger::getInstance().debug(
+        "Processing " + std::string(node.is_root ? "root" : "child") + " '" +
+        node.cb_name + "' at address " + addressToString(node.address) + " (" +
+        std::to_string(ctx_.queue.size()) + " still queued)");
 
     const ControlBlock& cb = ctx_.control_blocks.at(node.cb_name);
 
-    // For root nodes apply the full reachability check, which includes
-    // refusing access to non-common storage when no filters are present.
-    // For child nodes (enqueued by fieldToJson via a valid parent pointer)
-    // we still check the key/fetch-protection gate but treat the absence of
-    // filters as acceptable — the child was explicitly included by the user
-    // and its address was read from a live parent field.
+    // Roots get the full reachability check (incl. refusing non-common storage
+    // without filters); children only need the key/fetch-protection gate.
     auto visit_key = std::make_pair(node.address, node.cb_name);
 
-    // Only CbxpBlockUnreachableError is handled per node: an inaccessible block
-    // (protected storage, bad pointer from a peer-ASCB link like ASCBLOCI,
-    // etc.) is recorded as null so the placeholder stays as raw hex.  Every
-    // other CBXPError (bad include/filter, data too small, ...) propagates
-    // out of run() to ControlBlockExplorer::processControlBlock, which
-    // reports it to the caller as the return code.
+    // Only CbxpBlockUnreachableError is handled per node (recorded as null, so
+    // the placeholder stays raw hex); other CBXPErrors propagate out of run().
     try {
       if (isGuardPageAddress(node.address)) {
         Logger::getInstance().debug("Skipping '" + node.cb_name +
@@ -329,6 +343,10 @@ void TraversalEngine::drainQueue() {
       } else {
         ctx_.visited[visit_key]        = result.json;
         ctx_.child_filtered[visit_key] = cb_node->childFilterMap();
+        Logger::getInstance().debug(
+            "Parsed '" + node.cb_name + "' at address " +
+            addressToString(node.address) + ": " +
+            std::to_string(result.json.size()) + " JSON key(s)");
       }
     } catch (const CbxpBlockUnreachableError& e) {
       Logger::getInstance().debug(
@@ -338,6 +356,10 @@ void TraversalEngine::drainQueue() {
       ctx_.visited[visit_key] = nullptr;
     }
   }
+  Logger::getInstance().debug(
+      "Traversal complete: " + std::to_string(processed) +
+      " node(s) processed, " + std::to_string(ctx_.filter_rejected.size()) +
+      " rejected by filters");
 }
 
 namespace {
@@ -359,11 +381,8 @@ struct ChildField {
   bool is_repeated = false;
 };
 
-// Determines whether JSON `key` of control block `cb` is a pointer field
-// whose target is an included child.  Lower-case field names are matched
-// against the key.  Repeated pointer fields are stored under "<field>s" (with
-// a trailing "s"), so both the exact (scalar) and the repeated (array) forms
-// are checked.
+// Returns whether JSON `key` of `cb` is a pointer field to an included child,
+// matching the field name or its repeated form "<field>s".
 bool findChildField(const ControlBlock& cb, const std::string& key,
                     const std::unordered_map<std::string, bool>& child_options,
                     ChildField& out) {
@@ -415,6 +434,10 @@ VisitKeyMap TraversalEngine::computeOwners(const VisitKey& root_key) const {
           f.name);
       if (owners.emplace(child_key, node_key).second) {
         pending.push(child_key);
+        Logger::getInstance().debug(
+            "Owner of '" + child_key.second + "' at address " +
+            addressToString(child_key.first) + " is '" + node_key.second +
+            "' at address " + addressToString(node_key.first));
       }
     };
 
@@ -435,30 +458,10 @@ VisitKeyMap TraversalEngine::computeOwners(const VisitKey& root_key) const {
   return owners;
 }
 
-// Stitches child JSON into `json` (the parsed node identified by `node_key`)
-// and decides whether the node survives its children's filters.
-//
-// Two cases per included child:
-//  - Unfiltered child: looked up in ctx_.visited and its own included
-//    children are stitched in recursively, so multi-level includes such as
-//    'assb.ldax' are fully expanded.  It can never reject this node.  A node
-//    is expanded only under its owner, the shallowest parent that reaches it
-//    (`owners`, from computeOwners), and at most once per root (`expanded`);
-//    every other reference stays as its pointer placeholder.  Because the
-//    owner is the BFS parent, entries of a repeated field such as 'asvtenty'
-//    are expanded in place instead of being swallowed by a deeper path (e.g.
-//    ascb -> oucb -> oucbbck -> ...).  This also keeps the work linear on
-//    cyclic and heavily shared graphs (e.g. with '**'), where expanding every
-//    path would never finish.
-//  - Filtered child: resolved recursively (bottom-up) so that its own
-//    filtered descendants can reject it.  Filters lose one path segment per
-//    level, so recursion along filtered edges is bounded by filter depth and
-//    cannot cycle.
-//
-// Returns false if the node must be rejected because a filtered child was
-// rejected (or could not be evaluated).  For repeated pointer fields,
-// rejected entries are dropped and the node is rejected only when every entry
-// was rejected.
+// Stitches child JSON into `json`. Unfiltered children expand once, under their
+// shallowest parent: keeps 'asvtenty' entries in place, stays linear on cyclic
+// graphs ('**'). Filtered ones resolve first; filters lose a path segment per
+// level, so this cannot cycle. Returns false if the node is rejected.
 bool TraversalEngine::resolvePlaceholders(nlohmann::json& json,
                                           const VisitKey& node_key,
                                           VisitKeySet& expanded,
@@ -505,11 +508,22 @@ bool TraversalEngine::resolvePlaceholders(nlohmann::json& json,
       if (!child_filtered) {
         // Expand only under the owner (shallowest parent); any other
         // reference stays as a pointer placeholder.
-        auto owner_it = owners.find(child_key);
-        auto it       = ctx_.visited.find(child_key);
-        if (owner_it == owners.end() || owner_it->second != node_key ||
-            it == ctx_.visited.end() || it->second.is_boolean() ||
-            it->second.is_null() || expanded.count(child_key) != 0) {
+        auto owner_it           = owners.find(child_key);
+        auto it                 = ctx_.visited.find(child_key);
+        const char* skip_reason = nullptr;
+        if (owner_it == owners.end() || owner_it->second != node_key) {
+          skip_reason = "it is owned by a different parent";
+        } else if (it == ctx_.visited.end() || it->second.is_boolean() ||
+                   it->second.is_null()) {
+          skip_reason = "it is unreachable or was never parsed";
+        } else if (expanded.count(child_key) != 0) {
+          skip_reason = "it was already expanded";
+        }
+        if (skip_reason != nullptr) {
+          Logger::getInstance().debug(
+              "Leaving '" + child_name + "' at address " +
+              addressToString(child_addr) + " as a pointer under " + node_desc +
+              ": " + skip_reason);
           return ChildState::Unavailable;
         }
         child_json = it->second;

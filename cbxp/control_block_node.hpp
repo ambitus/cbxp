@@ -21,20 +21,13 @@ struct NodeParseResult {
   // True when this node's own filter matched (or there were no filters).
   // False when the filter rejected the node.
   bool filter_passed;
-  // True when at least one child entry was rejected by a child-level filter
-  // and no child entries survived.  The engine uses this to also reject the
-  // parent.
+  // True if child-level filters rejected every entry; the engine then rejects
+  // the parent too.
   bool child_filter_failed;
 };
 
-// Parses a single control block at a known address.
-//
-// ControlBlockNode is intentionally thin:
-//  - It reads fields from `address` using the schema in `cb_name`.
-//  - For pointer fields that appear in `options.include_patterns`, it emits
-//    the raw hex pointer as a placeholder and pushes the target onto
-//    ctx.queue (BFS) instead of recursing.
-//  - It never modifies ctx.visited — that is the engine's responsibility.
+// Parses one control block at a known address; included pointer targets are
+// queued on ctx.queue as hex placeholders.  Never modifies ctx.visited.
 class ControlBlockNode {
  public:
   ControlBlockNode(TraversalContext& ctx, const cbxp_options_t& options,
@@ -65,18 +58,16 @@ class ControlBlockNode {
   void checkDataLength(ptrdiff_t offset) const;
   ptrdiff_t getReadableLength() const;
 
-  // Read one field from memory and return its JSON value.
-  // For pointer fields whose target is in child_options_, returns the raw
-  // pointer hex as a placeholder and pushes a PendingNode onto ctx_.queue.
+  // Reads one field and returns its JSON; included pointer targets are queued
+  // on ctx_.queue and returned as raw pointer hex placeholders.
   nlohmann::json fieldToJson(const control_block_field_t& field,
                              ptrdiff_t extra_offset = 0);
 
   // Push pending_children_ onto ctx_.queue (skipping already-visited ones).
   void enqueuePendingChildren();
 
-  // Build the full JSON object for this node's fields (non-repeated then
-  // repeated).  child_filter_failed is set to true if a repeated pointer
-  // field's entries were all rejected by child filters.
+  // Builds the JSON for this node's fields; child_filter_failed is set when a
+  // repeated pointer field's entries were all rejected by child filters.
   nlohmann::json parseFields(bool& child_filter_failed);
 };
 

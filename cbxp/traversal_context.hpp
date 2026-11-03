@@ -24,11 +24,8 @@ struct PairHash {
   }
 };
 
-// Stores the JSON result for every (address, cb_type) pair that has been
-// enqueued.  Values follow a three-state protocol:
-//   boolean false  — in-progress sentinel (cycle break)
-//   null           — visited but legitimately empty (eyecatcher mismatch, etc.)
-//   object/array   — fully resolved
+// Result JSON per enqueued (address, cb_type): false = in progress (cycle
+// break), null = empty/unreachable, object/array = fully resolved.
 using VisitKey    = std::pair<const void*, std::string>;
 using VisitedMap  = std::unordered_map<VisitKey, nlohmann::json, PairHash>;
 using VisitKeySet = std::unordered_set<VisitKey, PairHash>;
@@ -41,14 +38,11 @@ struct PendingNode {
   const void* address;
   std::string cb_name;
   cbxp_options_t options;
-  // True only for nodes seeded directly by run() (root nodes).
-  // False for all nodes enqueued by ControlBlockNode::fieldToJson (children).
-  // Used by drainQueue to decide whether the reachability check should
-  // treat missing filters as a reason to refuse access.
+  // True for nodes seeded by run() (roots), false for children; traverse uses
+  // it to decide whether missing filters make the reachability check refuse.
   bool is_root = false;
-  // Root nodes only: a node already built by TraversalEngine::run() while it
-  // validated the options.  drainQueue reuses it instead of rebuilding (and
-  // re-logging) the include and filter lists.  Null for child nodes.
+  // Roots only: the node run() built while validating options, reused by
+  // traverse().  Null for children.
   std::shared_ptr<ControlBlockNode> prepared = nullptr;
 };
 
@@ -59,13 +53,11 @@ struct TraversalContext {
   bool skip_buffer_length_check;
   VisitedMap visited;
   std::queue<PendingNode> queue;
-  // Nodes whose own filters (or a repeated-child roll-up) rejected them.
-  // visited holds null for these; this set lets a parent distinguish
-  // "rejected by a filter" from "inaccessible / eyecatcher mismatch".
+  // Nodes rejected by their own filters (visited holds null); lets a parent
+  // tell this apart from inaccessible / eyecatcher mismatch.
   VisitKeySet filter_rejected;
-  // For every parsed node: included child name -> whether that child carries
-  // filters (and can therefore reject its parent).  Used by
-  // TraversalEngine::resolvePlaceholders.
+  // Included child name -> whether it has filters (can reject its parent);
+  // used by TraversalEngine::resolvePlaceholders.
   std::unordered_map<VisitKey, std::unordered_map<std::string, bool>, PairHash>
       child_filtered;
 };

@@ -280,14 +280,9 @@ void ControlBlockExplorer::processControlBlock(
     if (control_blocks.find(control_block_name) != control_blocks.end()) {
       TraversalEngine engine(control_blocks,
                              cbxp_options_.skip_buffer_length_check);
-      nlohmann::json wrapped =
+      control_block_json =
           engine.run(control_block_name, cbxp_options_, p_control_block_,
                      control_block_data_length_);
-      // run() wraps its result under the control block name (or name+"s" for
-      // lists).  At the top level we want the unwrapped value directly.
-      if (!wrapped.empty()) {
-        control_block_json = wrapped.begin().value();
-      }
     } else {
       throw ControlBlockError();
     }

@@ -3,10 +3,12 @@
 
 #include <unistd.h>
 
+#include <bitset>
 #include <cstdint>
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace CBXP {
 class ControlBlockFieldFormatter {
@@ -16,6 +18,13 @@ class ControlBlockFieldFormatter {
     T uint_field;
     std::memcpy(reinterpret_cast<char*>(&uint_field), p_field, sizeof(T));
     return uint_field;
+  }
+
+  template <typename T>
+  static T sint(const void* p_field) {
+    T sint_field;
+    std::memcpy(reinterpret_cast<char*>(&sint_field), p_field, sizeof(T));
+    return sint_field;
   }
 
   static const std::string getString(const void* p_field, int length) {
@@ -37,7 +46,6 @@ class ControlBlockFieldFormatter {
     return oss.str();
   }
   template <typename T>
-  // cppcheck-suppress unusedFunction
   static const std::string getBitmap(const void* p_field) {
     std::ostringstream oss;
     oss << std::bitset<sizeof(T) * 8>{
