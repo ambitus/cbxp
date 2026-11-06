@@ -1000,9 +1000,10 @@ class TestCBXP(unittest.TestCase):
         expected_messages = {
             5: "A null data pointer was provided",
             6: "Error with your CBXPPATH environment variable",
-            7: "Could not parse a JSON file",
-            8: "Could not validate a JSON file",
-            9: "Cannot reach control block",
+            7: "Cannot reach control block",
+            8: "Could not parse a JSON file",
+            9: "Could not validate a JSON file",
+            10: "Could not load a JSON file",
         }
         for return_code, message in expected_messages.items():
             with self.subTest(return_code=return_code):

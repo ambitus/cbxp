@@ -46,14 +46,14 @@ ControlBlockExplorer::loadCustomControlBlocks(
       // The file is not well formed JSON at all.
       Logger::getInstance().debug("Could not parse '" + file.path().string() +
                                   "': " + std::string(e.what()));
-      throw CbxpBadJsonError();
-    } catch (const std::exception& e) {
+      throw CbxpJsonParseError();
+    } catch (const std::invalid_argument& e) {
       // The validator throws std::invalid_argument when the JSON does not
       // conform to the schema.
       Logger::getInstance().debug("Could not validate '" +
                                   file.path().string() +
                                   "': " + std::string(e.what()));
-      throw CbxpIncompatibleJsonError();
+      throw CbxpSchemaValidationError();
     }
   }
   return new_maps;
@@ -89,7 +89,7 @@ void ControlBlockExplorer::validateControlBlockReferences(
       Logger::getInstance().debug("The '" + name + "' control block is " +
                                   "pointed to by unknown control block '" +
                                   *unknown_parent + "'.");
-      throw CbxpIncompatibleJsonError();
+      throw CbxpJsonValueError();
     }
     for (const auto& [field_name, field] : control_block.getMap()) {
       if (!field.repeated) {
@@ -104,7 +104,7 @@ void ControlBlockExplorer::validateControlBlockReferences(
             "The repeated field '" + field_name + "' of the '" + name +
             "' control block has an unknown count field '" + field.count +
             "'.");
-        throw CbxpIncompatibleJsonError();
+        throw CbxpJsonValueError();
       }
     }
   }

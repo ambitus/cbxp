@@ -456,11 +456,14 @@ void CommandProcessor::run() {
     case CBXP::Error::BlockUnreachable:
       std::cerr << ERROR_CANT_REACH_BLOCK_ << std::endl;
       throw CLIExitFailure();
-    case CBXP::Error::CantParseJson:
+    case CBXP::Error::JsonFailParse:
       std::cerr << ERROR_PARSE_JSON_FILE_ << std::endl;
       throw CLIExitFailure();
-    case CBXP::Error::BadJsonFile:
+    case CBXP::Error::JsonFailSchema:
       std::cerr << ERROR_VALIDATE_JSON_FILE_ << std::endl;
+      throw CLIExitFailure();
+    case CBXP::Error::JsonBadValue:
+      std::cerr << ERROR_VALUES_JSON_FILE_ << std::endl;
       throw CLIExitFailure();
     default:
       std::cerr << ERROR_UNKNOWN_ERROR_ << " " << control_block_name_
