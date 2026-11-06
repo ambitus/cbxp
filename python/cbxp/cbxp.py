@@ -82,7 +82,7 @@ class CBXPError(Exception):
             case CBXPErrorCode.JSON_FAIL_SCHEMA.value:
                 message = "Could not validate a JSON file"
             case CBXPErrorCode.JSON_BAD_VALUE.value:
-                message = "Could not load JSON file"
+                message = "Could not a load JSON file"
             case _:
                 message = "An unknown error occurred"
         super().__init__(message)
