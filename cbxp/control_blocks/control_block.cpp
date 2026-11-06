@@ -43,10 +43,10 @@ ControlBlock::ControlBlock(
   // fields read below exist and have the right type.
   try {
     cbxp_schema_validator.validate(control_block_map);
-  } catch (const std::exception& e) {
+  } catch (const std::invalid_argument& e) {
     Logger::getInstance().debug("Control block failed validation: " +
                                 std::string(e.what()));
-    throw CbxpIncompatibleJsonError();
+    throw SchemaValidationError();
   }
 
   storage_attributes_.key =
