@@ -1,0 +1,1333 @@
+{
+  "version": 1,
+  "name": "cvt",
+  "commonName": "Communications Vector Table",
+  "macroId": "cvt",
+  "description": "The CVT provides the means by which non-nucleus-resident routines may refer to information in the nucleus of the control program.  It contains addresses of other control blocks and tables used by the control program routines.",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [
+    "psa"
+  ],
+  "storageAttributes": {
+    "subpools": [
+      "nucleus"
+    ],
+    "key": 0,
+    "residency": 24
+  },
+  "sections": [
+    {
+      "name": "cvtfix",
+      "description": "",
+      "fields": [
+        {
+          "name": "CVTPROD",
+          "description": "SYSTEM CONTROL PROGRAM PRODUCT LEVEL.",
+          "offset": -40,
+          "length": 16,
+          "type": "string",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTVERID",
+          "description": "OPTIONAL USER PERSONALIZATION OF SOFTWARE SYSTEM VERSION.",
+          "offset": -24,
+          "length": 16,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "                "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTMDL",
+          "description": "CPU NUMBER IN SIGNLESS PACKED DECIMAL, I.E., A 3090 PROCESSOR WOULD APPEAR AS X'3090'",
+          "offset": -6,
+          "length": 2,
+          "type": "string",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTRELNO",
+          "description": "RELEASE NUMBER (EBCDIC)",
+          "offset": -4,
+          "length": 4,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "038 "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVT0EF00",
+          "description": "ADDRESS OF ROUTINE TO SCHEDULE ASYNCHRONOUS EXITS",
+          "offset": 4,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEA0EF00"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTLINK",
+          "description": "ADDRESS OF DCB FOR SYS1.LINKLIB DATA SET. UPDATED BY CONTENTS SUPERVISION RIM. OWNERSHIP: CONTENTS SUPERVISION.",
+          "offset": 8,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEFLINK"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTPCNVT",
+          "description": "ADDRESS OF ENTRY POINT OF THE ROUTINE WHICH CONVERTS A RELATIVE TRACK ADDRESS (TTR) TO AN ABSOLUTE TRACK ADDRESS (MBBCCHHR)",
+          "offset": 28,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IECPCNVT"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTPRLTV",
+          "description": "ADDRESS OF ENTRY POINT OF THE ROUTINE WHICH CONVERTS AN ABSOLUTE TRACK ADDRESS (MBBCCHHR) TO A RELATIVE TRACK ADDRESS (TTR)",
+          "offset": 32,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IECPRLTV"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTSYSAD",
+          "description": "UCB ADDRESS FOR THE SYSTEM RESIDENCE VOLUME",
+          "offset": 48,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "vtrg",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTEXIT",
+          "description": "An SVC 3 instruction. Exit to dispatcher. This is a programming interface for IRBs only. An IRB may return to the system by branching to this location",
+          "offset": 80,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "instruction",
+              "value": "SVC   3"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTBRET",
+          "description": "A BR 14 INSTRUCTION.  RETURN TO CALLER (USED BY DATA MANAGEMENT ROUTINES)",
+          "offset": 82,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "instruction",
+              "value": "BR   14"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTTPC",
+          "description": "ADDRESS OF THE TIMER SUPERVISOR WORK AREA",
+          "offset": 88,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEATPC"
+            }
+          ],
+          "pointsTo": "tpc",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTCVT",
+          "description": "CVT ACRONYM IN EBCDIC (EYE-CATCHER)",
+          "offset": 96,
+          "length": 4,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": " CVT"
+            }
+          ],
+          "eyecatcher": true
+        },
+        {
+          "name": "CVTQTE00",
+          "description": "ADDRESS OF THE TIMER ENQUEUE ROUTINE FOR INTERVAL TIMER",
+          "offset": 104,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAQTE00"
+            }
+          ],
+          "pointsTo": "qte",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTQTD00",
+          "description": "ADDRESS OF THE TIMER DEQUEUE ROUTINE FOR INTERVAL TIMER",
+          "offset": 108,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAQTD00"
+            }
+          ],
+          "pointsTo": "qtd",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTDCB",
+          "description": "OPERATING SYSTEM FOR S/370-XA MODE EXECUTION, CVTMVSE, CVT4MS1, CVTOSEXT, CVT6DAT, AND CVTMVS2 ARE SET ON AT CVT CREATION",
+          "offset": 116,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "9B"
+            }
+          ],
+          "bitmasks": {
+            "CVTMVSE": {
+              "description": "S/370-XA MODE EXECUTION",
+              "offset": 0,
+              "length": 1
+            },
+            "CVT1SSS": {
+              "description": "OPTION 1 (PCP) SSS. ALSO, LANGUAGE COMPILERS MAY USE THIS BIT TO DETERMINE IF THEY ARE RUNNING UNDER OS OR VM (WILL BE 0 FOR OS).",
+              "offset": 1,
+              "length": 1
+            },
+            "CVT2SPS": {
+              "description": "OPTION 2 (MFT) SPS, OS/VS1, VSE",
+              "offset": 2,
+              "length": 1
+            },
+            "CVT4MS1": {
+              "description": "OPTION 4 (MVT) MS1, OS/VS2",
+              "offset": 3,
+              "length": 1
+            },
+            "CVTOSEXT": {
+              "description": "INDICATOR THAT THE CVTOSLVL AREA IS PRESENT AND MAY BE REFERENCED. This bit is on for all releases starting with MVS/SP3.1.0.",
+              "offset": 4,
+              "length": 1
+            },
+            "CVT4MPS": {
+              "description": "MODEL 65 MULTIPROCESSING",
+              "offset": 5,
+              "length": 1
+            },
+            "CVT6DAT": {
+              "description": "DYNAMIC ADDRESS TRANSLATION BY CPU (OS/VS1, OS/VS2)",
+              "offset": 6,
+              "length": 1
+            },
+            "CVTMVS2": {
+              "description": "MULTIPLE MEMORY OPTION OF OS/VS2 IS PRESENT",
+              "offset": 7,
+              "length": 1
+            }
+          },
+          "equates": [
+            {
+              "name": "CVT8AOS2",
+              "value": "CVT4MS1+CVT6DAT",
+              "description": "+CVT6DAT - OS/VS2 SYSTEM"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTIXAVL",
+          "description": "ADDRESS OF THE I/O SUPERVISOR'S FREELIST POINTER WHICH CONTAINS THE ADDRESS OF THE NEXT REQUEST ELEMENT  (OS/VS1) ADDRESS OF THE I/O SUPERVISOR'S COMMUNICATION AREA (IOCOM)  (OS/VS2)",
+          "offset": 124,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IECIXAVL"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTECVT",
+          "description": "POINTER TO THE EXTENDED CVT",
+          "offset": 140,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAECVT"
+            }
+          ],
+          "pointsTo": "ecvt",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTMSER",
+          "description": "ADDRESS OF DATA AREA OF MASTER SCHEDULER RESIDENT DATA AREA",
+          "offset": 148,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEEMSER"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTTVT",
+          "description": "ADDRESS OF TSO VECTOR TABLE",
+          "offset": 156,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "tso",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTSMCA",
+          "description": "ADDRESS OF THE SYSTEM MANAGEMENT CONTROL AREA (SMCA) IF THE SYSTEM MANAGEMENT FACILITIES (SMF) OPTION IS PRESENT IN THE SYSTEM.  OTHERWISE, ZERO.",
+          "offset": 196,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTABEND",
+          "description": "ADDRESS OF SECONDARY CVT FOR ABEND IN EOT (OS/VS2)",
+          "offset": 200,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEABEND"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTUSER",
+          "description": "A WORD AVAILABLE TO THE USER",
+          "offset": 204,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVT0SCR1",
+          "description": "ADDRESS OF THE SECTOR CALCULATION ROUTINE FOR ROTATIONAL POSITION SENSING (RPS)",
+          "offset": 232,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEC0SCR1"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTFLAG5",
+          "description": "Flags, refreshed upon error, set during NIP and never changed",
+          "offset": 244,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "40"
+            }
+          ],
+          "bitmasks": {
+            "CVTVEF": {
+              "description": "Vector Extension Facility",
+              "offset": 0,
+              "length": 1
+            },
+            "CVTZ1": {
+              "description": "Z1",
+              "offset": 0,
+              "length": 1
+            },
+            "CVTEEC": {
+              "description": "EEC",
+              "offset": 1,
+              "length": 1
+            },
+            "CVTNNPAF": {
+              "description": "NNPA facility",
+              "offset": 2,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTFLAG6",
+          "description": "More flags",
+          "offset": 245,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "bitmasks": {
+            "CVTSOLED": {
+              "description": "Solution Edition",
+              "offset": 0,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTFLAG7",
+          "description": "More flags",
+          "offset": 246,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "bitmasks": {
+            "CvtSysplexZaapOnline": {
+              "description": "The sysplex has one or more zAAP processors currently online",
+              "offset": 0,
+              "length": 1
+            },
+            "CvtSysplexZcbpOnline": {
+              "description": "The sysplex has one or more zCBP processors currently online",
+              "offset": 1,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTSAF",
+          "description": "ADDRESS OF ROUTER VECTOR TABLE.",
+          "offset": 248,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "vmsgs",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTAMFF",
+          "description": "RESERVED FOR ACCESS METHOD FLAGS",
+          "offset": 264,
+          "length": 4,
+          "type": "hex",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "pointsTo": "vmsgs",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTJESCT",
+          "description": "ADDRESS OF JOB ENTRY SUBSYSTEM (JES) CONTROL TABLE",
+          "offset": 296,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEFJESCT"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTTZ",
+          "description": "Difference between local time and UTC (Coordinated Universal Time) in binary units of 1.048576 seconds.  Contains the same value as CVTLDTOL.  CVTLDTO (which contains CVTLDTOL) has this difference to a finer degree of accuracy.",
+          "offset": 304,
+          "length": 4,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00000000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTSNAME",
+          "description": "SYSTEM NAME FOR CURRENT SYSTEM. OWNERSHIP: IPL/NIP. SERIALIZATION: NONE.",
+          "offset": 340,
+          "length": 8,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": " "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTPVTP",
+          "description": "ADDRESS OF PAGE VECTOR TABLE",
+          "offset": 356,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IARMPVT"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTFLAG2",
+          "description": "FLAG BYTE",
+          "offset": 377,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "80"
+            }
+          ],
+          "bitmasks": {
+            "CVTCMPSC": {
+              "description": "IF ONE, INDICATES PRESENCE OF MVS COMPRESSION/EXPANSION SERVICE. INITIALIZED ON. OWNERSHIP: CALLABLE SERVICES. SERIALIZATION: NONE.",
+              "offset": 0,
+              "length": 1
+            },
+            "CVTCMPSH": {
+              "description": "IF ONE, INDICATES PRESENCE OF CMPSC COMPRESSION/EXPANSION HARDWARE INSTRUCTION SET BY NIP. OWNERSHIP: CALLABLE SERVICES. SERIALIZATION: NONE (UNCHANGED AFTER NIP).",
+              "offset": 1,
+              "length": 1
+            },
+            "CVTSOPF": {
+              "description": "IF ONE, INDICATES PRESENCE OF THE SUPPRESSION-ON-PROTECTION HARDWARE FACILITY. SET BY NIP. OWNERSHIP: SUPERVISOR CONTROL SERIALIZATION: NONE (UNCHANGED AFTER NIP).",
+              "offset": 2,
+              "length": 1
+            },
+            "CVTBFPH": {
+              "description": "If one, indicates presence of BFP hardware instruction set. Set by NIP. Ownership: Supervisor. Serialization: None (unchanged after NIP).",
+              "offset": 3,
+              "length": 1
+            },
+            "CVTPER2": {
+              "description": "If one, indicates presence of PER2 hardware on all CPUs Set by NIP. Ownership: Supervisor. Serialization: None (unchanged after NIP).",
+              "offset": 4,
+              "length": 1
+            },
+            "CVTIQD": {
+              "description": "If one, indicates that Internal Queued Direct Communications is supported. Set by IOS during NIP. Ownership: IOS Serialization: None (unchanged after NIP).",
+              "offset": 5,
+              "length": 1
+            },
+            "CVTALR": {
+              "description": "If one, indicates ASN and LX Reuse Architecture is enabled. Set by NIP. Ownership: Supervisor. Serialization: None (unchanged after NIP).",
+              "offset": 6,
+              "length": 1
+            },
+            "CVTEDAT": {
+              "description": "If one, indicates that the Enhanced DAT Architecture is available Set by NIP. Ownership: Supervisor. Serialization: None (unchanged after NIP).",
+              "offset": 7,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTFLAG3",
+          "description": "FLAG BYTE refreshed upon error, set during NIP and never changed",
+          "offset": 378,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "bitmasks": {
+            "CVTESAME": {
+              "description": "cvtesame",
+              "offset": 0,
+              "length": 1
+            },
+            "CVTZARCH": {
+              "description": "If one, indicates presence of z/Architecture hardware. Note that it is often simpler to check if PSA field FLCARCH is non-zero to determine this. Set by NIP. Ownership: Supervisor. Serialization: None (unchanged after NIP).",
+              "offset": 0,
+              "length": 1
+            },
+            "CvtProcAsCore": {
+              "description": "A processor resource is viewed as a CPU Core",
+              "offset": 1,
+              "length": 1
+            },
+            "CvtMultiCpusPerCore": {
+              "description": "When CvtProcAsCore is on, this indicates there are multiple CPUs defined within a CPU Core (On MT hardware). When CvtProcAsCore is off, this is always off",
+              "offset": 2,
+              "length": 1
+            },
+            "CvtCpuAsAliasToCore": {
+              "description": "When CvtProcAsCore is on, the term \"CPU\" is treated as an alias to \"CORE\" for D M and CF system commands. When CvtProcAsCore is off, this is always off",
+              "offset": 3,
+              "length": 1
+            },
+            "CvtFlag3Diag": {
+              "description": "Diagnostic data for IBM use only",
+              "offset": 4,
+              "length": 1
+            },
+            "CvtFlag3Rsvd": {
+              "description": "Reserved for IBM use",
+              "offset": 5,
+              "length": 1
+            },
+            "CvtzCBP": {
+              "description": "When bit is on, system fields with zCBP names and and aliases with corresponding zAAP names contain data about zCBP processors.",
+              "offset": 6,
+              "length": 1
+            },
+            "CvtGsf": {
+              "description": "GSF is available",
+              "offset": 7,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTFLAG4",
+          "description": "Flag byte This is an interface for      CA CVTZNALC, CVTDCPA, CVTTX, CVTTXC, CVTEDAT2 only",
+          "offset": 379,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "80"
+            }
+          ],
+          "bitmasks": {
+            "CVTP001I": {
+              "description": "If one, indicates that P001 support is installed",
+              "offset": 0,
+              "length": 1
+            },
+            "CVTP001A": {
+              "description": "If one, indicates that the system is in P001_Active mode Ownership: IPL/NIP Serialization: SALLOC",
+              "offset": 1,
+              "length": 1
+            },
+            "CVTZNALC": {
+              "description": "zNALC",
+              "offset": 2,
+              "length": 1
+            },
+            "CVTDCPA": {
+              "description": "Dynamic CPU Addition is enabled",
+              "offset": 3,
+              "length": 1
+            },
+            "CVTTX": {
+              "description": "TX support is enabled",
+              "offset": 4,
+              "length": 1
+            },
+            "CVTP002": {
+              "description": "P002 support is enabled",
+              "offset": 4,
+              "length": 1
+            },
+            "CVTTXC": {
+              "description": "TXC support is enabled",
+              "offset": 5,
+              "length": 1
+            },
+            "CVTP002C": {
+              "description": "P002C support is enabled",
+              "offset": 5,
+              "length": 1
+            },
+            "CVTRI": {
+              "description": "RI support is enabled",
+              "offset": 6,
+              "length": 1
+            },
+            "CVTEDAT2": {
+              "description": "EDAT2 is enabled",
+              "offset": 7,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTCTLFG",
+          "description": "SYSTEM CONTROL FLAGS",
+          "offset": 398,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "10"
+            }
+          ],
+          "bitmasks": {
+            "CVTTXTE": {
+              "description": "A Transactional Execution test is available. When only such a test environment exists, you should not use Transactional Execution in product code. In this test environment, the limited diagnostic data available upon such failures as program interrupts may well be inadequate to debug programs",
+              "offset": 0,
+              "length": 1
+            },
+            "CVTTXJ": {
+              "description": "Not a programming interface",
+              "offset": 0,
+              "length": 1
+            },
+            "CVTCTLFGDiag": {
+              "description": "Diagnostic data for IBM use only",
+              "offset": 1,
+              "length": 2
+            },
+            "CVTDSTAT": {
+              "description": "DEVSTAT OPTION IN EFFECT.  DEVICE ADDRESS FOR 2319, 3330, 2314, 3330-1, 3340 CAN VARY ACROSS SYSTEMS. Not a programming interface.",
+              "offset": 3,
+              "length": 1
+            },
+            "CVTDRMOD": {
+              "description": "Set on when DRMODE=YES was specified.",
+              "offset": 4,
+              "length": 1
+            },
+            "CVTNOMP": {
+              "description": "MULTIPROCESSING CODE IS NOT IN THE SYSTEM. Not a programming interface.",
+              "offset": 5,
+              "length": 1
+            },
+            "CVTGTRCE": {
+              "description": "GENERALIZED TRACE FACILITY (GTF) HAS SUPPRESSED SUPERVISOR TRACE. Not a programming interface.",
+              "offset": 6,
+              "length": 1
+            },
+            "CVTSDTRC": {
+              "description": "SVC DUMP HAS SUPPRESSED SUPERVISOR TRACE. Not a programming interface.",
+              "offset": 7,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTGRSST",
+          "description": "GRS status. SERIALIZATION: None.",
+          "offset": 428,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "bitmasks": {
+            "CVTE51GN": {
+              "description": "When on, global resource contention data normally reported via ENF event code 51 to listeners on this system is unavailable or incomplete.",
+              "offset": 0,
+              "length": 1
+            },
+            "CVTE51LN": {
+              "description": "When on, local resource contention data normally reported via ENF event code 51 to listeners on this system is unavailable or incomplete.",
+              "offset": 1,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTFLAG9",
+          "description": "Function-available flags",
+          "offset": 429,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "41"
+            }
+          ],
+          "bitmasks": {
+            "CVT_LLACOPY_DEBLOCKEXCLOK": {
+              "description": "LLACOPY supports DEBLOCKEXCLOK=YES",
+              "offset": 1,
+              "length": 1
+            },
+            "CVTIFAWICAvailable": {
+              "description": "IFAWIC service is available for use",
+              "offset": 6,
+              "length": 1
+            },
+            "CVTIFAWICInstalled": {
+              "description": "IFAWIC service is installed",
+              "offset": 7,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTBSM0F",
+          "description": "Return via reg 15, BSM 0,15",
+          "offset": 430,
+          "length": 2,
+          "type": "hex",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0B0F"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTGVT",
+          "description": "ADDRESS OF THE GRS VECTOR TABLE",
+          "offset": 432,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "GVT"
+            }
+          ],
+          "pointsTo": "pdsrt",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTMAXMP",
+          "description": "Maximum CPU address available for this IPL",
+          "offset": 476,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0001"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTASVT",
+          "description": "POINTER TO ADDRESS SPACE VECTOR TABLE (ASVT)",
+          "offset": 556,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "asvt",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTGDA",
+          "description": "POINTER TO GLOBAL DATA AREA (GDA) IN SQA",
+          "offset": 560,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "mascb",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTRTMCT",
+          "description": "POINTER TO RECOVERY/TERMINATION CONTROL TABLE",
+          "offset": 572,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "vstag",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTSDBF",
+          "description": "Address of 4K SQA buffer used by SVC Dump.  High-order bit of this CVT word is used as lock to indicate buffer is in use. See related bit ASCBSDBF in macro IHAASCB.",
+          "offset": 588,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "hex",
+              "value": "80000000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTOPCTP",
+          "description": "ADDRESS OF SYSTEM RESOURCES MANAGER (SRM) CONTROL TABLE",
+          "offset": 604,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IRARMCNS"
+            }
+          ],
+          "pointsTo": "vexpr",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTVWAIT",
+          "description": "ADDRESS OF WAIT ROUTINE",
+          "offset": 624,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVWAIT"
+            }
+          ],
+          "pointsTo": "vwait",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTCSD",
+          "description": "VIRTUAL ADDRESS OF COMMON SYSTEM DATA AREA (CSD).  INITIALIZED BY NIP.",
+          "offset": 660,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "dqiqe",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTASMVT",
+          "description": "POINTER TO AUXILIARY STORAGE MANAGEMENT VECTOR TABLE (AMVT)",
+          "offset": 704,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "ASMVT"
+            }
+          ],
+          "pointsTo": "spost",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTPCCAT",
+          "description": "POINTER TO PHYSICAL CCA VECTOR TABLE",
+          "offset": 764,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "vxsft",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTLCCAT",
+          "description": "POINTER TO LOGICAL CCA VECTOR TABLE",
+          "offset": 768,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "vxsft",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTVPSIB",
+          "description": "BRANCH ENTRY TO PAGE SERVICES",
+          "offset": 804,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IARPSIV"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTSCPIN",
+          "description": "ADDRESS OF IPL-TIME SCPINFO DATA BLOCK (ECVTSCPIN has address of \"current\"). Mapped by IHASCCB",
+          "offset": 832,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTSVT",
+          "description": "ADDRESS POINTER FOR FETCH PROTECTED PSASVT.",
+          "offset": 868,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVESVT"
+            }
+          ],
+          "pointsTo": "vesvt",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVT0PT02",
+          "description": "ADDRESS OF POST ENTRY POINT IEA0PT02.",
+          "offset": 880,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEA0PT02"
+            }
+          ],
+          "pointsTo": "post",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTEXP1",
+          "description": "ADDRESS OF EXIT PROLOGUE WHICH RETURNS TO THE DISPATCHER.",
+          "offset": 920,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVEXP1"
+            }
+          ],
+          "pointsTo": "vexp",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTRAC",
+          "description": "ADDRESS OF ACCESS CONTROL CVT.",
+          "offset": 992,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "access",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVT0PT0E",
+          "description": "ENTRY POINT TO IDENTIFY POST EXIT ROUTINES.",
+          "offset": 1004,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEA0PT0E"
+            }
+          ],
+          "pointsTo": "tso",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVT0PT03",
+          "description": "POST REINVOCATION ENTRY POINT FROM POST EXIT ROUTINES.",
+          "offset": 1008,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEA0PT03"
+            }
+          ],
+          "pointsTo": "tso",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTHID",
+          "description": "ADDRESS OF SCP HOST ID.",
+          "offset": 1068,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IOSVHID"
+            }
+          ],
+          "pointsTo": "scp",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTPSXM",
+          "description": "ADDRESS OF CROSS MEMORY PAGE FIX AND PAGE FREE.",
+          "offset": 1072,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IARPSXM"
+            }
+          ],
+          "pointsTo": "cross",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTUCBSC",
+          "description": "ADDRESS OF UCB SCAN SERVICE.",
+          "offset": 1076,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IOSVSUCB"
+            }
+          ],
+          "pointsTo": "ucb",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTVFIND",
+          "description": "THE POINTER TO VIRTUAL FETCH BUILD AND FIND ROUTINE.",
+          "offset": 1100,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "CSVVFIND"
+            }
+          ],
+          "pointsTo": "virtual",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTVFGET",
+          "description": "THE POINTER TO VIRTUAL FETCH GET ROUTINE.",
+          "offset": 1104,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "CSVVFGET"
+            }
+          ],
+          "pointsTo": "virtual",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTRCEP",
+          "description": "ADDRESS OF THE RSM CONTROL AND ENUMERATION AREA.",
+          "offset": 1168,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IARMRRCE"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTRCZRT",
+          "description": "",
+          "offset": 1188,
+          "length": 4,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "instruction",
+              "value": "SR   15,15"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTDFA",
+          "description": "ADDRESS OF DFP ID TABLE, MAPPED BY THE DFA. OWNERSHIP: DFP.",
+          "offset": 1216,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "DFAIDTAB"
+            }
+          ],
+          "pointsTo": "vnvt",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTOSLVL",
+          "description": "SYSTEM LEVEL INDICATORS The presence of certain hardware functions is indicated within the SCCB (mapped by macro IHASCCB, pointed to by CVTSCPIN and/or ECVTSCPIN). The presence of other hardware functions can be found within CVT field CVTFLAGS2.",
+          "offset": 1264,
+          "length": 16,
+          "type": "hex",
+          "programmingInterface": true
+        }
+      ]
+    },
+    {
+      "name": "cvtvstgx",
+      "description": "",
+      "fields": [
+        {
+          "name": "CVTEPLPS",
+          "description": "Starting virtual address of extended PLPA. This is an interface for accessing the LPAT only.",
+          "offset": -200,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        }
+      ]
+    },
+    {
+      "name": "cvtxtnt2",
+      "description": "",
+      "fields": [
+        {
+          "name": "CVTFLGBT",
+          "description": "Flag byte. This byte is an interface only for bits CVTUNDzVM (CVTUNDVM), CVTzPDT CVTUNDAltVM, CVTzPDT & CVTVMENV",
+          "offset": -251,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "bitmasks": {
+            "CVTNPE": {
+              "description": "INDICATES NON-PAGING ENVIRONMENT (VM HANDSHAKING)  (OS/VS1)",
+              "offset": 0,
+              "length": 1
+            },
+            "CVTVME": {
+              "description": "INDICATES MACHINE IS OPERATING IN VM ENVIRONMENT  (OS/VS1)",
+              "offset": 1,
+              "length": 1
+            },
+            "CVTBAH": {
+              "description": "INDICATES THAT THE VM/370 - OS/VS1 BTAM AUTOPOLL HANDSHAKE IS OPERATIONAL (OS/VS1)",
+              "offset": 2,
+              "length": 1
+            },
+            "CVTUNDZVM": {
+              "description": "Running under z/VM (this is not the same as running under VICOM)  Bit is set to 0 when CVTUNDAltVM is 1.",
+              "offset": 3,
+              "length": 1
+            },
+            "CVTUNDVM": {
+              "description": "Same as CVTUNDzVM",
+              "offset": 3,
+              "length": 1
+            },
+            "CVTVICOM": {
+              "description": "Running under VICOM",
+              "offset": 4,
+              "length": 1
+            },
+            "CVTZPDT": {
+              "description": "Running on zPDT (includes running on zD&T)",
+              "offset": 5,
+              "length": 1
+            },
+            "CVTUNDAltVM": {
+              "description": "Running under an alternate virtual machine environment.  To determine which alternate virtual machine, the STSI output will list the control program identifier in field SI22V3DBCPIdentifier mapped by CSRSIIDF and can be obtained by the CSRSI service. Bit is set to 0 when CVTUNDzVM is 1",
+              "offset": 6,
+              "length": 1
+            },
+            "CVTVMENV": {
+              "description": "Running as a virtual machine environment. Bit is set to 1 when CVTUNDzVM or CVTUNDAltVM is set to 1",
+              "offset": 7,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTLDTO",
+          "description": "LOCAL TIME/DATE OFFSET",
+          "offset": -203,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "CVTLSO",
+          "description": "LEAP SECOND OFFSET IN TOD FORMAT",
+          "offset": -179,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        }
+      ]
+    }
+  ],
+  "constants": [
+    {
+      "name": "CVTPTR",
+      "value": 16,
+      "description": "ABSOLUTE ADDRESS OF POINTER TO CVT"
+    }
+  ]
+}

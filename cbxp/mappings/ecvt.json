@@ -1,0 +1,1075 @@
+{
+  "version": 1,
+  "name": "ecvt",
+  "commonName": "Extended Communications Vector Table",
+  "macroId": "ihaecvt",
+  "description": "",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [
+    "cvt",
+    "psa"
+  ],
+  "storageAttributes": {
+    "subpools": [],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "ecvt",
+      "description": "",
+      "fields": [
+        {
+          "name": "ECVTECVT",
+          "description": "ECVT ACRONYM",
+          "offset": 0,
+          "length": 4,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "ECVT"
+            }
+          ],
+          "eyecatcher": true
+        },
+        {
+          "name": "ECVTSPLX",
+          "description": "SYSPLEX NAME USED FOR DEBUGGING. OWNERSHIP: XCF. SERIALIZATION: N/A.",
+          "offset": 8,
+          "length": 8,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "  "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTAPPC",
+          "description": "ANCHOR FOR APPC DATA STRUCTURES OWNERSHIP: MVS/APPC SERIALIZATION: NONE",
+          "offset": 40,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTCSVN",
+          "description": "Counter Second Version Number for CPU counter facility",
+          "offset": 56,
+          "length": 2,
+          "type": "hex",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_Customer_Area_Addr",
+          "description": "Customer Area Address.          - Address of a 128-byte area in       - page-fixed, key 0, common           - storage above 16M, below 2G. This   - field is owned by the customer that - owns this system. No program should - modify this without the permission  - of the owner. Non-zero as of        - z/OS 2.2. Prior to z/OS 2.2, the    - owning customer may take the steps  - to allocate an area of storage and  -",
+          "offset": 88,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVECAA"
+            }
+          ],
+          "pointsTo": "vecaa",
+          "equates": [
+            {
+              "name": "ECVTCAA",
+              "value": "ECVT_Customer_Area_Addr"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTDPQH",
+          "description": "Queue of DU-AL Pools (DPHs) Ownership:  PC Auth Serialization: Disp lock",
+          "offset": 96,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTSRBJ",
+          "description": "SRB-mode enclave join - A value of 0 in ECVTSRBJ means that the function is not available - Caller must be AMODE 31 or 64, key 0, supervisor state, enabled for I/O and external interrupts, holding no locks - SRB mode (preemptible non-Client SRB only) - Primary ASC mode - Any P, Any S, Any H - Set GR 1 to the below-2G address of the 8-byte enclave token. Bits 0-31 of 64-bit",
+          "offset": 144,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVJOIN"
+            }
+          ],
+          "pointsTo": "vjoin",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTSRBL",
+          "description": "SRB-mode enclave leave - A value of 0 in ECVTSRBL means that the function is not available - Caller must be AMODE 31 or 64, key 0, supervisor state, enabled for I/O and external interrupts, holding no locks - SRB mode - Primary ASC mode - Any P, Any S, Any H - Set GR 1 to the below-2G address of the 8-byte enclave token. Bits 0-31 of 64-bit",
+          "offset": 148,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVLEAV"
+            }
+          ],
+          "pointsTo": "vleav",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTTCP",
+          "description": "Token used by TCP/IP OWNERSHIP: TCPIP SERIALIZATION: Compare and Swap during TCPIP initialization",
+          "offset": 176,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTCSM",
+          "description": "Pointer to Communication Storage Manager control structure OWNERSHIP: VTAM (Communications Storage Manager(CSM)) SERIALIZATION: ENQUEUE/DEQUEUE",
+          "offset": 200,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTCTBL",
+          "description": "Customer anchor table. Slots assigned by IBM. Ownership: Callable Services. Serialization: None",
+          "offset": 204,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "CSRCTABL"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTSLID",
+          "description": "CONTAINS THE SLIP PER TRAP ID OR BINARY ZEROS. OWNERSHIP: SLIP SERIALIZATION: NONE.",
+          "offset": 224,
+          "length": 4,
+          "type": "hex",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "pointsTo": "vexpm",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTOCVT",
+          "description": "ANCHOR FOR OpenMVS COMMUNICATION VECTOR TABLE. OWNERSHIP: OpenMVS. SERIALIZATION: COMPARE AND SWAP DURING OpenMVS INITIALIZATION.",
+          "offset": 240,
+          "length": 4,
+          "type": "address",
+          "equates": [
+            {
+              "name": "ECVTOMVS",
+              "value": "X'80'",
+              "description": "If on, OpenMVS is up and available."
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTOEXT",
+          "description": "ANCHOR FOR OpenMVS EXTERNAL DATA THAT NEEDS TO BE ACCESSED BY NON-MVS CODE. OWNERSHIP: OpenMVS. SERIALIZATION: COMPARE AND SWAP DURING OpenMVS INITIALIZATION. (NEVER CHANGED AFTER INITIALIZATION)",
+          "offset": 244,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTCLON",
+          "description": "1 or 2 character value used to identify a system within a sysplex. Valid values are A-Z, 0-9, $, @, #. Not valid if blank. Serialization: None. Ownership: Supervisor Control.",
+          "offset": 264,
+          "length": 2,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "  "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTGMOD",
+          "description": "GRS mode of operation OWNERSHIP: GRS. SERIALIZATION: None.",
+          "offset": 266,
+          "length": 1,
+          "type": "hex",
+          "equates": [
+            {
+              "name": "ECVTGNON",
+              "value": "0",
+              "description": "GRS operating with option NONE."
+            },
+            {
+              "name": "ECVTGRNG",
+              "value": "1",
+              "description": "GRS operating in ring mode."
+            },
+            {
+              "name": "ECVTGSTA",
+              "value": "2",
+              "description": "GRS operating in star mode."
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTLPDELEN",
+          "description": "Length of LPDE",
+          "offset": 267,
+          "length": 1,
+          "type": "hex",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTDUCU",
+          "description": "DUCT update",
+          "offset": 268,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVDUCU"
+            }
+          ],
+          "pointsTo": "vducu",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTALCK",
+          "description": "ALIAS check",
+          "offset": 272,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVALCK"
+            }
+          ],
+          "pointsTo": "valck",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTSXMP",
+          "description": "IEAMSXMP target. This field is an interface only for determining if IEAMSXMP may be used. When this field is 0, IEAMSXMP may not be used, otherwise it may be.",
+          "offset": 276,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVSXMP"
+            }
+          ],
+          "pointsTo": "vsxmp",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTLSAB",
+          "description": "Pointer to Logger Services Anchor Block. Mapped by IXGPLSAB macro. OWNERSHIP: IXG. SERIALIZATION: None.",
+          "offset": 288,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IXGLSAB"
+            }
+          ],
+          "pointsTo": "logger",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTSYMT",
+          "description": "Address of the system static symbol table. The system static symbol table is mapped by dsect SYMBT within ASASYMBP. The table is preceded by an area mapped by dsect SYMBTH within ASASYMBP. Serialization: None. Ownership: NIP",
+          "offset": 296,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTFLG1",
+          "description": "First miscellaneous flag Serialization: None. Ownership: NIP",
+          "offset": 304,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "bitmasks": {
+            "ECVTCLNU": {
+              "description": "When set, this flag indicates that the system static symbol &SYSCLONE value defined in an IEASYMxx member used for this IPL must be unique in the SYSPLEX. Serialization: None. Ownership: NIP",
+              "offset": 0,
+              "length": 1
+            },
+            "ECVTPMAC": {
+              "description": "Serialization: None. Ownership: NIP",
+              "offset": 1,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTVSER",
+          "description": "Reserved for use by VSE Ownership: VSE Serialization: none",
+          "offset": 324,
+          "length": 4,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00000000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTLSEN",
+          "description": "Address of module IEAVLSEN",
+          "offset": 328,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVLSEN"
+            }
+          ],
+          "pointsTo": "vlsen",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTDGNB",
+          "description": "Address of DGNB Serialization: None. Ownership: VSM",
+          "offset": 332,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IGVDGNBT"
+            }
+          ],
+          "pointsTo": "dgnb",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTHDNM",
+          "description": "Hardware name of the processor configuration. Serialization: None. Ownership: NIP",
+          "offset": 336,
+          "length": 8,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "        "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTLPNM",
+          "description": "LPAR name of the processor configuration.  This field is blanks if processor is not in LPAR mode. Serialization: None. Ownership: NIP",
+          "offset": 344,
+          "length": 8,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "        "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTVMNM",
+          "description": "z/VM user id of the virtual machine, of which this z/OS image is a guest.  This field is blanks if the processor is not a guest under z/VM (such as running under PR/SM or an alternate VM). Serialization: None. Ownership: NIP",
+          "offset": 352,
+          "length": 8,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "        "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTIPA",
+          "description": "Address of the Initialization Parameter Area Serialization: None. Ownership: NIP",
+          "offset": 392,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTPSEQ",
+          "description": "Product sequence number. This field will be changed when any new version, release, or modification level is provided. It can be used to determine if the operating system is at a suitable level for a desired function. Its value will always increase from one release/mod level to the next. For z/OS 3.2 (HBB77F0), the value is For z/OS 3.1 (HBB77E0), the value is For z/OS 2.5 (HBB77D0), the value is",
+          "offset": 476,
+          "length": 4,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00000000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTPOWN",
+          "description": "Product owner",
+          "offset": 480,
+          "length": 16,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": " "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTPNAM",
+          "description": "Product name.",
+          "offset": 496,
+          "length": 16,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": " "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTPVER",
+          "description": "Product version",
+          "offset": 512,
+          "length": 2,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": " "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTPREL",
+          "description": "Product release",
+          "offset": 514,
+          "length": 2,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": " "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTPMOD",
+          "description": "Product mod level",
+          "offset": 516,
+          "length": 2,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": " "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTPDVL",
+          "description": "Product development level. Note: This field is used for web deliverable for which the Product Modification Level is not changed.",
+          "offset": 518,
+          "length": 1,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": " "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTDLPF",
+          "description": "Address of first CDE on dynamic LPA queue. Ownership: CSV Only CSV is allowed to change this. Serialization: CMS Lock",
+          "offset": 552,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTDLPL",
+          "description": "Address of last CDE on dynamic LPA queue. It is intended that the CDHAIN field of this CDE point to the CDE pointed to by the word pointed to by CVTQLPAQ Ownership: CSV Only CSV is allowed to change this. Serialization: CMS Lock",
+          "offset": 556,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTPIDN",
+          "description": "PID number",
+          "offset": 568,
+          "length": 8,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": " "
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTCRDT",
+          "description": "Entry for RACF to get CDRACDTY bits set",
+          "offset": 648,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "CSVRCDTY"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTCTB2",
+          "description": "Customer anchor table 2 (8-byte slots) Slots assigned by IBM. Ownership: Callable Services. Serialization: None",
+          "offset": 652,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "CSRCTAB2"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTJAOF",
+          "description": "Address of IEAVJAOF when not 0. Use this when you must turn off JSCBAUTH. The system might have additional functions to perform when this is done. The JSCBAUTH bit in the JSCB pointed to by the current task's jobstep task's JSCB will be turned off. For system integrity reasons you should not turn JSCBAUTH back on once it has been turned off. - Caller must be AMODE 31 or AMODE 64. - Caller must be supervisor state and key 0",
+          "offset": 656,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVJAOF"
+            }
+          ],
+          "pointsTo": "vjaof",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTCACHELINESIZE",
+          "description": "CPU Cache Line Size",
+          "offset": 704,
+          "length": 2,
+          "type": "hex",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTCACHELINESTARTBDY",
+          "description": "CPU Cache Line Start Boundary",
+          "offset": 706,
+          "length": 1,
+          "type": "hex",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_OSProtect",
+          "description": "- OSPROTECT system parameter in effect. X'00' indicates OSPROTECT=SYSTEM. See ECVT_OSProtect_WhenSystem. X'01' indicates OSPROTECT=1. X'FF' indicates OSPROTECT=MIN. A value in the range x'01'-x'FE' indicates \"more than minimum\"",
+          "offset": 707,
+          "length": 1,
+          "type": "hex",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_Installed_CPU_HWM",
+          "description": "The highest CPU number currently installed within this IPL. Could increase upon dynamic CPU addition",
+          "offset": 712,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_Installed_CPU_At_IPL",
+          "description": "The highest CPU number installed at the time of IPL.",
+          "offset": 714,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTFACL",
+          "description": "Address of 2048-byte facility area mapped by IHAFACL.",
+          "offset": 852,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVFACL"
+            }
+          ],
+          "pointsTo": "vfacl",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTMaxCoreID",
+          "description": "When CvtProcAsCore is on, the maximum CPU Core Id allowed in the system for this IPL. When CvtProcAsCore is off, this will be set to CVTMAXMP.",
+          "offset": 856,
+          "length": 2,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTNumCPUIDsInCore",
+          "description": "The maximum number of CPUs that can \"fit\" on a CPU Core. This doesn't mean all of them can be active. This can be looked at as how many IDs exist between thread 0 of two contiguous cores. When CvtProcAsCore is off, this will be set to 1.",
+          "offset": 858,
+          "length": 2,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTMaxMPNumBytesInMask",
+          "description": "Maximum number of bytes a bitmask of CVTMAXMP bits would take up, rounded to a multiple of 8",
+          "offset": 888,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTPhysicalToLogicalMask",
+          "description": "\"OR\" this value with a CPUs physical ID to obtain its logical ID",
+          "offset": 890,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTLogicalToPhysicalMask",
+          "description": "\"AND\" this value with a CPUs logical ID to obtain its physical ID",
+          "offset": 892,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTAppFlags",
+          "description": "Application-set flags Serialization: CS",
+          "offset": 894,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0"
+            }
+          ],
+          "bitmasks": {
+            "ECVTStcksyncReplaced": {
+              "description": "A product has replaced system control block fields that contain the entry point addresses for STCKSYNC services. The system is not to reset these fields to their IPL-time values.",
+              "offset": 0,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_OSProtect_WhenSystem",
+          "description": "As of z/OS 3.1, the OSPROTECT level you get when OSPROTECT=SYSTEM is in effect. Valid only when OSPROTECT=SYSTEM is in effect. Current possible values are: X'01' indicating OSPROTECT=1 (not on zPDT), X'FF' indicating OSPROTECT=MIN (on zPDT) A value in the range x'01'-x'FE' indicates \"more than minimum\"",
+          "offset": 895,
+          "length": 1,
+          "type": "hex",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_GetSrbIdToken",
+          "description": "Address of the routine to return the SrbIdToken of the current preemptible- class SRB - Caller must be running under the preemptible- class SRB for which the SrbIdToken is to be returned. - Caller may be AMODE 31 or 64, must be key 0 Supervisor state. - Caller may hold any locks, none are required. - Primary ASC mode. - Any P, Any S, Any H.",
+          "offset": 896,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVSCHY"
+            }
+          ],
+          "pointsTo": "vschy",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVTXTSW",
+          "description": "Address of \"Cross-memory TCB or SRB wait\" routine. - Caller must be AMODE 31, key 0, supervisor state, enabled for I/O and external interrupts, holding no locks. - SRB or task mode. - Primary ASC mode. - Any P, Any S, Any H. - Load this address into GR 15, - Issue BASR 14,15 - 31-bit GRs 2-13, high halves 2-14, and",
+          "offset": 900,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "ISGXSRBW"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_SMF_CMS_LockInst_Addr",
+          "description": "Address of the SMF CMS instrumentation data for the system",
+          "offset": 904,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "CMSSMFLP"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_ENQDEQ_CMS_LockInst_Addr",
+          "description": "Address of the ENQ/DEQ CMS instrumentation data for the system",
+          "offset": 908,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "CMSEDLPP"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_LATCH_CMS_LockInst_Addr",
+          "description": "Address of the Latch CMS instrumentation data for the system",
+          "offset": 912,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "CMSLATLP"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_CMS_LockInst_Addr",
+          "description": "Address of the CMS instrumentation data for the system",
+          "offset": 916,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "CMSLP"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "Ecvt_Installed_Core_HWM",
+          "description": "The highest core number currently installed. Could increase upon dynamic core/CPU addition.",
+          "offset": 940,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "Ecvt_Installed_Core_At_IPL",
+          "description": "The highest core number installed at the time of IPL.",
+          "offset": 942,
+          "length": 2,
+          "type": "signed-integer",
+          "init": [
+            {
+              "type": "hex",
+              "value": "0000"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "EcvtLSO",
+          "description": "Leap second value in STCKE format. Bytes 1-8 (0 origin) have same value as CVTLSO",
+          "offset": 944,
+          "length": 16,
+          "type": "hex",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "EcvtLDTO",
+          "description": "Local time/date offset in STCKE format. Bytes 1-8 (0-origin) have same value as CVTLDTO. Byte 0 is sign extended from bit 0 of byte 1",
+          "offset": 960,
+          "length": 16,
+          "type": "hex",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "Ecvt_BoostInfo",
+          "description": "Valid only when CVTBoost is on",
+          "offset": 992,
+          "length": 24,
+          "type": "hex",
+          "programmingInterface": true
+        },
+        {
+          "name": "Ecvt_BoostInfo_V1",
+          "description": "Recovery process boost support. Valid when Ecvt_BoostLevel is at least Ecvt_BoostLevel_V1",
+          "offset": 1016,
+          "length": 32,
+          "type": "hex",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_BoostInfo_V2",
+          "description": "",
+          "offset": 1048,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "Ecvt_zIIPBoostCoresAddr",
+          "description": "When not 0, the address of an area that is a bit string of which cores were config'd online for a boost. Each bit corresponds to a core (bit 0 is core 0, bit 1 is core 1, etc). When bit n is on, core n is considered a zIIP boost core",
+          "offset": 1076,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "Ecvt_IFunc_Addr",
+          "description": "Address of area mapped by IHAIFUNC indicating which function codes of such instructions as PRNO, KIMD, KLMD are available.",
+          "offset": 1080,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ECVT_MaxTOD",
+          "description": "A value that will not be reached by the clock comparator for this IPL. That is x'FFFFFFFF_FFFFFFFF' when a signed CC is not used, x'7FFFFFFF_FFFFFFFF' when a signed CC is used",
+          "offset": 1088,
+          "length": 8,
+          "type": "bitstring",
+          "equates": [
+            {
+              "name": "ECVT_max_highestCPUID",
+              "value": "ECVT_zOSV2R1_highestCPUID",
+              "description": "The highest physical CPU ID allowed in a z/OS system.  If you use this equate, you must be prepared to reassemble if this value changes in a new release.  IBM recommends using CVTMAXMP at runtime."
+            },
+            {
+              "name": "ECVT_max_CPUMaskSizeInBits",
+              "value": "ECVT_zOSV2R1_CPUMaskSizeInBits",
+              "description": "The maximum number of bits needed to allocate storage at assemble time to guarantee enough storage to hold a full CPU mask of any current or prior release. If you use this equate, you must be prepared to reassemble if this value changes in a new release. IBM recommends using CVTMAXMP at runtime."
+            },
+            {
+              "name": "ECVT_max_CPUMaskSizeInBytes",
+              "value": "ECVT_max_CPUMaskSizeInBits/8",
+              "description": "/8 The maximum number of bytes needed to allocate storage at assemble time to guarantee enough storage to hold a full CPU mask of of any current or prior release. If you use this equate, you must be prepared to reassemble if this value changes in a new release. IBM recommends using ECVTMaxMPNumBytesInMask at runtime."
+            },
+            {
+              "name": "ECVT_zOSV2R1_highestCPUID",
+              "value": "255",
+              "description": "The highest physical CPU ID allowed in a z/OS system up to and including z/OS V2R1.  This constant will never change.  IBM recommends using CVTMAXMP at runtime."
+            },
+            {
+              "name": "ECVT_zOSV2R1_CPUMaskSizeInBits",
+              "value": "256",
+              "description": "The number of bits needed to allocate storage at assemble time to guarantee enough storage to hold a full CPU mask up to and including release z/OS V2R1. This constant will never change. IBM recommends using CVTMAXMP at runtime."
+            },
+            {
+              "name": "ECVT_zOSV2R1_CPUMaskSizeInBytes",
+              "value": "ECVT_zOSV2R1_CPUMaskSizeInBits/8",
+              "description": "/8 Number of bytes needed to allocate storage at assemble time to guarantee enough storage to hold a full CPU mask up to and including release z/OS V2R1.  This constant will never change.  IBM recommends using ECVTMaxMPNumBytesInMask at runtime."
+            },
+            {
+              "name": "ECVT_zOSR11_highestCPUID",
+              "value": "99",
+              "description": "The highest physical CPU ID allowed in a z/OS system up to and including z/OS V1R11.  This constant will never change.  IBM recommends using CVTMAXMP at runtime."
+            },
+            {
+              "name": "ECVT_zOSR11_CPUMaskSizeInBits",
+              "value": "128",
+              "description": "The number of bits needed to allocate storage at assemble time to guarantee enough storage to hold a full CPU mask up to and including release z/OS V1R11. This constant will never change. IBM recommends using CVTMAXMP at runtime."
+            },
+            {
+              "name": "ECVT_zOSR11_CPUMaskSizeInBytes",
+              "value": "ECVT_zOSR11_CPUMaskSizeInBits/8",
+              "description": "/8 The number of bytes needed to allocate storage at assemble time to guarantee enough storage to hold a full CPU mask up to and including release z/OS V1R11.  This constant will never change.  IBM recommends using ECVTMaxMPNumBytesInMask at runtime."
+            },
+            {
+              "name": "Ecvt_RPBReq_Not_Identified",
+              "value": "0"
+            },
+            {
+              "name": "Ecvt_RPBReq_Sysplex_Partitioning",
+              "value": "1"
+            },
+            {
+              "name": "Ecvt_RPBReq_CF_Structure_Recov",
+              "value": "2"
+            },
+            {
+              "name": "Ecvt_RPBReq_CF_Datasharing_Member_Recov",
+              "value": "3"
+            },
+            {
+              "name": "Ecvt_RPBReq_Hyperswap",
+              "value": "4"
+            },
+            {
+              "name": "Ecvt_RPBReq_SVCDump",
+              "value": "5"
+            },
+            {
+              "name": "Ecvt_RPBReq_Middleware_Region_Startup",
+              "value": "6"
+            },
+            {
+              "name": "Ecvt_RPBReq_Hyperswap_Config_Load",
+              "value": "7"
+            },
+            {
+              "name": "Ecvt_RPBReq_Dynamic_IO_Activate",
+              "value": "8"
+            }
+          ],
+          "bitmasks": {
+            "Ecvt_BoostClass_Mask": {
+              "description": "ecvt_boostclass_mask",
+              "offset": 61,
+              "length": 3
+            },
+            "Ecvt_BoostClass_IPL": {
+              "description": "ecvt_boostclass_ipl",
+              "offset": 63,
+              "length": 1
+            },
+            "Ecvt_BoostClass_ShutDown": {
+              "description": "ecvt_boostclass_shutdown",
+              "offset": 62,
+              "length": 1
+            },
+            "Ecvt_BoostClass_RP": {
+              "description": "ecvt_boostclass_rp",
+              "offset": 62,
+              "length": 2
+            }
+          },
+          "programmingInterface": true
+        }
+      ]
+    }
+  ]
+}

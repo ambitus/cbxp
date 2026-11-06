@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "name": "ftypes",
+  "commonName": "Test ftypes",
+  "macroId": "ftypes",
+  "description": "CBXPPATH test fixture",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [],
+  "storageAttributes": {
+    "subpools": [],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "ftypes",
+      "fields": [
+        {
+          "name": "FTID",
+          "offset": 0,
+          "length": 4,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "FTYP"
+            }
+          ],
+          "eyecatcher": true
+        },
+        {
+          "name": "FTSTR",
+          "offset": 4,
+          "length": 4,
+          "type": "string"
+        },
+        {
+          "name": "FTSI2",
+          "offset": 8,
+          "length": 2,
+          "type": "signed-integer"
+        },
+        {
+          "name": "FTSI4",
+          "offset": 12,
+          "length": 4,
+          "type": "signed-integer"
+        },
+        {
+          "name": "FTSI8",
+          "offset": 16,
+          "length": 8,
+          "type": "signed-integer"
+        },
+        {
+          "name": "FTUI4",
+          "offset": 24,
+          "length": 4,
+          "type": "unsigned-integer"
+        },
+        {
+          "name": "FTUI8",
+          "offset": 32,
+          "length": 8,
+          "type": "unsigned-integer"
+        },
+        {
+          "name": "FTHEX4",
+          "offset": 40,
+          "length": 4,
+          "type": "hex"
+        },
+        {
+          "name": "FTHEX8",
+          "offset": 48,
+          "length": 8,
+          "type": "hex"
+        },
+        {
+          "name": "FTBIT4",
+          "offset": 56,
+          "length": 4,
+          "type": "bitstring"
+        },
+        {
+          "name": "FTADR4",
+          "offset": 60,
+          "length": 4,
+          "type": "address"
+        }
+      ]
+    }
+  ]
+}

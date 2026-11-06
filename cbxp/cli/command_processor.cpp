@@ -12,7 +12,7 @@
 #include <iostream>
 
 #include "cbxp.h"
-#include "control_block_error.hpp"
+#include "util/control_block_error.hpp"
 
 namespace CBXP {
 
@@ -409,16 +409,16 @@ bool CommandProcessor::checkForComma(const std::string& string) {
 }
 
 void CommandProcessor::run() {
-  cbxp_result_t* cbxp_result;
+  cbxp_result_t* p_cbxp_result;
 
   if (command_ == "extract") {
-    cbxp_result = cbxp_extract(
+    p_cbxp_result = cbxp_extract(
         control_block_name_.c_str(), control_block_name_.length(),
         extract_options_.include.c_str(), extract_options_.include.length(),
         extract_options_.filter.c_str(), extract_options_.filter.length(),
         global_options_.debug);
   } else {
-    cbxp_result =
+    p_cbxp_result =
         cbxp_format(control_block_name_.c_str(), control_block_name_.length(),
                     static_cast<void*>(format_options_.data_buffer.data() +
                                        format_options_.offset),
@@ -426,13 +426,13 @@ void CommandProcessor::run() {
                     global_options_.debug);
   }
 
-  unsigned int return_code = cbxp_result->return_code;
+  unsigned int return_code = p_cbxp_result->return_code;
 
   if (return_code == 0) {
-    std::cout << cbxp_result->result_json << std::endl;
+    std::cout << p_cbxp_result->result_json << std::endl;
   }
 
-  cbxp_free(cbxp_result, global_options_.debug);
+  cbxp_free(p_cbxp_result, global_options_.debug);
 
   switch (return_code) {
     case 0:
@@ -450,8 +450,24 @@ void CommandProcessor::run() {
     case CBXP::Error::DataTooSmall:
       std::cerr << ERROR_DATA_TOO_SMALL_ << control_block_name_ << std::endl;
       throw CLIExitFailure();
+    case CBXP::Error::BadCbxpPath:
+      std::cerr << ERROR_BAD_CBXP_ENV_PATH_ << std::endl;
+      throw CLIExitFailure();
+    case CBXP::Error::BlockUnreachable:
+      std::cerr << ERROR_CANT_REACH_BLOCK_ << std::endl;
+      throw CLIExitFailure();
+    case CBXP::Error::JsonFailParse:
+      std::cerr << ERROR_PARSE_JSON_FILE_ << std::endl;
+      throw CLIExitFailure();
+    case CBXP::Error::JsonFailSchema:
+      std::cerr << ERROR_VALIDATE_JSON_FILE_ << std::endl;
+      throw CLIExitFailure();
+    case CBXP::Error::JsonBadValue:
+      std::cerr << ERROR_JSON_FILE_VALUES_ << std::endl;
+      throw CLIExitFailure();
     default:
-      std::cerr << ERROR_UNKNOWN_ERROR_ << control_block_name_ << std::endl;
+      std::cerr << ERROR_UNKNOWN_ERROR_ << " " << control_block_name_
+                << std::endl;
       throw CLIExitFailure();
   }
   throw CLIExitSuccess();

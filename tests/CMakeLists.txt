@@ -165,7 +165,7 @@ cbxp_test_fail(ExtractErrorIncludeAsvtAscbPsa         ${EXE} extract -i asvt.asc
 cbxp_test_fail(ExtractErrorIncludeAscbPsa             ${EXE} extract -i ascb psa)
 cbxp_test_fail(ExtractErrorIncludeEcvtAscb            ${EXE} extract -i ecvt ascb)
 cbxp_test_fail(ExtractErrorIncludeCvtEcvtCvtAscbPsa   ${EXE} extract -i cvt.ecvt -i cvt.ascb psa)
-cbxp_test_fail(ExtractErrorIncludeCvtAsvtAscbEcvtPsa  ${EXE} extract -i cvt.asvt.ascb -i ecvt psa)
+cbxp_test_fail(ExtractErrorIncludeCvtAsvtAscbLdaxPsa  ${EXE} extract -i cvt.asvt.ascb -i ldax psa)
 cbxp_test_fail(ExtractErrorIncludeCvtCvt              ${EXE} extract -i cvt cvt)
 cbxp_test_fail(ExtractErrorIncludeLdaxPsa             ${EXE} extract -i ldax psa)
 cbxp_test_fail(ExtractErrorIncludeLdaxCvt             ${EXE} extract -i ldax cvt)
@@ -257,3 +257,22 @@ cbxp_test_fail(FormatErrorFileAndPipe
 # Format - Errors: Data Too Small
 # =============================================================================
 cbxp_test_fail(FormatErrorDataTooSmall        ${EXE} format -F ${SAMPLES}/ascb.bin psa)
+
+# =============================================================================
+# CBXPPATH Fixtures
+# =============================================================================
+file(GLOB FIXTURE_DIRS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cbxppath ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cbxppath/*)
+
+foreach(fixture_name IN LISTS FIXTURE_DIRS)
+    set(fixture_dir "${CMAKE_CURRENT_SOURCE_DIR}/fixtures/cbxppath/${fixture_name}")
+    if(IS_DIRECTORY "${fixture_dir}")
+        add_test(NAME cbxp.fixture.${fixture_name}
+            COMMAND ${CMAKE_COMMAND}
+                -DEXE=${EXE}
+                -DFIXTURE_DIR=${fixture_dir}
+                -DSAMPLES_DIR=${SAMPLES}
+                -P ${CMAKE_CURRENT_SOURCE_DIR}/run_fixture.cmake
+        )
+        set_property(TEST cbxp.fixture.${fixture_name} PROPERTY FIXTURES_REQUIRED cbxp.built)
+    endif()
+endforeach()

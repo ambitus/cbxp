@@ -1,0 +1,225 @@
+{
+  "version": 1,
+  "name": "ascb",
+  "commonName": "ADDRESS SPACE CONTROL BLOCK",
+  "macroId": "ihaascb",
+  "description": "Contain information and pointers needed for Address Space Control.  The ASCB is non-swappable.",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [
+    "asvt"
+  ],
+  "storageAttributes": {
+    "subpools": [
+      245
+    ],
+    "key": 0,
+    "residency": 24
+  },
+  "sections": [
+    {
+      "name": "ascb",
+      "description": "",
+      "fields": [
+        {
+          "name": "ASCBASCB",
+          "description": "ACRONYM IN EBCDIC -ASCB-",
+          "offset": 0,
+          "length": 4,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "ASCB"
+            }
+          ],
+          "eyecatcher": true
+        },
+        {
+          "name": "ASCBASID",
+          "description": "ADDRESS SPACE IDENTIFIER FOR THE ASCB",
+          "offset": 36,
+          "length": 2,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBTCBE",
+          "description": "Count of ready tcbs in the space that are in an enclave. Ownership:  Task Management Serialization: Compare and Swap and WEB Lock of TCB for which this count is being manipulated.",
+          "offset": 44,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBFLG3",
+          "description": "Flags needing no serialization. byte is a programming interface only for bit ASCBzCX",
+          "offset": 53,
+          "length": 1,
+          "type": "bitstring",
+          "bitmasks": {
+            "ASCBCNIP": {
+              "description": "Address space created during NIP",
+              "offset": 0,
+              "length": 1
+            },
+            "ASCBREUS": {
+              "description": "This is a reusable ASID. It may be given out only to a reusable ASID requestor",
+              "offset": 1,
+              "length": 1
+            },
+            "ASCBM881": {
+              "description": "This address space went through IEEMB881",
+              "offset": 2,
+              "length": 1
+            },
+            "ASCBSingleStepStartedTask": {
+              "description": "This address space is a single step started task",
+              "offset": 3,
+              "length": 1
+            },
+            "ASCBzCX": {
+              "description": "This address space is a zCX address space",
+              "offset": 4,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBEJST",
+          "description": "Accumulated job step CPU time. Non-enclave TCB time only. Unsigned 64-bit binary number",
+          "offset": 64,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBASXB",
+          "description": "POINTER TO ADDRESS SPACE EXTENSION CONTROL BLOCK (ASXB)",
+          "offset": 108,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBOUCB",
+          "description": "SYSTEM RESOURCES MANAGER (SRM) USER CONTROL BLOCK POINTER",
+          "offset": 144,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true,
+          "pointsTo": "oucb"
+        },
+        {
+          "name": "ASCBOUXB",
+          "description": "SYSTEM RESOURCES MANAGER (SRM) USER EXTENSION BLOCK POINTER",
+          "offset": 148,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBJBNI",
+          "description": "POINTER TO JOBNAME FIELD FOR INITIATED PROGRAMS OR ZERO",
+          "offset": 172,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "jobname",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBJBNS",
+          "description": "POINTER TO JOBNAME FIELD FOR START/MOUNT/LOGON OR ZERO",
+          "offset": 176,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "jobname",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBSRBT",
+          "description": "ACCUMULATED SRB TIME",
+          "offset": 200,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBTCBS",
+          "description": "NUMBER OF READY TCB'S. THE ACTUAL NUMBER OF READY TCBS IS ASCBTCBS-ASCBLSQT. SERIALIZATION: CS OWNERSHIP: TASK MANAGEMENT",
+          "offset": 216,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBLSQT",
+          "description": "NUMBER OF TCBS ON A LOCAL LOCK SUSPEND QUEUE. SERIALIZATION: CS OWNERSHIP: TASK MANAGEMENT",
+          "offset": 220,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBXTCB",
+          "description": "ADDRESS OF THE JOB STEP TASK TCB WHICH OWNS THE CROSS MEMORY RESOURCES IN THIS ADDRESS SPACE. SERIALIZATION - LOCAL LOCK. OWNERSHIP - SUPERVISOR.",
+          "offset": 284,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBFW3",
+          "description": "Fullword label to address bits in this word. Serialization - CS. This word is a programming interface only for bits ASCBSDBF, ASCBNOFT, ASCBPO1M, ASCBP1M0",
+          "offset": 288,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBASSB",
+          "description": "POINTER TO ADDRESS SPACE SECONDARY BLOCK (ASSB).",
+          "offset": 336,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "assb",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBLSQE",
+          "description": "Number of Enclave TCBs that are on a Local Lock Suspend Queue. Ownership:  Task Management Serialization:  Compare and Swap",
+          "offset": 348,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBRSME",
+          "description": "POINTER TO RSM ADDRESS SPACE BLOCK EXTENSION. SERIALIZATION: RSMAD LOCK OWNERSHIP: RSM",
+          "offset": 364,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "rsm",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBDCTI",
+          "description": "ACCUMULATED CHANNEL CONNECT TIME INCURRED BY THIS MEMORY",
+          "offset": 380,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASCBEND",
+          "description": "END OF ASCB",
+          "offset": 384,
+          "length": 8,
+          "type": "signed-integer",
+          "endOfControlBlock": true
+        }
+      ]
+    }
+  ]
+}

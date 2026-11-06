@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "name": "mycb",
+  "commonName": "Test mycb",
+  "macroId": "mycb",
+  "description": "CBXPPATH test fixture",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [],
+  "storageAttributes": {
+    "subpools": [
+      230
+    ],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "mycb",
+      "fields": [
+        {
+          "name": "MYCBID",
+          "offset": 0,
+          "length": 4,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "MYCB"
+            }
+          ],
+          "eyecatcher": true
+        },
+        {
+          "name": "MYCBNUM",
+          "offset": 4,
+          "length": 4,
+          "type": "unsigned-integer"
+        }
+      ]
+    }
+  ]
+}

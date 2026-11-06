@@ -1,0 +1,271 @@
+{
+  "version": 1,
+  "name": "psa",
+  "commonName": "Prefixed Save Area",
+  "macroId": "ihapsa",
+  "description": "Maps fixed hardware and software storage locations for the related processor. The fixed hardware storage locations (all within the first x'200' bytes of the area) are for the ESA/390 architecture. The z/Architecture locations are mapped by macro IHAPSAE.",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [],
+  "storageAttributes": {
+    "subpools": [
+      239
+    ],
+    "key": 0,
+    "residency": 24
+  },
+  "sections": [
+    {
+      "name": "psa",
+      "description": "",
+      "fields": [
+        {
+          "name": "FLCCVT",
+          "description": "ADDRESS OF CVT (AFTER IPL).",
+          "offset": 16,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEACVT"
+            }
+          ],
+          "pointsTo": "cvt",
+          "programmingInterface": true
+        },
+        {
+          "name": "FLCCVT64",
+          "description": "8-byte CVT address",
+          "offset": 72,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "FLCARCH",
+          "description": "Architecture information",
+          "offset": 163,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "bitmasks": {
+            "PSAZARCH": {
+              "description": "z/Architecture",
+              "offset": 7,
+              "length": 1
+            },
+            "PSAESAME": {
+              "description": "z/Architecture",
+              "offset": 7,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "FLCFACL",
+          "description": "Facilities List. See FaclBytes0To15 in IHAFACL for description",
+          "offset": 200,
+          "length": 16,
+          "type": "hex",
+          "programmingInterface": true
+        },
+        {
+          "name": "FLCFACLE",
+          "description": "Facilities List bytes 16-31. See FaclBytes16To31 in IHAFACL for description",
+          "offset": 216,
+          "length": 16,
+          "type": "hex",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "programmingInterface": true
+        },
+        {
+          "name": "PSAPSA",
+          "description": "CONTROL BLOCK ACRONYM IN EBCDIC",
+          "offset": 512,
+          "length": 4,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "PSA "
+            }
+          ],
+          "eyecatcher": true
+        },
+        {
+          "name": "PSALCCAV",
+          "description": "VIRTUAL ADDRESS OF LCCA",
+          "offset": 528,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "lcca",
+          "programmingInterface": true
+        },
+        {
+          "name": "PSATOLD",
+          "description": "Pointer to current TCB or zero if in SRB mode.                           e",
+          "offset": 540,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "PSAAOLD",
+          "description": "Pointer to the home (current) ASCB.",
+          "offset": 548,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "home",
+          "programmingInterface": true
+        },
+        {
+          "name": "PSAFLAGS",
+          "description": "SYSTEM FLAGS This field is PI for bits PSATX and PSATXC only OWNERSHIP: SUPERVISOR CONTROL SERIALIZATION: DISABLEMENT SERIALIZATION: None for PI bits",
+          "offset": 576,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "bitmasks": {
+            "PSAAEIT": {
+              "description": "ADDRESSING ENVIRONMENT IS IN TRANSITION. INDICATES THAT THE SPACE TYPE (ADDRESS SPACE OR SUBSPACE) ASSOCIATED WITH PASN OR SASN IS UNKNOWN. Was PSAFPAC, PSAFPPE",
+              "offset": 0,
+              "length": 1
+            },
+            "PSATX": {
+              "description": "Equivalent to CVTTX",
+              "offset": 4,
+              "length": 1
+            },
+            "PSATXC": {
+              "description": "Equivalent to CVTTXC",
+              "offset": 5,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "PSAVAL",
+          "description": "Virtual Architecture Level. Bits 0-11 are the same as IHASCCB field SCCBVAL bits 20-31. Bits 12-15 are not defined.",
+          "offset": 894,
+          "length": 2,
+          "type": "hex",
+          "programmingInterface": true
+        },
+        {
+          "name": "PSAFPFL",
+          "description": "See LCCAFPFL Interface only for PSABFP, PSAVSS",
+          "offset": 1018,
+          "length": 1,
+          "type": "bitstring",
+          "init": [
+            {
+              "type": "hex",
+              "value": "00"
+            }
+          ],
+          "bitmasks": {
+            "PSABFP": {
+              "description": "Additional FP status is being saved",
+              "offset": 3,
+              "length": 1
+            },
+            "PSAVSS": {
+              "description": "VRs are being saved",
+              "offset": 4,
+              "length": 1
+            },
+            "PSAGSF": {
+              "description": "GSF controls are being saved",
+              "offset": 5,
+              "length": 1
+            }
+          },
+          "programmingInterface": true
+        },
+        {
+          "name": "PSALAA",
+          "description": "LE Anchor Area. Owner: LE",
+          "offset": 1208,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "velt",
+          "programmingInterface": true
+        },
+        {
+          "name": "PSAECVT",
+          "description": "Address of ECVT",
+          "offset": 1952,
+          "length": 8,
+          "type": "address",
+          "pointsTo": "ecvt",
+          "programmingInterface": true
+        },
+        {
+          "name": "PSAXCVT",
+          "description": "Address of XCVT",
+          "offset": 1960,
+          "length": 8,
+          "type": "address",
+          "pointsTo": "xcvt",
+          "programmingInterface": true
+        },
+        {
+          "name": "PSATRVT",
+          "description": "ADDRESS OF SYSTEM TRACE VECTOR TABLE.",
+          "offset": 2040,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVETVT"
+            }
+          ],
+          "pointsTo": "vetvt",
+          "programmingInterface": true
+        },
+        {
+          "name": "PSASVTX",
+          "description": "Address of Supervisor Vector Table extension. SERIALIZATION: None OWNERSHIP: Supervisor Control",
+          "offset": 2896,
+          "length": 4,
+          "type": "address",
+          "init": [
+            {
+              "type": "address",
+              "value": "IEAVSVTX"
+            }
+          ],
+          "pointsTo": "vsvtx",
+          "programmingInterface": true
+        },
+        {
+          "name": "PSAEND",
+          "description": "END OF PSA",
+          "offset": 4096,
+          "length": 8,
+          "type": "signed-integer",
+          "endOfControlBlock": true
+        }
+      ]
+    }
+  ]
+}
