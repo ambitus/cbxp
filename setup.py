@@ -22,9 +22,9 @@ def generate_headers():
     """Generate .hpp headers from .json files, mirroring the CMake process."""
     # Schema header
     schema_json = _escape_for_macro(
-        Path("cbxp/schemas/control_block_v1.json").read_text(),
+        Path("cbxp/schemas/control_block.json").read_text(),
     )
-    Path("cbxp/schemas/control_block_v1.hpp").write_text(
+    Path("cbxp/schemas/control_block.hpp").write_text(
         "#ifndef CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
         "#define CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
         "\n"

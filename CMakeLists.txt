@@ -65,14 +65,14 @@ file(
 # Build '/lib/libcbxp.a'
 # ============================================================================
 # ============================================================================
-# Generate schema header from cbxp/schemas/control_block_v1.json
+# Generate schema header from cbxp/schemas/control_block.json
 # ============================================================================
 set(CBXP_SCHEMAS_GENERATED_DIR "${CMAKE_BINARY_DIR}/cbxp/schemas")
 file(MAKE_DIRECTORY "${CBXP_SCHEMAS_GENERATED_DIR}")
 
-file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cbxp/schemas/control_block_v1.json" CBXP_SCHEMA_JSON)
+file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cbxp/schemas/control_block.json" CBXP_SCHEMA_JSON)
 
-file(WRITE "${CBXP_SCHEMAS_GENERATED_DIR}/control_block_v1.hpp"
+file(WRITE "${CBXP_SCHEMAS_GENERATED_DIR}/control_block.hpp"
 "#ifndef CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n\
 #define CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n\
 \n\
