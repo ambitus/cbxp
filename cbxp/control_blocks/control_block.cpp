@@ -46,7 +46,7 @@ ControlBlock::ControlBlock(
   } catch (const std::invalid_argument& e) {
     Logger::getInstance().debug("Control block failed validation: " +
                                 std::string(e.what()));
-    throw SchemaValidationError();
+    throw CbxpSchemaValidationError();
   }
 
   storage_attributes_.key =
