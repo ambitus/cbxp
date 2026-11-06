@@ -274,7 +274,7 @@ void ControlBlockExplorer::processControlBlock(
     if (control_blocks.empty()) {
       // We would only have this if incompatible control blocks overwrote our
       // core control blocks
-      throw JsonValueError();
+      throw CbxpJsonValueError();
     }
     if (control_blocks.find(control_block_name) != control_blocks.end()) {
       TraversalEngine engine(control_blocks,
