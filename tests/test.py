@@ -1,33 +1,38 @@
 import json
+import multiprocessing
 import os
 import shlex
-import subprocess
-import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 from cbxp import CBXPError, CBXPFilter, CBXPFilterOperation, cbxp
 
-# Runs in a fresh interpreter because the control block mappings (including any
-# found through CBXPPATH) are loaded once per process.
-CBXPPATH_FIXTURE_SCRIPT = """
-import json
-import sys
 
-from cbxp import CBXPError, cbxp
-
-command, block, sample, debug = sys.argv[1:5]
-debug = debug == "1"
-try:
-    if command == "extract":
-        data = cbxp.extract(block, debug=debug)
+def _cbxppath_worker(queue, cbxppath, command, block, sample, debug, log_path):
+    # Runs in a spawned process because the control block mappings (including
+    # any found through CBXPPATH) are loaded once per process. Nothing has
+    # called cbxp yet in a spawned interpreter, so CBXPPATH is read fresh.
+    if cbxppath is None:
+        os.environ.pop("CBXPPATH", None)
     else:
-        with open(sample, "rb") as sample_file:
-            data = cbxp.format(block, data=sample_file.read(), debug=debug)
-    print(json.dumps({"ok": True, "data": data}))
-except CBXPError as e:
-    print(json.dumps({"ok": False, "rc": e.rc, "message": str(e)}))
-"""
+        os.environ["CBXPPATH"] = cbxppath
+
+    # The library logs through C++ std::cout, so redirect file descriptor 1
+    # (sys.stdout redirection would not capture it).
+    log_fd = os.open(log_path, os.O_WRONLY | os.O_TRUNC)
+    os.dup2(log_fd, 1)
+    os.close(log_fd)
+
+    try:
+        if command == "extract":
+            data = cbxp.extract(block, debug=debug)
+        else:
+            with open(sample, "rb") as sample_file:
+                data = cbxp.format(block, data=sample_file.read(), debug=debug)
+        queue.put({"ok": True, "data": data})
+    except CBXPError as e:
+        queue.put({"ok": False, "rc": e.rc, "message": str(e)})
 
 
 class TestCBXP(unittest.TestCase):
@@ -1032,37 +1037,41 @@ class TestCBXP(unittest.TestCase):
 
     def run_cbxppath_fixture(self, fixture_dir: Path):
         conf = self.load_fixture_conf(fixture_dir)
-        env = {k: v for k, v in os.environ.items() if k != "CBXPPATH"}
-        if "CBXPPATH" in conf:
-            env["CBXPPATH"] = conf["CBXPPATH"].replace("@CASE@", str(fixture_dir))
-        result = subprocess.run(
-            [
-                sys.executable,
-                "-c",
-                CBXPPATH_FIXTURE_SCRIPT,
-                conf.get("COMMAND", "format"),
-                conf["BLOCK"],
-                str(self.SAMPLE_DIR / conf.get("SAMPLE", "")),
-                "1" if "DEBUG" in conf else "0",
-            ],
-            env=env,
-            cwd=self.TEST_DIR.parent,
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        self.assertEqual(0, result.returncode, result.stderr)
-        # With DEBUG the library also logs to stdout, through a different
-        # buffer than the script's print, so pick the result line by prefix
-        # instead of by position.
-        result_line = next(
-            line for line in result.stdout.splitlines() if line.startswith('{"ok":')
-        )
-        response = json.loads(result_line)
+        cbxppath = conf.get("CBXPPATH")
+        if cbxppath is not None:
+            cbxppath = cbxppath.replace("@CASE@", str(fixture_dir))
+
+        ctx = multiprocessing.get_context("spawn")
+        queue = ctx.Queue()
+        with tempfile.NamedTemporaryFile(suffix=".log") as log_file:
+            process = ctx.Process(
+                target=_cbxppath_worker,
+                args=(
+                    queue,
+                    cbxppath,
+                    conf.get("COMMAND", "format"),
+                    conf["BLOCK"],
+                    str(self.SAMPLE_DIR / conf.get("SAMPLE", "")),
+                    "DEBUG" in conf,
+                    log_file.name,
+                ),
+            )
+            process.start()
+            try:
+                # Read the result before join() so a full pipe cannot deadlock.
+                response = queue.get(timeout=60)
+            except Exception:
+                process.kill()
+                self.fail("Worker produced no result (crash or timeout)")
+            finally:
+                process.join()
+            self.assertEqual(0, process.exitcode)
+            log_output = Path(log_file.name).read_text()
+
         if conf["EXPECT"] == "ok":
             self.assertTrue(response["ok"], response)
             if "LOG_CONTAINS" in conf:
-                self.assertIn(conf["LOG_CONTAINS"], result.stdout)
+                self.assertIn(conf["LOG_CONTAINS"], log_output)
             output = json.dumps(response["data"], sort_keys=True, separators=(",", ":"))
             if "CONTAINS" in conf:
                 self.assertIn(conf["CONTAINS"], output)
