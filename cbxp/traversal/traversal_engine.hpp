@@ -8,7 +8,7 @@
 
 #include "cbxp_types.hpp"
 #include "control_blocks/control_block.hpp"
-#include "traversal_context.hpp"
+#include "traversal/traversal_context.hpp"
 
 namespace CBXP {
 

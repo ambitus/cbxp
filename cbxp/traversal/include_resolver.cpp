@@ -1,9 +1,9 @@
-#include "include_resolver.hpp"
+#include "traversal/include_resolver.hpp"
 
 #include <algorithm>
 
-#include "control_block_error.hpp"
-#include "logger.hpp"
+#include "util/control_block_error.hpp"
+#include "util/logger.hpp"
 
 namespace CBXP {
 

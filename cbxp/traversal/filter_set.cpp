@@ -1,11 +1,11 @@
-#include "filter_set.hpp"
+#include "traversal/filter_set.hpp"
 
 #include <fnmatch.h>
 
 #include <vector>
 
-#include "control_block_error.hpp"
-#include "logger.hpp"
+#include "util/control_block_error.hpp"
+#include "util/logger.hpp"
 
 namespace CBXP {
 

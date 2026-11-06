@@ -1,15 +1,15 @@
-#include "traversal_engine.hpp"
+#include "traversal/traversal_engine.hpp"
 
 #include <algorithm>
 #include <cctype>
 #include <sstream>
 
-#include "address_util.hpp"
-#include "control_block_error.hpp"
-#include "control_block_node.hpp"
 #include "control_blocks/control_block_field_formatter.hpp"
-#include "include_resolver.hpp"
-#include "logger.hpp"
+#include "traversal/control_block_node.hpp"
+#include "traversal/include_resolver.hpp"
+#include "util/address_util.hpp"
+#include "util/control_block_error.hpp"
+#include "util/logger.hpp"
 
 namespace CBXP {
 

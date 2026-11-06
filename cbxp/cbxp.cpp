@@ -2,9 +2,9 @@
 
 #include <nlohmann/json.hpp>
 
-#include "control_block_error.hpp"
 #include "control_block_explorer.hpp"
-#include "logger.hpp"
+#include "util/control_block_error.hpp"
+#include "util/logger.hpp"
 
 cbxp_result_t* cbxp_extract(const char* control_block_name,
                             const size_t control_block_name_length,

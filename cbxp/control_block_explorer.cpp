@@ -9,10 +9,10 @@
 #include <sstream>
 
 #include "cbxp.h"
-#include "control_block_error.hpp"
 #include "control_blocks/control_block.hpp"
-#include "logger.hpp"
-#include "traversal_engine.hpp"
+#include "traversal/traversal_engine.hpp"
+#include "util/control_block_error.hpp"
+#include "util/logger.hpp"
 
 namespace CBXP {
 

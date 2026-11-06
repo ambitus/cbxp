@@ -12,7 +12,7 @@
 #include <iostream>
 
 #include "cbxp.h"
-#include "control_block_error.hpp"
+#include "util/control_block_error.hpp"
 
 namespace CBXP {
 

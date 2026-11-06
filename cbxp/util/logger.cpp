@@ -1,6 +1,6 @@
 #define _POSIX_SOURCE
 
-#include "logger.hpp"
+#include "util/logger.hpp"
 
 #include <unistd.h>
 
@@ -12,7 +12,7 @@
 #include <memory>
 #include <sstream>
 
-#include "safe_read.hpp"
+#include "util/safe_read.hpp"
 
 namespace CBXP {
 Logger::Logger() { debug_ = false; }

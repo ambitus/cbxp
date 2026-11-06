@@ -7,9 +7,9 @@
 
 #include "cbxp_types.hpp"
 #include "control_blocks/control_block.hpp"
-#include "filter_set.hpp"
-#include "include_resolver.hpp"
-#include "traversal_context.hpp"
+#include "traversal/filter_set.hpp"
+#include "traversal/include_resolver.hpp"
+#include "traversal/traversal_context.hpp"
 
 namespace CBXP {
 

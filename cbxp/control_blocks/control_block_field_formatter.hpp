@@ -11,8 +11,8 @@
 #include <string>
 #include <vector>
 
-#include "../control_block_error.hpp"
-#include "../safe_read.hpp"
+#include "util/control_block_error.hpp"
+#include "util/safe_read.hpp"
 
 namespace CBXP {
 class ControlBlockFieldFormatter {

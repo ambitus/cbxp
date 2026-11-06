@@ -5,8 +5,8 @@
 #include <algorithm>
 #include <nlohmann/json.hpp>
 
-#include "control_block_error.hpp"
-#include "logger.hpp"
+#include "util/control_block_error.hpp"
+#include "util/logger.hpp"
 #include "zos_subpools.hpp"
 
 namespace CBXP {

@@ -1,13 +1,13 @@
-#include "control_block_node.hpp"
+#include "traversal/control_block_node.hpp"
 
 #include <algorithm>
 #include <cctype>
 #include <cstdint>
 #include <sstream>
 
-#include "address_util.hpp"
-#include "control_block_error.hpp"
-#include "logger.hpp"
+#include "util/address_util.hpp"
+#include "util/control_block_error.hpp"
+#include "util/logger.hpp"
 
 namespace CBXP {
 
