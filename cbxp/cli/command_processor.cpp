@@ -463,7 +463,7 @@ void CommandProcessor::run() {
       std::cerr << ERROR_VALIDATE_JSON_FILE_ << std::endl;
       throw CLIExitFailure();
     case CBXP::Error::JsonBadValue:
-      std::cerr << ERROR_VALUES_JSON_FILE_ << std::endl;
+      std::cerr << ERROR_JSON_FILE_VALUES_ << std::endl;
       throw CLIExitFailure();
     default:
       std::cerr << ERROR_UNKNOWN_ERROR_ << " " << control_block_name_
