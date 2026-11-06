@@ -5,21 +5,11 @@
 #include <cstdint>
 #include <sstream>
 
+#include "address_util.hpp"
 #include "control_block_error.hpp"
-#include "guard_page.hpp"
 #include "logger.hpp"
 
 namespace CBXP {
-
-namespace {
-
-std::string addressToString(const void* addr) {
-  std::ostringstream oss;
-  oss << addr;
-  return oss.str();
-}
-
-}  // namespace
 
 ControlBlockNode::ControlBlockNode(TraversalContext& ctx,
                                    const cbxp_options_t& options,
@@ -215,7 +205,7 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
           cb_.formatter_.uint<uint32_t>(raw));
     }
 
-    // Reject PSA fetch-protected addresses before enqueueing: the 0C4 fires
+    // Reject guard page addresses before enqueueing: the 0C4 fires
     // before any C++ catch, so a try/catch can't handle it.
     if (isGuardPageAddress(child_addr)) {
       Logger::getInstance().debug(

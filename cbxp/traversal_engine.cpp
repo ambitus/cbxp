@@ -4,24 +4,14 @@
 #include <cctype>
 #include <sstream>
 
+#include "address_util.hpp"
 #include "control_block_error.hpp"
 #include "control_block_node.hpp"
 #include "control_blocks/control_block_field_formatter.hpp"
-#include "guard_page.hpp"
 #include "include_resolver.hpp"
 #include "logger.hpp"
 
 namespace CBXP {
-
-namespace {
-
-std::string addressToString(const void* addr) {
-  std::ostringstream oss;
-  oss << addr;
-  return oss.str();
-}
-
-}  // namespace
 
 TraversalEngine::TraversalEngine(
     const std::unordered_map<std::string, ControlBlock>& control_blocks,
