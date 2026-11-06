@@ -44,10 +44,10 @@ class CommandProcessor {
   const std::string ERROR_PARSE_JSON_FILE_  = "Could not parse a JSON file";
   const std::string ERROR_VALIDATE_JSON_FILE_ =
       "Could not validate a JSON file";
-  const std::string ERROR_JSON_FILE_VALUES_ = "Could not load JSON file"
-      // Format
-      const std::string ERROR_OFFSET_MUST_BE_A_POSITIVE_INTEGER_ =
-          "Offset must be a positive integer";
+  const std::string ERROR_JSON_FILE_VALUES_ = "Could not load JSON file";
+  // Format
+  const std::string ERROR_OFFSET_MUST_BE_A_POSITIVE_INTEGER_ =
+      "Offset must be a positive integer";
   const std::string ERROR_OFFSET_TOO_LARGE_ =
       "Offset is too large for data provided";
   const std::string ERROR_OPENING_FILE_ = "Error opening file: ";
