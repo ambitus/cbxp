@@ -23,7 +23,7 @@ class TraversalEngine {
   // Runs the traversal rooted at `cb_name`: returns the root object, an array
   // for multiple roots, or null if rejected / no root found.
   nlohmann::json run(const std::string& cb_name, const cbxp_options_t& options,
-                     const void* address, size_t buffer_length);
+                     const void* p_address, size_t buffer_length);
 
  private:
   TraversalContext ctx_;

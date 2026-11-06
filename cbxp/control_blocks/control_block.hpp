@@ -15,11 +15,11 @@ typedef struct {
   ptrdiff_t offset;
   size_t length;
   FieldType type;
-  std::string pointsTo;
+  std::string points_to;
   bool repeated;
   std::string count;
-  std::string ignoreMask;
-  bool endOfControlBlock;
+  std::string ignore_mask;
+  bool end_of_control_block;
 } control_block_field_t;
 
 typedef struct {
@@ -44,7 +44,7 @@ class ControlBlock {
   std::vector<std::string> includables_   = {};
   std::vector<std::string> pointed_to_by_ = {};
   ptrdiff_t max_offset_                   = 0;
-  void* fixed_address_                    = nullptr;
+  void* p_fixed_address_                  = nullptr;
   eyecatcher_field_t eyecatcher_field_    = {0, 0, ""};
   static FieldType stringToType(const std::string& type_str);
 
@@ -64,7 +64,7 @@ class ControlBlock {
     return pointed_to_by_;
   }
   ptrdiff_t getMaxOffset() const { return max_offset_; }
-  const void* getFixedAddress() const { return fixed_address_; }
+  const void* getFixedAddress() const { return p_fixed_address_; }
   const eyecatcher_field_t& getEyecatcherField() const {
     return eyecatcher_field_;
   }

@@ -26,7 +26,7 @@ cbxp_result_t* cbxp_format(const char* control_block_name,
                            const void* data, const size_t data_length,
                            bool debug);
 
-void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
+void cbxp_free(cbxp_result_t* p_cbxp_result, bool debug);
 
 #ifdef __cplusplus
 }

@@ -168,11 +168,11 @@ ControlBlockExplorer::getControlBlocks() {
     }
 
     // Load custom control blocks
-    const char* cbxp_path_env = std::getenv("CBXPPATH");
-    if (cbxp_path_env == nullptr) {
+    const char* p_cbxp_path_env = std::getenv("CBXPPATH");
+    if (p_cbxp_path_env == nullptr) {
       return map;
     }
-    std::string env_p(cbxp_path_env);
+    std::string env_p(p_cbxp_path_env);
     if (env_p.empty()) {
       return map;
     }

@@ -23,7 +23,7 @@ void onStorageException(struct __cib*, void* token) {
 }  // namespace
 
 // Keep this frame free of C++ objects: longjmp does not run destructors.
-bool safeCopy(void* dst, const void* src, size_t n) {
+bool safeCopy(void* p_dst, const void* p_src, size_t n) {
   Recovery rec;
   if (setjmp(rec.env) != 0) {
     // The handler is still registered in this frame, so remove it.
@@ -34,7 +34,7 @@ bool safeCopy(void* dst, const void* src, size_t n) {
     // Fail closed: never read without protection in place.
     return false;
   }
-  std::memcpy(dst, src, n);
+  std::memcpy(p_dst, p_src, n);
   __reset_exception_handler();
   return true;
 }

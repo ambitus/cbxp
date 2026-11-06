@@ -14,10 +14,10 @@ namespace CBXP {
 ControlBlockNode::ControlBlockNode(TraversalContext& ctx,
                                    const cbxp_options_t& options,
                                    const std::string& cb_name,
-                                   const void* address, size_t buffer_length)
+                                   const void* p_address, size_t buffer_length)
     : ctx_(ctx),
       cb_(ctx.control_blocks.at(cb_name)),
-      address_(address),
+      p_address_(p_address),
       buffer_length_(buffer_length) {
   // Resolve include patterns into child_options_ for this node.
   child_options_ = IncludeResolver::resolve(options.include_patterns, cb_,
@@ -40,32 +40,32 @@ NodeParseResult ControlBlockNode::parse() {
 
   // Verify the whole block fits in the caller's buffer before reading anything;
   // no-op when skip_buffer_length_check is true (live memory).
-  checkDataLength(getReadableLength());
+  ControlBlockNode::checkDataLength(ControlBlockNode::getReadableLength());
 
-  if (!eyecatcherMatches()) {
+  if (!ControlBlockNode::eyecatcherMatches()) {
     return result;  // json stays null
   }
 
-  result.json = parseFields();
+  result.json = ControlBlockNode::parseFields();
 
   if (!filter_set_.match(result.json)) {
     result.filter_passed = false;
     Logger::getInstance().debug(
         "Filters rejected '" + cb_.getName() + "' at address " +
-        addressToString(address_) + ": discarding " +
+        addressToString(p_address_) + ": discarding " +
         std::to_string(pending_children_.size()) + " pending child(ren)");
     pending_children_.clear();  // rejected: do not load children
     return result;
   }
 
-  enqueuePendingChildren();
+  ControlBlockNode::enqueuePendingChildren();
 
   return result;
 }
 
-ControlBlockNode ControlBlockNode::withAddress(const void* address) const {
+ControlBlockNode ControlBlockNode::withAddress(const void* p_address) const {
   ControlBlockNode copy(*this);
-  copy.address_ = address;
+  copy.p_address_ = p_address;
   return copy;
 }
 
@@ -85,9 +85,9 @@ bool ControlBlockNode::eyecatcherMatches() const {
   if (ec.expected.empty()) {
     return true;
   }
-  const char* raw = static_cast<const char*>(address_) + ec.offset;
+  const char* p_raw = static_cast<const char*>(p_address_) + ec.offset;
   std::string actual =
-      ControlBlockFieldFormatter::getString(raw, static_cast<int>(ec.length));
+      ControlBlockFieldFormatter::getString(p_raw, static_cast<int>(ec.length));
   std::string expected = ec.expected;
   expected.erase(expected.find_last_not_of(" \t\0", std::string::npos, 3) + 1);
   if (actual != expected) {
@@ -95,7 +95,7 @@ bool ControlBlockNode::eyecatcherMatches() const {
         "Eyecatcher mismatch for '" + cb_.getName() + "' at " +
         [&]() {
           std::ostringstream oss;
-          oss << address_;
+          oss << p_address_;
           return oss.str();
         }() +
         ": expected '" + expected + "', got '" + actual + "' — skipping");
@@ -129,55 +129,55 @@ ptrdiff_t ControlBlockNode::getReadableLength() const {
 nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
                                              ptrdiff_t extra_offset) {
   ptrdiff_t offset = field.offset + extra_offset;
-  checkDataLength(offset);
+  ControlBlockNode::checkDataLength(offset);
 
   nlohmann::json field_json;
-  const char* base = static_cast<const char*>(address_);
+  const char* p_base = static_cast<const char*>(p_address_);
 
   try {
     switch (field.type) {
       case STRING:
-        field_json = cb_.formatter_.getString(base + offset, field.length);
+        field_json = cb_.formatter_.getString(p_base + offset, field.length);
         break;
       case UNSIGNED_INT:
         if (field.length == 8) {
-          field_json = cb_.formatter_.uint<uint64_t>(base + offset);
+          field_json = cb_.formatter_.uint<uint64_t>(p_base + offset);
         } else if (field.length == 2) {
-          field_json = cb_.formatter_.uint<uint16_t>(base + offset);
+          field_json = cb_.formatter_.uint<uint16_t>(p_base + offset);
         } else if (field.length == 1) {
-          field_json = cb_.formatter_.uint<uint8_t>(base + offset);
+          field_json = cb_.formatter_.uint<uint8_t>(p_base + offset);
         } else {
-          field_json = cb_.formatter_.uint<uint32_t>(base + offset);
+          field_json = cb_.formatter_.uint<uint32_t>(p_base + offset);
         }
         break;
       case SIGNED_INT:
         if (field.length == 8) {
-          field_json = cb_.formatter_.sint<int64_t>(base + offset);
+          field_json = cb_.formatter_.sint<int64_t>(p_base + offset);
         } else if (field.length == 2) {
-          field_json = cb_.formatter_.sint<int16_t>(base + offset);
+          field_json = cb_.formatter_.sint<int16_t>(p_base + offset);
         } else if (field.length == 1) {
-          field_json = cb_.formatter_.sint<int8_t>(base + offset);
+          field_json = cb_.formatter_.sint<int8_t>(p_base + offset);
         } else {
-          field_json = cb_.formatter_.sint<int32_t>(base + offset);
+          field_json = cb_.formatter_.sint<int32_t>(p_base + offset);
         }
         break;
       case BITSTRING:
         if (field.length == 8) {
-          field_json = cb_.formatter_.getBitmap<uint64_t>(base + offset);
+          field_json = cb_.formatter_.getBitmap<uint64_t>(p_base + offset);
         } else if (field.length == 2) {
-          field_json = cb_.formatter_.getBitmap<uint16_t>(base + offset);
+          field_json = cb_.formatter_.getBitmap<uint16_t>(p_base + offset);
         } else if (field.length == 1) {
-          field_json = cb_.formatter_.getBitmap<uint8_t>(base + offset);
+          field_json = cb_.formatter_.getBitmap<uint8_t>(p_base + offset);
         } else {
-          field_json = cb_.formatter_.getBitmap<uint32_t>(base + offset);
+          field_json = cb_.formatter_.getBitmap<uint32_t>(p_base + offset);
         }
         break;
       case HEX:
       case ADDRESS:
         if (field.length == 8) {
-          field_json = cb_.formatter_.getHex<uint64_t>(base + offset);
+          field_json = cb_.formatter_.getHex<uint64_t>(p_base + offset);
         } else {
-          field_json = cb_.formatter_.getHex<uint32_t>(base + offset);
+          field_json = cb_.formatter_.getHex<uint32_t>(p_base + offset);
         }
         break;
     }
@@ -186,28 +186,28 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
         "Unexpected error reading field '" + field.name + "' (type " +
         std::to_string(static_cast<int>(field.type)) + ", offset " +
         std::to_string(offset) + ") of '" + cb_.getName() + "' at address " +
-        addressToString(address_) + ": " + e.what());
+        addressToString(p_address_) + ": " + e.what());
     throw CbxpBlockUnreachableError();
   }
 
   // For an included child pointer field: enqueue the target and return the raw
   // pointer hex as a placeholder, which the engine resolves after traversal.
-  if (!field.pointsTo.empty() &&
-      child_options_.find(field.pointsTo) != child_options_.end()) {
-    const std::string& child_name = field.pointsTo;
-    const char* raw               = base + offset;
-    const void* child_addr;
+  if (!field.points_to.empty() &&
+      child_options_.find(field.points_to) != child_options_.end()) {
+    const std::string& child_name = field.points_to;
+    const char* p_raw             = p_base + offset;
+    const void* p_child_addr;
     if (field.length == 8) {
-      child_addr =
-          reinterpret_cast<const void*>(cb_.formatter_.uint<uint64_t>(raw));
+      p_child_addr =
+          reinterpret_cast<const void*>(cb_.formatter_.uint<uint64_t>(p_raw));
     } else {
-      child_addr = reinterpret_cast<const void* __ptr32>(
-          cb_.formatter_.uint<uint32_t>(raw));
+      p_child_addr = reinterpret_cast<const void* __ptr32>(
+          cb_.formatter_.uint<uint32_t>(p_raw));
     }
 
     // Reject guard page addresses before enqueueing: the 0C4 fires
     // before any C++ catch, so a try/catch can't handle it.
-    if (isGuardPageAddress(child_addr)) {
+    if (isGuardPageAddress(p_child_addr)) {
       Logger::getInstance().debug(
           "Skipping enqueue of '" + child_name +
           "' — address falls in PSA fetch-protected range " + kGuardPageRange);
@@ -216,7 +216,7 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
 
     // Defer enqueueing until this node's filters are evaluated, so children of
     // rejected nodes are never loaded.
-    pending_children_.push_back({child_addr, child_name,
+    pending_children_.push_back({p_child_addr, child_name,
                                  child_options_[child_name],
                                  /*is_root=*/false});
     // Return the raw hex as a placeholder regardless — the engine will
@@ -229,8 +229,8 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
 void ControlBlockNode::enqueuePendingChildren() {
   size_t enqueued = 0;
   for (const PendingNode& child : pending_children_) {
-    auto visit_key       = std::make_pair(child.address, child.cb_name);
-    std::string addr_str = addressToString(child.address);
+    auto visit_key       = std::make_pair(child.p_address, child.cb_name);
+    std::string addr_str = addressToString(child.p_address);
     if (ctx_.visited.find(visit_key) == ctx_.visited.end()) {
       // Mark in-progress before enqueueing so two parents at the same BFS level
       // can't double-enqueue the same child address.
@@ -246,7 +246,7 @@ void ControlBlockNode::enqueuePendingChildren() {
   }
   if (!pending_children_.empty()) {
     Logger::getInstance().debug(
-        "'" + cb_.getName() + "' at address " + addressToString(address_) +
+        "'" + cb_.getName() + "' at address " + addressToString(p_address_) +
         ": enqueued " + std::to_string(enqueued) + " of " +
         std::to_string(pending_children_.size()) + " pending child(ren)");
   }
@@ -259,7 +259,7 @@ nlohmann::json ControlBlockNode::parseFields() {
   size_t psa_fields_skipped = 0;
 
   for (const auto& [field_name, field_data] : cb_.getMap()) {
-    if (field_data.endOfControlBlock) {
+    if (field_data.end_of_control_block) {
       continue;
     }
     if (cb_.getName() == "psa" &&
@@ -278,15 +278,16 @@ nlohmann::json ControlBlockNode::parseFields() {
       continue;
     }
 
-    nlohmann::json resolved = fieldToJson(field_data);
+    nlohmann::json resolved = ControlBlockNode::fieldToJson(field_data);
 
     if (resolved.is_object() || resolved.is_array()) {
       // Already an expanded child — preserve raw pointer under "<name>_ptr".
-      const char* raw = static_cast<const char*>(address_) + field_data.offset;
+      const char* p_raw =
+          static_cast<const char*>(p_address_) + field_data.offset;
       cb_json[lower_name + "_ptr"] =
           (field_data.length == 8)
-              ? nlohmann::json(cb_.formatter_.getHex<uint64_t>(raw))
-              : nlohmann::json(cb_.formatter_.getHex<uint32_t>(raw));
+              ? nlohmann::json(cb_.formatter_.getHex<uint64_t>(p_raw))
+              : nlohmann::json(cb_.formatter_.getHex<uint32_t>(p_raw));
     }
     cb_json[lower_name] = resolved;
   }
@@ -317,22 +318,22 @@ nlohmann::json ControlBlockNode::parseFields() {
       // ignoreMask matches (e.g. unused slots) are dropped up front, so they
       // are neither emitted nor followed.  Child filters are applied later by
       // TraversalEngine::resolvePlaceholders.
-      if (!field_data.ignoreMask.empty() && !field_data.pointsTo.empty() &&
-          child_options_.find(field_data.pointsTo) != child_options_.end()) {
-        checkDataLength(field_data.offset +
-                        static_cast<ptrdiff_t>(i) * field_data.length);
-        const char* entry_raw = static_cast<const char*>(address_) +
-                                field_data.offset + i * field_data.length;
+      if (!field_data.ignore_mask.empty() && !field_data.points_to.empty() &&
+          child_options_.find(field_data.points_to) != child_options_.end()) {
+        ControlBlockNode::checkDataLength(
+            field_data.offset + static_cast<ptrdiff_t>(i) * field_data.length);
+        const char* p_entry_raw = static_cast<const char*>(p_address_) +
+                                  field_data.offset + i * field_data.length;
         const uint32_t mask = static_cast<uint32_t>(std::stoull(
-                                  field_data.ignoreMask, nullptr, 16))
+                                  field_data.ignore_mask, nullptr, 16))
                               << 24;
-        if (cb_.formatter_.uint<uint32_t>(entry_raw) & mask) {
+        if (cb_.formatter_.uint<uint32_t>(p_entry_raw) & mask) {
           ++entries_ignored;
           continue;
         }
       }
 
-      nlohmann::json entry = fieldToJson(
+      nlohmann::json entry = ControlBlockNode::fieldToJson(
           field_data, static_cast<ptrdiff_t>(i) * field_data.length);
 
       if (!entry.is_null()) {

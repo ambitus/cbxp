@@ -55,13 +55,13 @@ std::unordered_map<std::string, cbxp_options_t> IncludeResolver::resolve(
     if (include == "**") {
       Logger::getInstance().debug("Processing '**' include...");
       // ** overrides everything: return the cached full-depth map directly.
-      return getDoubleAsteriskMap(cb, all_cbs);
+      return IncludeResolver::getDoubleAsteriskMap(cb, all_cbs);
     } else if (include == "*") {
       Logger::getInstance().debug("Processing '*' include...");
-      processAsterisk(out, cb, all_cbs);
+      IncludeResolver::processAsterisk(out, cb, all_cbs);
     } else {
       Logger::getInstance().debug("Processing '" + include + "' include...");
-      processExplicit(out, include, cb, all_cbs);
+      IncludeResolver::processExplicit(out, include, cb, all_cbs);
     }
   }
 

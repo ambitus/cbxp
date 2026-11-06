@@ -36,7 +36,7 @@ void FilterSet::parse(
                                   "' control block...");
       it->second.filters.push_back(child_filter);
     } else {
-      addFilter(filter, cb_name);
+      FilterSet::addFilter(filter, cb_name);
     }
   }
 
@@ -140,7 +140,8 @@ bool FilterSet::match(const nlohmann::json& cb_json) const {
       Logger::getInstance().debug("Applying filter '" + filter_key +
                                   filter_data.operation + filter_data.value +
                                   "'...");
-      if (!compare(effective_value, filter_data.value, filter_data.operation)) {
+      if (!FilterSet::compare(effective_value, filter_data.value,
+                              filter_data.operation)) {
         Logger::getInstance().debug("The filter '" + filter_key +
                                     filter_data.operation + filter_data.value +
                                     "' did not match");

@@ -17,26 +17,27 @@
 namespace CBXP {
 class ControlBlockFieldFormatter {
  public:
-  // Every read of live storage goes through readOrThrow(), so an unreadable
+  // Every read of live storage goes through safeMemCopy(), so an unreadable
   // address (e.g. fetch-protected) raises CbxpBlockUnreachableError instead of
   // abending with S0C4.
   template <typename T>
   static T uint(const void* p_field) {
     T uint_field;
-    readOrThrow(&uint_field, p_field, sizeof(T));
+    ControlBlockFieldFormatter::safeMemCopy(&uint_field, p_field, sizeof(T));
     return uint_field;
   }
 
   template <typename T>
   static T sint(const void* p_field) {
     T sint_field;
-    readOrThrow(&sint_field, p_field, sizeof(T));
+    ControlBlockFieldFormatter::safeMemCopy(&sint_field, p_field, sizeof(T));
     return sint_field;
   }
 
   static const std::string getString(const void* p_field, int length) {
     std::vector<char> ascii_field_tmp(length, 0);
-    readOrThrow(ascii_field_tmp.data(), p_field, length);
+    ControlBlockFieldFormatter::safeMemCopy(ascii_field_tmp.data(), p_field,
+                                            length);
     __e2a_l(ascii_field_tmp.data(), length);
     std::string ascii_field(ascii_field_tmp.begin(), ascii_field_tmp.end());
     size_t last_non_space =
@@ -67,7 +68,7 @@ class ControlBlockFieldFormatter {
   }
 
  private:
-  static void readOrThrow(void* p_dest, const void* p_src, size_t length) {
+  static void safeMemCopy(void* p_dest, const void* p_src, size_t length) {
     if (!safeCopy(p_dest, p_src, length)) {
       throw CbxpBlockUnreachableError();
     }

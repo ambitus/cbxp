@@ -35,7 +35,7 @@ class ControlBlockNode;
 
 // One item in the BFS work-queue.
 struct PendingNode {
-  const void* address;
+  const void* p_address;
   std::string cb_name;
   cbxp_options_t options;
   // True for nodes seeded by run() (roots), false for children; traverse uses

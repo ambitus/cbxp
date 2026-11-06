@@ -87,7 +87,7 @@ static constexpr SubpoolLocation CommCSAExt{O::Common, R::CSA, E::Extended};
 
 // ---------------------------------------------------------------------------
 // Map from subpool decimal number → SubpoolInfo.
-// Subpools 0–127 are handled as a range in get_subpool_info(); they are NOT
+// Subpools 0–127 are handled as a range in getSubpoolInfo(); they are NOT
 // stored individually here.
 // ---------------------------------------------------------------------------
 // clang-format off
@@ -167,23 +167,23 @@ inline const std::unordered_map<uint32_t, SubpoolInfo> kSubpoolMap = {
 // ---------------------------------------------------------------------------
 // Predicates
 // ---------------------------------------------------------------------------
-[[nodiscard]] inline bool is_common(const SubpoolLocation& loc) noexcept {
+[[nodiscard]] inline bool isCommon(const SubpoolLocation& loc) noexcept {
   return loc.ownership == SubpoolOwnership::Common;
 }
 
 // cppcheck-suppress unusedFunction
-[[nodiscard]] inline bool is_private(const SubpoolLocation& loc) noexcept {
+[[nodiscard]] inline bool isPrivate(const SubpoolLocation& loc) noexcept {
   return loc.ownership == SubpoolOwnership::Private;
 }
 
 // cppcheck-suppress unusedFunction
-[[nodiscard]] inline bool is_extended(const SubpoolLocation& loc) noexcept {
+[[nodiscard]] inline bool isExtended(const SubpoolLocation& loc) noexcept {
   return loc.extent == SubpoolExtent::Extended ||
          loc.extent == SubpoolExtent::Both;
 }
 
 // cppcheck-suppress unusedFunction
-[[nodiscard]] inline bool is_base(const SubpoolLocation& loc) noexcept {
+[[nodiscard]] inline bool isBase(const SubpoolLocation& loc) noexcept {
   return loc.extent == SubpoolExtent::Base;
 }
 
@@ -191,7 +191,7 @@ inline const std::unordered_map<uint32_t, SubpoolInfo> kSubpoolMap = {
 // Primary lookup.  Handles the 0–127 range inline (all: Private Low Base,
 // fetch-protected).  Returns nullptr for any subpool not in the IBM table.
 // ---------------------------------------------------------------------------
-[[nodiscard]] inline const SubpoolInfo* get_subpool_info(uint32_t sp) noexcept {
+[[nodiscard]] inline const SubpoolInfo* getSubpoolInfo(uint32_t sp) noexcept {
   static constexpr SubpoolInfo k0to127{detail::PrivLowBase, true};
   if (sp <= 127) {
     return &k0to127;

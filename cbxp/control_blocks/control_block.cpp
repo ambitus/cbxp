@@ -62,15 +62,15 @@ ControlBlock::ControlBlock(
       storage_attributes_.is_protected = false;
       continue;
     }
-    unsigned char subpool        = (*it).get<uint8_t>();
-    const zos::SubpoolInfo* info = zos::get_subpool_info(subpool);
-    if (info == nullptr) {
+    unsigned char subpool          = (*it).get<uint8_t>();
+    const zos::SubpoolInfo* p_info = zos::getSubpoolInfo(subpool);
+    if (p_info == nullptr) {
       // If subpool information isn't there, we try to get the control block
       storage_attributes_.is_common    = true;
       storage_attributes_.is_protected = false;
     } else {
-      storage_attributes_.is_common    = zos::is_common(info->location);
-      storage_attributes_.is_protected = info->fetch_protected;
+      storage_attributes_.is_common    = zos::isCommon(p_info->location);
+      storage_attributes_.is_protected = p_info->fetch_protected;
     }
   }
 
@@ -98,11 +98,11 @@ ControlBlock::ControlBlock(
       } else if (offset + static_cast<ptrdiff_t>(length) > max_offset_) {
         max_offset_ = offset + static_cast<ptrdiff_t>(length);
       }
-      std::string pointsTo = "";
+      std::string points_to = "";
       if ((*it).contains("pointsTo")) {
         // Also build inclusion MAP
-        pointsTo = (*it)["pointsTo"].get<std::string>();
-        includables_.push_back(pointsTo);
+        points_to = (*it)["pointsTo"].get<std::string>();
+        includables_.push_back(points_to);
       }
       std::string type_str    = (*it)["type"].get<std::string>();
       FieldType type          = ControlBlock::stringToType(type_str);
@@ -131,7 +131,7 @@ ControlBlock::ControlBlock(
         }
       }
       control_block_field_t field = {name,  offset,      length,
-                                     type,  pointsTo,    repeated,
+                                     type,  points_to,   repeated,
                                      count, ignore_mask, end_of_control_block};
       control_block_map_[name]    = field;
     }

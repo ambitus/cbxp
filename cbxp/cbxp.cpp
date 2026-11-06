@@ -72,15 +72,15 @@ cbxp_result_t* cbxp_format(const char* control_block_name,
   return p_cbxp_result;
 }
 
-void cbxp_free(cbxp_result_t* cbxp_result, bool debug) {
+void cbxp_free(cbxp_result_t* p_cbxp_result, bool debug) {
   CBXP::Logger::getInstance().setDebug(debug);
 
-  if (cbxp_result != nullptr) {
-    if (cbxp_result->result_json != nullptr) {
-      CBXP::Logger::getInstance().debugFree(cbxp_result->result_json);
-      delete cbxp_result->result_json;
+  if (p_cbxp_result != nullptr) {
+    if (p_cbxp_result->result_json != nullptr) {
+      CBXP::Logger::getInstance().debugFree(p_cbxp_result->result_json);
+      delete p_cbxp_result->result_json;
     }
-    CBXP::Logger::getInstance().debugFree(cbxp_result);
-    delete cbxp_result;
+    CBXP::Logger::getInstance().debugFree(p_cbxp_result);
+    delete p_cbxp_result;
   }
 }

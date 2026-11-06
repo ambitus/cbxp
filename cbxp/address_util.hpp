@@ -6,9 +6,9 @@
 
 namespace CBXP {
 
-inline std::string addressToString(const void* addr) {
+inline std::string addressToString(const void* p_addr) {
   std::ostringstream oss;
-  oss << addr;
+  oss << p_addr;
   return oss.str();
 }
 
@@ -19,8 +19,8 @@ constexpr uintptr_t kGuardPageStart   = 0x7FFFF000u;
 constexpr uintptr_t kGuardPageEnd     = 0x7FFFFFFFu;
 constexpr const char* kGuardPageRange = "0x7FFFF000-0x7FFFFFFF";
 
-inline bool isGuardPageAddress(const void* addr) {
-  const uintptr_t p = reinterpret_cast<uintptr_t>(addr);
+inline bool isGuardPageAddress(const void* p_addr) {
+  const uintptr_t p = reinterpret_cast<uintptr_t>(p_addr);
   return p >= kGuardPageStart && p <= kGuardPageEnd;
 }
 

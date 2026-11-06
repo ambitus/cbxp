@@ -27,12 +27,12 @@ struct NodeParseResult {
 class ControlBlockNode {
  public:
   ControlBlockNode(TraversalContext& ctx, const cbxp_options_t& options,
-                   const std::string& cb_name, const void* address,
+                   const std::string& cb_name, const void* p_address,
                    size_t buffer_length = 0);
 
   // Returns a copy of this node bound to `address`.  The include and filter
   // lists are copied, not rebuilt, so nothing is re-parsed or re-logged.
-  ControlBlockNode withAddress(const void* address) const;
+  ControlBlockNode withAddress(const void* p_address) const;
 
   NodeParseResult parse();
 
@@ -42,7 +42,7 @@ class ControlBlockNode {
  private:
   TraversalContext& ctx_;
   const ControlBlock& cb_;
-  const void* address_;
+  const void* p_address_;
   size_t buffer_length_;
   std::unordered_map<std::string, cbxp_options_t> child_options_;
   FilterSet filter_set_;

@@ -43,22 +43,23 @@ void Logger::debug(const std::string& message, const std::string& body) const {
   }
 }
 
-void Logger::debugAllocate(const void* ptr, int rmode, int byte_count) const {
+void Logger::debugAllocate(const void* p_memory, int rmode,
+                           int byte_count) const {
   if (!debug_) {
     return;
   }
   std::ostringstream oss;
   oss << "Allocated " << byte_count << " bytes in " << rmode
-      << "-bit memory at address " << ptr;
+      << "-bit memory at address " << p_memory;
   Logger::debug(oss.str());
 }
 
-void Logger::debugFree(const void* ptr) const {
+void Logger::debugFree(const void* p_memory) const {
   if (!debug_) {
     return;
   }
   std::ostringstream oss;
-  oss << "Freeing memory at address " << ptr << " ...";
+  oss << "Freeing memory at address " << p_memory << " ...";
   Logger::debug(oss.str());
 }
 
