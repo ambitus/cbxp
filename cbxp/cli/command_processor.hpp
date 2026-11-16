@@ -1,5 +1,4 @@
-#ifndef __CBXP_CLI_H_
-#define __CBXP_CLI_H_
+#pragma once
 
 #include <algorithm>
 #include <cstring>
@@ -100,4 +99,3 @@ class CommandProcessor {
 };
 }  // namespace CBXP
 
-#endif

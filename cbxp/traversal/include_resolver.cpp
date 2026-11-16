@@ -2,30 +2,27 @@
 
 #include <algorithm>
 
-#include "util/control_block_error.hpp"
+#include "control_block_error.hpp"
 #include "util/logger.hpp"
 
 namespace CBXP {
-
-std::unordered_map<std::string, std::unordered_map<std::string, cbxp_options_t>>
-    IncludeResolver::double_asterisk_cache_ = {};
 
 const std::unordered_map<std::string, cbxp_options_t>&
 IncludeResolver::getDoubleAsteriskMap(
     const ControlBlock& cb,
     const std::unordered_map<std::string, ControlBlock>& all_cbs) {
-  const std::string& cb_name = cb.getName();
-  auto it                    = double_asterisk_cache_.find(cb_name);
+  const std::string& control_block_name = control_block.getName();
+  auto it = double_asterisk_cache_.find(control_block_name);
   if (it != double_asterisk_cache_.end()) {
     Logger::getInstance().debug("Using cached '**' options map for '" +
-                                cb_name + "'");
+                                control_block_name + "'");
     return it->second;
   }
 
   Logger::getInstance().debug("Building and caching '**' options map for '" +
-                              cb_name + "'");
+                              control_block_name + "'");
   std::unordered_map<std::string, cbxp_options_t> built_map;
-  for (const std::string& includable : cb.getIncludables()) {
+  for (const std::string& includable : control_block.getIncludables()) {
     if (all_cbs.find(includable) == all_cbs.end()) {
       Logger::getInstance().debug("Skipping '" + includable +
                                   "' — not a loaded control block");
@@ -38,7 +35,7 @@ IncludeResolver::getDoubleAsteriskMap(
   }
 
   auto [inserted_it, _] =
-      double_asterisk_cache_.emplace(cb_name, std::move(built_map));
+      double_asterisk_cache_.emplace(control_block_name, std::move(built_map));
   return inserted_it->second;
 }
 
@@ -47,9 +44,9 @@ std::unordered_map<std::string, cbxp_options_t> IncludeResolver::resolve(
     const std::unordered_map<std::string, ControlBlock>& all_cbs) {
   Logger::getInstance().debug(
       "Creating include lists for child control blocks to include with the '" +
-      cb.getName() + "' control block...");
+      control_block.getName() + "' control block...");
 
-  std::unordered_map<std::string, cbxp_options_t> out;
+  std::unordered_map<std::string, cbxp_options_t> options_map;
 
   for (const std::string& include : include_patterns) {
     if (include == "**") {
@@ -58,24 +55,24 @@ std::unordered_map<std::string, cbxp_options_t> IncludeResolver::resolve(
       return IncludeResolver::getDoubleAsteriskMap(cb, all_cbs);
     } else if (include == "*") {
       Logger::getInstance().debug("Processing '*' include...");
-      IncludeResolver::processAsterisk(out, cb, all_cbs);
+      IncludeResolver::processAsterisk(options_map, cb, all_cbs);
     } else {
       Logger::getInstance().debug("Processing '" + include + "' include...");
-      IncludeResolver::processExplicit(out, include, cb, all_cbs);
+      IncludeResolver::processExplicit(options_map, include, cb, all_cbs);
     }
   }
 
   Logger::getInstance().debug(
       "Include lists for child control blocks to include with the '" +
-      cb.getName() + "' control block have been created");
-  return out;
+      control_block.getName() + "' control block have been created");
+  return options_map;
 }
 
 void IncludeResolver::processAsterisk(
     std::unordered_map<std::string, cbxp_options_t>& out,
     const ControlBlock& cb,
     const std::unordered_map<std::string, ControlBlock>& all_cbs) {
-  for (const std::string& includable : cb.getIncludables()) {
+  for (const std::string& includable : control_block.getIncludables()) {
     if (all_cbs.find(includable) == all_cbs.end()) {
       Logger::getInstance().debug("Skipping '" + includable +
                                   "' — not a loaded control block");
@@ -103,12 +100,13 @@ void IncludeResolver::processExplicit(
     include_includes = include.substr(del_pos + 1);
     include.resize(del_pos);
   }
-  if (std::find(cb.getIncludables().begin(), cb.getIncludables().end(),
-                include) == cb.getIncludables().end()) {
+  if (std::find(control_block.getIncludables().begin(),
+                control_block.getIncludables().end(),
+                include) == control_block.getIncludables().end()) {
     Logger::getInstance().debug(
         "'" + include +
         "' is not a known child control block that can be included with the '" +
-        cb.getName() + "' control block");
+        control_block.getName() + "' control block");
     throw IncludeError();
   }
   if (all_cbs.find(include) == all_cbs.end()) {

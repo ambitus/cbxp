@@ -1,5 +1,4 @@
-#ifndef __CBXP_SAFE_READ_H_
-#define __CBXP_SAFE_READ_H_
+#pragma once
 
 #include <cstddef>
 
@@ -13,4 +12,3 @@ bool safeCopy(void* p_dst, const void* p_src, size_t n);
 
 }  // namespace CBXP
 
-#endif

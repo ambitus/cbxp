@@ -1,5 +1,4 @@
-#ifndef __CONTROL_BLOCK_EXPLORER_H_
-#define __CONTROL_BLOCK_EXPLORER_H_
+#pragma once
 
 #include <nlohmann/json.hpp>
 
@@ -11,7 +10,8 @@ namespace CBXP {
 
 class ControlBlockExplorer {
  private:
-  cbxp_options_t cbxp_options_ = {{}, {}, false};
+  cbxp_options_t cbxp_options_   = {{}, {}};
+  bool skip_buffer_length_check_ = false;
   cbxp_result_t* p_result_;
   const void* p_control_block_         = nullptr;
   size_t control_block_data_length_    = 0;
@@ -42,4 +42,3 @@ class ControlBlockExplorer {
 };
 }  // namespace CBXP
 
-#endif

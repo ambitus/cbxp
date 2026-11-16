@@ -1,5 +1,4 @@
-#ifndef __CBXP_LOGGER_H_
-#define __CBXP_LOGGER_H_
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -27,4 +26,3 @@ class Logger {
 };
 }  // namespace CBXP
 
-#endif

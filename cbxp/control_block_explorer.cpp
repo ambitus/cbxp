@@ -9,9 +9,9 @@
 #include <sstream>
 
 #include "cbxp.h"
+#include "control_block_error.hpp"
 #include "control_blocks/control_block.hpp"
 #include "traversal/traversal_engine.hpp"
-#include "util/control_block_error.hpp"
 #include "util/logger.hpp"
 
 namespace CBXP {
@@ -36,10 +36,15 @@ ControlBlockExplorer::loadCustomControlBlocks(
       // Control blocks are keyed by the "name" in the mapping, not the file
       // name.
       std::string name = json_data["name"].get<std::string>();
+      if (new_maps.find(name) != new_maps.end()) {
+        Logger::getInstance().debug(
+            "Multiple control blocks named '" + name + "' found in '" +
+            path.string() + "'; names must be unique within a directory.");
+        throw CbxpJsonValueError();
+      }
       Logger::getInstance().debug("Adding '" + name + "' control block from '" +
                                   file.path().string() + "'.");
-      new_maps.insert_or_assign(name,
-                                ControlBlock(cbxp_schema_validator, json_data));
+      new_maps.emplace(name, ControlBlock(cbxp_schema_validator, json_data));
     } catch (const CBXPError&) {
       throw;
     } catch (const nlohmann::json::parse_error& e) {
@@ -178,7 +183,12 @@ ControlBlockExplorer::getControlBlocks() {
     }
     // CBXPPATH is a colon separated list of directories. Custom mappings
     // overwrite any control block of the same name that was already loaded.
-    for (const auto& path : ControlBlockExplorer::splitCbxpPath(env_p)) {
+    // Directories are loaded last to first so that earlier directories take
+    // precedence, as with PATH.
+    const std::vector<std::string> paths =
+        ControlBlockExplorer::splitCbxpPath(env_p);
+    for (auto it = paths.rbegin(); it != paths.rend(); ++it) {
+      const std::string& path = *it;
       std::unordered_map<std::string, ControlBlock> custom_control_blocks =
           ControlBlockExplorer::loadCustomControlBlocks(cbxp_schema_validator,
                                                         path);
@@ -233,10 +243,10 @@ void ControlBlockExplorer::extractControlBlock(
     const std::string& control_block_name, const std::string& includes_string,
     const std::string& filters_string) {
   cbxp_options_ = {ControlBlockExplorer::createOptionsList(includes_string),
-                   ControlBlockExplorer::createOptionsList(filters_string),
-                   true};
+                   ControlBlockExplorer::createOptionsList(filters_string)};
+  skip_buffer_length_check_ = true;
 
-  control_block_operation_ = "Extract";
+  control_block_operation_  = "Extract";
 
   ControlBlockExplorer::processControlBlock(control_block_name);
 
@@ -277,8 +287,7 @@ void ControlBlockExplorer::processControlBlock(
       throw CbxpJsonValueError();
     }
     if (control_blocks.find(control_block_name) != control_blocks.end()) {
-      TraversalEngine engine(control_blocks,
-                             cbxp_options_.skip_buffer_length_check);
+      TraversalEngine engine(control_blocks, skip_buffer_length_check_);
       control_block_json =
           engine.run(control_block_name, cbxp_options_, p_control_block_,
                      control_block_data_length_);

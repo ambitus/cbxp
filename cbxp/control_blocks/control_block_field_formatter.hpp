@@ -1,5 +1,4 @@
-#ifndef __CB_EXPLORER_CONTROL_BLOCK_FIELD_FORMATTER
-#define __CB_EXPLORER_CONTROL_BLOCK_FIELD_FORMATTER
+#pragma once
 
 #include <unistd.h>
 
@@ -11,7 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "util/control_block_error.hpp"
+#include "control_block_error.hpp"
 #include "util/safe_read.hpp"
 
 namespace CBXP {
@@ -76,4 +75,3 @@ class ControlBlockFieldFormatter {
 };
 }  // namespace CBXP
 
-#endif

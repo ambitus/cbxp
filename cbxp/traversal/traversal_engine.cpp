@@ -4,11 +4,11 @@
 #include <cctype>
 #include <sstream>
 
+#include "control_block_error.hpp"
 #include "control_blocks/control_block_field_formatter.hpp"
 #include "traversal/control_block_node.hpp"
 #include "traversal/include_resolver.hpp"
 #include "util/address_util.hpp"
-#include "util/control_block_error.hpp"
 #include "util/logger.hpp"
 
 namespace CBXP {
@@ -20,18 +20,19 @@ TraversalEngine::TraversalEngine(
 
 // ---------------------------------------------------------------------------
 // Public
+// ---------------------------------------------------------------------------
 
-nlohmann::json TraversalEngine::run(const std::string& cb_name,
+nlohmann::json TraversalEngine::run(const std::string& control_block_name,
                                     const cbxp_options_t& options,
                                     const void* p_address,
                                     size_t buffer_length) {
-  const ControlBlock& cb = ctx_.control_blocks.at(cb_name);
+  const ControlBlock& cb = ctx_.control_blocks.at(control_block_name);
   // Validate include/filter options against the root block before reading
-  // storage; the node is kept so traverse() reuses its include/filter lists.
-  const ControlBlockNode validator(ctx_, options, cb_name, /*address=*/nullptr,
-                                   buffer_length);
+  // storage.
+  const ControlBlockNode validator(ctx_, options, control_block_name,
+                                   /*address=*/nullptr, buffer_length);
   Logger::getInstance().debug(
-      "Traversing '" + cb_name + "' (" +
+      "Traversing '" + control_block_name + "' (" +
       (p_address == nullptr ? "extract" : "format") +
       "): " + std::to_string(options.include_patterns.size()) +
       " include pattern(s), " + std::to_string(options.filters.size()) +
@@ -60,33 +61,35 @@ nlohmann::json TraversalEngine::run(const std::string& cb_name,
     if (unique_roots.size() != roots.size()) {
       Logger::getInstance().debug(
           "Dropped " + std::to_string(roots.size() - unique_roots.size()) +
-          " duplicate root address(es) for '" + cb_name + "'");
+          " duplicate root address(es) for '" + control_block_name + "'");
     }
     roots = std::move(unique_roots);
   }
 
   if (roots.empty()) {
-    Logger::getInstance().debug("No pointers found for '" + cb_name +
+    Logger::getInstance().debug("No pointers found for '" + control_block_name +
                                 "' control block.");
     return {};
   }
   Logger::getInstance().debug("Found " + std::to_string(roots.size()) +
-                              " root address(es) for '" + cb_name + "'");
+                              " root address(es) for '" + control_block_name +
+                              "'");
 
   // Seed the queue with the roots; is_root=true makes traverse() apply the
   // full reachability check (incl. the no-filter guard) to them only.
   for (const void* p_root_addr : roots) {
-    auto visit_key = std::make_pair(p_root_addr, cb_name);
+    auto visit_key = std::make_pair(p_root_addr, control_block_name);
     // try_emplace is a no-op when the key already exists, so this
     // atomically checks-and-inserts the in-progress sentinel.
     if (ctx_.visited.try_emplace(visit_key, false).second) {
-      ctx_.queue.push({p_root_addr, cb_name, options, /*is_root=*/true,
-                       std::make_shared<ControlBlockNode>(
-                           validator.withAddress(p_root_addr))});
+      ctx_.queue.push(
+          {p_root_addr, control_block_name, options, /*is_root=*/true,
+           std::make_shared<ControlBlockNode>(ctx_, options, control_block_name,
+                                              p_root_addr, buffer_length)});
     } else {
-      Logger::getInstance().debug("Root '" + cb_name + "' at address " +
-                                  addressToString(p_root_addr) +
-                                  " already queued, skipping");
+      Logger::getInstance().debug(
+          "Root '" + control_block_name + "' at address " +
+          addressToString(p_root_addr) + " already queued, skipping");
     }
   }
 
@@ -96,10 +99,11 @@ nlohmann::json TraversalEngine::run(const std::string& cb_name,
   // Resolve placeholder hex strings to real child JSON.  A root is omitted
   // when it (or a filtered descendant) was rejected.
   auto resolve_root = [&](const void* p_root_addr, nlohmann::json& resolved) {
-    const VisitKey visit_key(p_root_addr, cb_name);
-    const nlohmann::json& v = ctx_.visited.at(visit_key);
-    const std::string root_desc =
-        "Root '" + cb_name + "' at address " + addressToString(p_root_addr);
+    const VisitKey visit_key(p_root_addr, control_block_name);
+    const nlohmann::json& v     = ctx_.visited.at(visit_key);
+    const std::string root_desc = "Root '" + control_block_name +
+                                  "' at address " +
+                                  addressToString(p_root_addr);
     if (v.is_null() || v.is_boolean()) {
       Logger::getInstance().debug(
           root_desc + " omitted: unreachable or rejected by filters");
@@ -139,20 +143,21 @@ nlohmann::json TraversalEngine::run(const std::string& cb_name,
 
 // ---------------------------------------------------------------------------
 // Private
+// ---------------------------------------------------------------------------
 
 void TraversalEngine::checkReachability(const ControlBlock& cb,
                                         bool has_filters) {
-  const storage_attributes_t& attr = cb.getStorageAttributes();
-  if (attr.key != 8 && attr.is_protected && cb.getName() != "psa") {
+  const storage_attributes_t& attr = control_block.getStorageAttributes();
+  if (attr.key != 8 && attr.is_protected && control_block.getName() != "psa") {
     Logger::getInstance().debug(
-        "The '" + cb.getName() + "' control block is key '" +
+        "The '" + control_block.getName() + "' control block is key '" +
         std::to_string(attr.key) +
         "' and fetch protected, so cbxp cannot access it.");
     throw CbxpBlockUnreachableError();
   }
   if (!attr.is_common && !has_filters) {
     Logger::getInstance().debug(
-        "The '" + cb.getName() +
+        "The '" + control_block.getName() +
         "' control block is not in common storage and there are no filters "
         "enabled, so cbxp cannot guarantee accuracy.");
     throw CbxpBlockUnreachableError();
@@ -160,9 +165,10 @@ void TraversalEngine::checkReachability(const ControlBlock& cb,
 }
 
 std::vector<const void*> TraversalEngine::findRootAddresses(
-    const ControlBlock& cb) const {
+    const ControlBlock& control_block) const {
   std::vector<const void*> result;
-  const std::vector<std::string>& pointed_to_by = cb.getPointedToBy();
+  const std::vector<std::string>& pointed_to_by =
+      control_block.getPointedToBy();
 
   if (pointed_to_by.empty()) {
     return {cb.getFixedAddress()};
@@ -173,14 +179,15 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
     const std::vector<const void*> parent_addrs =
         TraversalEngine::findRootAddresses(parent_cb);
 
-    // Find the field in parent that points to cb.
+    // Find the field in parent that points to control_block.
     std::string pointer_field_name;
     ptrdiff_t pointer_offset = 0;
     size_t pointer_length    = 4;
     std::string count_field;
 
     for (const auto& [fname, fdata] : parent_cb.getMap()) {
-      if (!fdata.points_to.empty() && fdata.points_to == cb.getName()) {
+      if (!fdata.points_to.empty() &&
+          fdata.points_to == control_block.getName()) {
         pointer_field_name = fname;
         pointer_offset     = fdata.offset;
         pointer_length     = fdata.length;
@@ -237,7 +244,7 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
                           << 24;
           if (raw_val & mask) {
             Logger::getInstance().debug(
-                "Skipping '" + cb.getName() + "' entry at index " +
+                "Skipping '" + control_block.getName() + "' entry at index " +
                 std::to_string(i) + " — ignoreMask bit set (raw=0x" +
                 [&]() {
                   std::ostringstream oss;
@@ -249,7 +256,7 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
           }
         }
 
-        Logger::getInstance().debug("Resolved '" + cb.getName() +
+        Logger::getInstance().debug("Resolved '" + control_block.getName() +
                                     "' pointer to address " + [&]() {
                                       std::ostringstream oss;
                                       oss << p_resolved;
@@ -271,23 +278,23 @@ void TraversalEngine::traverse() {
     ++processed;
     Logger::getInstance().debug(
         "Processing " + std::string(node.is_root ? "root" : "child") + " '" +
-        node.cb_name + "' at address " + addressToString(node.p_address) +
-        " (" + std::to_string(ctx_.queue.size()) + " still queued)");
+        node.control_block_name + "' at address " +
+        addressToString(node.p_address) + " (" +
+        std::to_string(ctx_.queue.size()) + " still queued)");
 
-    const ControlBlock& cb = ctx_.control_blocks.at(node.cb_name);
+    const ControlBlock& cb = ctx_.control_blocks.at(node.control_block_name);
 
     // Roots get the full reachability check (incl. refusing non-common storage
     // without filters); children only need the key/fetch-protection gate.
-    auto visit_key = std::make_pair(node.p_address, node.cb_name);
+    auto visit_key = std::make_pair(node.p_address, node.control_block_name);
 
     // Only CbxpBlockUnreachableError is handled per node (recorded as null, so
     // the placeholder stays raw hex); other CBXPErrors propagate out of run().
     try {
       if (isGuardPageAddress(node.p_address)) {
-        Logger::getInstance().debug(
-            "Skipping '" + node.cb_name +
-            "' — address falls in PSA fetch-protected range " +
-            kGuardPageRange);
+        Logger::getInstance().debug("Skipping '" + node.control_block_name +
+                                    "' — address falls in Guard page range " +
+                                    kGuardPageRange);
         throw CbxpBlockUnreachableError();
       }
       if (node.is_root) {
@@ -296,26 +303,30 @@ void TraversalEngine::traverse() {
         TraversalEngine::checkReachability(cb, /*has_filters=*/true);
       }
 
-      Logger::getInstance().debug(node.cb_name + " hex dump: address=" + [&]() {
-        std::ostringstream oss;
-        oss << node.p_address;
-        return oss.str();
-      }() + " length=" + std::to_string(cb.getMaxOffset()));
+      Logger::getInstance().debug(
+          node.control_block_name + " hex dump: address=" +
+          [&]() {
+            std::ostringstream oss;
+            oss << node.p_address;
+            return oss.str();
+          }() +
+          " length=" + std::to_string(control_block.getMaxOffset()));
       Logger::getInstance().hexDump(
           reinterpret_cast<const char*>(node.p_address),
-          static_cast<int>(cb.getName() == "psa" ? (cb.getMaxOffset() - 8) / 2
-                                                 : cb.getMaxOffset()),
-          cb.getName() == "psa");
+          static_cast<int>(control_block.getName() == "psa"
+                               ? (control_block.getMaxOffset() - 8) / 2
+                               : control_block.getMaxOffset()),
+          control_block.getName() == "psa");
 
       // Root nodes arrive with the node run() built while validating the
       // options; children are built here.
-      std::shared_ptr<ControlBlockNode> cb_node = node.prepared;
-      if (!cb_node) {
-        cb_node = std::make_shared<ControlBlockNode>(
-            ctx_, node.options, node.cb_name, node.p_address,
+      std::shared_ptr<ControlBlockNode> control_block_node = node.prepared;
+      if (!control_block_node) {
+        control_block_node = std::make_shared<ControlBlockNode>(
+            ctx_, node.options, node.control_block_name, node.p_address,
             0 /* buffer_length: 0 = live memory */);
       }
-      NodeParseResult result = cb_node->parse();
+      NodeParseResult result = control_block_node->parse();
 
       if (result.json.is_null()) {
         ctx_.visited[visit_key] = nullptr;
@@ -323,21 +334,21 @@ void TraversalEngine::traverse() {
         // Remember that this node was rejected by a filter so that its
         // parent can tell this apart from an inaccessible node.
         Logger::getInstance().debug(
-            "Rejected '" + node.cb_name + "' at address " +
+            "Rejected '" + node.control_block_name + "' at address " +
             addressToString(node.p_address) + ": did not pass its filters");
         ctx_.visited[visit_key] = nullptr;
         ctx_.filter_rejected.insert(visit_key);
       } else {
         ctx_.visited[visit_key]        = result.json;
-        ctx_.child_filtered[visit_key] = cb_node->childFilterMap();
+        ctx_.child_filtered[visit_key] = std::move(result.child_filtered);
         Logger::getInstance().debug(
-            "Parsed '" + node.cb_name + "' at address " +
+            "Parsed '" + node.control_block_name + "' at address " +
             addressToString(node.p_address) + ": " +
             std::to_string(result.json.size()) + " JSON key(s)");
       }
     } catch (const CbxpBlockUnreachableError& e) {
       Logger::getInstance().debug(
-          "Skipping '" + node.cb_name + "' at address " +
+          "Skipping '" + node.control_block_name + "' at address " +
           addressToString(node.p_address) + " — error code " +
           std::to_string(e.getErrorCode()));
       ctx_.visited[visit_key] = nullptr;
@@ -373,7 +384,7 @@ struct ChildField {
 bool findChildField(const ControlBlock& cb, const std::string& key,
                     const std::unordered_map<std::string, bool>& child_options,
                     ChildField& out) {
-  for (const auto& [fname, fdata] : cb.getMap()) {
+  for (const auto& [fname, fdata] : control_block.getMap()) {
     std::string lower_fname = fname;
     std::transform(lower_fname.begin(), lower_fname.end(), lower_fname.begin(),
                    [](unsigned char c) { return std::tolower(c); });
@@ -459,12 +470,12 @@ bool TraversalEngine::resolvePlaceholders(nlohmann::json& json,
 
   expanded.insert(node_key);
 
-  const std::string& cb_name = node_key.second;
-  const ControlBlock& cb     = ctx_.control_blocks.at(cb_name);
+  const std::string& control_block_name = node_key.second;
+  const ControlBlock& cb = ctx_.control_blocks.at(control_block_name);
   // Included child name -> whether that child carries filters.
-  const auto& child_options = ctx_.child_filtered.at(node_key);
-  const std::string node_desc =
-      "'" + cb_name + "' at address " + addressToString(node_key.first);
+  const auto& child_options   = ctx_.child_filtered.at(node_key);
+  const std::string node_desc = "'" + control_block_name + "' at address " +
+                                addressToString(node_key.first);
 
   for (auto& [key, value] : json.items()) {
     // Skip the "_ptr" preservation keys.

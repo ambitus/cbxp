@@ -1,5 +1,4 @@
-#ifndef __CONTROL_BLOCK_H_
-#define __CONTROL_BLOCK_H_
+#pragma once
 
 #include <nlohmann/json-schema.hpp>
 #include <nlohmann/json.hpp>
@@ -75,4 +74,3 @@ class ControlBlock {
 
 }  // namespace CBXP
 
-#endif

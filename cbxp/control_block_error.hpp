@@ -1,5 +1,4 @@
-#ifndef __CONTROL_BLOCK_ERROR_H_
-#define __CONTROL_BLOCK_ERROR_H_
+#pragma once
 
 namespace CBXP {
 enum Error {
@@ -71,4 +70,3 @@ class CbxpJsonValueError : public CBXPError {
 
 }  // namespace CBXP
 
-#endif

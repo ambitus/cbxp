@@ -2,8 +2,8 @@
 
 #include <nlohmann/json.hpp>
 
+#include "control_block_error.hpp"
 #include "control_block_explorer.hpp"
-#include "util/control_block_error.hpp"
 #include "util/logger.hpp"
 
 cbxp_result_t* cbxp_extract(const char* control_block_name,
@@ -28,20 +28,20 @@ cbxp_result_t* cbxp_extract(const char* control_block_name,
 
   CBXP::Logger::getInstance().setDebug(debug);
 
-  cbxp_result_t* p_cbxp_result = new cbxp_result_t();
-  CBXP::Logger::getInstance().debugAllocate(p_cbxp_result, 64,
+  cbxp_result_t* cbxp_result = new cbxp_result_t();
+  CBXP::Logger::getInstance().debugAllocate(cbxp_result, 64,
                                             sizeof(cbxp_result_t));
 
   try {
     CBXP::ControlBlockExplorer explorer =
-        CBXP::ControlBlockExplorer(p_cbxp_result);
+        CBXP::ControlBlockExplorer(cbxp_result);
     explorer.extractControlBlock(control_block_name_string,
                                  includes_string_string, filters_string_string);
   } catch (const CBXP::CBXPError& e) {
-    p_cbxp_result->return_code = e.getErrorCode();
+    cbxp_result->return_code = e.getErrorCode();
   }
 
-  return p_cbxp_result;
+  return cbxp_result;
 }
 
 cbxp_result_t* cbxp_format(const char* control_block_name,
@@ -57,30 +57,30 @@ cbxp_result_t* cbxp_format(const char* control_block_name,
 
   CBXP::Logger::getInstance().setDebug(debug);
 
-  cbxp_result_t* p_cbxp_result = new cbxp_result_t();
-  CBXP::Logger::getInstance().debugAllocate(p_cbxp_result, 64,
+  cbxp_result_t* cbxp_result = new cbxp_result_t();
+  CBXP::Logger::getInstance().debugAllocate(cbxp_result, 64,
                                             sizeof(cbxp_result_t));
 
   try {
     CBXP::ControlBlockExplorer explorer =
-        CBXP::ControlBlockExplorer(p_cbxp_result);
+        CBXP::ControlBlockExplorer(cbxp_result);
     explorer.formatControlBlock(control_block_name_string, data, data_length);
   } catch (const CBXP::CBXPError& e) {
-    p_cbxp_result->return_code = e.getErrorCode();
+    cbxp_result->return_code = e.getErrorCode();
   }
 
-  return p_cbxp_result;
+  return cbxp_result;
 }
 
-void cbxp_free(cbxp_result_t* p_cbxp_result, bool debug) {
+void cbxp_free(cbxp_result_t* cbxp_result, bool debug) {
   CBXP::Logger::getInstance().setDebug(debug);
 
-  if (p_cbxp_result != nullptr) {
-    if (p_cbxp_result->result_json != nullptr) {
-      CBXP::Logger::getInstance().debugFree(p_cbxp_result->result_json);
-      delete p_cbxp_result->result_json;
+  if (cbxp_result != nullptr) {
+    if (cbxp_result->result_json != nullptr) {
+      CBXP::Logger::getInstance().debugFree(cbxp_result->result_json);
+      delete cbxp_result->result_json;
     }
-    CBXP::Logger::getInstance().debugFree(p_cbxp_result);
-    delete p_cbxp_result;
+    CBXP::Logger::getInstance().debugFree(cbxp_result);
+    delete cbxp_result;
   }
 }

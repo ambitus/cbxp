@@ -5,33 +5,30 @@
 #include <cstdint>
 #include <sstream>
 
+#include "control_block_error.hpp"
 #include "util/address_util.hpp"
-#include "util/control_block_error.hpp"
 #include "util/logger.hpp"
 
 namespace CBXP {
 
 ControlBlockNode::ControlBlockNode(TraversalContext& ctx,
                                    const cbxp_options_t& options,
-                                   const std::string& cb_name,
+                                   const std::string& control_block_name,
                                    const void* p_address, size_t buffer_length)
     : ctx_(ctx),
-      cb_(ctx.control_blocks.at(cb_name)),
+      control_block_(ctx.control_blocks.at(control_block_name)),
       p_address_(p_address),
       buffer_length_(buffer_length) {
   // Resolve include patterns into child_options_ for this node.
-  child_options_ = IncludeResolver::resolve(options.include_patterns, cb_,
-                                            ctx_.control_blocks);
-  // Propagate skip_buffer_length_check into each child option set.
-  for (auto& [name, child_opt] : child_options_) {
-    child_opt.skip_buffer_length_check = ctx_.skip_buffer_length_check;
-  }
+  child_options_ = IncludeResolver::resolve(
+      options.include_patterns, control_block_, ctx_.control_blocks);
   // Parse filter strings; child filters are pushed into child_options_.
-  filter_set_.parse(options.filters, child_options_, cb_name);
+  filter_set_.parse(options.filters, child_options_, control_block_name);
 }
 
 // ---------------------------------------------------------------------------
 // Public
+// ---------------------------------------------------------------------------
 
 NodeParseResult ControlBlockNode::parse() {
   NodeParseResult result;
@@ -51,7 +48,7 @@ NodeParseResult ControlBlockNode::parse() {
   if (!filter_set_.match(result.json)) {
     result.filter_passed = false;
     Logger::getInstance().debug(
-        "Filters rejected '" + cb_.getName() + "' at address " +
+        "Filters rejected '" + control_block_.getName() + "' at address " +
         addressToString(p_address_) + ": discarding " +
         std::to_string(pending_children_.size()) + " pending child(ren)");
     pending_children_.clear();  // rejected: do not load children
@@ -60,28 +57,19 @@ NodeParseResult ControlBlockNode::parse() {
 
   ControlBlockNode::enqueuePendingChildren();
 
-  return result;
-}
-
-ControlBlockNode ControlBlockNode::withAddress(const void* p_address) const {
-  ControlBlockNode copy(*this);
-  copy.p_address_ = p_address;
-  return copy;
-}
-
-std::unordered_map<std::string, bool> ControlBlockNode::childFilterMap() const {
-  std::unordered_map<std::string, bool> out;
   for (const auto& [name, child_opt] : child_options_) {
-    out[name] = !child_opt.filters.empty();
+    result.child_filtered[name] = !child_opt.filters.empty();
   }
-  return out;
+
+  return result;
 }
 
 // ---------------------------------------------------------------------------
 // Private helpers
+// ---------------------------------------------------------------------------
 
 bool ControlBlockNode::eyecatcherMatches() const {
-  const eyecatcher_field_t& ec = cb_.getEyecatcherField();
+  const eyecatcher_field_t& ec = control_block_.getEyecatcherField();
   if (ec.expected.empty()) {
     return true;
   }
@@ -92,7 +80,7 @@ bool ControlBlockNode::eyecatcherMatches() const {
   expected.erase(expected.find_last_not_of(" \t\0", std::string::npos, 3) + 1);
   if (actual != expected) {
     Logger::getInstance().debug(
-        "Eyecatcher mismatch for '" + cb_.getName() + "' at " +
+        "Eyecatcher mismatch for '" + control_block_.getName() + "' at " +
         [&]() {
           std::ostringstream oss;
           oss << p_address_;
@@ -113,7 +101,7 @@ void ControlBlockNode::checkDataLength(ptrdiff_t offset) const {
   }
   Logger::getInstance().debug(
       "Checking if specified buffer (" + std::to_string(buffer_length_) +
-      " bytes) too small to contain the '" + cb_.getName() +
+      " bytes) too small to contain the '" + control_block_.getName() +
       "' control block (requires at least " + std::to_string(offset) +
       " bytes)...");
   if (static_cast<size_t>(offset) > buffer_length_) {
@@ -122,8 +110,9 @@ void ControlBlockNode::checkDataLength(ptrdiff_t offset) const {
 }
 
 ptrdiff_t ControlBlockNode::getReadableLength() const {
-  return cb_.getName() == "psa" ? (cb_.getMaxOffset() - 8) / 2
-                                : cb_.getMaxOffset();
+  return control_block_.getName() == "psa"
+             ? (control_block_.getMaxOffset() - 8) / 2
+             : control_block_.getMaxOffset();
 }
 
 nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
@@ -137,47 +126,57 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
   try {
     switch (field.type) {
       case STRING:
-        field_json = cb_.formatter_.getString(p_base + offset, field.length);
+        field_json =
+            control_block_.formatter_.getString(p_base + offset, field.length);
         break;
       case UNSIGNED_INT:
         if (field.length == 8) {
-          field_json = cb_.formatter_.uint<uint64_t>(p_base + offset);
+          field_json =
+              control_block_.formatter_.uint<uint64_t>(p_base + offset);
         } else if (field.length == 2) {
-          field_json = cb_.formatter_.uint<uint16_t>(p_base + offset);
+          field_json =
+              control_block_.formatter_.uint<uint16_t>(p_base + offset);
         } else if (field.length == 1) {
-          field_json = cb_.formatter_.uint<uint8_t>(p_base + offset);
+          field_json = control_block_.formatter_.uint<uint8_t>(p_base + offset);
         } else {
-          field_json = cb_.formatter_.uint<uint32_t>(p_base + offset);
+          field_json =
+              control_block_.formatter_.uint<uint32_t>(p_base + offset);
         }
         break;
       case SIGNED_INT:
         if (field.length == 8) {
-          field_json = cb_.formatter_.sint<int64_t>(p_base + offset);
+          field_json = control_block_.formatter_.sint<int64_t>(p_base + offset);
         } else if (field.length == 2) {
-          field_json = cb_.formatter_.sint<int16_t>(p_base + offset);
+          field_json = control_block_.formatter_.sint<int16_t>(p_base + offset);
         } else if (field.length == 1) {
-          field_json = cb_.formatter_.sint<int8_t>(p_base + offset);
+          field_json = control_block_.formatter_.sint<int8_t>(p_base + offset);
         } else {
-          field_json = cb_.formatter_.sint<int32_t>(p_base + offset);
+          field_json = control_block_.formatter_.sint<int32_t>(p_base + offset);
         }
         break;
       case BITSTRING:
         if (field.length == 8) {
-          field_json = cb_.formatter_.getBitmap<uint64_t>(p_base + offset);
+          field_json =
+              control_block_.formatter_.getBitmap<uint64_t>(p_base + offset);
         } else if (field.length == 2) {
-          field_json = cb_.formatter_.getBitmap<uint16_t>(p_base + offset);
+          field_json =
+              control_block_.formatter_.getBitmap<uint16_t>(p_base + offset);
         } else if (field.length == 1) {
-          field_json = cb_.formatter_.getBitmap<uint8_t>(p_base + offset);
+          field_json =
+              control_block_.formatter_.getBitmap<uint8_t>(p_base + offset);
         } else {
-          field_json = cb_.formatter_.getBitmap<uint32_t>(p_base + offset);
+          field_json =
+              control_block_.formatter_.getBitmap<uint32_t>(p_base + offset);
         }
         break;
       case HEX:
       case ADDRESS:
         if (field.length == 8) {
-          field_json = cb_.formatter_.getHex<uint64_t>(p_base + offset);
+          field_json =
+              control_block_.formatter_.getHex<uint64_t>(p_base + offset);
         } else {
-          field_json = cb_.formatter_.getHex<uint32_t>(p_base + offset);
+          field_json =
+              control_block_.formatter_.getHex<uint32_t>(p_base + offset);
         }
         break;
     }
@@ -185,8 +184,8 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
     Logger::getInstance().debug(
         "Unexpected error reading field '" + field.name + "' (type " +
         std::to_string(static_cast<int>(field.type)) + ", offset " +
-        std::to_string(offset) + ") of '" + cb_.getName() + "' at address " +
-        addressToString(p_address_) + ": " + e.what());
+        std::to_string(offset) + ") of '" + control_block_.getName() +
+        "' at address " + addressToString(p_address_) + ": " + e.what());
     throw CbxpBlockUnreachableError();
   }
 
@@ -198,11 +197,11 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
     const char* p_raw             = p_base + offset;
     const void* p_child_addr;
     if (field.length == 8) {
-      p_child_addr =
-          reinterpret_cast<const void*>(cb_.formatter_.uint<uint64_t>(p_raw));
+      p_child_addr = reinterpret_cast<const void*>(
+          control_block_.formatter_.uint<uint64_t>(p_raw));
     } else {
       p_child_addr = reinterpret_cast<const void* __ptr32>(
-          cb_.formatter_.uint<uint32_t>(p_raw));
+          control_block_.formatter_.uint<uint32_t>(p_raw));
     }
 
     // Reject guard page addresses before enqueueing: the 0C4 fires
@@ -229,7 +228,7 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
 void ControlBlockNode::enqueuePendingChildren() {
   size_t enqueued = 0;
   for (const PendingNode& child : pending_children_) {
-    auto visit_key       = std::make_pair(child.p_address, child.cb_name);
+    auto visit_key = std::make_pair(child.p_address, child.control_block_name);
     std::string addr_str = addressToString(child.p_address);
     if (ctx_.visited.find(visit_key) == ctx_.visited.end()) {
       // Mark in-progress before enqueueing so two parents at the same BFS level
@@ -237,33 +236,35 @@ void ControlBlockNode::enqueuePendingChildren() {
       ctx_.visited[visit_key] = false;  // sentinel
       ctx_.queue.push(child);
       ++enqueued;
-      Logger::getInstance().debug("Enqueued '" + child.cb_name +
+      Logger::getInstance().debug("Enqueued '" + child.control_block_name +
                                   "' at address " + addr_str);
     } else {
-      Logger::getInstance().debug("Already visited/enqueued '" + child.cb_name +
-                                  "' at address " + addr_str);
+      Logger::getInstance().debug("Already visited/enqueued '" +
+                                  child.control_block_name + "' at address " +
+                                  addr_str);
     }
   }
   if (!pending_children_.empty()) {
     Logger::getInstance().debug(
-        "'" + cb_.getName() + "' at address " + addressToString(p_address_) +
-        ": enqueued " + std::to_string(enqueued) + " of " +
-        std::to_string(pending_children_.size()) + " pending child(ren)");
+        "'" + control_block_.getName() + "' at address " +
+        addressToString(p_address_) + ": enqueued " + std::to_string(enqueued) +
+        " of " + std::to_string(pending_children_.size()) +
+        " pending child(ren)");
   }
   pending_children_.clear();
 }
 
 nlohmann::json ControlBlockNode::parseFields() {
-  nlohmann::json cb_json = {};
+  nlohmann::json control_block_json = {};
   std::unordered_map<std::string, control_block_field_t> repeated_fields;
   size_t psa_fields_skipped = 0;
 
-  for (const auto& [field_name, field_data] : cb_.getMap()) {
+  for (const auto& [field_name, field_data] : control_block_.getMap()) {
     if (field_data.end_of_control_block) {
       continue;
     }
-    if (cb_.getName() == "psa" &&
-        field_data.offset >= (cb_.getMaxOffset() - 8) / 2 &&
+    if (control_block_.getName() == "psa" &&
+        field_data.offset >= ControlBlockNode::getReadableLength() &&
         field_data.offset >= 0) {
       ++psa_fields_skipped;
       continue;
@@ -278,18 +279,7 @@ nlohmann::json ControlBlockNode::parseFields() {
       continue;
     }
 
-    nlohmann::json resolved = ControlBlockNode::fieldToJson(field_data);
-
-    if (resolved.is_object() || resolved.is_array()) {
-      // Already an expanded child — preserve raw pointer under "<name>_ptr".
-      const char* p_raw =
-          static_cast<const char*>(p_address_) + field_data.offset;
-      cb_json[lower_name + "_ptr"] =
-          (field_data.length == 8)
-              ? nlohmann::json(cb_.formatter_.getHex<uint64_t>(p_raw))
-              : nlohmann::json(cb_.formatter_.getHex<uint32_t>(p_raw));
-    }
-    cb_json[lower_name] = resolved;
+    control_block_json[lower_name] = ControlBlockNode::fieldToJson(field_data);
   }
 
   if (psa_fields_skipped > 0) {
@@ -307,7 +297,7 @@ nlohmann::json ControlBlockNode::parseFields() {
     std::transform(count_key.begin(), count_key.end(), count_key.begin(),
                    [](unsigned char c) { return std::tolower(c); });
 
-    size_t count = cb_json[count_key].get<size_t>();
+    size_t count = control_block_json[count_key].get<size_t>();
     Logger::getInstance().debug("Repeated field '" + field_name +
                                 "': count_key='" + count_key +
                                 "', count=" + std::to_string(count));
@@ -327,7 +317,7 @@ nlohmann::json ControlBlockNode::parseFields() {
         const uint32_t mask = static_cast<uint32_t>(std::stoull(
                                   field_data.ignore_mask, nullptr, 16))
                               << 24;
-        if (cb_.formatter_.uint<uint32_t>(p_entry_raw) & mask) {
+        if (control_block_.formatter_.uint<uint32_t>(p_entry_raw) & mask) {
           ++entries_ignored;
           continue;
         }
@@ -348,10 +338,10 @@ nlohmann::json ControlBlockNode::parseFields() {
           " entries (ignoreMask)");
     }
 
-    cb_json.merge_patch(field_json);
+    control_block_json.merge_patch(field_json);
   }
 
-  return cb_json;
+  return control_block_json;
 }
 
 }  // namespace CBXP

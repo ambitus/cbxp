@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include "util/control_block_error.hpp"
+#include "control_block_error.hpp"
 #include "util/logger.hpp"
 
 namespace CBXP {
@@ -12,9 +12,9 @@ namespace CBXP {
 void FilterSet::parse(
     const std::vector<std::string>& filters,
     std::unordered_map<std::string, cbxp_options_t>& child_options,
-    const std::string& cb_name) {
+    const std::string& control_block_name) {
   Logger::getInstance().debug(
-      "Creating filter lists for the '" + cb_name +
+      "Creating filter lists for the '" + control_block_name +
       "' control block and included child control blocks...");
 
   for (const std::string& filter : filters) {
@@ -36,17 +36,17 @@ void FilterSet::parse(
                                   "' control block...");
       it->second.filters.push_back(child_filter);
     } else {
-      FilterSet::addFilter(filter, cb_name);
+      FilterSet::addFilter(filter, control_block_name);
     }
   }
 
   Logger::getInstance().debug(
-      "Filter lists for the '" + cb_name +
+      "Filter lists for the '" + control_block_name +
       "' control block and included child control blocks have been created");
 }
 
 void FilterSet::addFilter(const std::string& filter,
-                          const std::string& cb_name) {
+                          const std::string& control_block_name) {
   static const std::vector<std::string> operations = {"<=", ">=", "<", ">",
                                                       "="};
   for (const std::string& operation : operations) {
@@ -58,7 +58,7 @@ void FilterSet::addFilter(const std::string& filter,
       Logger::getInstance().debug("Adding '" + filter_key + operation +
                                   filter_value +
                                   "' to the current filters list for the '" +
-                                  cb_name + "' control block...");
+                                  control_block_name + "' control block...");
       filters_[filter_key].push_back(filter_data);
       return;
     }
@@ -116,31 +116,25 @@ bool FilterSet::compare(const nlohmann::json& json_value,
   return false;
 }
 
-bool FilterSet::match(const nlohmann::json& cb_json) const {
+bool FilterSet::match(const nlohmann::json& control_block_json) const {
   if (filters_.empty()) {
     return true;
   }
   for (const auto& [filter_key, filter_list] : filters_) {
-    if (!cb_json.contains(filter_key)) {
+    if (!control_block_json.contains(filter_key)) {
       Logger::getInstance().debug(
           "The filter key '" + filter_key +
           "' does not correspond to any control block field");
       throw FilterError();
     }
-    const nlohmann::json& json_field = cb_json[filter_key];
-    const std::string ptr_key        = filter_key + "_ptr";
-    const nlohmann::json& effective_value =
-        (json_field.is_object() || json_field.is_array()) &&
-                cb_json.contains(ptr_key)
-            ? cb_json[ptr_key]
-            : json_field;
+    const nlohmann::json& json_field = control_block_json[filter_key];
     // cppcheck-suppress useStlAlgorithm; loop body contains throw and
     // debug logging; std::all_of cannot express this pattern.
     for (const cbxp_filter_t& filter_data : filter_list) {
       Logger::getInstance().debug("Applying filter '" + filter_key +
                                   filter_data.operation + filter_data.value +
                                   "'...");
-      if (!FilterSet::compare(effective_value, filter_data.value,
+      if (!FilterSet::compare(json_field, filter_data.value,
                               filter_data.operation)) {
         Logger::getInstance().debug("The filter '" + filter_key +
                                     filter_data.operation + filter_data.value +

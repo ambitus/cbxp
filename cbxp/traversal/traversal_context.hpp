@@ -1,5 +1,4 @@
-#ifndef __CBXP_TRAVERSAL_CONTEXT_H_
-#define __CBXP_TRAVERSAL_CONTEXT_H_
+#pragma once
 
 #include <memory>
 #include <nlohmann/json.hpp>
@@ -14,7 +13,7 @@
 
 namespace CBXP {
 
-// Hash for (address, cb_name) pairs used as VisitedMap keys.
+// Hash for (address, control_block_name) pairs used as VisitedMap keys.
 struct PairHash {
   std::size_t operator()(
       const std::pair<const void*, std::string>& p) const noexcept {
@@ -24,8 +23,8 @@ struct PairHash {
   }
 };
 
-// Result JSON per enqueued (address, cb_type): false = in progress (cycle
-// break), null = empty/unreachable, object/array = fully resolved.
+// Result JSON per enqueued (address, control_block_type): false = in progress
+// (cycle break), null = empty/unreachable, object/array = fully resolved.
 using VisitKey    = std::pair<const void*, std::string>;
 using VisitedMap  = std::unordered_map<VisitKey, nlohmann::json, PairHash>;
 using VisitKeySet = std::unordered_set<VisitKey, PairHash>;
@@ -36,7 +35,7 @@ class ControlBlockNode;
 // One item in the BFS work-queue.
 struct PendingNode {
   const void* p_address;
-  std::string cb_name;
+  std::string control_block_name;
   cbxp_options_t options;
   // True for nodes seeded by run() (roots), false for children; traverse uses
   // it to decide whether missing filters make the reachability check refuse.
@@ -64,4 +63,3 @@ struct TraversalContext {
 
 }  // namespace CBXP
 
-#endif

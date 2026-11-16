@@ -1,5 +1,4 @@
-#ifndef __CBXP_TRAVERSAL_ENGINE_H_
-#define __CBXP_TRAVERSAL_ENGINE_H_
+#pragma once
 
 #include <nlohmann/json.hpp>
 #include <string>
@@ -20,17 +19,19 @@ class TraversalEngine {
       const std::unordered_map<std::string, ControlBlock>& control_blocks,
       bool skip_buffer_length_check);
 
-  // Runs the traversal rooted at `cb_name`: returns the root object, an array
-  // for multiple roots, or null if rejected / no root found.
-  nlohmann::json run(const std::string& cb_name, const cbxp_options_t& options,
-                     const void* p_address, size_t buffer_length);
+  // Runs the traversal rooted at `control_block_name`: returns the root object,
+  // an array for multiple roots, or null if rejected / no root found.
+  nlohmann::json run(const std::string& control_block_name,
+                     const cbxp_options_t& options, const void* p_address,
+                     size_t buffer_length);
 
  private:
   TraversalContext ctx_;
 
   // Resolves the root address(es) of `cb` by walking its pointedToBy chain
   // from a fixed anchor address.
-  std::vector<const void*> findRootAddresses(const ControlBlock& cb) const;
+  std::vector<const void*> findRootAddresses(
+      const ControlBlock& control_block) const;
 
   // BFS loop: pops each node, parses it and stores its JSON in ctx_.visited;
   // parsing enqueues children, so the queue grows until the graph is visited.
@@ -56,4 +57,3 @@ class TraversalEngine {
 
 }  // namespace CBXP
 
-#endif

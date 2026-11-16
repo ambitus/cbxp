@@ -75,12 +75,9 @@ file(MAKE_DIRECTORY "${CBXP_SCHEMAS_GENERATED_DIR}")
 file(READ "${CMAKE_CURRENT_SOURCE_DIR}/cbxp/schemas/control_block.json" CBXP_SCHEMA_JSON)
 
 file(WRITE "${CBXP_SCHEMAS_GENERATED_DIR}/control_block.hpp"
-"#ifndef CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n\
-#define CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n\
+"#pragma once\n\
 \n\
-#define CBXP_SCHEMA_JSON R\"JSON(${CBXP_SCHEMA_JSON})JSON\"\n\
-\n\
-#endif // CBXP_SCHEMA_CONTROL_BLOCK_V1_JSON_HPP\n"
+#define CBXP_SCHEMA_JSON R\"JSON(${CBXP_SCHEMA_JSON})JSON\"\n"
 )
 
 # ============================================================================
@@ -99,17 +96,13 @@ foreach(MAPPING_JSON_FILE ${CBXP_MAPPING_JSON_FILES})
 
     file(READ "${MAPPING_JSON_FILE}" MAPPING_JSON)
 
-    set(MAPPING_GUARD "${MAPPING_NAME_UPPER}_JSON_HPP")
     set(MAPPING_MACRO "${MAPPING_NAME_UPPER}_JSON")
     set(MAPPING_HEADER_PATH "${CBXP_MAPPINGS_GENERATED_DIR}/${MAPPING_NAME}.hpp")
 
     file(WRITE "${MAPPING_HEADER_PATH}"
-"#ifndef ${MAPPING_GUARD}\n\
-#define ${MAPPING_GUARD}\n\
+"#pragma once\n\
 \n\
-#define ${MAPPING_MACRO} R\"JSON(${MAPPING_JSON})JSON\"\n\
-\n\
-#endif // ${MAPPING_GUARD}\n"
+#define ${MAPPING_MACRO} R\"JSON(${MAPPING_JSON})JSON\"\n"
     )
 
     list(APPEND CBXP_MAPPING_FORCED_INCLUDES "--include=${MAPPING_HEADER_PATH}")

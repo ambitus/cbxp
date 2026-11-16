@@ -1,5 +1,4 @@
-#ifndef __CBXP_INCLUDE_RESOLVER_H_
-#define __CBXP_INCLUDE_RESOLVER_H_
+#pragma once
 
 #include <string>
 #include <unordered_map>
@@ -28,8 +27,8 @@ class IncludeResolver {
       const std::unordered_map<std::string, ControlBlock>& all_cbs);
 
  private:
-  static std::unordered_map<std::string,
-                            std::unordered_map<std::string, cbxp_options_t>>
+  static inline std::unordered_map<
+      std::string, std::unordered_map<std::string, cbxp_options_t>>
       double_asterisk_cache_;
 
   static void processAsterisk(
@@ -45,4 +44,3 @@ class IncludeResolver {
 
 }  // namespace CBXP
 
-#endif

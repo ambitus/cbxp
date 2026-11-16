@@ -1,5 +1,4 @@
-#ifndef __CBXP_FILTER_SET_H_
-#define __CBXP_FILTER_SET_H_
+#pragma once
 
 #include <nlohmann/json.hpp>
 #include <string>
@@ -22,16 +21,17 @@ class FilterSet {
   // `child_options` keyed by child name.
   void parse(const std::vector<std::string>& filters,
              std::unordered_map<std::string, cbxp_options_t>& child_options,
-             const std::string& cb_name);
+             const std::string& control_block_name);
 
-  // Returns true if `cb_json` satisfies every filter in this set.
-  bool match(const nlohmann::json& cb_json) const;
+  // Returns true if `control_block_json` satisfies every filter in this set.
+  bool match(const nlohmann::json& control_block_json) const;
 
  private:
   // field_name → list of (operation, value) pairs
   std::unordered_map<std::string, std::vector<cbxp_filter_t>> filters_;
 
-  void addFilter(const std::string& filter, const std::string& cb_name);
+  void addFilter(const std::string& filter,
+                 const std::string& control_block_name);
 
   static bool compare(const nlohmann::json& json_value,
                       const std::string& filter_value,
@@ -40,4 +40,3 @@ class FilterSet {
 
 }  // namespace CBXP
 
-#endif

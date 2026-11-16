@@ -1,5 +1,4 @@
-#ifndef __CBXP_CONTROL_BLOCK_NODE_H_
-#define __CBXP_CONTROL_BLOCK_NODE_H_
+#pragma once
 
 #include <nlohmann/json.hpp>
 #include <string>
@@ -20,6 +19,9 @@ struct NodeParseResult {
   // True when this node's own filter matched (or there were no filters).
   // False when the filter rejected the node.
   bool filter_passed;
+  // Included child control block name -> true if that child has filters.
+  // Only populated when the node's own filters passed.
+  std::unordered_map<std::string, bool> child_filtered;
 };
 
 // Parses one control block at a known address; included pointer targets are
@@ -27,21 +29,14 @@ struct NodeParseResult {
 class ControlBlockNode {
  public:
   ControlBlockNode(TraversalContext& ctx, const cbxp_options_t& options,
-                   const std::string& cb_name, const void* p_address,
+                   const std::string& control_block_name, const void* p_address,
                    size_t buffer_length = 0);
-
-  // Returns a copy of this node bound to `address`.  The include and filter
-  // lists are copied, not rebuilt, so nothing is re-parsed or re-logged.
-  ControlBlockNode withAddress(const void* p_address) const;
 
   NodeParseResult parse();
 
-  // Included child control block name -> true if that child has filters.
-  std::unordered_map<std::string, bool> childFilterMap() const;
-
  private:
   TraversalContext& ctx_;
-  const ControlBlock& cb_;
+  const ControlBlock& control_block_;
   const void* p_address_;
   size_t buffer_length_;
   std::unordered_map<std::string, cbxp_options_t> child_options_;
@@ -68,4 +63,3 @@ class ControlBlockNode {
 
 }  // namespace CBXP
 
-#endif

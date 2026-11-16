@@ -1,5 +1,4 @@
-#ifndef __CBXP_ADDRESS_UTIL_H_
-#define __CBXP_ADDRESS_UTIL_H_
+#pragma once
 
 #include <sstream>
 #include <string>
@@ -26,4 +25,3 @@ inline bool isGuardPageAddress(const void* p_addr) {
 
 }  // namespace CBXP
 
-#endif
