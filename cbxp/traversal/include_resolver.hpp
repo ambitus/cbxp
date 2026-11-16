@@ -32,13 +32,13 @@ class IncludeResolver {
       double_asterisk_cache_;
 
   static void processAsterisk(
-      std::unordered_map<std::string, cbxp_options_t>& out,
+      std::unordered_map<std::string, cbxp_options_t>& options_map,
       const ControlBlock& cb,
       const std::unordered_map<std::string, ControlBlock>& all_cbs);
 
   static void processExplicit(
-      std::unordered_map<std::string, cbxp_options_t>& out, std::string include,
-      const ControlBlock& cb,
+      std::unordered_map<std::string, cbxp_options_t>& options_map,
+      std::string include, const ControlBlock& cb,
       const std::unordered_map<std::string, ControlBlock>& all_cbs);
 };
 

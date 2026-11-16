@@ -69,7 +69,7 @@ std::unordered_map<std::string, cbxp_options_t> IncludeResolver::resolve(
 }
 
 void IncludeResolver::processAsterisk(
-    std::unordered_map<std::string, cbxp_options_t>& out,
+    std::unordered_map<std::string, cbxp_options_t>& options_map,
     const ControlBlock& cb,
     const std::unordered_map<std::string, ControlBlock>& all_cbs) {
   for (const std::string& includable : control_block.getIncludables()) {
@@ -78,20 +78,20 @@ void IncludeResolver::processAsterisk(
                                   "' — not a loaded control block");
       continue;
     }
-    if (out.find(includable) != out.end()) {
+    if (options_map.find(includable) != options_map.end()) {
       Logger::getInstance().debug("Include list already exists for the '" +
                                   includable + "' control block");
       continue;
     }
     Logger::getInstance().debug("Initializing include list for the '" +
                                 includable + "' control block...");
-    out[includable].include_patterns = {};
+    options_map[includable].include_patterns = {};
   }
 }
 
 void IncludeResolver::processExplicit(
-    std::unordered_map<std::string, cbxp_options_t>& out, std::string include,
-    const ControlBlock& cb,
+    std::unordered_map<std::string, cbxp_options_t>& options_map,
+    std::string include, const ControlBlock& cb,
     const std::unordered_map<std::string, ControlBlock>& all_cbs) {
   const std::string del        = ".";
   std::string include_includes = "";
@@ -114,30 +114,31 @@ void IncludeResolver::processExplicit(
                                 "' is not a loaded control block");
     throw IncludeError();
   }
-  if (out.find(include) == out.end()) {
+  if (options_map.find(include) == options_map.end()) {
     if (include_includes.empty()) {
       Logger::getInstance().debug("Initializing include list for the '" +
                                   include + "' control block...");
-      out[include].include_patterns = {};
+      options_map[include].include_patterns = {};
     } else {
       Logger::getInstance().debug("Adding '" + include_includes +
                                   "' to the include list for the '" + include +
                                   "' control block...");
-      out[include].include_patterns = {include_includes};
+      options_map[include].include_patterns = {include_includes};
     }
   } else {
     if (include_includes.empty()) {
       return;
     }
-    if (std::find(out[include].include_patterns.begin(),
-                  out[include].include_patterns.end(),
-                  include_includes) != out[include].include_patterns.end()) {
+    if (std::find(options_map[include].include_patterns.begin(),
+                  options_map[include].include_patterns.end(),
+                  include_includes) !=
+        options_map[include].include_patterns.end()) {
       return;
     }
     Logger::getInstance().debug("Adding '" + include_includes +
                                 "' to the include list for the '" + include +
                                 "' control block...");
-    out[include].include_patterns.push_back(include_includes);
+    options_map[include].include_patterns.push_back(include_includes);
   }
 }
 
