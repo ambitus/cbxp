@@ -1,13 +1,17 @@
-#ifndef __CONTROL_BLOCK_ERROR_H_
-#define __CONTROL_BLOCK_ERROR_H_
+#pragma once
 
 namespace CBXP {
 enum Error {
-  BadControlBlock = 1,
-  BadInclude      = 2,
-  BadFilter       = 3,
-  DataTooSmall    = 4,
-  NullDataPtr     = 5
+  BadControlBlock  = 1,
+  BadInclude       = 2,
+  BadFilter        = 3,
+  DataTooSmall     = 4,
+  NullDataPtr      = 5,
+  BadCbxpPath      = 6,
+  BlockUnreachable = 7,
+  JsonFailParse    = 8,
+  JsonFailSchema   = 9,
+  JsonBadValue     = 10,
 };
 
 class CBXPError : public std::exception {
@@ -39,6 +43,30 @@ class DataLengthError : public CBXPError {
   DataLengthError() : CBXPError(Error::DataTooSmall) {}
 };
 
+class CbxpPathError : public CBXPError {
+ public:
+  CbxpPathError() : CBXPError(Error::BadCbxpPath) {}
+};
+
+class CbxpBlockUnreachableError : public CBXPError {
+ public:
+  CbxpBlockUnreachableError() : CBXPError(Error::BlockUnreachable) {}
+};
+
+class CbxpJsonParseError : public CBXPError {
+ public:
+  CbxpJsonParseError() : CBXPError(Error::JsonFailParse) {}
+};
+
+class CbxpSchemaValidationError : public CBXPError {
+ public:
+  CbxpSchemaValidationError() : CBXPError(Error::JsonFailSchema) {}
+};
+
+class CbxpJsonValueError : public CBXPError {
+ public:
+  CbxpJsonValueError() : CBXPError(Error::JsonBadValue) {}
+};
+
 }  // namespace CBXP
 
-#endif

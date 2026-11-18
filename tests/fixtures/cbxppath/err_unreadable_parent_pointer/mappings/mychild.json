@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "name": "mychild",
+  "commonName": "Test mychild",
+  "macroId": "mychild",
+  "description": "CBXPPATH test fixture",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [
+    "mycb"
+  ],
+  "storageAttributes": {
+    "subpools": [],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "mychild",
+      "fields": [
+        {
+          "name": "MYCHNUM",
+          "offset": 0,
+          "length": 4,
+          "type": "unsigned-integer"
+        }
+      ]
+    }
+  ]
+}

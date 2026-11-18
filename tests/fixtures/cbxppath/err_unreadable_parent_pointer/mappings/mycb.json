@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "name": "mycb",
+  "commonName": "Test mycb",
+  "macroId": "mycb",
+  "description": "CBXPPATH test fixture",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [],
+  "storageAttributes": {
+    "subpools": [],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "mycb",
+      "fields": [
+        {
+          "name": "MYCBPTR",
+          "offset": 2048,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "mychild"
+        }
+      ]
+    }
+  ]
+}

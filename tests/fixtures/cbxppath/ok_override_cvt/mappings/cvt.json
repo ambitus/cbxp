@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "name": "cvt",
+  "commonName": "Test cvt",
+  "macroId": "cvt",
+  "description": "CBXPPATH test fixture",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [],
+  "storageAttributes": {
+    "subpools": [],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "cvt",
+      "fields": [
+        {
+          "name": "CVTONLY",
+          "offset": 0,
+          "length": 4,
+          "type": "unsigned-integer"
+        },
+        {
+          "name": "CVTCVT",
+          "offset": 96,
+          "length": 4,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": " CVT"
+            }
+          ],
+          "eyecatcher": true
+        }
+      ]
+    }
+  ]
+}

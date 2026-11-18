@@ -1,5 +1,4 @@
-#ifndef __CBXP_H_
-#define __CBXP_H_
+#pragma once
 
 #ifdef __cplusplus
 #include <cstddef>
@@ -32,4 +31,3 @@ void cbxp_free(cbxp_result_t* cbxp_result, bool debug);
 }
 #endif
 
-#endif

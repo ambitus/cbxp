@@ -1,0 +1,443 @@
+{
+  "version": 1,
+  "name": "assb",
+  "commonName": "Address Space Secondary Block",
+  "macroId": "ihaassb",
+  "description": "Allows address space related information to be maintained above 16 megabytes.",
+  "type": "control-block",
+  "aliases": [],
+  "pointedToBy": [
+    "ascb"
+  ],
+  "storageAttributes": {
+    "subpools": [
+      245
+    ],
+    "key": 0,
+    "residency": 31
+  },
+  "sections": [
+    {
+      "name": "assb",
+      "description": "",
+      "fields": [
+        {
+          "name": "ASSBASSB",
+          "description": "ACRONYM IN EBCDIC - ASSB.",
+          "offset": 0,
+          "length": 4,
+          "type": "string",
+          "init": [
+            {
+              "type": "string",
+              "value": "ASSB"
+            }
+          ],
+          "eyecatcher": true
+        },
+        {
+          "name": "ASSBSTKN",
+          "description": "STOKEN. OWNERSHIP: SUPERVISOR CONTROL. SERIALIZATION: NONE. As with other ASCB/ASSB fields, serialization may be required when accessing something other than your address space's data.",
+          "offset": 48,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBISQN",
+          "description": "Initial address space sequence number / instance number. It can be used with ASCBASID for the SSAIR instruction",
+          "offset": 52,
+          "length": 4,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBMQMA",
+          "description": "CONTROL BLOCK ANCHOR FOR MQM MVS/ESA. SERIALIZATION: NONE. OWNERSHIP: MQSERIES",
+          "offset": 148,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBLDAX",
+          "description": "Address of LDAX for this space",
+          "offset": 176,
+          "length": 8,
+          "type": "address",
+          "programmingInterface": true,
+          "pointsTo": "ldax"
+        },
+        {
+          "name": "ASSBOASB",
+          "description": "OpenMVS ADDRESS SPACE BLOCK. SERIALIZATION: ENQ MAJOR=SYSZBPX MINOR=PROCESS_INIT. OWNERSHIP: OpenMVS.",
+          "offset": 228,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBDLCB",
+          "description": "Contains the address of the Dynamic LNKLST Control Block (DLCB) mapped by CSVDLCB. Ownership: CSV Serialization: ENQ",
+          "offset": 236,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBVAB",
+          "description": "ADDRESS OF VSM ADDRESS SPACE BLOCK (VAB), WHICH ANCHORS SOME OF THE VSM CONTROL BLOCKS THAT DESCRIBE COMMON STORAGE. SERIALIZATION: NONE. OWNERSHIP: VIRTUAL STORAGE MANAGER.",
+          "offset": 240,
+          "length": 4,
+          "type": "address",
+          "pointsTo": "vsm",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBTASB",
+          "description": "TCPIP ASSB Extension Ownership: TCPIP Serialization: Compare and Swap when first TCPIP client is initialized in this space.",
+          "offset": 264,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBJBNI",
+          "description": "Jobname for the Initiated Program that is associated with this Address Space. If the first byte is x'00', none is associated. OWNERSHIP: Initiator. SERIALIZATION: None.",
+          "offset": 336,
+          "length": 8,
+          "type": "string",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBJBNS",
+          "description": "Jobname for the START/MOUNT/ LOGON that is associated with this Address Space. If the first byte is x'00', none is associated. OWNERSHIP: Console Services. SERIALIZATION: None.",
+          "offset": 344,
+          "length": 8,
+          "type": "string",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBASST",
+          "description": "Additional SRB Service Time. CPU time is accumulated here for this address space's non-Enclave Preemptable SRBs and for Client Related SRBs for which this address space is the client. Format: TOD Clock Format Ownership: Supervisor Control Serialization: CS",
+          "offset": 352,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBPHTM",
+          "description": "Preemptable-class Time. The CPU time for all types of preemptable SRBs (PSRB, CSRB, ESRB) executing with this address space as their home space and enclave tasks is accumulated here.  This value is not used in SMF or SRM calculations. This value is not reset at step/job start.",
+          "offset": 360,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_TIME_zCBP_ON_CP",
+          "description": "",
+          "offset": 472,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_TIME_IFA_ON_CP",
+          "description": "",
+          "offset": 472,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_TIME_ON_zCBP",
+          "description": "zCBP time. Enclave time not included",
+          "offset": 480,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_TIME_ON_zAAP",
+          "description": "zAAP time. Enclave time not included",
+          "offset": 480,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_TIME_ON_IFA",
+          "description": "",
+          "offset": 480,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_TASK_TIME_ON_CP",
+          "description": "Time on CP in task mode for this space. Valid only when zCBPs, zAAPs or zIIPs are installed",
+          "offset": 488,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBPHTM_BASE",
+          "description": "Value in ASSBPHTM at the end of the previous jobstep. Serialization: none",
+          "offset": 504,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_zCBP_PHTM",
+          "description": "zCBP-only equivalent of ASSBPHTM This is \"normalized\" time",
+          "offset": 520,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_zAAP_PHTM",
+          "description": "zAAP-only equivalent of ASSBPHTM This is \"normalized\" time This value is not reset at step/job start.",
+          "offset": 520,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_IFA_PHTM",
+          "description": "",
+          "offset": 520,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_ENCT_PREZOS11",
+          "description": "Enclave time in an address space on a standard CP Not set as of z/OS 1.11",
+          "offset": 528,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_IFA_ENCT_PREZOS11",
+          "description": "Enclave IFA time in an address space. This is \"normalized\" time Not set as of z/OS 1.11",
+          "offset": 536,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_zCBP_Base_PHTM",
+          "description": "Base value, set by WLM",
+          "offset": 552,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_TIME_ON_zIIP",
+          "description": "zIIP time. Enclave time not included",
+          "offset": 592,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_TIME_zIIP_ON_CP",
+          "description": "zIIP time on CP. Enclave time not included. When zAAPzIIP=YES is in effect, zAAP-eligible work running on a CP is included.",
+          "offset": 600,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_zIIP_PHTM",
+          "description": "zIIP-only equivalent of ASSBPHTM This is \"normalized\" time This value is not reset at step/job start.",
+          "offset": 608,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_SRB_TIME_ON_CP",
+          "description": "Time on CP in SRB mode for this space. Valid only when zAAPs or SUPs are installed",
+          "offset": 616,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_zIIP_ENCT",
+          "description": "Enclave zIIP time in an address space. This is \"normalized\" time This value is not reset at step/job start.",
+          "offset": 624,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_zCBP_ON_CP_ENCT",
+          "description": "Enclave time for zCBP on CP in an address space This value is not reset at step/job start.",
+          "offset": 632,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_IFA_ON_CP_ENCT",
+          "description": "Enclave time for IFA on CP in an address space This value is not reset at step/job start.",
+          "offset": 632,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_ASST_TIME_ON_CP",
+          "description": "Additional SRB Service Time on a standard CP. CPU time is accumulated here for this address space's Preemptable SRBs and for Client Related SRBs for which this address space is the client. Valid only when zAAPs or zIIPs are installed Format: TOD Clock Format Ownership: Supervisor Control",
+          "offset": 680,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_zIIP_ON_CP_ENCT",
+          "description": "Enclave time for zIIP on CP in an address space. When zAAPzIIP=YES is in effect, zAAP-eligible work running on a CP is included. This value is not reset at step/job start.",
+          "offset": 712,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_SUP_ON_CP_ENCT",
+          "description": "See ASSB_zIIP_ON_CP_ENCT",
+          "offset": 712,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_SMFCMS_LockInst_Addr",
+          "description": "Address of the SMF CMS instrumentation data for this address space",
+          "offset": 744,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_ENQDEQ_CMS_LockInst_Addr",
+          "description": "Address of the ENQ/DEQ CMS instrumentation data for this address space",
+          "offset": 748,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_LATCH_CMS_LockInst_Addr",
+          "description": "Address of the Latch CMS instrumentation data for this address space",
+          "offset": 752,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_CMS_LockInst_Addr",
+          "description": "Address of the CMS instrumentation data for this address space",
+          "offset": 756,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_Local_LockInst_Addr",
+          "description": "Address of the local and CML lock instrumentation data for this address space",
+          "offset": 760,
+          "length": 4,
+          "type": "address",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_ENCT",
+          "description": "Enclave time in an address space on a standard CP This value is not reset at step/job start.",
+          "offset": 1280,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_zCBP_ENCT",
+          "description": "Enclave zCBP time in an address space. This is \"normalized\" time This value is not reset at step/job start.",
+          "offset": 1536,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_zAAP_ENCT",
+          "description": "Enclave zAAP time in an address space. This is \"normalized\" time This value is not reset at step/job start.",
+          "offset": 1536,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_IFA_ENCT",
+          "description": "",
+          "offset": 1536,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_SRB_TIME_ON_zCBP",
+          "description": "Non-preemptable SRB time on zCBP",
+          "offset": 1768,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_ASST_TIME_ON_zCBP",
+          "description": "non-enclave preemptable SRB time on zCBP",
+          "offset": 1776,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_zIIP_PHTM_BASE",
+          "description": "Value in ASSB_zIIP_PHTM at the end  x of the previous jobstep.",
+          "offset": 2336,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_Time_Java_On_zIIP",
+          "description": "Time Java is zIIP eligible and executing on zIIP engines and not in an enclave. (Unnormalized)",
+          "offset": 2480,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSB_Time_Java_On_CP",
+          "description": "Time Java is zIIP eligible and executing on CP engines and not in an enclave",
+          "offset": 2488,
+          "length": 8,
+          "type": "signed-integer",
+          "programmingInterface": true
+        },
+        {
+          "name": "ASSBEND",
+          "description": "END OF ASSB.",
+          "offset": 2496,
+          "length": 8,
+          "type": "signed-integer",
+          "endOfControlBlock": true
+        }
+      ]
+    }
+  ]
+}

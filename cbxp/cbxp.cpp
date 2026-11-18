@@ -2,8 +2,9 @@
 
 #include <nlohmann/json.hpp>
 
+#include "control_block_error.hpp"
 #include "control_block_explorer.hpp"
-#include "logger.hpp"
+#include "util/logger.hpp"
 
 cbxp_result_t* cbxp_extract(const char* control_block_name,
                             const size_t control_block_name_length,
@@ -27,17 +28,20 @@ cbxp_result_t* cbxp_extract(const char* control_block_name,
 
   CBXP::Logger::getInstance().setDebug(debug);
 
-  cbxp_result_t* p_cbxp_result = new cbxp_result_t();
-  CBXP::Logger::getInstance().debugAllocate(p_cbxp_result, 64,
+  cbxp_result_t* cbxp_result = new cbxp_result_t();
+  CBXP::Logger::getInstance().debugAllocate(cbxp_result, 64,
                                             sizeof(cbxp_result_t));
 
-  CBXP::ControlBlockExplorer explorer =
-      CBXP::ControlBlockExplorer(p_cbxp_result);
+  try {
+    CBXP::ControlBlockExplorer explorer =
+        CBXP::ControlBlockExplorer(cbxp_result);
+    explorer.extractControlBlock(control_block_name_string,
+                                 includes_string_string, filters_string_string);
+  } catch (const CBXP::CBXPError& e) {
+    cbxp_result->return_code = e.getErrorCode();
+  }
 
-  explorer.extractControlBlock(control_block_name_string,
-                               includes_string_string, filters_string_string);
-
-  return p_cbxp_result;
+  return cbxp_result;
 }
 
 cbxp_result_t* cbxp_format(const char* control_block_name,
@@ -53,16 +57,19 @@ cbxp_result_t* cbxp_format(const char* control_block_name,
 
   CBXP::Logger::getInstance().setDebug(debug);
 
-  cbxp_result_t* p_cbxp_result = new cbxp_result_t();
-  CBXP::Logger::getInstance().debugAllocate(p_cbxp_result, 64,
+  cbxp_result_t* cbxp_result = new cbxp_result_t();
+  CBXP::Logger::getInstance().debugAllocate(cbxp_result, 64,
                                             sizeof(cbxp_result_t));
 
-  CBXP::ControlBlockExplorer explorer =
-      CBXP::ControlBlockExplorer(p_cbxp_result);
+  try {
+    CBXP::ControlBlockExplorer explorer =
+        CBXP::ControlBlockExplorer(cbxp_result);
+    explorer.formatControlBlock(control_block_name_string, data, data_length);
+  } catch (const CBXP::CBXPError& e) {
+    cbxp_result->return_code = e.getErrorCode();
+  }
 
-  explorer.formatControlBlock(control_block_name_string, data, data_length);
-
-  return p_cbxp_result;
+  return cbxp_result;
 }
 
 void cbxp_free(cbxp_result_t* cbxp_result, bool debug) {

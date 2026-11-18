@@ -27,18 +27,17 @@ static PyObject* call_cbxp_extract(PyObject* self, PyObject* args,
     return NULL;
   }
 
-  debug                        = PyObject_IsTrue(debug_pyobj);
+  debug                      = PyObject_IsTrue(debug_pyobj);
 
-  cbxp_result_t* p_cbxp_result = cbxp_extract(
+  cbxp_result_t* cbxp_result = cbxp_extract(
       p_control_block_name, control_block_name_length, p_includes_string,
       includes_length, p_filters_string, filters_length, debug);
 
-  result_dictionary =
-      Py_BuildValue("{s:s#, s:I}", "result_json", p_cbxp_result->result_json,
-                    p_cbxp_result->result_json_length, "return_code",
-                    p_cbxp_result->return_code);
+  result_dictionary = Py_BuildValue(
+      "{s:s#, s:I}", "result_json", cbxp_result->result_json,
+      cbxp_result->result_json_length, "return_code", cbxp_result->return_code);
 
-  cbxp_free(p_cbxp_result, debug);
+  cbxp_free(cbxp_result, debug);
 
   return result_dictionary;
 }
@@ -63,16 +62,15 @@ static PyObject* call_cbxp_format(PyObject* self, PyObject* args,
 
   debug = PyObject_IsTrue(debug_pyobj);
 
-  cbxp_result_t* p_cbxp_result =
+  cbxp_result_t* cbxp_result =
       cbxp_format(p_control_block_name, control_block_name_length, p_data,
                   data_length, debug);
 
-  result_dictionary =
-      Py_BuildValue("{s:s#, s:I}", "result_json", p_cbxp_result->result_json,
-                    p_cbxp_result->result_json_length, "return_code",
-                    p_cbxp_result->return_code);
+  result_dictionary = Py_BuildValue(
+      "{s:s#, s:I}", "result_json", cbxp_result->result_json,
+      cbxp_result->result_json_length, "return_code", cbxp_result->return_code);
 
-  cbxp_free(p_cbxp_result, debug);
+  cbxp_free(cbxp_result, debug);
 
   return result_dictionary;
 }
