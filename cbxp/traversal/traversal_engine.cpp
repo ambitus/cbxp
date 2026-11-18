@@ -179,7 +179,7 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
     const ControlBlock& parent_control_block =
         ctx_.control_blocks.at(parent_name);
     const std::vector<const void*> parent_addrs =
-        TraversalEngine::findRootAddresses(parent_cb);
+        TraversalEngine::findRootAddresses(parent_control_block);
 
     // Find the field in parent that points to control_block.
     std::string pointer_field_name;
@@ -187,7 +187,7 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
     size_t pointer_length    = 4;
     std::string count_field;
 
-    for (const auto& [fname, fdata] : parent_cb.getMap()) {
+    for (const auto& [fname, fdata] : parent_control_block.getMap()) {
       if (!fdata.points_to.empty() &&
           fdata.points_to == control_block.getName()) {
         pointer_field_name = fname;
@@ -204,7 +204,8 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
         std::string count_key = count_field;
         std::transform(count_key.begin(), count_key.end(), count_key.begin(),
                        [](unsigned char c) { return std::toupper(c); });
-        const control_block_field_t& count_f = parent_cb.getMap().at(count_key);
+        const control_block_field_t& count_f =
+            parent_control_block.getMap().at(count_key);
         const char* p_count =
             static_cast<const char*>(p_parent_addr) + count_f.offset;
         if (count_f.type == SIGNED_INT) {
@@ -236,7 +237,7 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
         }
 
         // Skip entries masked by ignoreMask.
-        const auto& field_map = parent_cb.getMap();
+        const auto& field_map = parent_control_block.getMap();
         auto mask_it          = field_map.find(pointer_field_name);
         if (mask_it != field_map.end() &&
             !mask_it->second.ignore_mask.empty()) {
