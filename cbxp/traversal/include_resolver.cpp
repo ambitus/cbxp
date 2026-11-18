@@ -9,8 +9,8 @@ namespace CBXP {
 
 const std::unordered_map<std::string, cbxp_options_t>&
 IncludeResolver::getDoubleAsteriskMap(
-    const ControlBlock& cb,
-    const std::unordered_map<std::string, ControlBlock>& all_cbs) {
+    const ControlBlock& control_block,
+    const std::unordered_map<std::string, ControlBlock>& all_control_blocks) {
   const std::string& control_block_name = control_block.getName();
   auto it = double_asterisk_cache_.find(control_block_name);
   if (it != double_asterisk_cache_.end()) {
@@ -23,7 +23,7 @@ IncludeResolver::getDoubleAsteriskMap(
                               control_block_name + "'");
   std::unordered_map<std::string, cbxp_options_t> built_map;
   for (const std::string& includable : control_block.getIncludables()) {
-    if (all_cbs.find(includable) == all_cbs.end()) {
+    if (all_control_blocks.find(includable) == all_control_blocks.end()) {
       Logger::getInstance().debug("Skipping '" + includable +
                                   "' - not a loaded control block");
       continue;
@@ -40,8 +40,9 @@ IncludeResolver::getDoubleAsteriskMap(
 }
 
 std::unordered_map<std::string, cbxp_options_t> IncludeResolver::resolve(
-    const std::vector<std::string>& include_patterns, const ControlBlock& cb,
-    const std::unordered_map<std::string, ControlBlock>& all_cbs) {
+    const std::vector<std::string>& include_patterns,
+    const ControlBlock& control_block,
+    const std::unordered_map<std::string, ControlBlock>& all_control_blocks) {
   Logger::getInstance().debug(
       "Creating include lists for child control blocks to include with the '" +
       control_block.getName() + "' control block...");
@@ -52,13 +53,16 @@ std::unordered_map<std::string, cbxp_options_t> IncludeResolver::resolve(
     if (include == "**") {
       Logger::getInstance().debug("Processing '**' include...");
       // ** overrides everything: return the cached full-depth map directly.
-      return IncludeResolver::getDoubleAsteriskMap(cb, all_cbs);
+      return IncludeResolver::getDoubleAsteriskMap(control_block,
+                                                   all_control_blocks);
     } else if (include == "*") {
       Logger::getInstance().debug("Processing '*' include...");
-      IncludeResolver::processAsterisk(options_map, cb, all_cbs);
+      IncludeResolver::processAsterisk(options_map, control_block,
+                                       all_control_blocks);
     } else {
       Logger::getInstance().debug("Processing '" + include + "' include...");
-      IncludeResolver::processExplicit(options_map, include, cb, all_cbs);
+      IncludeResolver::processExplicit(options_map, include, control_block,
+                                       all_control_blocks);
     }
   }
 
@@ -70,10 +74,10 @@ std::unordered_map<std::string, cbxp_options_t> IncludeResolver::resolve(
 
 void IncludeResolver::processAsterisk(
     std::unordered_map<std::string, cbxp_options_t>& options_map,
-    const ControlBlock& cb,
-    const std::unordered_map<std::string, ControlBlock>& all_cbs) {
+    const ControlBlock& control_block,
+    const std::unordered_map<std::string, ControlBlock>& all_control_blocks) {
   for (const std::string& includable : control_block.getIncludables()) {
-    if (all_cbs.find(includable) == all_cbs.end()) {
+    if (all_control_blocks.find(includable) == all_control_blocks.end()) {
       Logger::getInstance().debug("Skipping '" + includable +
                                   "' - not a loaded control block");
       continue;
@@ -91,8 +95,8 @@ void IncludeResolver::processAsterisk(
 
 void IncludeResolver::processExplicit(
     std::unordered_map<std::string, cbxp_options_t>& options_map,
-    std::string include, const ControlBlock& cb,
-    const std::unordered_map<std::string, ControlBlock>& all_cbs) {
+    std::string include, const ControlBlock& control_block,
+    const std::unordered_map<std::string, ControlBlock>& all_control_blocks) {
   const std::string del        = ".";
   std::string include_includes = "";
   size_t del_pos               = include.find(del);
@@ -109,7 +113,7 @@ void IncludeResolver::processExplicit(
         control_block.getName() + "' control block");
     throw IncludeError();
   }
-  if (all_cbs.find(include) == all_cbs.end()) {
+  if (all_control_blocks.find(include) == all_control_blocks.end()) {
     Logger::getInstance().debug("'" + include +
                                 "' is not a loaded control block");
     throw IncludeError();

@@ -17,14 +17,15 @@ class IncludeResolver {
   // call; the cache is keyed by name and shared process-wide.
   static const std::unordered_map<std::string, cbxp_options_t>&
   getDoubleAsteriskMap(
-      const ControlBlock& cb,
-      const std::unordered_map<std::string, ControlBlock>& all_cbs);
+      const ControlBlock& control_block,
+      const std::unordered_map<std::string, ControlBlock>& all_control_blocks);
 
   // Parses `include_patterns` for `cb` and returns child-block-name ->
   // cbxp_options_t for every child to follow.
   static std::unordered_map<std::string, cbxp_options_t> resolve(
-      const std::vector<std::string>& include_patterns, const ControlBlock& cb,
-      const std::unordered_map<std::string, ControlBlock>& all_cbs);
+      const std::vector<std::string>& include_patterns,
+      const ControlBlock& control_block,
+      const std::unordered_map<std::string, ControlBlock>& all_control_blocks);
 
  private:
   static inline std::unordered_map<
@@ -33,13 +34,13 @@ class IncludeResolver {
 
   static void processAsterisk(
       std::unordered_map<std::string, cbxp_options_t>& options_map,
-      const ControlBlock& cb,
-      const std::unordered_map<std::string, ControlBlock>& all_cbs);
+      const ControlBlock& control_block,
+      const std::unordered_map<std::string, ControlBlock>& all_control_blocks);
 
   static void processExplicit(
       std::unordered_map<std::string, cbxp_options_t>& options_map,
-      std::string include, const ControlBlock& cb,
-      const std::unordered_map<std::string, ControlBlock>& all_cbs);
+      std::string include, const ControlBlock& control_block,
+      const std::unordered_map<std::string, ControlBlock>& all_control_blocks);
 };
 
 }  // namespace CBXP
