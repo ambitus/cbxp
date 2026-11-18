@@ -50,7 +50,7 @@ nlohmann::json TraversalEngine::run(const std::string& control_block_name,
   if (p_address != nullptr) {
     roots = {p_address};
   } else {
-    roots = TraversalEngine::findRootAddresses(cb);
+    roots = TraversalEngine::findRootAddresses(control_block);
     // Deduplicate (e.g. ECVT is pointed to by both CVT and PSA).
     std::vector<const void*> unique_roots;
     for (const void* p : roots) {
