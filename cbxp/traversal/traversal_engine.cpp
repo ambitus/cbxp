@@ -41,7 +41,7 @@ nlohmann::json TraversalEngine::run(const std::string& control_block_name,
   // Extract only (address == nullptr): child nodes skip this check because
   // their parent already passed it.
   if (p_address == nullptr) {
-    TraversalEngine::checkReachability(cb, !options.filters.empty());
+    TraversalEngine::checkReachability(control_block, !options.filters.empty());
   }
 
   // Resolve the set of root addresses for this traversal.
@@ -145,7 +145,7 @@ nlohmann::json TraversalEngine::run(const std::string& control_block_name,
 // Private
 // ---------------------------------------------------------------------------
 
-void TraversalEngine::checkReachability(const ControlBlock& cb,
+void TraversalEngine::checkReachability(const ControlBlock& control_block,
                                         bool has_filters) {
   const storage_attributes_t& attr = control_block.getStorageAttributes();
   if (attr.key != 8 && attr.is_protected && control_block.getName() != "psa") {
@@ -298,9 +298,10 @@ void TraversalEngine::traverse() {
         throw CbxpBlockUnreachableError();
       }
       if (node.is_root) {
-        TraversalEngine::checkReachability(cb, !node.options.filters.empty());
+        TraversalEngine::checkReachability(control_block,
+                                           !node.options.filters.empty());
       } else {
-        TraversalEngine::checkReachability(cb, /*has_filters=*/true);
+        TraversalEngine::checkReachability(control_block, /*has_filters=*/true);
       }
 
       Logger::getInstance().debug(
@@ -381,7 +382,7 @@ struct ChildField {
 
 // Returns whether JSON `key` of `cb` is a pointer field to an included child,
 // matching the field name or its repeated form "<field>s".
-bool findChildField(const ControlBlock& cb, const std::string& key,
+bool findChildField(const ControlBlock& control_block, const std::string& key,
                     const std::unordered_map<std::string, bool>& child_options,
                     ChildField& out) {
   for (const auto& [fname, fdata] : control_block.getMap()) {
@@ -441,7 +442,8 @@ VisitKeyMap TraversalEngine::computeOwners(const VisitKey& root_key) const {
 
     for (const auto& [key, value] : node_it->second.items()) {
       ChildField field;
-      if (isPtrKey(key) || !findChildField(cb, key, opts_it->second, field)) {
+      if (isPtrKey(key) ||
+          !findChildField(control_block, key, opts_it->second, field)) {
         continue;
       }
       if (field.is_repeated && value.is_array()) {
@@ -486,7 +488,7 @@ bool TraversalEngine::resolvePlaceholders(nlohmann::json& json,
     // Determine whether this key maps to a pointer field with an included
     // child.
     ChildField child_field;
-    if (!findChildField(cb, key, child_options, child_field)) {
+    if (!findChildField(control_block, key, child_options, child_field)) {
       continue;
     }
     const std::string& child_name = child_field.name;

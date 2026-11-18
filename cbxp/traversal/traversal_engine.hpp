@@ -52,7 +52,8 @@ class TraversalEngine {
 
   // Check storage-attribute reachability for the root control block.
   // Throws CbxpBlockUnreachableError if the block cannot be accessed.
-  static void checkReachability(const ControlBlock& cb, bool has_filters);
+  static void checkReachability(const ControlBlock& control_block,
+                                bool has_filters);
 };
 
 }  // namespace CBXP
