@@ -25,7 +25,7 @@ IncludeResolver::getDoubleAsteriskMap(
   for (const std::string& includable : control_block.getIncludables()) {
     if (all_cbs.find(includable) == all_cbs.end()) {
       Logger::getInstance().debug("Skipping '" + includable +
-                                  "' — not a loaded control block");
+                                  "' - not a loaded control block");
       continue;
     }
     Logger::getInstance().debug(
@@ -75,7 +75,7 @@ void IncludeResolver::processAsterisk(
   for (const std::string& includable : control_block.getIncludables()) {
     if (all_cbs.find(includable) == all_cbs.end()) {
       Logger::getInstance().debug("Skipping '" + includable +
-                                  "' — not a loaded control block");
+                                  "' - not a loaded control block");
       continue;
     }
     if (options_map.find(includable) != options_map.end()) {

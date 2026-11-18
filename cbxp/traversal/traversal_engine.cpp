@@ -93,7 +93,7 @@ nlohmann::json TraversalEngine::run(const std::string& control_block_name,
     }
   }
 
-  // Process the queue until empty — this is the BFS loop.
+  // Process the queue until empty - this is the BFS loop.
   TraversalEngine::traverse();
 
   // Resolve placeholder hex strings to real child JSON.  A root is omitted
@@ -245,7 +245,7 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
           if (raw_val & mask) {
             Logger::getInstance().debug(
                 "Skipping '" + control_block.getName() + "' entry at index " +
-                std::to_string(i) + " — ignoreMask bit set (raw=0x" +
+                std::to_string(i) + " - ignoreMask bit set (raw=0x" +
                 [&]() {
                   std::ostringstream oss;
                   oss << std::hex << raw_val;
@@ -293,7 +293,7 @@ void TraversalEngine::traverse() {
     try {
       if (isGuardPageAddress(node.p_address)) {
         Logger::getInstance().debug("Skipping '" + node.control_block_name +
-                                    "' — address falls in Guard page range " +
+                                    "' - address falls in Guard page range " +
                                     kGuardPageRange);
         throw CbxpBlockUnreachableError();
       }
@@ -349,7 +349,7 @@ void TraversalEngine::traverse() {
     } catch (const CbxpBlockUnreachableError& e) {
       Logger::getInstance().debug(
           "Skipping '" + node.control_block_name + "' at address " +
-          addressToString(node.p_address) + " — error code " +
+          addressToString(node.p_address) + " - error code " +
           std::to_string(e.getErrorCode()));
       ctx_.visited[visit_key] = nullptr;
     }

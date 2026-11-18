@@ -27,7 +27,7 @@ class FilterSet {
   bool match(const nlohmann::json& control_block_json) const;
 
  private:
-  // field_name → list of (operation, value) pairs
+  // field_name -> list of (operation, value) pairs
   std::unordered_map<std::string, std::vector<cbxp_filter_t>> filters_;
 
   void addFilter(const std::string& filter,

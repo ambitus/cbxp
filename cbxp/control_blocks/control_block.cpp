@@ -89,7 +89,7 @@ ControlBlock::ControlBlock(
       size_t length             = (*it)["length"].get<int>();
       bool end_of_control_block = (*it).contains("endOfControlBlock") &&
                                   (*it)["endOfControlBlock"].get<bool>();
-      // endOfControlBlock fields mark the boundary address only — do not
+      // endOfControlBlock fields mark the boundary address only - do not
       // count their length toward the control block size.
       if (end_of_control_block) {
         if (offset > max_offset_) {

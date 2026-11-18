@@ -86,7 +86,7 @@ bool ControlBlockNode::eyecatcherMatches() const {
           oss << p_address_;
           return oss.str();
         }() +
-        ": expected '" + expected + "', got '" + actual + "' — skipping");
+        ": expected '" + expected + "', got '" + actual + "' - skipping");
     return false;
   }
   return true;
@@ -209,7 +209,7 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
     if (isGuardPageAddress(p_child_addr)) {
       Logger::getInstance().debug(
           "Skipping enqueue of '" + child_name +
-          "' — address falls in PSA fetch-protected range " + kGuardPageRange);
+          "' - address falls in PSA fetch-protected range " + kGuardPageRange);
       return field_json;  // leave raw hex placeholder in place
     }
 
@@ -218,7 +218,7 @@ nlohmann::json ControlBlockNode::fieldToJson(const control_block_field_t& field,
     pending_children_.push_back({p_child_addr, child_name,
                                  child_options_[child_name],
                                  /*is_root=*/false});
-    // Return the raw hex as a placeholder regardless — the engine will
+    // Return the raw hex as a placeholder regardless - the engine will
     // patch it to the real child JSON once that node finishes processing.
   }
 
