@@ -26,7 +26,8 @@ nlohmann::json TraversalEngine::run(const std::string& control_block_name,
                                     const cbxp_options_t& options,
                                     const void* p_address,
                                     size_t buffer_length) {
-  const ControlBlock& cb = ctx_.control_blocks.at(control_block_name);
+  const ControlBlock& control_block =
+      ctx_.control_blocks.at(control_block_name);
   // Validate include/filter options against the root block before reading
   // storage.
   const ControlBlockNode validator(ctx_, options, control_block_name,
@@ -171,11 +172,12 @@ std::vector<const void*> TraversalEngine::findRootAddresses(
       control_block.getPointedToBy();
 
   if (pointed_to_by.empty()) {
-    return {cb.getFixedAddress()};
+    return {control_block.getFixedAddress()};
   }
 
   for (const auto& parent_name : pointed_to_by) {
-    const ControlBlock& parent_cb = ctx_.control_blocks.at(parent_name);
+    const ControlBlock& parent_control_block =
+        ctx_.control_blocks.at(parent_name);
     const std::vector<const void*> parent_addrs =
         TraversalEngine::findRootAddresses(parent_cb);
 
@@ -282,7 +284,8 @@ void TraversalEngine::traverse() {
         addressToString(node.p_address) + " (" +
         std::to_string(ctx_.queue.size()) + " still queued)");
 
-    const ControlBlock& cb = ctx_.control_blocks.at(node.control_block_name);
+    const ControlBlock& control_block =
+        ctx_.control_blocks.at(node.control_block_name);
 
     // Roots get the full reachability check (incl. refusing non-common storage
     // without filters); children only need the key/fetch-protection gate.
@@ -422,7 +425,7 @@ VisitKeyMap TraversalEngine::computeOwners(const VisitKey& root_key) const {
         !node_it->second.is_object()) {
       continue;
     }
-    const ControlBlock& cb = ctx_.control_blocks.at(node_key.second);
+    const ControlBlock& control_block = ctx_.control_blocks.at(node_key.second);
 
     auto claim = [&](const nlohmann::json& placeholder, const ChildField& f) {
       if (!placeholder.is_string()) {
@@ -473,7 +476,8 @@ bool TraversalEngine::resolvePlaceholders(nlohmann::json& json,
   expanded.insert(node_key);
 
   const std::string& control_block_name = node_key.second;
-  const ControlBlock& cb = ctx_.control_blocks.at(control_block_name);
+  const ControlBlock& control_block =
+      ctx_.control_blocks.at(control_block_name);
   // Included child name -> whether that child carries filters.
   const auto& child_options   = ctx_.child_filtered.at(node_key);
   const std::string node_desc = "'" + control_block_name + "' at address " +
